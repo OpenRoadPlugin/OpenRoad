@@ -1,50 +1,18 @@
-name: CI - Build & Validate
+name: CI - Validate PR
 
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [main]
 
 jobs:
-  build:
-    name: Build & Validate
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Restore dependencies
-        run: dotnet restore src/OpenRoad.sln
-
-      - name: Build Core
-        run: dotnet build src/OpenRoad.sln -c Release --no-restore
-
-      - name: Build all Modules
-        shell: pwsh
-        run: |
-          $modules = Get-ChildItem -Path modules -Filter *.csproj -Recurse
-          foreach ($module in $modules) {
-            Write-Host "Building $($module.Name)..."
-            dotnet build $module.FullName -c Release
-            if ($LASTEXITCODE -ne 0) {
-              Write-Error "Failed to build $($module.Name)"
-              exit 1
-            }
-          }
-          Write-Host "All modules built successfully!"
+  # NOTE: La compilation nécessite les DLL AutoCAD (non disponibles sur GitHub Actions)
+  # Le build doit être fait localement sur une machine avec AutoCAD installé
+  # Ce workflow vérifie uniquement les règles de contribution
 
   # Vérifie que le Core n'a pas été modifié sans autorisation
   core-protection:
     name: Core Protection Check
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout code
@@ -68,3 +36,30 @@ jobs:
           else
             echo "✅ Aucune modification du Core détectée."
           fi
+
+  # Vérifie la structure des fichiers
+  validate-structure:
+    name: Validate File Structure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check version.json exists
+        run: |
+          if [ ! -f "version.json" ]; then
+            echo "❌ version.json manquant!"
+            exit 1
+          fi
+          echo "✅ version.json présent"
+
+      - name: Check required folders
+        run: |
+          for folder in "src" "docs" "bin"; do
+            if [ ! -d "$folder" ]; then
+              echo "❌ Dossier $folder manquant!"
+              exit 1
+            fi
+          done
+          echo "✅ Structure de dossiers correcte"
