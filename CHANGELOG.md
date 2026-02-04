@@ -5,11 +5,24 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
-## [0.0.2 - Non publié]
+## [0.0.2] - En développement
+
+### Ajouté
+- **Gestionnaire de modules amélioré** :
+  - Auto-refresh de la liste lors de l'arrivée sur l'onglet Modules
+  - Gestion automatique des dépendances (téléchargement récursif)
+  - Multi-sélection avec checkboxes pour installation par lot
+  - Groupement des modules par catégorie
+  - Message au démarrage si aucun module installé
+- **Traductions** : Nouvelles clés FR/EN/ES pour le gestionnaire de modules
+- **CI/CD** : Workflow GitHub Actions pour validation des PRs
+
+### Corrigé
+- Bug TFormat avec placeholders {0} {1} non remplacés dans les messages de dépendances
 
 ### À venir
-- De nouveaux modules officiels.
-- Possiblité de personnaliser le nom du menu [name - OR]
+- De nouveaux modules officiels
+- Possibilité de personnaliser le nom du menu [name - OR]
 
 ---
 
