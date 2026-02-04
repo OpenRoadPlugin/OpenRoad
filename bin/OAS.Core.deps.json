@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "OAS.Core/0.0.2-dev": {
+        "runtime": {
+          "OAS.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "OAS.Core/0.0.2-dev": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

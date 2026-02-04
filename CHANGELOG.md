@@ -9,7 +9,9 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Ajouté
 - **Changement de nom** pour empecher toute confusion avec des soft existants.
-    - Open Road s'appelle maintenant **Asphalte**
+    - Open Road s'appelle maintenant **Open Asphalte**
+- **Personnalisation du menu** : L'installateur permet de définir un nom personnalisé (ex: "MonEntreprise - OA")
+- **Page de licence** : Acceptation obligatoire de la licence Apache 2.0 dans l'installateur
 - **Gestionnaire de modules amélioré** :
   - Auto-refresh de la liste lors de l'arrivée sur l'onglet Modules
   - Gestion automatique des dépendances (téléchargement récursif)
@@ -20,11 +22,15 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **CI/CD** : Workflow GitHub Actions pour validation des PRs
 
 ### Corrigé
-- Bug TFormat avec placeholders {0} {1} non remplacés dans les messages de dépendances
+- Bug TFormat avec placeholders {0} {1} non remplacés dans les messages de dépendances (surcharge ambiguë)
+- Logo dans la fenêtre "À propos" : adapté au nouveau format rectangulaire (200x105)
+- Modules non détectés après installation : préfixe de fichier corrigé (`OAS.*.dll` au lieu de `OpenRoad.*.dll`) + migration automatique des anciens modules
+- Dépendances non affichées comme installées : correction du binding WPF avec `INotifyPropertyChanged`
+- Onglet Modules de Settings non rafraîchi : ajout du chargement automatique à l'ouverture directe
+- Nom du menu persistant après désinstallation : suppression du fichier `config.json` lors de la désinstallation
 
 ### À venir
 - De nouveaux modules officiels
-- Possibilité de personnaliser le nom du menu [name - OR]
 
 ---
 
@@ -39,11 +45,11 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   - LayerService : Gestion des calques AutoCAD
 
 - **Commandes système** :
-  - OR_HELP : Liste des commandes disponibles
-  - OR_VERSION : Informations de version et modules chargés
-  - OR_SETTINGS : Fenêtre de paramètres utilisateur
-  - OR_RELOAD : Rechargement de la configuration
-  - OR_UPDATE : Vérification des mises à jour
+  - OAS_HELP : Liste des commandes disponibles
+  - OAS_VERSION : Informations de version et modules chargés
+  - OAS_SETTINGS : Fenêtre de paramètres utilisateur
+  - OAS_RELOAD : Rechargement de la configuration
+  - OAS_UPDATE : Vérification des mises à jour
 - **Classes de base pour modules** :
   - ModuleBase : Classe abstraite pour créer des modules
   - CommandBase : Classe de base pour les commandes avec gestion des erreurs

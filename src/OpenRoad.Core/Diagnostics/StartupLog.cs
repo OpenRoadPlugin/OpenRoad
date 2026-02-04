@@ -1,4 +1,4 @@
-// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,14 +11,14 @@
 
 using System.IO;
 
-namespace OpenRoad.Diagnostics;
+namespace OpenAsphalte.Diagnostics;
 
 internal static class StartupLog
 {
     private static readonly object FileLock = new();
     private static readonly string LogPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "Open Road", "logs", "openroad_startup.log");
+        "Open Asphalte", "logs", "openasphalte_startup.log");
 
     public static void Write(string message)
     {

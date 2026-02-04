@@ -1,4 +1,4 @@
-# Open Road – Context IA Module
+# Open Asphalte – Context IA Module
 
 > **Context IA pour le développement de MODULES** | Version 2026.02.04 | .NET 8.0 / AutoCAD 2025+
 
@@ -31,7 +31,7 @@ Tu adoptes la mentalit� suivante :
 2. **Tu �cris du code production-ready** � Gestion d'erreurs, traductions, conventions respect�es
 3. **Tu utilises les services existants** � `GeometryService`, `LayerService`, `Logger`...
 4. **Tu fournis toujours les 3 langues** � FR, EN, ES dans `GetTranslations()`
-5. **Tu pr�fixes tout** � Commandes `OR_`, calques `OR_`, cl�s traduction `{module}.`
+5. **Tu préfixes tout** ? Commandes `OAS_`, calques `OAS_`, clés traduction `{module}.`
 
 ### Patterns obligatoires
 
@@ -58,9 +58,9 @@ WriteMessage($"\n{T("select.point")}: ");
 
 ### Ce que tu NE FAIS JAMAIS
 
-- ? Modifier les fichiers dans `src/OpenRoad.Core/` pour ajouter des fonctionnalit�s m�tier
+- ? Modifier les fichiers dans `src/OpenAsphalte.Core/` pour ajouter des fonctionnalités métier
 - ? Ajouter des commandes dans `SystemCommands.cs`
-- ? Cr�er des commandes sans le pr�fixe `OR_`
+- ? Créer des commandes sans le préfixe `OAS_`
 - ? Oublier les traductions (FR, EN, ES obligatoires)
 - ? Manipuler la Database sans transaction
 - ? Ignorer `ExecuteSafe()` dans une commande
@@ -69,7 +69,7 @@ WriteMessage($"\n{T("select.point")}: ");
 
 ## ?? IDENTIT� DU PROJET
 
-**Open Road** est un plugin **C# modulaire** pour AutoCAD, destin� aux professionnels de la voirie et de l'am�nagement urbain.
+**Open Asphalte** est un plugin **C# modulaire** pour AutoCAD, destiné aux professionnels de la voirie et de l'aménagement urbain.
 
 ### Caract�ristiques techniques
 |--------------|----------------------------------------------|
@@ -90,7 +90,7 @@ WriteMessage($"\n{T("select.point")}: ");
 
 ```
 ????????????????????????????????????????????????????????????????????
-?  LE C�UR (OpenRoad.Core) NE DOIT JAMAIS �TRE MODIFI� POUR        ?
+?  LE CŒUR (OpenAsphalte.Core) NE DOIT JAMAIS ÊTRE MODIFIÉ POUR        ?
 ?  AJOUTER UN MODULE OU UNE FONCTIONNALIT� M�TIER.                 ?
 ?                                                                  ?
 ?  Les modules sont des DLL s�par�es, d�couvertes automatiquement. ?
@@ -104,16 +104,16 @@ WriteMessage($"\n{T("select.point")}: ");
 ## ?? ARCHITECTURE FICHIERS
 
 ```
-OpenRoad/
+OpenAsphalte/
 ??? src/
-?   ??? OpenRoad.Core/                    # ? C�UR - NE PAS MODIFIER POUR MODULES
+?   ??? OpenAsphalte.Core/                    # ? CŒUR - NE PAS MODIFIER POUR MODULES
 ??? templates/                            # ? TEMPLATES POUR NOUVEAUX MODULES
-?   ??? OpenRoad.Module.Template.csproj
+?   ??? OAS.Module.Template.csproj
 ?   ??? ModuleTemplate.cs
 ?   ??? CommandTemplate.cs
 ??? bin/
     ??? Modules/                          # ?? DOSSIER MODULES EXTERNES
-        ??? (DLL OpenRoad.*.dll)          # D�couvertes automatiquement
+        ??? (DLL OAS.*.dll)               # Découvertes automatiquement
 ```
 
 ---
@@ -124,8 +124,8 @@ OpenRoad/
 
 ```
 modules/
-??? OpenRoad.MonModule/
-    ??? OpenRoad.MonModule.csproj
+??? OAS.MonModule/
+    ??? OAS.MonModule.csproj
     ??? MonModuleModule.cs          # H�rite ModuleBase
     ??? Commands/
         ??? MaCommande.cs           # H�rite CommandBase
@@ -142,9 +142,9 @@ modules/
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     
-    <!-- ?? OBLIGATOIRE: Doit commencer par "OpenRoad." -->
-    <AssemblyName>OpenRoad.MonModule</AssemblyName>
-    <RootNamespace>OpenRoad.Modules.MonModule</RootNamespace>
+    <!-- ?? OBLIGATOIRE: Doit commencer par "OAS." -->
+    <AssemblyName>OAS.MonModule</AssemblyName>
+    <RootNamespace>OpenAsphalte.Modules.MonModule</RootNamespace>
     
     <!-- Output dans Modules/ -->
     <OutputPath>..\..\bin\Modules\</OutputPath>
@@ -152,8 +152,8 @@ modules/
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="OpenRoad.Core">
-      <HintPath>..\..\bin\OpenRoad.Core.dll</HintPath>
+    <Reference Include="OAS.Core">
+      <HintPath>..\..\bin\OAS.Core.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <!-- R�f�rences AutoCAD (Private=false car d�j� charg�es) -->
@@ -167,9 +167,9 @@ modules/
 ### �tape 3 : Classe Module
 
 ```csharp
-using OpenRoad.Abstractions;
+using OpenAsphalte.Abstractions;
 
-namespace OpenRoad.Modules.MonModule;
+namespace OpenAsphalte.Modules.MonModule;
 
 public class MonModuleModule : ModuleBase
 {
@@ -198,13 +198,13 @@ public class MonModuleModule : ModuleBase
 
 ```csharp
 using Autodesk.AutoCAD.Runtime;
-using OpenRoad.Abstractions;
+using OpenAsphalte.Abstractions;
 
-namespace OpenRoad.Modules.MonModule.Commands;
+namespace OpenAsphalte.Modules.MonModule.Commands;
 
 public class MaCommande : CommandBase
 {
-    [CommandMethod("OR_MONMODULE_ACTION")]
+    [CommandMethod("OAS_MONMODULE_ACTION")]
     [CommandInfo("Ma Commande", ...)]
     public void Execute()
     {
@@ -226,13 +226,13 @@ public class MaCommande : CommandBase
 
 ### ? FAIRE (Modules)
 
-- Cr�er une **nouvelle DLL** dans `modules/OpenRoad.{Module}/`
+- Créer une **nouvelle DLL** dans `modules/OAS.{Module}/`
 - H�riter de `ModuleBase` pour le module
 - H�riter de `CommandBase` pour les commandes
 - Utiliser les services existants (`GeometryService`, `LayerService`...)
 - Fournir traductions FR, EN, ES dans `GetTranslations()`
-- Pr�fixer commandes par `OR_`
-- Pr�fixer calques par `OR_`
+- Préfixer commandes par `OAS_`
+- Préfixer calques par `OAS_`
 - Utiliser `ExecuteSafe()` pour toute commande
 - Utiliser `ExecuteInTransaction()` pour modifications DB
 
@@ -248,14 +248,14 @@ public class MaCommande : CommandBase
 ## ?? CHECKLIST NOUVEAU MODULE
 
 ```
-? Cr�er dossier modules/OpenRoad.{Module}/
-? Cr�er .csproj avec AssemblyName commen�ant par "OpenRoad."
+? Créer dossier modules/OAS.{Module}/
+? Créer .csproj avec AssemblyName commençant par "OAS."
 ? Cr�er classe {Module}Module h�ritant ModuleBase
   ? Impl�menter Id, Name, Description
   ? Impl�menter GetCommandTypes()
   ? Impl�menter GetTranslations() (FR, EN, ES)
 ? Cr�er commandes h�ritant CommandBase
-  ? Attribut [CommandMethod("OR_...")] 
+  ? Attribut [CommandMethod("OAS_...")]
   ? Attribut [CommandInfo(...)]
   ? Utiliser ExecuteSafe() dans Execute()
   ? Utiliser ExecuteInTransaction() pour modifications

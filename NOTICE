@@ -1,29 +1,29 @@
-Open Road
-Copyright 2026 Open Road Contributors
+Open Asphalte
+Copyright 2026 Open Asphalte Contributors
 
-This product includes software developed by the Open Road project
-(https://github.com/openroadplugin/openroad).
+This product includes software developed by the Open Asphalte project
+(https://github.com/openasphalteplugin/openasphalte).
 
 ================================================================================
                               TRADEMARK NOTICE
 ================================================================================
 
-"Open Road" and the Open Road logo are trademarks of the Open Road project.
+"Open Asphalte" and the Open Asphalte logo are trademarks of the Open Asphalte project.
 
 The Apache License 2.0 does NOT grant permission to use the trade names,
-trademarks, service marks, or product names "Open Road", except as required
+trademarks, service marks, or product names "Open Asphalte", except as required
 for reasonable and customary use in describing the origin of the Work.
 
 PROHIBITED WITHOUT WRITTEN PERMISSION:
-- Using "Open Road" in the name of derivative products
-- Using "Open Road" in a way that suggests official endorsement
-- Using the Open Road logo in derivative products
-- Creating products named "Open Road [Something]" or "[Something] Open Road"
+- Using "Open Asphalte" in the name of derivative products
+- Using "Open Asphalte" in a way that suggests official endorsement
+- Using the Open Asphalte logo in derivative products
+- Creating products named "Open Asphalte [Something]" or "[Something] Open Asphalte"
 
 PERMITTED:
-- Stating "Based on Open Road" or "Compatible with Open Road"
-- Stating "Uses Open Road technology"
-- Linking to the official Open Road repository
+- Stating "Based on Open Asphalte" or "Compatible with Open Asphalte"
+- Stating "Uses Open Asphalte technology"
+- Linking to the official Open Asphalte repository
 
 For trademark usage requests, please open an issue on the official repository.
 
@@ -41,7 +41,7 @@ This software uses the following third-party components:
                           CONTRIBUTOR ATTRIBUTIONS
 ================================================================================
 
-Open Road est développé grâce aux contributions de la communauté.
+Open Asphalte est développé grâce aux contributions de la communauté.
 Merci à tous ceux qui participent à améliorer ce projet !
 
 DÉVELOPPEURS PRINCIPAUX (Lead Developers)
@@ -62,7 +62,7 @@ TESTEURS (Testers)
 
 TRADUCTEURS (Translators)
 -------------------------
-• [Votre place ici] - Aidez à traduire Open Road !
+• [Votre place ici] - Aidez à traduire Open Asphalte !
 
 --------------------------------------------------------------------------------
 Pour être ajouté à cette liste, consultez CONTRIBUTING.md section "Reconnaissance"

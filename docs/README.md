@@ -1,6 +1,6 @@
-# 📚 Documentation Open Road
+# 📚 Documentation Open Asphalte
 
-> Documentation technique pour les développeurs de modules Open Road
+> Documentation technique pour les développeurs de modules Open Asphalte
 
 ---
 
@@ -70,11 +70,11 @@ docs/
 
 ## 🔗 Liens utiles
 
-- **Repository GitHub** : [Open Road](https://github.com/openroad/openroad)
+- **Repository GitHub** : [Open Asphalte](https://github.com/openasphalte/openasphalte)
 - **Changelog** : [CHANGELOG.md](../CHANGELOG.md)
 - **Contributing** : [CONTRIBUTING.md](../CONTRIBUTING.md)
 - **License** : Apache 2.0
 
 ---
 
-*Documentation Open Road v0.0.1*
+*Documentation Open Asphalte v0.0.1*

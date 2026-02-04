@@ -1,5 +1,5 @@
 # ============================================================
-#                    OPEN ROAD - .gitignore
+#                    OPEN ASPHALTE - .gitignore
 # ============================================================
 
 # ------------------------------------------------------------
@@ -9,10 +9,10 @@ bin/*.pdb
 bin/*.exe
 
 # Exceptions - fichiers necessaires pour les releases GitHub
-!bin/OpenRoad.Core.dll
-!bin/OpenRoad.Core.xml
-!bin/OpenRoad.Core.deps.json
-!bin/OpenRoad.Core.runtimeconfig.json
+!bin/OAS.Core.dll
+!bin/OAS.Core.xml
+!bin/OAS.Core.deps.json
+!bin/OAS.Core.runtimeconfig.json
 !bin/version.json
 !bin/Modules/
 !bin/Modules/**
@@ -97,3 +97,9 @@ _ReSharper*/
 [Ee]xpress/
 BundleArtifacts/
 PublishScripts/
+
+# ------------------------------------------------------------
+#  DWG Logo
+# ------------------------------------------------------------
+Logo_v1.dwg
+*.dwl

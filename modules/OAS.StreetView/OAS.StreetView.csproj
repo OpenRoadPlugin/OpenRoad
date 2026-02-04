@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ==============================================================================
+  OPEN ASPHALTE - MODULE STREET VIEW
+  ==============================================================================
+
+  Module pour ouvrir Google Street View depuis un dessin géoréférencé.
+  Convertit les coordonnées AutoCAD en WGS84 et ouvre le navigateur.
+
+  Auteur: Charles TILLY
+  Version: 0.0.1
+
+  Ce module permet de :
+  - Sélectionner un point de vue dans le dessin
+  - Définir une direction de visée
+  - Ouvrir Google Street View avec les coordonnées converties
+
+  DÉPENDANCE: Nécessite le module "setprojection" (Géoréférencement)
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Configuration .NET -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+
+    <!-- Suppression des warnings de conflits d'assemblies AutoCAD -->
+    <NoWarn>$(NoWarn);MSB3277</NoWarn>
+
+    <!-- Identification du module -->
+    <AssemblyName>OAS.StreetView</AssemblyName>
+    <RootNamespace>OpenAsphalte.Modules.StreetView</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>Charles TILLY</Authors>
+    <Company>Open Asphalte Contributors</Company>
+    <Description>Module Street View pour Open Asphalte - Visualisation terrain depuis un dessin géoréférencé</Description>
+    <Copyright>Copyright © 2026 Open Asphalte Contributors</Copyright>
+
+    <!-- Output dans le dossier Modules -->
+    <OutputPath>..\..\bin\Modules\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!-- Référence au Core Open Asphalte -->
+  <ItemGroup>
+    <Reference Include="OAS.Core">
+      <HintPath>..\..\bin\OAS.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- Référence au module Géoréférencement pour les services de conversion -->
+    <Reference Include="OAS.Georeferencement">
+      <HintPath>..\..\bin\Modules\OAS.Georeferencement.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Détection automatique du chemin AutoCAD -->
+  <PropertyGroup>
+    <AutoCADPath Condition="Exists('C:\Program Files\Autodesk\AutoCAD 2025')">C:\Program Files\Autodesk\AutoCAD 2025</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('D:\Program Files\Autodesk\AutoCAD 2025')">D:\Program Files\Autodesk\AutoCAD 2025</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('$(ProgramFiles)\Autodesk\AutoCAD 2025')">$(ProgramFiles)\Autodesk\AutoCAD 2025</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2026')">C:\Program Files\Autodesk\AutoCAD 2026</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2027')">C:\Program Files\Autodesk\AutoCAD 2027</AutoCADPath>
+    <AutoCADPath Condition="'$(AUTOCAD_PATH)' != ''">$(AUTOCAD_PATH)</AutoCADPath>
+  </PropertyGroup>
+
+  <!-- Références AutoCAD (Private=false car déjà chargées par AutoCAD) -->
+  <ItemGroup>
+    <Reference Include="accoremgd">
+      <HintPath>$(AutoCADPath)\accoremgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="acdbmgd">
+      <HintPath>$(AutoCADPath)\acdbmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="acmgd">
+      <HintPath>$(AutoCADPath)\acmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AcCui">
+      <HintPath>$(AutoCADPath)\AcCui.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

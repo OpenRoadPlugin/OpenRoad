@@ -1,4 +1,4 @@
-// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,15 +12,15 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace OpenRoad.Diagnostics;
+namespace OpenAsphalte.Diagnostics;
 
 internal static class StartupDiagnostics
 {
     private static readonly string LogPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "Open Road", "logs", "openroad_startup.log");
+        "Open Asphalte", "logs", "openasphalte_startup.log");
 
-#pragma warning disable CA2255 // ModuleInitializer utilis� intentionnellement pour diagnostics au chargement
+#pragma warning disable CA2255 // ModuleInitializer utilisé intentionnellement pour diagnostics au chargement
     [ModuleInitializer]
     internal static void Init()
 #pragma warning restore CA2255
@@ -29,7 +29,7 @@ internal static class StartupDiagnostics
         {
             Directory.CreateDirectory(Path.GetDirectoryName(LogPath)!);
             File.AppendAllText(LogPath,
-                $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] Assembly loaded: OpenRoad.Core\n");
+                $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] Assembly loaded: OpenAsphalte.Core\n");
         }
         catch
         {

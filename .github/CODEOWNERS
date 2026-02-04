@@ -5,13 +5,13 @@
 # PROTECTION DU CORE - Approbation OBLIGATOIRE
 # ============================================
 # Toute modification du Core nécessite l'approbation d'un Lead Dev
-/src/OpenRoad.Core/                    @openroadplugin/lead-dev
-/src/Directory.Build.props             @openroadplugin/lead-dev
+/src/OAS.Core/                         @openasphalteplugin/lead-dev
+/src/Directory.Build.props             @openasphalteplugin/lead-dev
 
 # Fichiers critiques
-/.github/                              @openroadplugin/lead-dev
-/installer/                            @openroadplugin/lead-dev
-/version.json                          @openroadplugin/lead-dev
+/.github/                              @openasphalteplugin/lead-dev
+/installer/                            @openasphalteplugin/lead-dev
+/version.json                          @openasphalteplugin/lead-dev
 
 # ============================================
 # MODULES - Review recommandée mais pas bloquante

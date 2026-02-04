@@ -5,7 +5,7 @@ Service de gestion des calques AutoCAD. Fournit des méthodes utilitaires pour c
 ## Namespace
 
 ```csharp
-using OpenRoad.Services;
+using OpenAsphalte.Services;
 ```
 
 ## Dépendances
@@ -41,7 +41,7 @@ public static ObjectId EnsureLayer(
 ```csharp
 ExecuteInTransaction(tr =>
 {
-    var layerId = LayerService.EnsureLayer(Database, tr, "OR_AXES",
+    var layerId = LayerService.EnsureLayer(Database, tr, "OAS_AXES",
         AcColor.FromColorIndex(AcColorMethod.ByAci, 1)); // Rouge
 });
 ```
@@ -113,6 +113,6 @@ Informations sur un calque AutoCAD.
 
 ## Bonnes pratiques
 
-- Préfixer vos calques par `OR_` pour les identifier comme calques Open Road
+- Préfixer vos calques par `OAS_` pour les identifier comme calques Open Asphalte
 - Toujours utiliser dans une transaction (`ExecuteInTransaction`)
 - Vérifier l'existence d'un calque avant de le modifier

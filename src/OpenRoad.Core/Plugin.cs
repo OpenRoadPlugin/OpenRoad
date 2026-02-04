@@ -1,4 +1,4 @@
-﻿// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -15,30 +15,30 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Runtime.ExceptionServices;
 using Autodesk.AutoCAD.Runtime;
-using OpenRoad.Commands;
-using OpenRoad.Configuration;
-using OpenRoad.Discovery;
-using OpenRoad.Diagnostics;
-using OpenRoad.Logging;
-using OpenRoad.UI;
-using L10n = OpenRoad.Localization.Localization;
+using OpenAsphalte.Commands;
+using OpenAsphalte.Configuration;
+using OpenAsphalte.Discovery;
+using OpenAsphalte.Diagnostics;
+using OpenAsphalte.Logging;
+using OpenAsphalte.UI;
+using L10n = OpenAsphalte.Localization.Localization;
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
 // Enregistrer la classe de commandes système
 [assembly: CommandClass(typeof(SystemCommands))]
 
 // Point d'entrée du plugin
-[assembly: ExtensionApplication(typeof(OpenRoad.Plugin))]
+[assembly: ExtensionApplication(typeof(OpenAsphalte.Plugin))]
 
-namespace OpenRoad;
+namespace OpenAsphalte;
 
 /// <summary>
-/// Point d'entrée principal du plugin Open Road pour AutoCAD.
+/// Point d'entrée principal du plugin Open Asphalte pour AutoCAD.
 /// Gère le cycle de vie de l'application et la découverte automatique des modules.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Open Road est un plugin modulaire. Le coeur (cette DLL) fournit :
+/// Open Asphalte est un plugin modulaire. Le coeur (cette DLL) fournit :
 /// - La decouverte automatique des modules
 /// - Le systeme de menus et rubans dynamiques
 /// - Les services partages (geometrie, calques, coordonnees)
@@ -57,17 +57,17 @@ public class Plugin : IExtensionApplication
     private const int MaxFirstChanceLogs = 5;
 
     /// <summary>
-    /// Version du coeur Open Road (chargée depuis version.json)
+    /// Version du coeur Open Asphalte (chargée depuis version.json)
     /// </summary>
     public static string Version => _version.Value;
 
     /// <summary>
     /// Nom de l'application
     /// </summary>
-    public static string AppName => "Open Road";
+    public static string AppName => "Open Asphalte";
 
     /// <summary>
-    /// Chemin du dossier contenant OpenRoad.Core.dll
+    /// Chemin du dossier contenant OpenAsphalte.Core.dll
     /// </summary>
     public static string BasePath { get; private set; } = "";
 

@@ -1,6 +1,6 @@
-using OpenRoad.Abstractions;
+﻿using OpenAsphalte.Abstractions;
 
-namespace OpenRoad.Core.Resources;
+namespace OpenAsphalte.Core.Resources;
 
 /// <summary>
 /// Registre statique des crédits du Core pour l'affichage dans l'interface.

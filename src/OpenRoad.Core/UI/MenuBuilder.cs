@@ -1,4 +1,4 @@
-﻿// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,12 +12,12 @@
 using System.Runtime.InteropServices;
 using Autodesk.AutoCAD.Interop;
 using Autodesk.AutoCAD.Interop.Common;
-using OpenRoad.Discovery;
-using OpenRoad.Logging;
-using L10n = OpenRoad.Localization.Localization;
+using OpenAsphalte.Discovery;
+using OpenAsphalte.Logging;
+using L10n = OpenAsphalte.Localization.Localization;
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
-namespace OpenRoad.UI;
+namespace OpenAsphalte.UI;
 
 /// <summary>
 /// Wrapper IDisposable pour les objets COM AutoCAD.
@@ -69,16 +69,16 @@ internal sealed class ComWrapper<T> : IDisposable where T : class
 }
 
 /// <summary>
-/// Construction dynamique du menu contextuel Open Road.
+/// Construction dynamique du menu contextuel Open Asphalte.
 /// Génère automatiquement le menu basé sur les modules découverts.
 /// </summary>
 public static class MenuBuilder
 {
-    private const string DefaultMenuName = "Open Road";
+    private const string DefaultMenuName = "Open Asphalte";
     private static bool _menuCreated = false;
     
     /// <summary>
-    /// Crée le menu Open Road basé sur les modules découverts.
+    /// Crée le menu Open Asphalte basé sur les modules découverts.
     /// </summary>
     public static void CreateMenu()
     {
@@ -262,10 +262,10 @@ public static class MenuBuilder
                 
                 // === Commandes système (toujours présentes) ===
                 openRoadMenu.AddSeparator(idx++);
-                openRoadMenu.AddMenuItem(idx++, L10n.T("system.settings"), "OR_SETTINGS ");
-                openRoadMenu.AddMenuItem(idx++, L10n.T("system.help"), "OR_HELP ");
+                openRoadMenu.AddMenuItem(idx++, L10n.T("system.settings"), "OAS_SETTINGS ");
+                openRoadMenu.AddMenuItem(idx++, L10n.T("system.help"), "OAS_HELP ");
                 openRoadMenu.AddSeparator(idx++);
-                openRoadMenu.AddMenuItem(idx++, L10n.T("about.title"), "OR_VERSION ");
+                openRoadMenu.AddMenuItem(idx++, L10n.T("about.title"), "OAS_VERSION ");
                 
                 // Insérer dans la barre de menus si pas déjà présent
                 if (!menuExisted || !IsMenuInMenuBar(menuBarWrapper.Object, openRoadMenu.Name))
@@ -291,7 +291,7 @@ public static class MenuBuilder
     }
     
     /// <summary>
-    /// Vérifie si un nom correspond au menu Open Road (toutes langues)
+    /// Vérifie si un nom correspond au menu Open Asphalte (toutes langues)
     /// </summary>
     private static bool IsOpenRoadMenu(string? name)
     {
@@ -362,7 +362,7 @@ public static class MenuBuilder
     }
     
     /// <summary>
-    /// Supprime le menu Open Road de la barre de menus.
+    /// Supprime le menu Open Asphalte de la barre de menus.
     /// Note: Le menu reste dans le groupe de menus (limitation API COM AutoCAD).
     /// </summary>
     public static void RemoveMenu()

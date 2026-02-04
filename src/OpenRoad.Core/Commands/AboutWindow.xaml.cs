@@ -1,4 +1,4 @@
-// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -15,21 +15,21 @@ using System.Reflection;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using OpenRoad.Configuration;
-using OpenRoad.Discovery;
-using OpenRoad.Logging;
-using OpenRoad.Services;
-using L10n = OpenRoad.Localization.Localization;
+using OpenAsphalte.Configuration;
+using OpenAsphalte.Discovery;
+using OpenAsphalte.Logging;
+using OpenAsphalte.Services;
+using L10n = OpenAsphalte.Localization.Localization;
 
-namespace OpenRoad.Commands;
+namespace OpenAsphalte.Commands;
 
 /// <summary>
-/// Fen�tre "� propos" d'Open Road
+/// Fenêtre "à propos" d'Open Asphalte
 /// </summary>
 public partial class AboutWindow : Window
 {
     private string _updateUrl = "";
-    
+
     public AboutWindow()
     {
         InitializeComponent();
@@ -37,7 +37,7 @@ public partial class AboutWindow : Window
         LoadVersionInfo();
         UpdateLocalizedText();
     }
-    
+
     /// <summary>
     /// Charge le logo depuis les ressources
     /// </summary>
@@ -54,25 +54,25 @@ public partial class AboutWindow : Window
             Logger.Debug($"Logo loading failed: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Charge les informations de version depuis version.json
     /// </summary>
     private void LoadVersionInfo()
     {
         string channel = "release";
-        
+
         try
         {
             var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
             var versionFile = Path.Combine(basePath, "version.json");
-            
+
             if (File.Exists(versionFile))
             {
                 var json = File.ReadAllText(versionFile);
                 using var doc = JsonDocument.Parse(json);
                 var root = doc.RootElement;
-                
+
                 txtVersion.Text = GetJsonString(root, "version", Plugin.Version);
                 txtBuildDate.Text = GetJsonString(root, "build", "");
                 channel = GetJsonString(root, "channel", "release");
@@ -88,7 +88,7 @@ public partial class AboutWindow : Window
                 txtFramework.Text = "net8.0-windows";
                 _updateUrl = Configuration.Configuration.UpdateUrl;
             }
-            
+
             // Informations dynamiques
             var modules = ModuleDiscovery.Modules;
             var commands = ModuleDiscovery.AllCommands;
@@ -100,18 +100,18 @@ public partial class AboutWindow : Window
             txtVersion.Text = Plugin.Version;
             _updateUrl = Configuration.Configuration.UpdateUrl;
         }
-        
+
         // Afficher le badge warning pour les versions pre-release
         UpdateChannelWarningBadge(channel);
     }
-    
+
     /// <summary>
     /// Met à jour le badge d'avertissement selon le canal de release
     /// </summary>
     private void UpdateChannelWarningBadge(string channel)
     {
         var lowerChannel = channel.ToLowerInvariant();
-        
+
         if (lowerChannel == "alpha")
         {
             badgeWarning.Visibility = Visibility.Visible;
@@ -131,7 +131,7 @@ public partial class AboutWindow : Window
             badgeWarning.Visibility = Visibility.Collapsed;
         }
     }
-    
+
     /// <summary>
     /// Extrait une valeur string d'un JsonElement
     /// </summary>
@@ -143,7 +143,7 @@ public partial class AboutWindow : Window
         }
         return defaultValue;
     }
-    
+
     /// <summary>
     /// Met à jour les textes localisés
     /// </summary>
@@ -151,28 +151,28 @@ public partial class AboutWindow : Window
     {
         Title = L10n.T("about.title");
         txtSubtitle.Text = L10n.T("about.subtitle");
-        
+
         lblVersion.Text = L10n.T("about.version");
         lblBuildDate.Text = L10n.T("about.buildDate");
         lblChannel.Text = L10n.T("about.channel");
         lblFramework.Text = L10n.T("about.framework");
         lblModules.Text = L10n.T("about.modules");
         lblCommands.Text = L10n.T("about.commands");
-        
+
         txtLicense.Text = L10n.T("about.license");
-        
+
         btnUpdate.Content = "⬇ " + L10n.T("about.checkUpdate");
         btnCredits.Content = "❤ " + L10n.T("about.credits", "Credits");
         btnClose.Content = L10n.T("about.close");
     }
-    
+
     private void OnCreditsClick(object sender, RoutedEventArgs e)
     {
         var creditsWindow = new OpenRoad.Core.Commands.CreditsWindow();
         creditsWindow.Owner = this;
         creditsWindow.ShowDialog();
     }
-    
+
     /// <summary>
     /// Ouvre la page des mises a jour
     /// </summary>
@@ -189,7 +189,7 @@ public partial class AboutWindow : Window
                     MessageBoxImage.Warning);
                 return;
             }
-            
+
             Process.Start(new ProcessStartInfo(_updateUrl) { UseShellExecute = true });
             Logger.Info(L10n.TFormat("system.update.opening"));
         }
@@ -202,7 +202,7 @@ public partial class AboutWindow : Window
                 MessageBoxImage.Error);
         }
     }
-    
+
     /// <summary>
     /// Ferme la fen�tre
     /// </summary>

@@ -5,15 +5,15 @@
 ; La version est extraite par le script de build (build-install.ps1)
 ; Fallback si compilé directement sans le script
 #ifndef MyAppVersion
-  #define MyAppVersion GetStringFileInfo("..\bin\OpenRoad.Core.dll", "ProductVersion")
+  #define MyAppVersion GetStringFileInfo("..\bin\OpenAsphalte.Core.dll", "ProductVersion")
   #if MyAppVersion == ""
     #define MyAppVersion "0.0.1"
   #endif
 #endif
 
-#define MyAppName "Open Road"
-#define MyAppPublisher "Open Road Contributors"
-#define MyAppURL "https://github.com/openroadplugin/openroad"
+#define MyAppName "Open Asphalte"
+#define MyAppPublisher "Open Asphalte Contributors"
+#define MyAppURL "https://github.com/openasphalteplugin/openasphalte"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -26,19 +26,19 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={userappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle
+DefaultDirName={userappdata}\Autodesk\ApplicationPlugins\OpenAsphalte.bundle
 DisableDirPage=yes
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 ArchitecturesInstallIn64BitMode=x64compatible
-OutPutBaseFilename=OpenRoad_Setup_v{#MyAppVersion}
+OutPutBaseFilename=OpenAsphalte_Setup_v{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 ; Logo dans le wizard d'installation
-SetupIconFile=..\OpenRoad_Logo.ico
+SetupIconFile=..\OpenAsphalte_Logo.ico
 WizardImageFile=WizardImage.bmp
 WizardSmallImageFile=WizardSmallImage.bmp
 
@@ -56,14 +56,14 @@ Source: "..\version.json"; DestDir: "{app}\Contents"; Flags: ignoreversion
 
 ; Place binaries in Contents subfolder
 ; NOTE: Adjust the source path "..\bin" depending on where you run the compiler from.
-Source: "..\bin\OpenRoad.Core.dll"; DestDir: "{app}\Contents"; Flags: ignoreversion
-Source: "..\bin\OpenRoad.Core.deps.json"; DestDir: "{app}\Contents"; Flags: ignoreversion
-Source: "..\bin\OpenRoad.Core.runtimeconfig.json"; DestDir: "{app}\Contents"; Flags: ignoreversion
-Source: "..\bin\OpenRoad.Core.pdb"; DestDir: "{app}\Contents"; Flags: ignoreversion skipifsourcedoesntexist; Tasks: devmode
+Source: "..\bin\OpenAsphalte.Core.dll"; DestDir: "{app}\Contents"; Flags: ignoreversion
+Source: "..\bin\OpenAsphalte.Core.deps.json"; DestDir: "{app}\Contents"; Flags: ignoreversion
+Source: "..\bin\OpenAsphalte.Core.runtimeconfig.json"; DestDir: "{app}\Contents"; Flags: ignoreversion
+Source: "..\bin\OpenAsphalte.Core.pdb"; DestDir: "{app}\Contents"; Flags: ignoreversion skipifsourcedoesntexist; Tasks: devmode
 ; NOTE: Les modules ne sont PAS inclus dans l'installeur.
-; Ils sont téléchargés via le Gestionnaire de Modules (OR_MODULES) depuis GitHub.
-; Source: "..in\Modules\*"; DestDir: "{app}\Contents\Modules"; ... (désactivé)
-Source: "..\OpenRoad_Logo.png"; DestDir: "{app}\Contents\Resources"; Flags: ignoreversion
+; Ils sont téléchargés via le Gestionnaire de Modules (OAS_MODULES) depuis GitHub.
+; Source: "..in\Modules\*"; DestDir: "{app}\Contents\Modules"; ... (désactivé)
+Source: "..\OpenAsphalte_Logo.png"; DestDir: "{app}\Contents\Resources"; Flags: ignoreversion
 
 ; Fallback install in LocalAppData for AutoCAD variants not scanning Roaming
 Source: "PackageContents.xml"; DestDir: "{localappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle"; Flags: ignoreversion
@@ -83,21 +83,21 @@ Name: "devmode"; Description: "Installer les fichiers de debug (PDB)"; GroupDesc
 Name: "{app}\Contents"
 Name: "{app}\Contents\Modules"
 Name: "{app}\Contents\Resources"
-Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle\Contents"
-Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle\Contents\Modules"
-Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle\Contents\Resources"
+Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenAsphalte.bundle\Contents"
+Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenAsphalte.bundle\Contents\Modules"
+Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenAsphalte.bundle\Contents\Resources"
 ; Ensure config folder exists
-Name: "{localappdata}\Open Road"; Permissions: users-modify
+Name: "{localappdata}\Open Asphalte"; Permissions: users-modify
 
 [UninstallDelete]
 ; Supprimer les modules téléchargés
 Type: filesandordirs; Name: "{app}\Contents\Modules\*"
-Type: filesandordirs; Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle\Contents\Modules\*"
+Type: filesandordirs; Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenAsphalte.bundle\Contents\Modules\*"
 ; Supprimer complètement les dossiers bundle
 Type: filesandordirs; Name: "{app}"
-Type: filesandordirs; Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle"
+Type: filesandordirs; Name: "{localappdata}\Autodesk\ApplicationPlugins\OpenAsphalte.bundle"
 ; Optionnel: supprimer la configuration utilisateur (commenté par défaut)
-; Type: filesandordirs; Name: "{localappdata}\Open Road"
+; Type: filesandordirs; Name: "{localappdata}\Open Asphalte"
 
 [Code]
 var
@@ -170,15 +170,15 @@ end;
 function GetUninstallCompleteMessage: String;
 begin
   case ActiveLanguage of
-    'french': Result := 'Open Road a été désinstallé avec succès.' + #13#10 + #13#10 +
-                        'Note: Le dossier de configuration (%LOCALAPPDATA%\Open Road) a été conservé.' + #13#10 +
+    'french': Result := 'Open Asphalte a été désinstallé avec succès.' + #13#10 + #13#10 +
+                        'Note: Le dossier de configuration (%LOCALAPPDATA%\Open Asphalte) a été conservé.' + #13#10 +
                         'Supprimez-le manuellement si vous souhaitez effacer tous les paramètres.';
-    'spanish': Result := 'Open Road se ha desinstalado correctamente.' + #13#10 + #13#10 +
-                         'Nota: La carpeta de configuración (%LOCALAPPDATA%\Open Road) se ha conservado.' + #13#10 +
+    'spanish': Result := 'Open Asphalte se ha desinstalado correctamente.' + #13#10 + #13#10 +
+                         'Nota: La carpeta de configuración (%LOCALAPPDATA%\Open Asphalte) se ha conservado.' + #13#10 +
                          'Elimínela manualmente si desea borrar toda la configuración.';
   else
-    Result := 'Open Road has been successfully uninstalled.' + #13#10 + #13#10 +
-              'Note: The configuration folder (%LOCALAPPDATA%\Open Road) has been kept.' + #13#10 +
+    Result := 'Open Asphalte has been successfully uninstalled.' + #13#10 + #13#10 +
+              'Note: The configuration folder (%LOCALAPPDATA%\Open Asphalte) has been kept.' + #13#10 +
               'Delete it manually if you want to remove all settings.';
   end;
 end;
@@ -244,8 +244,8 @@ begin
   if CurUninstallStep = usPostUninstall then
   begin
     // Chemins des bundles
-    AppDataPath := ExpandConstant('{userappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle');
-    LocalAppDataPath := ExpandConstant('{localappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle');
+    AppDataPath := ExpandConstant('{userappdata}\Autodesk\ApplicationPlugins\OpenAsphalte.bundle');
+    LocalAppDataPath := ExpandConstant('{localappdata}\Autodesk\ApplicationPlugins\OpenAsphalte.bundle');
 
     // Supprimer le dossier bundle principal s'il existe encore
     if DirExists(AppDataPath) then
@@ -329,7 +329,7 @@ begin
   CompatibleVersionsPage := CreateOutputMsgMemoPage(wpWelcome,
     'Compatibilité AutoCAD',
     'Vérification des versions installées',
-    'L''assistant recherche des versions d''AutoCAD compatibles avec Open Road (.NET 8 / AutoCAD 2025+).',
+    'L''assistant recherche des versions d''AutoCAD compatibles avec Open Asphalte (.NET 8 / AutoCAD 2025+).',
     '');
 
   if VersionsFound then
@@ -338,7 +338,7 @@ begin
   end
   else
   begin
-    CompatibleVersionsPage.RichEditViewer.Lines.Text := '⚠️ AUCUNE VERSION COMPATIBLE DÉTECTÉE !' + #13#10 + #13#10 + 'Open Road nécessite AutoCAD 2025 ou supérieur (Série R25.0+ / .NET 8).' + #13#10 + #13#10 + 'Vous pouvez continuer l''installation, mais le plugin ne sera probablement pas chargé par vos versions actuelles.';
+    CompatibleVersionsPage.RichEditViewer.Lines.Text := '⚠️ AUCUNE VERSION COMPATIBLE DÉTECTÉE !' + #13#10 + #13#10 + 'Open Asphalte nécessite AutoCAD 2025 ou supérieur (Série R25.0+ / .NET 8).' + #13#10 + #13#10 + 'Vous pouvez continuer l''installation, mais le plugin ne sera probablement pas chargé par vos versions actuelles.';
   end;
 end;
 // You can add custom code here if needed

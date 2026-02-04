@@ -25,7 +25,7 @@ Ce module **dépend** du module "setprojection" (Géoréférencement) pour :
 
 ## Commandes
 
-### OR_STREETVIEW
+### OAS_STREETVIEW
 
 Ouvre Google Street View depuis un point du dessin.
 
@@ -64,7 +64,7 @@ Le module supporte les langues :
 ## Exemple d'utilisation
 
 ```
-Commande: OR_STREETVIEW
+Commande: OAS_STREETVIEW
 Sélectionnez le point de vue: [clic]
 Sélectionnez la direction: [clic]
 > Coordonnées WGS84: Lat=48.858844°, Lon=2.294351°

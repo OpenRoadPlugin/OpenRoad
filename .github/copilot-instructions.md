@@ -1,4 +1,4 @@
-# Open Road – Context IA Complet
+# Open Asphalte – Context IA Complet
 
 > **Document optimisé pour agents IA** | Version 2026.02.04 | .NET 8.0 / AutoCAD 2025+
 
@@ -6,7 +6,7 @@
 
 ## 🤖 CONTEXTE IA – RÔLE ET EXPERTISE REQUISE
 
-**Agis comme un Expert Technique Polyvalent sur le projet Open Road.**
+**Agis comme un Expert Technique Polyvalent sur le projet Open Asphalte.**
 
 Tu es capable de jongler entre deux casquettes selon la demande :
 1. **Architecte Core** : Garant de la stabilité, de l'API et de l'infrastructure.
@@ -58,9 +58,9 @@ WriteMessage($"\n{T("select.point")}: ");
 
 ### Ce que tu NE FAIS JAMAIS
 
-- ❌ Modifier les fichiers dans `src/OpenRoad.Core/` pour ajouter des fonctionnalités métier
+- ❌ Modifier les fichiers dans `src/OpenAsphalte.Core/` pour ajouter des fonctionnalités métier
 - ❌ Ajouter des commandes dans `SystemCommands.cs`
-- ❌ Créer des commandes sans le préfixe `OR_`
+- ❌ Créer des commandes sans le préfixe `OAS_`
 - ❌ Oublier les traductions (FR, EN, ES obligatoires)
 - ❌ Manipuler la Database sans transaction
 - ❌ Ignorer `ExecuteSafe()` dans une commande
@@ -69,7 +69,7 @@ WriteMessage($"\n{T("select.point")}: ");
 
 ## 🎯 IDENTITÉ DU PROJET
 
-**Open Road** est un plugin **C# modulaire** pour AutoCAD, destiné aux professionnels de la voirie et de l'aménagement urbain.
+**Open Asphalte** est un plugin **C# modulaire** pour AutoCAD, destiné aux professionnels de la voirie et de l'aménagement urbain.
 
 ### Caractéristiques techniques
 |--------------|----------------------------------------------|
@@ -90,7 +90,7 @@ WriteMessage($"\n{T("select.point")}: ");
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
-║  LE CŒUR (OpenRoad.Core) NE DOIT JAMAIS ÊTRE MODIFIÉ POUR        ║
+║  LE CŒUR (OpenAsphalte.Core) NE DOIT JAMAIS ÊTRE MODIFIÉ POUR    ║
 ║  AJOUTER UN MODULE OU UNE FONCTIONNALITÉ MÉTIER.                 ║
 ║                                                                  ║
 ║  Les modules sont des DLL séparées, découvertes automatiquement. ║
@@ -104,9 +104,9 @@ WriteMessage($"\n{T("select.point")}: ");
 ## 📁 ARCHITECTURE FICHIERS
 
 ```
-OpenRoad/
+OpenAsphalte/
 ├── src/
-│   └── OpenRoad.Core/                    # ⛔ CŒUR - NE PAS MODIFIER POUR MODULES
+│   └── OpenAsphalte.Core/                # ⛔ CŒUR - NE PAS MODIFIER POUR MODULES
 │       ├── Plugin.cs                     # Point d'entrée IExtensionApplication
 │       ├── Abstractions/                 # Interfaces publiques pour modules
 │       │   ├── IModule.cs                # Interface module (à implémenter)
@@ -128,18 +128,18 @@ OpenRoad/
 │       │   ├── MenuBuilder.cs            # Menu contextuel auto-généré
 │       │   └── RibbonBuilder.cs          # Ruban auto-généré
 │       └── Commands/
-│           ├── SystemCommands.cs         # OR_HELP, OR_VERSION, OR_SETTINGS...
+│           ├── SystemCommands.cs         # OAS_HELP, OAS_VERSION, OAS_SETTINGS...
 │           └── SettingsWindow.xaml(.cs)  # Fenêtre paramètres WPF
 │
 ├── templates/                            # ✅ TEMPLATES POUR NOUVEAUX MODULES
-│   ├── OpenRoad.Module.Template.csproj
+│   ├── OAS.Module.Template.csproj
 │   ├── ModuleTemplate.cs
 │   └── CommandTemplate.cs
 │
 ├── bin/
-│   ├── OpenRoad.Core.dll                 # DLL principale compilée
+│   ├── OAS.Core.dll                      # DLL principale compilée
 │   └── Modules/                          # 📦 DOSSIER MODULES EXTERNES
-│       └── (DLL OpenRoad.*.dll)          # Découvertes automatiquement
+│       └── (DLL OAS.*.dll)               # Découvertes automatiquement
 │
 └── version.json                          # Version centralisée du projet
 ```
@@ -149,12 +149,12 @@ OpenRoad/
 ## 🔄 FLUX DE DÉMARRAGE
 
 ```
-1. AutoCAD → NETLOAD OpenRoad.Core.dll
+1. AutoCAD → NETLOAD OAS.Core.dll
 2. Plugin.Initialize() appelé
 3. Configuration.Load() → charge config JSON
 4. Localization.Initialize() → charge traductions
 5. ModuleDiscovery.DiscoverAndLoad() :
-   └─ Scan Modules/*.dll (pattern OpenRoad.*.dll)
+   └─ Scan Modules/*.dll (pattern OAS.*.dll)
    └─ Pour chaque DLL :
       ├─ Recherche classes IModule
       ├─ Instanciation + validation dépendances
@@ -169,14 +169,14 @@ OpenRoad/
 
 ## 📋 COMMANDES SYSTÈME (toujours disponibles)
 
-| Commande      | Description                          | Fichier           |
-|---------------|--------------------------------------|-------------------|
-| `OR_HELP`     | Liste des commandes disponibles      | SystemCommands.cs |
-| `OR_VERSION`  | Version et modules chargés           | SystemCommands.cs |
-| `OR_SETTINGS` | Fenêtre paramètres (langue, devmode) | SystemCommands.cs |
-| `OR_RELOAD`   | Recharge configuration + UI          | SystemCommands.cs |
-| `OR_UPDATE`   | Ouvre page releases GitHub           | SystemCommands.cs |
-|---------------|--------------------------------------|-------------------|
+| Commande       | Description                          | Fichier           |
+|----------------|--------------------------------------|-------------------|
+| `OAS_HELP`     | Liste des commandes disponibles      | SystemCommands.cs |
+| `OAS_VERSION`  | Version et modules chargés           | SystemCommands.cs |
+| `OAS_SETTINGS` | Fenêtre paramètres (langue, devmode) | SystemCommands.cs |
+| `OAS_RELOAD`   | Recharge configuration + UI          | SystemCommands.cs |
+| `OAS_UPDATE`   | Ouvre page releases GitHub           | SystemCommands.cs |
+|----------------|--------------------------------------|-------------------|
 
 ---
 
@@ -186,8 +186,8 @@ OpenRoad/
 
 ```
 modules/
-└── OpenRoad.MonModule/
-    ├── OpenRoad.MonModule.csproj
+└── OpenAsphalte.MonModule/
+    ├── OpenAsphalte.MonModule.csproj
     ├── MonModuleModule.cs          # Hérite ModuleBase
     └── Commands/
         └── MaCommande.cs           # Hérite CommandBase
@@ -204,9 +204,9 @@ modules/
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     
-    <!-- ⚠️ OBLIGATOIRE: Doit commencer par "OpenRoad." -->
-    <AssemblyName>OpenRoad.MonModule</AssemblyName>
-    <RootNamespace>OpenRoad.Modules.MonModule</RootNamespace>
+    <!-- ⚠️ OBLIGATOIRE: Doit commencer par "OAS." -->
+    <AssemblyName>OAS.MonModule</AssemblyName>
+    <RootNamespace>OpenAsphalte.Modules.MonModule</RootNamespace>
     
     <!-- Output dans Modules/ -->
     <OutputPath>..\..\bin\Modules\</OutputPath>
@@ -214,8 +214,8 @@ modules/
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="OpenRoad.Core">
-      <HintPath>..\..\bin\OpenRoad.Core.dll</HintPath>
+    <Reference Include="OAS.Core">
+      <HintPath>..\..\bin\OAS.Core.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <!-- Références AutoCAD (Private=false car déjà chargées) -->
@@ -229,9 +229,9 @@ modules/
 ### Étape 3 : Classe Module
 
 ```csharp
-using OpenRoad.Abstractions;
+using OpenAsphalte.Abstractions;
 
-namespace OpenRoad.Modules.MonModule;
+namespace OpenAsphalte.Modules.MonModule;
 
 public class MonModuleModule : ModuleBase
 {
@@ -317,15 +317,15 @@ using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
-using OpenRoad.Abstractions;
-using OpenRoad.Logging;
-using OpenRoad.Services;
+using OpenAsphalte.Abstractions;
+using OpenAsphalte.Logging;
+using OpenAsphalte.Services;
 
-namespace OpenRoad.Modules.MonModule.Commands;
+namespace OpenAsphalte.Modules.MonModule.Commands;
 
 public class MaCommande : CommandBase
 {
-    [CommandMethod("OR_MONMODULE_ACTION")]  // ⚠️ Préfixe OR_ obligatoire
+    [CommandMethod("OAS_MONMODULE_ACTION")]  // ⚠️ Préfixe OAS_ obligatoire
     [CommandInfo("Ma Commande",
         Description = "Description de la commande",
         DisplayNameKey = "monmodule.cmd.title",
@@ -362,7 +362,7 @@ public class MaCommande : CommandBase
                 
                 // Exemple: créer un cercle
                 using var circle = new Circle(point, Vector3d.ZAxis, 1.0);
-                circle.Layer = "OR_MONMODULE_CERCLES"; // Convention calque
+                circle.Layer = "OAS_MONMODULE_CERCLES"; // Convention calque
                 
                 btr.AppendEntity(circle);
                 tr.AddNewlyCreatedDBObject(circle, true);
@@ -467,7 +467,7 @@ public abstract class ModuleBase : IModule
 ### Logger
 
 ```csharp
-using OpenRoad.Logging;
+using OpenAsphalte.Logging;
 
 Logger.Debug("Message debug");    // Seulement si DevMode=true
 Logger.Info("Information");       // [INFO] ...
@@ -480,7 +480,7 @@ Logger.Raw("Brut");               // Sans préfixe
 ### GeometryService
 
 ```csharp
-using OpenRoad.Services;
+using OpenAsphalte.Services;
 using Autodesk.AutoCAD.Geometry;
 
 // ═══════════════════════════════════════════════════════════════════
@@ -636,13 +636,13 @@ double vol = GeometryService.TriangularPrismVolume(p1, p2, p3, referenceZ);
 ### LayerService
 
 ```csharp
-using OpenRoad.Services;
+using OpenAsphalte.Services;
 using AcColor = Autodesk.AutoCAD.Colors.Color;
 
 ExecuteInTransaction(tr =>
 {
     // Créer ou récupérer un calque
-    ObjectId layerId = LayerService.EnsureLayer(Database, tr, "OR_MONMODULE_LAYER",
+    ObjectId layerId = LayerService.EnsureLayer(Database, tr, "OAS_MONMODULE_LAYER",
         color: AcColor.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 1),
         linetype: "CONTINUOUS");
     
@@ -661,7 +661,7 @@ ExecuteInTransaction(tr =>
 ### Configuration
 
 ```csharp
-using OpenRoad.Configuration;
+using OpenAsphalte.Configuration;
 
 // Propriétés raccourcis
 string lang = Configuration.Language;         // "fr", "en", "es"
@@ -675,7 +675,7 @@ Configuration.Set<T>("key", value);
 Configuration.Save();
 Configuration.Reload();
 
-// Chemin config: %AppData%/Open Road/config.json
+// Chemin config: %AppData%/Open Asphalte/config.json
 string folder = Configuration.ConfigurationFolder;
 string file = Configuration.ConfigurationFile;
 
@@ -686,7 +686,7 @@ Configuration.OnSettingChanged += (key, value) => { /* ... */ };
 ### Localization
 
 ```csharp
-using L10n = OpenRoad.Localization.Localization;
+using L10n = OpenAsphalte.Localization.Localization;
 
 // Langue courante
 string lang = L10n.CurrentLanguage;                  // "fr", "en", "es"
@@ -717,7 +717,7 @@ L10n.RegisterTranslations("fr", new Dictionary<string, string>
 ### ModuleDiscovery
 
 ```csharp
-using OpenRoad.Discovery;
+using OpenAsphalte.Discovery;
 
 // Modules chargés
 IReadOnlyList<IModule> modules = ModuleDiscovery.Modules;
@@ -740,8 +740,8 @@ var grouped = ModuleDiscovery.GetCommandsByModule();
 
 | Élément | Convention | Exemple |
 |---------|------------|---------|
-| Assembly | `OpenRoad.{Module}` | `OpenRoad.Voirie` |
-| Namespace | `OpenRoad.Modules.{Module}` | `OpenRoad.Modules.Voirie` |
+| Assembly | `OAS.{Module}` | `OAS.Voirie` |
+| Namespace | `OpenAsphalte.Modules.{Module}` | `OpenAsphalte.Modules.Voirie` |
 | Classe Module | `{Module}Module` | `VoirieModule` |
 | Classe Commande | `{Action}Command` | `ParkingCommand` |
 
@@ -749,9 +749,9 @@ var grouped = ModuleDiscovery.GetCommandsByModule();
 
 | Règle | Format | Exemple |
 |-------|--------|---------|
-| Préfixe obligatoire | `OR_` | `OR_PARKING` |
-| Module + Action | `OR_{MODULE}_{ACTION}` | `OR_VOIRIE_PARKING` |
-| Tout majuscules | `[A-Z0-9_]+` | `OR_TOPO_IMPORT` |
+| Préfixe obligatoire | `OAS_` | `OAS_PARKING` |
+| Module + Action | `OAS_{MODULE}_{ACTION}` | `OAS_VOIRIE_PARKING` |
+| Tout majuscules | `[A-Z0-9_]+` | `OAS_TOPO_IMPORT` |
 
 ### Clés de traduction
 
@@ -764,8 +764,8 @@ var grouped = ModuleDiscovery.GetCommandsByModule();
 
 | Règle | Format | Exemple |
 |-------|--------|---------|
-| Préfixe | `OR_` | `OR_PARKING` |
-| Module + Élément | `OR_{MODULE}_{ELEMENT}` | `OR_VOIRIE_AXES` |
+| Préfixe | `OAS_` | `OAS_PARKING` |
+| Module + Élément | `OAS_{MODULE}_{ELEMENT}` | `OAS_VOIRIE_AXES` |
 
 ---
 
@@ -776,25 +776,25 @@ var grouped = ModuleDiscovery.GetCommandsByModule();
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using AcColor = Autodesk.AutoCAD.Colors.Color;
 using AcColorMethod = Autodesk.AutoCAD.Colors.ColorMethod;
-using L10n = OpenRoad.Localization.Localization;
+using L10n = OpenAsphalte.Localization.Localization;
 ```
 
 ---
 
 ## 🏗️ COMPILATION
 
-### Core (depuis src/OpenRoad.Core/)
+### Core (depuis src/OAS.Core/)
 
 ```bash
 dotnet build -c Release
-# Output: bin/OpenRoad.Core.dll
+# Output: bin/OAS.Core.dll
 ```
 
-### Module (depuis modules/OpenRoad.MonModule/)
+### Module (depuis modules/OAS.MonModule/)
 
 ```bash
 dotnet build -c Release
-# Output: bin/Modules/OpenRoad.MonModule.dll
+# Output: bin/Modules/OAS.MonModule.dll
 ```
 
 ---
@@ -802,9 +802,9 @@ dotnet build -c Release
 ## 🧪 TEST DANS AUTOCAD
 
 1. Lancer AutoCAD 2025+
-2. Commande `NETLOAD` → sélectionner `bin/OpenRoad.Core.dll`
-3. Vérifier chargement : `OR_HELP` → liste des commandes
-4. Vérifier modules : `OR_VERSION` → modules chargés
+2. Commande `NETLOAD` → sélectionner `bin/OAS.Core.dll`
+3. Vérifier chargement : `OAS_HELP` → liste des commandes
+4. Vérifier modules : `OAS_VERSION` → modules chargés
 
 ---
 
@@ -812,13 +812,13 @@ dotnet build -c Release
 
 ### ✅ FAIRE (Modules)
 
-- Créer une **nouvelle DLL** dans `modules/OpenRoad.{Module}/`
+- Créer une **nouvelle DLL** dans `modules/OAS.{Module}/`
 - Hériter de `ModuleBase` pour le module
 - Hériter de `CommandBase` pour les commandes
 - Utiliser les services existants (`GeometryService`, `LayerService`...)
 - Fournir traductions FR, EN, ES dans `GetTranslations()`
-- Préfixer commandes par `OR_`
-- Préfixer calques par `OR_`
+- Préfixer commandes par `OAS_`
+- Préfixer calques par `OAS_`
 - Utiliser `ExecuteSafe()` pour toute commande
 - Utiliser `ExecuteInTransaction()` pour modifications DB
 
@@ -895,7 +895,7 @@ refactor: [description]        # Refactoring
 │                     VotreCommande                               │
 │  (votre classe)                                                 │
 │  ─────────────────────────────────────────────────────────────  │
-│  [CommandMethod("OR_VOTRE_COMMANDE")]                           │
+│  [CommandMethod("OAS_VOTRE_COMMANDE")]                          │
 │  [CommandInfo("Nom", Description="...", ...)]                   │
 │  public void Execute() { ExecuteSafe(() => {...}); }            │
 └─────────────────────────────────────────────────────────────────┘
@@ -927,23 +927,23 @@ refactor: [description]        # Refactoring
 ## 🎯 CHECKLIST NOUVEAU MODULE
 
 ```
-□ Créer dossier modules/OpenRoad.{Module}/
-□ Créer .csproj avec AssemblyName commençant par "OpenRoad."
+□ Créer dossier modules/OAS.{Module}/
+□ Créer .csproj avec AssemblyName commençant par "OAS."
 □ Créer classe {Module}Module héritant ModuleBase
   □ Implémenter Id, Name, Description
   □ Implémenter GetCommandTypes()
   □ Implémenter GetTranslations() (FR, EN, ES)
 □ Créer commandes héritant CommandBase
-  □ Attribut [CommandMethod("OR_...")] 
+  □ Attribut [CommandMethod("OAS_...")] 
   □ Attribut [CommandInfo(...)]
   □ Utiliser ExecuteSafe() dans Execute()
   □ Utiliser ExecuteInTransaction() pour modifications
 □ Compiler → vérifier DLL dans bin/Modules/
 □ Tester dans AutoCAD avec NETLOAD
-□ Vérifier OR_VERSION affiche le module
-□ Vérifier OR_HELP liste les commandes
+□ Vérifier OAS_VERSION affiche le module
+□ Vérifier OAS_HELP liste les commandes
 ```
 
 ---
 
-*Document généré pour Open Road v0.0.1 | .NET 8.0 | AutoCAD 2025+*
+*Document généré pour Open Asphalte v0.0.2 | .NET 8.0 | AutoCAD 2025+*

@@ -9,18 +9,16 @@
                 "build",
                 "-c",
                 "Release",
-                "${workspaceFolder}/src/OpenRoad.sln"
+                "${workspaceFolder}/src/OAS.sln"
             ],
             "group": "build",
             "problemMatcher": "$msCompile"
         },
         {
             "label": "build:installer",
-            "command": "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe",
+            "command": "& 'C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe' '${workspaceFolder}\\installer\\OAS.iss'",
             "type": "shell",
-            "args": [
-                "\"${workspaceFolder}/installer/OpenRoad.iss\""
-            ],
+            "args": [],
             "group": "build",
             "presentation": {
                 "reveal": "always"

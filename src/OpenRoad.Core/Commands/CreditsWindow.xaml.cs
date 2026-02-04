@@ -1,16 +1,16 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using OpenRoad.Abstractions;
-using OpenRoad.Core.Resources;
-using OpenRoad.Discovery;
-using OpenRoad.Localization;
+using OpenAsphalte.Abstractions;
+using OpenAsphalte.Core.Resources;
+using OpenAsphalte.Discovery;
+using OpenAsphalte.Localization;
 
-namespace OpenRoad.Core.Commands;
+namespace OpenAsphalte.Core.Commands;
 
 public partial class CreditsWindow : Window
 {

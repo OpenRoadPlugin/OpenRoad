@@ -1,4 +1,4 @@
-﻿// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,21 +12,21 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using OpenRoad.Diagnostics;
-using OpenRoad.Logging;
-using L10n = OpenRoad.Localization.Localization;
+using OpenAsphalte.Diagnostics;
+using OpenAsphalte.Logging;
+using L10n = OpenAsphalte.Localization.Localization;
 
-namespace OpenRoad.Configuration;
+namespace OpenAsphalte.Configuration;
 
 /// <summary>
-/// Gestion de la configuration utilisateur Open Road.
+/// Gestion de la configuration utilisateur Open Asphalte.
 /// Stocke les parametres dans un fichier JSON dans AppData.
 /// </summary>
 public static class Configuration
 {
     private static readonly string ConfigFolder = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "Open Road"
+        "Open Asphalte"
     );
     
     private static readonly string ConfigFile = Path.Combine(ConfigFolder, "config.json");

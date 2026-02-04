@@ -1,0 +1,2618 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OAS.Core</name>
+    </assembly>
+    <members>
+        <member name="T:OpenAsphalte.Abstractions.TransactionException">
+            <summary>
+            Exception métier pour signaler une erreur récupérable dans une transaction.
+            Utilisez cette exception pour indiquer une erreur de validation ou de logique métier
+            qui doit annuler la transaction et afficher un message à l'utilisateur.
+            </summary>
+            <remarks>
+            <para>
+            Cette exception est capturée par <see cref="M:OpenAsphalte.Abstractions.CommandBase.ExecuteInTransaction(System.Action{Autodesk.AutoCAD.DatabaseServices.Transaction})"/>
+            et affiche le message à l'utilisateur sans stack trace.
+            </para>
+            <example>
+            <code>
+            ExecuteInTransaction(tr =>
+            {
+                if (radius &lt; 0.5)
+                    throw new TransactionException(T("error.radiusTooSmall", "Le rayon est trop petit (min: 0.5m)"));
+                // ... reste du code
+            });
+            </code>
+            </example>
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.TransactionException.#ctor(System.String)">
+            <summary>
+            Crée une nouvelle exception de transaction avec un message utilisateur.
+            </summary>
+            <param name="message">Message à afficher à l'utilisateur</param>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.TransactionException.#ctor(System.String,System.Exception)">
+            <summary>
+            Crée une nouvelle exception de transaction avec un message et une exception interne.
+            </summary>
+            <param name="message">Message à afficher à l'utilisateur</param>
+            <param name="innerException">Exception d'origine</param>
+        </member>
+        <member name="T:OpenAsphalte.Abstractions.CommandBase">
+            <summary>
+            Classe de base pour toutes les commandes Open Asphalte.
+            Fournit un accès simplifié aux objets AutoCAD et aux services du framework.
+            </summary>
+            <remarks>
+            <para>
+            Héritez de cette classe pour créer vos commandes :
+            <code>
+            public class MaCommande : CommandBase
+            {
+                [CommandMethod("OAS_MACOMMANDE")]
+                [CommandInfo("Ma Commande", Description = "Description de ma commande")]
+                public void Execute()
+                {
+                    ExecuteSafe(() =>
+                    {
+                        // Votre code ici
+                        ExecuteInTransaction(tr =>
+                        {
+                            // Opérations avec transaction
+                        });
+                    });
+                }
+            }
+            </code>
+            </para>
+            </remarks>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandBase.Document">
+            <summary>
+            Document AutoCAD actif
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandBase.Database">
+            <summary>
+            Database du document actif
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandBase.Editor">
+            <summary>
+            Éditeur du document actif
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandBase.IsDocumentValid">
+            <summary>
+            Vérifie que le document est valide et accessible
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.CommandBase.ExecuteInTransaction(System.Action{Autodesk.AutoCAD.DatabaseServices.Transaction})">
+            <summary>
+            Exécute une action dans une transaction AutoCAD.
+            La transaction est automatiquement commitée ou annulée en cas d'exception.
+            </summary>
+            <param name="action">Action à exécuter avec la transaction</param>
+            <example>
+            <code>
+            ExecuteInTransaction(tr =>
+            {
+                var btr = (BlockTableRecord)tr.GetObject(Database.CurrentSpaceId, OpenMode.ForWrite);
+                // Créer des entités...
+            });
+            </code>
+            </example>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.CommandBase.ExecuteInTransaction``1(System.Func{Autodesk.AutoCAD.DatabaseServices.Transaction,``0})">
+            <summary>
+            Exécute une action dans une transaction avec retour de valeur.
+            </summary>
+            <typeparam name="TRetval">Type de retour</typeparam>
+            <param name="action">Fonction à exécuter</param>
+            <returns>Résultat de la fonction ou default(TRetval) si erreur</returns>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.CommandBase.TryExecuteInTransaction(System.Action{Autodesk.AutoCAD.DatabaseServices.Transaction},System.String@)">
+            <summary>
+            Tente d'exécuter une action dans une transaction sans propager les exceptions.
+            Utile pour les opérations optionnelles ou récupérables.
+            </summary>
+            <param name="action">Action à exécuter</param>
+            <param name="errorMessage">Message d'erreur reçu si échec (null si succès)</param>
+            <returns>True si succès, False si échec</returns>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.CommandBase.ExecuteSafe(System.Action,System.String,System.String)">
+            <summary>
+            Exécute une commande de manière sécurisée avec gestion automatique des erreurs.
+            Gère les annulations utilisateur et les exceptions.
+            </summary>
+            <param name="action">Action à exécuter</param>
+            <param name="successKey">Clé de traduction pour le message de succès (optionnel)</param>
+            <param name="errorKey">Clé de traduction pour le message d'erreur (optionnel)</param>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.CommandBase.WriteMessage(System.String)">
+            <summary>
+            Affiche un message dans la ligne de commande AutoCAD
+            </summary>
+            <param name="message">Message à afficher</param>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.CommandBase.Translate(System.String,System.String)">
+            <summary>
+            Traduction interne avec fallback si la clé est introuvable.
+            </summary>
+            <param name="key">Clé de traduction</param>
+            <param name="defaultValue">Valeur par défaut si clé non trouvée</param>
+            <returns>Texte traduit ou valeur par défaut</returns>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.CommandBase.T(System.String,System.String)">
+            <summary>
+            Raccourci pour la traduction via le système de localisation
+            </summary>
+            <param name="key">Clé de traduction</param>
+            <param name="defaultValue">Valeur par défaut si clé non trouvée</param>
+            <returns>Texte traduit</returns>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.CommandBase.TFormat(System.String,System.Object[])">
+            <summary>
+            Raccourci pour la traduction avec paramètres formatés
+            </summary>
+            <param name="key">Clé de traduction</param>
+            <param name="args">Arguments de formatage</param>
+            <returns>Texte traduit et formaté</returns>
+        </member>
+        <member name="T:OpenAsphalte.Abstractions.CommandInfoAttribute">
+            <summary>
+            Métadonnées d'une commande pour l'affichage dans les menus et rubans.
+            Appliqué sur les méthodes marquées avec [CommandMethod].
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.DisplayName">
+            <summary>
+            Nom affiché dans les menus et rubans
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.Description">
+            <summary>
+            Description/infobulle de la commande
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.DisplayNameKey">
+            <summary>
+            Clé de traduction pour le nom (si multilingue)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.DescriptionKey">
+            <summary>
+            Clé de traduction pour la description (si multilingue)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.MenuCategory">
+            <summary>
+            Catégorie menu niveau 1 (ex: "Cartographie"). Si null, utilise le nom du Module.
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.MenuCategoryKey">
+            <summary>
+            Clé de traduction pour la catégorie niveau 1.
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.MenuSubCategory">
+            <summary>
+            Sous-catégorie menu niveau 2 (ex: "Géoréférencement").
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.MenuSubCategoryKey">
+            <summary>
+            Clé de traduction pour la sous-catégorie niveau 2.
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.IconPath">
+            <summary>
+            Chemin de l'icône (16x16 pour menu, 32x32 pour ruban)
+            Format: "pack://application:,,,/Assembly;component/Resources/icon.png"
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.Order">
+            <summary>
+            Ordre d'affichage dans le menu/ruban du module
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.RibbonSize">
+            <summary>
+            Taille du bouton dans le ruban (Large ou Standard)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.Group">
+            <summary>
+            Groupe de la commande dans le ruban (pour regrouper les boutons)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.ShowInMenu">
+            <summary>
+            Indique si la commande doit apparaître dans le menu
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.CommandInfoAttribute.ShowInRibbon">
+            <summary>
+            Indique si la commande doit apparaître dans le ruban
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.CommandInfoAttribute.#ctor(System.String)">
+            <summary>
+            Crée une nouvelle instance de CommandInfoAttribute
+            </summary>
+            <param name="displayName">Nom affiché de la commande</param>
+        </member>
+        <member name="T:OpenAsphalte.Abstractions.CommandSize">
+            <summary>
+            Taille des boutons dans le ruban
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Abstractions.CommandSize.Standard">
+            <summary>
+            Bouton standard (petit)
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Abstractions.CommandSize.Large">
+            <summary>
+            Grand bouton avec icône 32x32
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Abstractions.Contributor">
+            <summary>
+            Represents a person or entity contributing to the project.
+            </summary>
+            <param name="Name">Display name of the contributor.</param>
+            <param name="Role">Role description (e.g., "Lead Developer", "Tester").</param>
+            <param name="Url">Optional URL (LinkedIn, GitHub, Website).</param>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.Contributor.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Represents a person or entity contributing to the project.
+            </summary>
+            <param name="Name">Display name of the contributor.</param>
+            <param name="Role">Role description (e.g., "Lead Developer", "Tester").</param>
+            <param name="Url">Optional URL (LinkedIn, GitHub, Website).</param>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.Contributor.Name">
+            <summary>Display name of the contributor.</summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.Contributor.Role">
+            <summary>Role description (e.g., "Lead Developer", "Tester").</summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.Contributor.Url">
+            <summary>Optional URL (LinkedIn, GitHub, Website).</summary>
+        </member>
+        <member name="T:OpenAsphalte.Abstractions.IModule">
+            <summary>
+            Interface pour tous les modules Open Asphalte.
+            Un module représente une extension fonctionnelle du plugin.
+            </summary>
+            <remarks>
+            Pour créer un nouveau module :
+            1. Créer une classe qui hérite de <see cref="T:OpenAsphalte.Abstractions.ModuleBase"/>
+            2. Implémenter les propriétés requises (Id, Name, Description)
+            3. Ajouter les commandes avec <see cref="T:OpenAsphalte.Abstractions.CommandInfoAttribute"/>
+            4. Compiler en DLL séparée et placer dans le dossier Modules/
+            </remarks>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.Id">
+            <summary>
+            Identifiant unique du module (en minuscules, sans espaces)
+            Exemple: "voirie", "dessin", "topographie"
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.Name">
+            <summary>
+            Nom affiché du module dans les menus et rubans
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.Description">
+            <summary>
+            Description complète du module
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.Version">
+            <summary>
+            Version du module (format semver: "1.0.0")
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.Author">
+            <summary>
+            Auteur(s) du module
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.Order">
+            <summary>
+            Ordre d'affichage dans les menus et rubans (plus petit = plus haut)
+            Modules système : 900+
+            Modules utilisateur : 1-899
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.IconPath">
+            <summary>
+            Chemin de l'icône du module (32x32 pour ruban)
+            Format: "pack://application:,,,/Assembly;component/Resources/icon.png"
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.NameKey">
+            <summary>
+            Clé de traduction pour le nom du module
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.Dependencies">
+            <summary>
+            Liste des IDs de modules requis pour ce module
+            Le module ne sera pas chargé si une dépendance est manquante
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.MinCoreVersion">
+            <summary>
+            Version minimale du Core requise (format semver)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.Contributors">
+            <summary>
+            Liste des contributeurs ayant participé au développement du module.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.IModule.Initialize">
+            <summary>
+            Appelé lors du chargement du module
+            Permet d'initialiser les ressources
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.IModule.Shutdown">
+            <summary>
+            Appelé lors de la fermeture du plugin
+            Permet de libérer les ressources
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.IsInitialized">
+            <summary>
+            Indique si le module est correctement initialisé
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.IModule.GetCommandTypes">
+            <summary>
+            Retourne tous les types contenant des commandes [CommandMethod]
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.IModule.GetTranslations">
+            <summary>
+            Retourne les traductions spécifiques au module
+            Structure: { "fr": { "key": "value" }, "en": { "key": "value" } }
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Abstractions.ModuleBase">
+            <summary>
+            Classe de base abstraite pour tous les modules Open Asphalte.
+            Fournit une implémentation par défaut de <see cref="T:OpenAsphalte.Abstractions.IModule"/>.
+            </summary>
+            <remarks>
+            <para>
+            Pour créer un nouveau module, héritez de cette classe et implémentez
+            les propriétés abstraites (Id, Name, Description).
+            </para>
+            <para>
+            Exemple d'implémentation :
+            <code>
+            public class MonModule : ModuleBase
+            {
+                public override string Id => "monmodule";
+                public override string Name => "Mon Module";
+                public override string Description => "Description du module";
+                
+                public override IEnumerable&lt;Type&gt; GetCommandTypes()
+                {
+                    yield return typeof(MaCommande);
+                }
+            }
+            </code>
+            </para>
+            </remarks>
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.Version">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.Author">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.IconPath">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.NameKey">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.Dependencies">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.MinCoreVersion">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.Contributors">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.IsInitialized">
+            <inheritdoc />
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.ModuleBase.Initialize">
+            <inheritdoc />
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.ModuleBase.Shutdown">
+            <inheritdoc />
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.ModuleBase.GetCommandTypes">
+            <inheritdoc />
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.ModuleBase.GetTranslations">
+            <inheritdoc />
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.ModuleBase.Dispose">
+            <summary>
+            Libère les ressources du module
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.ModuleBase.Dispose(System.Boolean)">
+            <summary>
+            Libère les ressources managées et non-managées
+            </summary>
+            <param name="disposing">True si appelé depuis Dispose()</param>
+        </member>
+        <member name="M:OpenAsphalte.Abstractions.ModuleBase.Finalize">
+            <summary>
+            Finaliseur
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Commands.AboutWindow">
+            <summary>
+            Fenêtre "à propos" d'Open Asphalte
+            </summary>
+            <summary>
+            AboutWindow
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.AboutWindow.LoadLogo">
+            <summary>
+            Charge le logo depuis les ressources
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.AboutWindow.LoadVersionInfo">
+            <summary>
+            Charge les informations de version depuis version.json
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.AboutWindow.UpdateChannelWarningBadge(System.String)">
+            <summary>
+            Met à jour le badge d'avertissement selon le canal de release
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.AboutWindow.GetJsonString(System.Text.Json.JsonElement,System.String,System.String)">
+            <summary>
+            Extrait une valeur string d'un JsonElement
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.AboutWindow.UpdateLocalizedText">
+            <summary>
+            Met à jour les textes localisés
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.AboutWindow.OnUpdateClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Ouvre la page des mises a jour
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.AboutWindow.OnCloseClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Ferme la fen�tre
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.AboutWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Commands.CreditsWindow">
+            <summary>
+            CreditsWindow
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.CreditsWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Commands.ContributorDisplay">
+            <summary>
+            Wrapper helper for XAML binding convenience
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Commands.ModuleManagerWindow">
+            <summary>
+            Fenêtre de gestion des modules Open Asphalte.
+            Permet d'installer, mettre à jour et gérer les modules depuis le catalogue GitHub.
+            </summary>
+            <summary>
+            ModuleManagerWindow
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.UpdateLocalizedText">
+            <summary>
+            Met à jour les textes de la fenêtre selon la langue
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.RefreshModulesAsync">
+            <summary>
+            Actualise la liste des modules depuis le catalogue
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.GetCategoryFromDefinition(OpenAsphalte.Services.ModuleDefinition)">
+            <summary>
+            Extrait la catégorie du module
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.ApplyFilter">
+            <summary>
+            Applique le filtre sélectionné et regroupe par catégorie
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.GetCategoryIcon(System.String)">
+            <summary>
+            Retourne l'icône pour une catégorie
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.SetLoadingState(System.Boolean,System.String)">
+            <summary>
+            Affiche l'état de chargement
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.ShowError(System.String)">
+            <summary>
+            Affiche une erreur
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.ShowEmpty(System.String)">
+            <summary>
+            Affiche le message vide
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.GetMissingDependencies(OpenAsphalte.Services.ModuleDefinition)">
+            <summary>
+            Récupère les dépendances manquantes pour un module
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.InstallModuleWithDependenciesAsync(OpenAsphalte.Services.ModuleDefinition,System.Collections.Generic.List{OpenAsphalte.Services.ModuleDefinition})">
+            <summary>
+            Installe un module et ses dépendances
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.OnInstallCategoryClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Installe tous les modules d'une catégorie
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Commands.CategoryViewModel">
+            <summary>
+            ViewModel pour une catégorie de modules
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Commands.ModuleViewModel">
+            <summary>
+            ViewModel pour un module dans la liste
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleViewModel.UpdateDisplay">
+            <summary>
+            Met à jour les propriétés d'affichage selon l'état
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Commands.SettingsWindow">
+            <summary>
+            Fenêtre des paramètres Open Asphalte
+            </summary>
+            <summary>
+            SettingsWindow
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.#ctor(System.Int32)">
+            <summary>
+            Constructeur permettant d'ouvrir directement sur un onglet spécifique
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.UpdateLocalizedText">
+            <summary>
+            Met à jour les textes de la fenêtre selon la langue
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.LoadSettings">
+            <summary>
+            Charge les paramètres actuels
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.UpdateInfoText">
+            <summary>
+            Met à jour le texte d'information
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.OnSaveClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Enregistre les paramètres
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.OnCancelClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Annule les modifications
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.OnTabSelectionChanged(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <summary>
+            Gère le changement d'onglet - rafraîchit la liste des modules quand on arrive sur l'onglet Modules
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.RefreshModulesListAsync">
+            <summary>
+            Rafraîchit la liste des modules depuis le catalogue
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.GetMissingDependencies(OpenAsphalte.Services.ModuleDefinition,OpenAsphalte.Services.MarketplaceManifest)">
+            <summary>
+            Récupère les dépendances manquantes pour un module
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.OnModuleSelectionChanged(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Gère le changement de sélection des modules (checkbox)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.UpdateSelectionUI">
+            <summary>
+            Met à jour l'interface selon la sélection
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.OnInstallSelectedClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Installe tous les modules sélectionnés
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Commands.SystemCommands">
+            <summary>
+            Commandes systeme integrees au coeur d'Open Asphalte.
+            Ces commandes sont toujours disponibles, meme sans module charge.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SystemCommands.Help">
+            <summary>
+            Affiche l'aide avec la liste de toutes les commandes disponibles
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SystemCommands.Version">
+            <summary>
+            Affiche les informations de version
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SystemCommands.Settings">
+            <summary>
+            Ouvre la fenetre des parametres
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SystemCommands.Reload">
+            <summary>
+            Recharge la configuration
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SystemCommands.Modules">
+            <summary>
+            Ouvre le gestionnaire de modules pour installer/mettre à jour les modules
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SystemCommands.Update">
+            <summary>
+            Vérifie les mises à jour en ouvrant la page des releases GitHub
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Configuration.Configuration">
+            <summary>
+            Gestion de la configuration utilisateur Open Asphalte.
+            Stocke les parametres dans un fichier JSON dans AppData.
+            </summary>
+        </member>
+        <member name="E:OpenAsphalte.Configuration.Configuration.OnSettingChanged">
+            <summary>
+            Evenement declenche quand une configuration change.
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Configuration.Configuration.ConfigurationFolder">
+            <summary>
+            Chemin du dossier de configuration
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Configuration.Configuration.ConfigurationFile">
+            <summary>
+            Chemin du fichier de configuration
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Configuration.Configuration.ClearEventSubscribers">
+            <summary>
+            Nettoie les abonnes aux evenements
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Configuration.Configuration.CurrentConfigVersion">
+            <summary>
+            Version actuelle du schéma de configuration.
+            Incrémentez cette valeur lors de changements breaking dans la structure.
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Configuration.Configuration.LoadedConfigVersion">
+            <summary>
+            Version du fichier de configuration chargé
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Configuration.Configuration.Load">
+            <summary>
+            Charge la configuration depuis le fichier
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Configuration.Configuration.MigrateConfiguration(System.Int32,System.Int32)">
+            <summary>
+            Migre la configuration d'une ancienne version vers la nouvelle.
+            </summary>
+            <param name="fromVersion">Version source</param>
+            <param name="toVersion">Version cible</param>
+        </member>
+        <member name="M:OpenAsphalte.Configuration.Configuration.Save">
+            <summary>
+            Sauvegarde la configuration
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Configuration.Configuration.Reload">
+            <summary>
+            Recharge la configuration depuis le fichier
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Configuration.Configuration.Get``1(System.String,``0)">
+            <summary>
+            Récupère une valeur de configuration
+            </summary>
+            <typeparam name="T">Type de la valeur</typeparam>
+            <param name="key">Clé de configuration</param>
+            <param name="defaultValue">Valeur par défaut</param>
+            <returns>Valeur ou défaut si non trouvée</returns>
+        </member>
+        <member name="M:OpenAsphalte.Configuration.Configuration.Set``1(System.String,``0)">
+            <summary>
+            Definit une valeur de configuration
+            </summary>
+            <typeparam name="T">Type de la valeur</typeparam>
+            <param name="key">Cle de configuration</param>
+            <param name="value">Valeur a definir</param>
+        </member>
+        <member name="M:OpenAsphalte.Configuration.Configuration.Remove(System.String)">
+            <summary>
+            Supprime une cle de configuration
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Configuration.Configuration.Contains(System.String)">
+            <summary>
+            Verifie si une cle existe
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Configuration.Configuration.Language">
+            <summary>
+            Langue active (fr, en, es).
+            Pour changer la langue avec notification de l'UI, utilisez <see cref="M:OpenAsphalte.Localization.Localization.SetLanguage(System.String,System.Boolean)"/>.
+            </summary>
+            <remarks>
+            Cette propriété accède directement à la configuration.
+            Si vous voulez que le changement de langue soit propag? ? l'UI,
+            utilisez plut?t <c>Localization.Localization.SetLanguage(language)</c>.
+            </remarks>
+        </member>
+        <member name="P:OpenAsphalte.Configuration.Configuration.DevMode">
+            <summary>
+            Mode developpeur (affiche les logs de debug)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Configuration.Configuration.UpdateUrl">
+            <summary>
+            URL de mise a jour (page des releases GitHub)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Configuration.Configuration.CheckUpdatesOnStartup">
+            <summary>
+            Verifier les mises a jour au demarrage
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Configuration.Configuration.MainMenuName">
+            <summary>
+            Nom du menu principal (defaut: "Open Asphalte")
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Discovery.CommandDescriptor">
+            <summary>
+            Informations sur une commande decouverte
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.CommandName">
+            <summary>
+            Nom de la commande AutoCAD (ex: "OAS_PARKING")
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.DisplayName">
+            <summary>
+            Nom affiche dans les menus
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.Description">
+            <summary>
+            Description de la commande
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.DisplayNameKey">
+            <summary>
+            Cle de traduction du nom (si multilingue)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.DescriptionKey">
+            <summary>
+            Cle de traduction de la description
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.IconPath">
+            <summary>
+            Chemin de l'icone
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.Order">
+            <summary>
+            Ordre d'affichage
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.RibbonSize">
+            <summary>
+            Taille dans le ruban
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.Group">
+            <summary>
+            Groupe dans le ruban
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.ShowInMenu">
+            <summary>
+            Afficher dans le menu
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.ShowInRibbon">
+            <summary>
+            Afficher dans le ruban
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.DeclaringType">
+            <summary>
+            Type contenant la commande
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.Method">
+            <summary>
+            Methode de la commande
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.Module">
+            <summary>
+            Module proprietaire
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.MenuCategory">
+            <summary>
+            Catégorie menu niveau 1
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.MenuCategoryKey">
+            <summary>
+            Clé de traduction pour la catégorie niveau 1
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.MenuSubCategory">
+            <summary>
+            Sous-catégorie menu niveau 2
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.CommandDescriptor.MenuSubCategoryKey">
+            <summary>
+            Clé de traduction pour la sous-catégorie niveau 2
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.CommandDescriptor.GetLocalizedDisplayName">
+            <summary>
+            Obtient le nom affiché traduit
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.CommandDescriptor.GetLocalizedDescription">
+            <summary>
+            Obtient la description traduite
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Discovery.ModuleDescriptor">
+            <summary>
+            Informations sur un module charge
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDescriptor.Module">
+            <summary>
+            Instance du module
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDescriptor.Assembly">
+            <summary>
+            Assembly contenant le module
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDescriptor.FilePath">
+            <summary>
+            Chemin du fichier DLL
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDescriptor.Commands">
+            <summary>
+            Commandes decouvertes dans ce module
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDescriptor.DependenciesSatisfied">
+            <summary>
+            Indique si les dependances sont satisfaites
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDescriptor.MissingDependencies">
+            <summary>
+            Liste des dependances manquantes
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Discovery.ModuleDiscovery">
+            <summary>
+            Service de decouverte automatique des modules Open Asphalte.
+            Scanne le dossier Modules/ et charge dynamiquement les DLL.
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDiscovery.ModulesPath">
+            <summary>
+            Chemin du dossier Modules
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDiscovery.LoadedModules">
+            <summary>
+            Liste de tous les modules charges
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDiscovery.Modules">
+            <summary>
+            Liste de tous les modules (instances)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDiscovery.AllCommands">
+            <summary>
+            Liste de toutes les commandes decouvertes
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Discovery.ModuleDiscovery.AdditionalModulesPaths">
+            <summary>
+            Chemins additionnels pour la découverte de modules (configurables)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.AddModulesPath(System.String)">
+            <summary>
+            Ajoute un chemin additionnel pour la découverte de modules.
+            Doit être appelé avant DiscoverAndLoad().
+            </summary>
+            <param name="path">Chemin vers un dossier contenant des modules OAS.*.dll</param>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.DiscoverAndLoad(System.String)">
+            <summary>
+            Decouvre et charge tous les modules
+            </summary>
+            <param name="basePath">Chemin de base (dossier contenant OAS.Core.dll)</param>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.MigrateOldModuleNames(System.String)">
+            <summary>
+            Migration: Renomme les anciens modules OpenRoad.*.dll en OAS.*.dll
+            </summary>
+            <param name="folderPath">Chemin du dossier à scanner</param>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.IsModuleSigned(System.String)">
+            <summary>
+            Vérifie si une DLL est signée numériquement.
+            </summary>
+            <param name="dllPath">Chemin vers la DLL</param>
+            <returns>True si signée, False sinon</returns>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.ValidateModuleSecurity(System.String)">
+            <summary>
+            Vérifie et avertit si un module n'est pas signé.
+            Dans le futur, cette méthode pourra bloquer les modules non signés.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.LoadModuleFromDll(System.String)">
+            <summary>
+            Charge un module depuis une DLL
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.DiscoverCommands(OpenAsphalte.Discovery.ModuleDescriptor)">
+            <summary>
+            Decouvre les commandes d'un module
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.ResolveDependencies">
+            <summary>
+            Resout les dependances entre modules
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.IsCoreVersionCompatible(OpenAsphalte.Discovery.ModuleDescriptor)">
+            <summary>
+            Vérifie la compatibilité de version minimale du Core pour un module
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.ParseVersion(System.String)">
+            <summary>
+            Tente de parser une version semver simple (ignore les suffixes)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.RebuildCommandList">
+            <summary>
+            Reconstruit la liste globale des commandes
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.InitializeAll">
+            <summary>
+            Initialise tous les modules charges
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.ShutdownAll">
+            <summary>
+            Ferme tous les modules
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.GetModule(System.String)">
+            <summary>
+            Recupere un module par son ID
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.GetModule``1">
+            <summary>
+            Recupere un module type
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.GetCommandsByModule">
+            <summary>
+            Obtient les commandes groupees par module
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Localization.Localization">
+            <summary>
+            Système de traduction multilingue pour Open Asphalte.
+            Supporte les traductions par module avec fallback automatique.
+            </summary>
+            <remarks>
+            <para>
+            Le Système de localisation supporte FR, EN et ES.
+            Les modules peuvent enregistrer leurs propres traductions via <see cref="M:OpenAsphalte.Localization.Localization.RegisterTranslations(System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Boolean)"/>.
+            </para>
+            <para>
+            Lorsque la langue change, l'événement <see cref="E:OpenAsphalte.Localization.Localization.OnLanguageChanged"/> est déclenché,
+            permettant à l'UI et aux modules de se Mettre à jour.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:OpenAsphalte.Localization.Localization._systemKeyPrefixes">
+            <summary>
+            Préfixes des clés système protégées (ne peuvent pas être écrasées par les modules)
+            </summary>
+        </member>
+        <member name="E:OpenAsphalte.Localization.Localization.OnLanguageChanged">
+            <summary>
+            événement déclenché lorsque la langue change.
+            Les modules peuvent s'y abonner pour Mettre à jour leur UI.
+            </summary>
+            <example>
+            <code>
+            Localization.OnLanguageChanged += (oldLang, newLang) =>
+            {
+                // Mettre à jour l'interface utilisateur
+            };
+            </code>
+            </example>
+        </member>
+        <member name="P:OpenAsphalte.Localization.Localization.SupportedLanguages">
+            <summary>
+            Langues supportées
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Localization.Localization.CurrentLanguage">
+            <summary>
+            Langue active (depuis la configuration)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Localization.Localization.LanguageNames">
+            <summary>
+            Noms des langues pour l'affichage dans l'UI
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.ClearEventSubscribers">
+            <summary>
+            Nettoie les abonnés aux événements (appelé lors de la fermeture)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.Initialize">
+            <summary>
+            Initialise les traductions de base du framework
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.RegisterTranslations(System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Boolean)">
+            <summary>
+            Enregistre des traductions pour une langue.
+            Les clés système (préfixes: app., cmd., error., etc.) ne peuvent pas être écrasées par les modules.
+            </summary>
+            <param name="language">Code langue (fr, en, es)</param>
+            <param name="translations">Dictionnaire de traductions</param>
+            <param name="isSystemRegistration">True si c'est l'initialisation système (autorise toutes les clés)</param>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.IsSystemKey(System.String)">
+            <summary>
+            Vérifie si une clé est une clé système protégée
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.T(System.String,System.String)">
+            <summary>
+            Traduit une clé dans la langue active
+            </summary>
+            <param name="key">clé de traduction</param>
+            <param name="defaultValue">Valeur par défaut si non trouvée</param>
+            <returns>Texte traduit</returns>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.TFormat(System.String,System.String,System.Object[])">
+            <summary>
+            Traduit avec des paramètres formatés et un fallback.
+            Utilise le fallback si la clé n'existe pas, puis formate avec les arguments.
+            </summary>
+            <param name="key">Clé de traduction</param>
+            <param name="fallback">Texte par défaut si la clé n'existe pas (doit contenir {0}, {1}... pour le formatage)</param>
+            <param name="args">Arguments de formatage</param>
+            <returns>Texte traduit et formaté</returns>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.TFormat(System.String,System.Object[])">
+            <summary>
+            Traduit avec des Paramètres formatés (sans fallback).
+            Note: Préférez TFormat(key, fallback, args) pour plus de robustesse.
+            </summary>
+            <param name="key">clé de traduction</param>
+            <param name="args">Arguments de formatage (au moins 1 élément requis)</param>
+            <returns>Texte traduit et formaté</returns>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.SetLanguage(System.String,System.Boolean)">
+            <summary>
+            Change la langue active et notifie les abonnés.
+            </summary>
+            <param name="language">Code langue (fr, en, es)</param>
+            <param name="saveToConfig">Si true, sauvegarde dans la configuration</param>
+            <returns>True si la langue a changé, false sinon</returns>
+            <remarks>
+            Cette méthode déclenche l'événement <see cref="E:OpenAsphalte.Localization.Localization.OnLanguageChanged"/> si la langue change,
+            permettant à l'UI de se reconstruire automatiquement.
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.IsLanguageSupported(System.String)">
+            <summary>
+            Vérifie si une langue est supportée
+            </summary>
+            <param name="language">Code langue à vérifier</param>
+            <returns>True si la langue est supportée</returns>
+        </member>
+        <member name="M:OpenAsphalte.Localization.Localization.GetAllKeys(System.String)">
+            <summary>
+            Obtient toutes les clés de traduction enregistrées pour une langue
+            </summary>
+            <param name="language">Code langue (optionnel, utilise la langue courante si null)</param>
+            <returns>Liste des clés de traduction</returns>
+        </member>
+        <member name="T:OpenAsphalte.Logging.Logger">
+            <summary>
+            Système de logging unifié pour Open Asphalte.
+            Affiche les messages dans la ligne de commande AutoCAD et optionnellement dans un fichier.
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Logging.Logger.DebugMode">
+            <summary>
+            Mode debug activé (affiche les messages Debug)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Logging.Logger.FileLoggingEnabled">
+            <summary>
+            Active l'écriture dans un fichier log (activé par défaut pour le diagnostic)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Logging.Logger.Prefix">
+            <summary>
+            Préfixe des messages
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Logging.Logger.LogFilePath">
+            <summary>
+            Chemin du fichier de log (dans AppData/Open Asphalte/logs/)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.Debug(System.String)">
+            <summary>
+            Message de debug (seulement si DevMode activé)
+            </summary>
+            <param name="message">Message à afficher</param>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.Info(System.String)">
+            <summary>
+            Message d'information
+            </summary>
+            <param name="message">Message à afficher</param>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.Success(System.String)">
+            <summary>
+            Message de succès
+            </summary>
+            <param name="message">Message à afficher</param>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.Warning(System.String)">
+            <summary>
+            Message d'avertissement
+            </summary>
+            <param name="message">Message à afficher</param>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.Error(System.String)">
+            <summary>
+            Message d'erreur
+            </summary>
+            <param name="message">Message à afficher</param>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.Raw(System.String)">
+            <summary>
+            Message brut sans préfixe
+            </summary>
+            <param name="message">Message à afficher</param>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.Write(System.String,OpenAsphalte.Logging.Logger.LogLevel)">
+            <summary>
+            Écrit un message formaté avec préfixe
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.WriteToFile(System.String,OpenAsphalte.Logging.Logger.LogLevel)">
+            <summary>
+            Écrit dans le fichier de log si activé
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.RotateLogIfNeeded">
+            <summary>
+            Effectue une rotation du fichier de log si nécessaire
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.CleanupOldLogs">
+            <summary>
+            Supprime les anciens fichiers de log
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Logging.Logger.LogLevel">
+            <summary>
+            Niveaux de log
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Plugin">
+            <summary>
+            Point d'entrée principal du plugin Open Asphalte pour AutoCAD.
+            Gère le cycle de vie de l'application et la découverte automatique des modules.
+            </summary>
+            <remarks>
+            <para>
+            Open Asphalte est un plugin modulaire. Le coeur (cette DLL) fournit :
+            - La decouverte automatique des modules
+            - Le systeme de menus et rubans dynamiques
+            - Les services partages (geometrie, calques, coordonnees)
+            - Les commandes systeme (aide, version, parametres)
+            </para>
+            <para>
+            Les modules sont des DLL separees placees dans le dossier Modules/.
+            Ils sont decouverts et charges automatiquement au demarrage.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:OpenAsphalte.Plugin.Version">
+            <summary>
+            Version du coeur Open Asphalte (chargée depuis version.json)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Plugin.AppName">
+            <summary>
+            Nom de l'application
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Plugin.BasePath">
+            <summary>
+            Chemin du dossier contenant OAS.Core.dll
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Plugin.LoadVersionFromJson">
+            <summary>
+            Charge la version depuis version.json de manière thread-safe
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Plugin.Initialize">
+            <summary>
+            Appelé au chargement du plugin par AutoCAD
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Plugin.EnableDiagnostics">
+            <summary>
+            Active le journal fichier et capture les exceptions non gérées.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Plugin.ShowWelcomeMessage">
+            <summary>
+            Affiche le message de bienvenue dans la console AutoCAD
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Plugin.OnApplicationIdle(System.Object,System.EventArgs)">
+            <summary>
+            Cree le menu et le ruban une fois AutoCAD completement charge
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Plugin.CheckFirstRunNoModules">
+            <summary>
+            Vérifie si c'est le premier démarrage sans modules et propose d'ouvrir le gestionnaire
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Plugin.OnLanguageChanged(System.String,System.String)">
+            <summary>
+            Appele lorsque la langue change.
+            Reconstruit l'interface utilisateur avec les nouvelles traductions.
+            </summary>
+            <param name="oldLanguage">Ancienne langue</param>
+            <param name="newLanguage">Nouvelle langue</param>
+        </member>
+        <member name="M:OpenAsphalte.Plugin.Terminate">
+            <summary>
+            Appele a la fermeture d'AutoCAD
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Core.Resources.CoreCredits">
+            <summary>
+            Registre statique des crédits du Core pour l'affichage dans l'interface.
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.CoordinateService">
+            <summary>
+            Service de gestion des syst�mes de coordonn�es et de conversion.
+            Fournit des m�thodes pour identifier, convertir et g�rer les projections cartographiques.
+            </summary>
+            <remarks>
+            Ce service g�re les syst�mes de coordonn�es compatibles avec AutoCAD (variable CGEOCS).
+            Il peut charger des d�finitions de projections depuis un fichier JSON externe.
+            </remarks>
+        </member>
+        <member name="F:OpenAsphalte.Services.CoordinateService.EarthRadiusEquatorial">
+            <summary>
+            Rayon �quatorial de la Terre (WGS84) en m�tres
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Services.CoordinateService.EarthRadiusPolar">
+            <summary>
+            Rayon polaire de la Terre (WGS84) en m�tres
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Services.CoordinateService.EarthFlattening">
+            <summary>
+            Aplatissement de la Terre (WGS84)
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Services.CoordinateService.EarthEccentricitySquared">
+            <summary>
+            Excentricit� au carr� (WGS84)
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Services.CoordinateService.OriginThreshold">
+            <summary>
+            Seuil de distance au centre (origine) en dessous duquel un point est ignor�
+            pour la d�tection automatique de projection (en unit�s du dessin)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.CoordinateService.Projections">
+            <summary>
+            Liste de toutes les projections connues
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.EnsureProjectionsLoaded">
+            <summary>
+            Charge les projections depuis le fichier JSON ou utilise les projections int�gr�es
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.LoadBuiltInProjections">
+            <summary>
+            Charge les projections int�gr�es au programme
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.ReloadProjections">
+            <summary>
+            Recharge les projections depuis le fichier externe (si modifi�)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionByCode(System.String)">
+            <summary>
+            Recherche une projection par son code AutoCAD
+            </summary>
+            <param name="code">Code AutoCAD (ex: "RGF93.CC49")</param>
+            <returns>Projection trouv�e ou null</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionByEpsg(System.Int32)">
+            <summary>
+            Recherche une projection par son code EPSG
+            </summary>
+            <param name="epsg">Code EPSG (ex: 3949)</param>
+            <returns>Projection trouv�e ou null</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.SearchProjections(System.String)">
+            <summary>
+            Recherche des projections par texte (nom, code, pays, r�gion)
+            </summary>
+            <param name="searchText">Texte de recherche</param>
+            <returns>Liste des projections correspondantes</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionsByCountry">
+            <summary>
+            Retourne les projections group�es par pays
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.DetectProjection(System.Collections.Generic.IEnumerable{Autodesk.AutoCAD.Geometry.Point3d})">
+            <summary>
+            D�tecte automatiquement la projection la plus probable � partir d'un ensemble de points
+            </summary>
+            <param name="points">Points � analyser</param>
+            <returns>Projection d�tect�e ou null si aucune correspondance</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.DetectProjection(System.Double,System.Double)">
+            <summary>
+            D�tecte automatiquement la projection la plus probable � partir de coordonn�es moyennes
+            </summary>
+            <param name="x">Coordonn�e X moyenne</param>
+            <param name="y">Coordonn�e Y moyenne</param>
+            <returns>Projection d�tect�e ou null si aucune correspondance</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.Lambert93ToWgs84(System.Double,System.Double)">
+            <summary>
+            Convertit des coordonn�es Lambert 93 en WGS84 (longitude/latitude)
+            </summary>
+            <param name="x">Coordonn�e X (Est) en m�tres</param>
+            <param name="y">Coordonn�e Y (Nord) en m�tres</param>
+            <returns>Tuple (longitude, latitude) en degr�s d�cimaux</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.Wgs84ToLambert93(System.Double,System.Double)">
+            <summary>
+            Convertit des coordonn�es WGS84 (longitude/latitude) en Lambert 93
+            </summary>
+            <param name="longitude">Longitude en degr�s d�cimaux</param>
+            <param name="latitude">Latitude en degr�s d�cimaux</param>
+            <returns>Tuple (X, Y) en m�tres</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.CCToWgs84(System.Double,System.Double,System.Int32)">
+            <summary>
+            Convertit des coordonnées CC (Conique Conforme) en WGS84
+            </summary>
+            <param name="x">Coordonnée X en mètres</param>
+            <param name="y">Coordonnée Y en mètres</param>
+            <param name="zone">Zone CC (42 à 50)</param>
+            <returns>Tuple (longitude, latitude) en degrés décimaux</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.CalculateTValue(System.Double,System.Double)">
+            <summary>
+            Calcule la valeur t pour la projection Lambert Conique Conforme
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.UtmToWgs84(System.Double,System.Double,System.Int32,System.Boolean)">
+            <summary>
+            Convertit des coordonnées UTM en WGS84
+            </summary>
+            <param name="easting">Coordonnée Est en mètres</param>
+            <param name="northing">Coordonnée Nord en mètres</param>
+            <param name="zone">Zone UTM (1 à 60)</param>
+            <param name="northern">True si hémisphère nord</param>
+            <returns>Tuple (longitude, latitude) en degrés décimaux</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.Wgs84ToUtm(System.Double,System.Double)">
+            <summary>
+            Convertit des coordonnées WGS84 en UTM
+            </summary>
+            <param name="longitude">Longitude en degrés décimaux</param>
+            <param name="latitude">Latitude en degrés décimaux</param>
+            <returns>Tuple (zone, easting, northing, northern)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.VincentyDistance(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule la distance géodésique (Vincenty) entre deux points WGS84
+            </summary>
+            <param name="lon1">Longitude du point 1 (degrés)</param>
+            <param name="lat1">Latitude du point 1 (degrés)</param>
+            <param name="lon2">Longitude du point 2 (degrés)</param>
+            <param name="lat2">Latitude du point 2 (degrés)</param>
+            <returns>Distance en mètres</returns>
+        </member>
+        <member name="T:OpenAsphalte.Services.ProjectionInfo">
+            <summary>
+            Informations sur un système de projection cartographique
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.Code">
+            <summary>
+            Code AutoCAD pour CGEOCS (ex: "RGF93.CC49")
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.Name">
+            <summary>
+            Nom complet de la projection
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.Country">
+            <summary>
+            Pays principal d'utilisation
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.Region">
+            <summary>
+            Région ou zone géographique
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.Epsg">
+            <summary>
+            Code EPSG (pour référence et interopérabilité)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.Unit">
+            <summary>
+            Unité de mesure ("m" pour mètres, "deg" pour degrés)
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.CentralMeridian">
+            <summary>
+            Méridien central en degrés
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.LatitudeOrigin">
+            <summary>
+            Latitude d'origine en degrés
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.FalseEasting">
+            <summary>
+            Faux Est (False Easting) en mètres
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.FalseNorthing">
+            <summary>
+            Faux Nord (False Northing) en mètres
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.MinX">
+            <summary>
+            Coordonnée X minimale typique
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.MaxX">
+            <summary>
+            Coordonnée X maximale typique
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.MinY">
+            <summary>
+            Coordonnée Y minimale typique
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.MaxY">
+            <summary>
+            Coordonnée Y maximale typique
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.Description">
+            <summary>
+            Description détaillée
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.ProjectionInfo.DisplayName">
+            <summary>
+            Affichage formaté pour UI
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.ProjectionInfo.ContainsPoint(System.Double,System.Double)">
+            <summary>
+            Vérifie si un point est dans les bornes typiques de cette projection
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.GeometryService">
+            <summary>
+            Service de calculs géométriques pour AutoCAD.
+            Fournit des méthodes utilitaires pour les opérations géométriques courantes,
+            la voirie, l'assainissement et les calculs de cubature.
+            </summary>
+            <remarks>
+            Documentation complète: docs/GeometryService.md
+            </remarks>
+        </member>
+        <member name="F:OpenAsphalte.Services.GeometryService.Tolerance">
+            <summary>Tolérance par défaut pour les comparaisons de doubles</summary>
+        </member>
+        <member name="F:OpenAsphalte.Services.GeometryService.Gravity">
+            <summary>Accélération gravitationnelle (m/s²)</summary>
+        </member>
+        <member name="F:OpenAsphalte.Services.GeometryService.DegToRad">
+            <summary>Pi / 180 pour conversion degrés → radians</summary>
+        </member>
+        <member name="F:OpenAsphalte.Services.GeometryService.RadToDeg">
+            <summary>180 / Pi pour conversion radians → degrés</summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.Distance(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule la distance euclidienne entre deux points 3D.
+            </summary>
+            <param name="p1">Premier point</param>
+            <param name="p2">Deuxième point</param>
+            <returns>Distance entre les deux points (toujours positive)</returns>
+            <example>
+            <code>
+            var distance = GeometryService.Distance(new Point3d(0, 0, 0), new Point3d(3, 4, 0));
+            // Résultat: 5.0
+            </code>
+            </example>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.Distance2D(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule la distance 2D (ignore Z) entre deux points.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.HorizontalDistance(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule la distance horizontale (projetée) entre deux points.
+            Alias de Distance2D pour clarté dans les contextes de topographie.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.DeltaZ(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule la différence d'altitude entre deux points.
+            </summary>
+            <returns>Différence positive si p2 est plus haut que p1</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.AngleBetween(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule l'angle formé par le vecteur allant de <paramref name="from"/> vers <paramref name="to"/>.
+            L'angle est mesuré dans le sens trigonométrique depuis l'axe X positif.
+            </summary>
+            <param name="from">Point d'origine du vecteur</param>
+            <param name="to">Point de destination du vecteur</param>
+            <returns>Angle en radians dans l'intervalle [-π, π]</returns>
+            <remarks>
+            Utilise <see cref="M:System.Math.Atan2(System.Double,System.Double)"/> pour gérer correctement tous les quadrants.
+            Pour un résultat en degrés, utilisez <see cref="M:OpenAsphalte.Services.GeometryService.AngleBetweenDegrees(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)"/>.
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.AngleBetweenDegrees(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule l'angle entre deux points (en degrés)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.NormalizeAngle(System.Double)">
+            <summary>
+            Normalise un angle en radians dans l'intervalle [0, 2π].
+            </summary>
+            <param name="angle">Angle à normaliser (peut être négatif ou > 2π)</param>
+            <returns>Angle normalisé dans [0, 2π]</returns>
+            <example>
+            <code>
+            var normalized = GeometryService.NormalizeAngle(-Math.PI / 2);
+            // Résultat: 3π/2 (environ 4.712)
+            </code>
+            </example>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.NormalizeAngleDegrees(System.Double)">
+            <summary>
+            Normalise un angle en degrés dans l'intervalle [0, 360].
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.AngleBetweenVectors(Autodesk.AutoCAD.Geometry.Vector3d,Autodesk.AutoCAD.Geometry.Vector3d)">
+            <summary>
+            Calcule l'angle entre deux vecteurs.
+            </summary>
+            <returns>Angle en radians [0, π]</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.Bearing(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule le gisement (bearing) d'un vecteur par rapport au Nord (axe Y+).
+            Le gisement est mesuré dans le sens horaire depuis le Nord.
+            </summary>
+            <returns>Gisement en grades [0, 400]</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.BearingToAngle(System.Double)">
+            <summary>
+            Convertit un gisement (grades) en angle trigonométrique (radians).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.OffsetPoint(Autodesk.AutoCAD.Geometry.Point3d,System.Double,System.Double)">
+            <summary>
+            Calcule un point décalé à partir d'un point et d'un angle
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.PerpendicularOffset(Autodesk.AutoCAD.Geometry.Point3d,System.Double,System.Double,System.Boolean)">
+            <summary>
+            Calcule un point décalé perpendiculairement
+            </summary>
+            <param name="point">Point de départ</param>
+            <param name="angle">Angle de la direction principale</param>
+            <param name="distance">Distance de décalage</param>
+            <param name="leftSide">True pour décaler à gauche, false à droite</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.MidPoint(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule le milieu entre deux points
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.Lerp(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,System.Double)">
+            <summary>
+            Interpole linéairement entre deux points
+            </summary>
+            <param name="p1">Point de départ</param>
+            <param name="p2">Point d'arrivée</param>
+            <param name="t">Paramètre d'interpolation (0 = p1, 1 = p2)</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ProjectPointOnLine(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Projette un point sur une droite définie par deux points.
+            </summary>
+            <param name="point">Point à projeter</param>
+            <param name="lineStart">Début de la ligne</param>
+            <param name="lineEnd">Fin de la ligne</param>
+            <returns>Point projeté sur la droite (peut être en dehors du segment)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ProjectPointOnSegment(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Projette un point sur un segment (résultat contraint au segment).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.DistancePointToLine(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule la distance d'un point à une droite.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.DistancePointToSegment(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule la distance d'un point à un segment.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.RotatePoint(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,System.Double)">
+            <summary>
+            Fait pivoter un point autour d'un centre.
+            </summary>
+            <param name="point">Point à pivoter</param>
+            <param name="center">Centre de rotation</param>
+            <param name="angle">Angle de rotation en radians (sens trigonométrique)</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TranslatePoint(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Vector3d)">
+            <summary>
+            Translate un point selon un vecteur.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TranslatePoint(Autodesk.AutoCAD.Geometry.Point3d,System.Double,System.Double,System.Double)">
+            <summary>
+            Translate un point selon des deltas X, Y, Z.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.GetPolylinePoints(Autodesk.AutoCAD.DatabaseServices.Polyline)">
+            <summary>
+            Extrait tous les points d'une polyligne
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.GetPolylineLength(Autodesk.AutoCAD.DatabaseServices.Polyline)">
+            <summary>
+            Calcule la longueur totale d'une polyligne
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.GetPointAtDistance(Autodesk.AutoCAD.DatabaseServices.Polyline,System.Double)">
+            <summary>
+            Obtient un point sur la polyligne à une distance donnée du départ
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.GetTangentAngle(Autodesk.AutoCAD.DatabaseServices.Polyline,System.Double)">
+            <summary>
+            Obtient l'angle tangent à un point sur la polyligne
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.IsPointOnLeftSide(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Détermine de quel côté d'une ligne se trouve un point
+            </summary>
+            <returns>True si le point est à gauche de la ligne</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.IsPointInPolygon(Autodesk.AutoCAD.Geometry.Point3d,System.Collections.Generic.IList{Autodesk.AutoCAD.Geometry.Point3d})">
+            <summary>
+            Vérifie si un point est à l'intérieur d'un polygone.
+            Utilise l'algorithme de ray-casting (trace un rayon horizontal vers la droite).
+            </summary>
+            <param name="point">Point à tester</param>
+            <param name="polygon">Liste des sommets du polygone</param>
+            <returns>True si le point est à l'intérieur du polygone</returns>
+            <remarks>
+            Les segments horizontaux (même coordonnée Y aux deux extrémités) sont ignorés
+            car un rayon horizontal ne peut pas les intersecter de manière non-dégénérée.
+            Cela évite également les divisions par zéro.
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CalculatePolygonArea(System.Collections.Generic.IList{Autodesk.AutoCAD.Geometry.Point3d})">
+            <summary>
+            Calcule l'aire d'un polygone (formule du lacet/shoelace)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CalculatePolygonPerimeter(System.Collections.Generic.IList{Autodesk.AutoCAD.Geometry.Point3d})">
+            <summary>
+            Calcule le périmètre d'un polygone
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CalculateCentroid(System.Collections.Generic.IList{Autodesk.AutoCAD.Geometry.Point3d})">
+            <summary>
+            Calcule le centroïde d'un polygone
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.GeometryService.LineIntersectionResult">
+            <summary>
+            Résultat d'une intersection entre deux lignes.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.IntersectLines(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule l'intersection de deux droites (infinies).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.IntersectSegments(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule l'intersection de deux segments (retourne null si pas d'intersection sur les segments).
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.GeometryService.LineCircleIntersectionResult">
+            <summary>
+            Résultat d'une intersection ligne/cercle.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.IntersectLineCircle(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,System.Double)">
+            <summary>
+            Calcule les intersections entre une droite et un cercle.
+            </summary>
+            <param name="lineStart">Point de départ de la ligne</param>
+            <param name="lineEnd">Point de fin de la ligne</param>
+            <param name="center">Centre du cercle</param>
+            <param name="radius">Rayon du cercle</param>
+        </member>
+        <member name="T:OpenAsphalte.Services.GeometryService.CircleCircleIntersectionResult">
+            <summary>
+            Résultat d'une intersection cercle/cercle.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.IntersectCircles(Autodesk.AutoCAD.Geometry.Point3d,System.Double,Autodesk.AutoCAD.Geometry.Point3d,System.Double)">
+            <summary>
+            Calcule les intersections entre deux cercles.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TangentPointsFromExternalPoint(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,System.Double)">
+            <summary>
+            Calcule les points de tangence d'un point externe à un cercle.
+            </summary>
+            <returns>Tuple des deux points de tangence, ou null si le point est dans le cercle</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CircleFrom3Points(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule le cercle passant par trois points.
+            </summary>
+            <returns>Tuple (centre, rayon) ou null si points colinéaires</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ArcLength(System.Double,System.Double)">
+            <summary>
+            Calcule la longueur d'un arc de cercle.
+            </summary>
+            <param name="radius">Rayon de l'arc</param>
+            <param name="angleRadians">Angle au centre en radians</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.SectorArea(System.Double,System.Double)">
+            <summary>
+            Calcule l'aire d'un secteur circulaire.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CircularSegmentArea(System.Double,System.Double)">
+            <summary>
+            Calcule l'aire d'un segment circulaire (partie entre corde et arc).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ChordLength(System.Double,System.Double)">
+            <summary>
+            Calcule la longueur de la corde d'un arc.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.Sagita(System.Double,System.Double)">
+            <summary>
+            Calcule la flèche (sagita) d'un arc.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ClothoidCoordinates(System.Double,System.Double)">
+            <summary>
+            Calcule les paramètres d'une clothoïde (spirale de Cornu / transition de courbure).
+            </summary>
+            <param name="A">Paramètre de la clothoïde (A² = R × L)</param>
+            <param name="L">Longueur développée sur la clothoïde</param>
+            <returns>Tuple avec les coordonnées (X, Y) et l'angle de rotation τ</returns>
+            <remarks>
+            La clothoïde est la courbe de transition idéale pour les routes car sa courbure
+            varie linéairement avec la longueur parcourue.
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ClothoidParameter(System.Double,System.Double)">
+            <summary>
+            Calcule le paramètre A de la clothoïde à partir du rayon et de la longueur.
+            </summary>
+            <param name="radius">Rayon de courbure à l'extrémité</param>
+            <param name="length">Longueur de la clothoïde</param>
+            <returns>Paramètre A (A² = R × L)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.MinClothoidLength(System.Double,System.Double)">
+            <summary>
+            Calcule la longueur minimale de transition (clothoïde) selon la règle du confort.
+            </summary>
+            <param name="radius">Rayon de la courbe circulaire</param>
+            <param name="speedKmh">Vitesse de référence en km/h</param>
+            <returns>Longueur minimale en mètres</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.MinCurveRadius(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le rayon minimum en fonction de la vitesse et du dévers.
+            </summary>
+            <param name="speedKmh">Vitesse de référence en km/h</param>
+            <param name="superelevationPercent">Dévers en % (ex: 7 pour 7%)</param>
+            <param name="frictionCoef">Coefficient de frottement latéral (défaut: 0.13)</param>
+            <returns>Rayon minimum en mètres</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.RecommendedSuperelevation(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le dévers recommandé pour un rayon donné.
+            </summary>
+            <param name="radius">Rayon de la courbe en mètres</param>
+            <param name="speedKmh">Vitesse de référence en km/h</param>
+            <param name="maxSuperelevation">Dévers maximum autorisé en % (défaut: 7%)</param>
+            <returns>Dévers en %</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CurveWidening(System.Double,System.Double)">
+            <summary>
+            Calcule la surlargeur nécessaire en courbe pour un véhicule type.
+            </summary>
+            <param name="radius">Rayon de la courbe en mètres</param>
+            <param name="vehicleLength">Longueur du véhicule en mètres (défaut: 12m PL)</param>
+            <returns>Surlargeur en mètres</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.StoppingDistance(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule la distance de visibilité d'arrêt.
+            </summary>
+            <param name="speedKmh">Vitesse en km/h</param>
+            <param name="reactionTime">Temps de réaction en secondes (défaut: 2s)</param>
+            <param name="frictionCoef">Coefficient de frottement (défaut: 0.35)</param>
+            <param name="slopePercent">Pente en % (positive = montée)</param>
+            <returns>Distance de visibilité d'arrêt en mètres</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.OvertakingDistance(System.Double)">
+            <summary>
+            Calcule la distance de visibilité de dépassement.
+            </summary>
+            <param name="speedKmh">Vitesse en km/h</param>
+            <returns>Distance de dépassement en mètres</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.SlopePercent(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule la pente entre deux points (en %).
+            </summary>
+            <param name="p1">Point de départ</param>
+            <param name="p2">Point d'arrivée</param>
+            <returns>Pente en % (positive = montée)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.SlopePerMille(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule la pente en pour mille (‰).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.VerticalCurveParameters(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule les paramètres d'un raccordement parabolique vertical.
+            </summary>
+            <param name="slope1">Pente d'entrée en %</param>
+            <param name="slope2">Pente de sortie en %</param>
+            <param name="length">Longueur du raccordement en mètres</param>
+            <returns>Paramètres du raccordement (rayon, flèche, type)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.MinCrestCurveLength(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule la longueur minimale d'un raccordement convexe (point haut).
+            </summary>
+            <param name="slope1">Pente d'entrée en %</param>
+            <param name="slope2">Pente de sortie en %</param>
+            <param name="stoppingDistance">Distance d'arrêt en mètres</param>
+            <param name="eyeHeight">Hauteur de l'œil du conducteur (défaut: 1.10m)</param>
+            <param name="objectHeight">Hauteur de l'objet à voir (défaut: 0.15m)</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.MinSagCurveLength(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule la longueur minimale d'un raccordement concave (point bas).
+            </summary>
+            <param name="slope1">Pente d'entrée en %</param>
+            <param name="slope2">Pente de sortie en %</param>
+            <param name="stoppingDistance">Distance d'arrêt en mètres</param>
+            <param name="headlightHeight">Hauteur des phares (défaut: 0.60m)</param>
+            <param name="headlightAngle">Angle des phares en degrés (défaut: 1°)</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.VerticalCurveElevation(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule l'altitude sur une courbe parabolique verticale.
+            </summary>
+            <param name="startZ">Altitude au début du raccordement</param>
+            <param name="startSlope">Pente au début en %</param>
+            <param name="curveLength">Longueur totale du raccordement</param>
+            <param name="position">Position sur le raccordement (0 à curveLength)</param>
+            <param name="endSlope">Pente à la fin en %</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ManningStricklerFlow(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le débit par la formule de Manning-Strickler.
+            Q = K × S × Rh^(2/3) × I^(1/2)
+            </summary>
+            <param name="stricklerK">Coefficient de Strickler (ex: 70 pour béton lisse)</param>
+            <param name="section">Section mouillée en m²</param>
+            <param name="hydraulicRadius">Rayon hydraulique en m (S/Pm)</param>
+            <param name="slopeDecimal">Pente en décimal (ex: 0.01 pour 1%)</param>
+            <returns>Débit en m³/s</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ManningStricklerVelocity(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule la vitesse d'écoulement par Manning-Strickler.
+            V = K × Rh^(2/3) × I^(1/2)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.HydraulicRadius(System.Double,System.Double)">
+            <summary>
+            Calcule le rayon hydraulique.
+            Rh = Section mouillée / Périmètre mouillé
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CircularPipeHydraulics(System.Double,System.Double)">
+            <summary>
+            Paramètres hydrauliques d'une section circulaire partiellement remplie.
+            </summary>
+            <param name="diameter">Diamètre de la canalisation en mètres</param>
+            <param name="fillRatio">Taux de remplissage (0 à 1, ex: 0.8 pour 80%)</param>
+            <returns>Section mouillée, périmètre mouillé, rayon hydraulique</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.FullPipeFlow(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le débit à pleine section pour une canalisation circulaire.
+            </summary>
+            <param name="diameter">Diamètre en mètres</param>
+            <param name="slopePercent">Pente en %</param>
+            <param name="stricklerK">Coefficient de Strickler (défaut: 70 béton)</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.RequiredPipeDiameter(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le diamètre nécessaire pour un débit donné (à pleine section).
+            </summary>
+            <param name="flowRate">Débit en m³/s</param>
+            <param name="slopePercent">Pente en %</param>
+            <param name="stricklerK">Coefficient de Strickler (défaut: 70)</param>
+            <returns>Diamètre minimum en mètres</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.SelfCleaningSlope(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule la pente critique pour éviter les dépôts (auto-curage).
+            </summary>
+            <param name="diameter">Diamètre en mètres</param>
+            <param name="minVelocity">Vitesse minimale d'auto-curage (défaut: 0.60 m/s)</param>
+            <param name="stricklerK">Coefficient de Strickler (défaut: 70)</param>
+            <returns>Pente minimale en %</returns>
+        </member>
+        <member name="T:OpenAsphalte.Services.GeometryService.StricklerCoefficients">
+            <summary>
+            Coefficients de Strickler courants.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ManholeDrop(System.Double,System.Double)">
+            <summary>
+            Calcule la hauteur de chute dans un regard.
+            </summary>
+            <param name="upstreamInvert">Cote radier amont</param>
+            <param name="downstreamInvert">Cote radier aval</param>
+            <returns>Hauteur de chute en mètres</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.RequiresEnergyDissipation(System.Double,System.Double)">
+            <summary>
+            Détermine si une chute nécessite un dispositif de dissipation d'énergie.
+            </summary>
+            <param name="dropHeight">Hauteur de chute en mètres</param>
+            <param name="threshold">Seuil au-delà duquel une dissipation est nécessaire (défaut: 0.80m)</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.OvoidPipeHydraulics(System.Double,System.Double)">
+            <summary>
+            Paramètres hydrauliques d'une section ovoïde (T150).
+            </summary>
+            <param name="height">Hauteur nominale de l'ovoïde en mètres</param>
+            <param name="fillRatio">Taux de remplissage (0 à 1)</param>
+            <returns>Section mouillée, périmètre mouillé, rayon hydraulique</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.RectangularChannelHydraulics(System.Double,System.Double,System.Double)">
+            <summary>
+            Paramètres hydrauliques d'une section rectangulaire (cadre ou dalot).
+            </summary>
+            <param name="width">Largeur en mètres</param>
+            <param name="height">Hauteur totale en mètres</param>
+            <param name="waterDepth">Hauteur d'eau en mètres</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TrapezoidalChannelHydraulics(System.Double,System.Double,System.Double)">
+            <summary>
+            Paramètres hydrauliques d'une section trapézoïdale (fossé).
+            </summary>
+            <param name="bottomWidth">Largeur au fond en mètres</param>
+            <param name="waterDepth">Hauteur d'eau en mètres</param>
+            <param name="sideSlope">Fruit des talus (horizontal/vertical, ex: 1 pour 1/1)</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CrossSectionAreas(System.Collections.Generic.IList{Autodesk.AutoCAD.Geometry.Point3d},System.Double)">
+            <summary>
+            Calcule l'aire d'un profil en travers par la méthode des trapèzes.
+            Les points doivent être ordonnés (gauche à droite ou inversement).
+            </summary>
+            <param name="profilePoints">Points du profil en travers (X = distance à l'axe, Z = altitude)</param>
+            <param name="referenceLevel">Niveau de référence (ex: niveau projet)</param>
+            <returns>Tuple (aire déblai, aire remblai)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.VolumeByAverageEndArea(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le volume entre deux profils en travers par la méthode de la moyenne des aires.
+            </summary>
+            <param name="area1">Aire du premier profil en m²</param>
+            <param name="area2">Aire du deuxième profil en m²</param>
+            <param name="distance">Distance entre les deux profils en mètres</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.VolumeByPrismoidal(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le volume entre deux profils par la formule prismoïdale (plus précis).
+            </summary>
+            <param name="area1">Aire du premier profil en m²</param>
+            <param name="areaMiddle">Aire du profil médian en m²</param>
+            <param name="area2">Aire du deuxième profil en m²</param>
+            <param name="distance">Distance entre les profils extrêmes en mètres</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TotalEarthworkVolumes(System.Collections.Generic.IList{System.ValueTuple{System.Double,System.Double,System.Double}})">
+            <summary>
+            Calcule le volume total de terrassement à partir d'une série de profils.
+            </summary>
+            <param name="sections">Liste de tuples (pk, aire déblai, aire remblai)</param>
+            <returns>Tuple (volume déblai total, volume remblai total)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.BulkingFactor(System.Double,System.Double)">
+            <summary>
+            Calcule le coefficient de foisonnement/compactage.
+            </summary>
+            <param name="volumeInPlace">Volume en place (terrain naturel)</param>
+            <param name="volumeLoose">Volume foisonné (transport)</param>
+        </member>
+        <member name="T:OpenAsphalte.Services.GeometryService.BulkingFactors">
+            <summary>
+            Coefficients de foisonnement courants.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ApplyBulking(System.Double,System.Double)">
+            <summary>
+            Applique le coefficient de foisonnement à un volume en place.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CompactedVolume(System.Double,System.Double)">
+            <summary>
+            Calcule le volume de remblai compacté nécessaire à partir du volume en place.
+            </summary>
+            <param name="volumeLoose">Volume foisonné disponible</param>
+            <param name="compactionRatio">Taux de compactage (ex: 0.90 pour 90% du volume initial)</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.FrustumVolume(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le volume d'un tronc de pyramide (excavation à talus).
+            </summary>
+            <param name="topArea">Aire au niveau supérieur en m²</param>
+            <param name="bottomArea">Aire au niveau inférieur en m²</param>
+            <param name="height">Hauteur de l'excavation en mètres</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TrenchVolume(System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le volume d'une tranchée à parois verticales.
+            </summary>
+            <param name="width">Largeur de la tranchée en mètres</param>
+            <param name="depth">Profondeur moyenne en mètres</param>
+            <param name="length">Longueur de la tranchée en mètres</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TrenchVolumeWithSlope(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le volume d'une tranchée avec talutage.
+            </summary>
+            <param name="bottomWidth">Largeur au fond en mètres</param>
+            <param name="depth">Profondeur en mètres</param>
+            <param name="length">Longueur en mètres</param>
+            <param name="sideSlope">Fruit des talus (H/V)</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.BeddingVolume(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le volume de lit de pose pour une canalisation.
+            </summary>
+            <param name="pipeOuterDiameter">Diamètre extérieur de la canalisation en mètres</param>
+            <param name="beddingThickness">Épaisseur du lit de pose en mètres</param>
+            <param name="trenchWidth">Largeur de la tranchée en mètres</param>
+            <param name="length">Longueur en mètres</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.SurroundVolume(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calcule le volume d'enrobage d'une canalisation.
+            </summary>
+            <param name="pipeOuterDiameter">Diamètre extérieur en mètres</param>
+            <param name="trenchWidth">Largeur de la tranchée en mètres</param>
+            <param name="length">Longueur en mètres</param>
+            <param name="coverAbovePipe">Hauteur d'enrobage au-dessus de la génératrice supérieure en mètres</param>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.InterpolateZFromPlane(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Interpole l'altitude Z en un point à partir d'un plan défini par trois points.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.PlaneSlope(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule la pente d'un plan défini par trois points.
+            </summary>
+            <returns>Pente en % (gradient maximum)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.PlaneAspect(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule l'orientation (exposition) d'un plan.
+            </summary>
+            <returns>Azimut de la pente en grades (0 = Nord, 100 = Est)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TriangularPrismVolume(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,System.Double)">
+            <summary>
+            Calcule le volume d'un prisme triangulaire (entre un triangle et un plan horizontal).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CalculateTriangleArea(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule l'aire d'un triangle en 2D (projeté).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CalculateTriangleArea3D(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Calcule l'aire 3D d'un triangle (surface réelle inclinée).
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.LayerService">
+            <summary>
+            Service de gestion des calques AutoCAD.
+            Fournit des méthodes utilitaires pour créer, modifier et interroger les calques.
+            </summary>
+            <remarks>
+            Toutes les méthodes nécessitent une transaction active.
+            Utilisez <c>CommandBase.ExecuteInTransaction</c> pour obtenir une transaction.
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.Services.LayerService.EnsureLayer(Autodesk.AutoCAD.DatabaseServices.Database,Autodesk.AutoCAD.DatabaseServices.Transaction,System.String,Autodesk.AutoCAD.Colors.Color,System.String)">
+            <summary>
+            Crée un calque s'il n'existe pas, ou récupère son ObjectId s'il existe déjà.
+            </summary>
+            <param name="db">Database AutoCAD cible</param>
+            <param name="tr">Transaction active (doit être en cours)</param>
+            <param name="layerName">Nom du calque à créer ou récupérer</param>
+            <param name="color">Couleur du calque (défaut: blanc/noir selon fond)</param>
+            <param name="linetype">Type de ligne (défaut: CONTINUOUS). Doit exister dans le dessin.</param>
+            <returns>ObjectId du calque (nouveau ou existant)</returns>
+            <example>
+            <code>
+            ExecuteInTransaction(tr =>
+            {
+                var layerId = LayerService.EnsureLayer(Database, tr, "OAS_AXES",
+                    AcColor.FromColorIndex(AcColorMethod.ByAci, 1)); // Rouge
+            });
+            </code>
+            </example>
+        </member>
+        <member name="M:OpenAsphalte.Services.LayerService.GetAllLayers(Autodesk.AutoCAD.DatabaseServices.Database,Autodesk.AutoCAD.DatabaseServices.Transaction)">
+            <summary>
+            Récupère tous les calques du dessin avec leurs propriétés.
+            </summary>
+            <param name="db">Database AutoCAD source</param>
+            <param name="tr">Transaction active</param>
+            <returns>Liste de <see cref="T:OpenAsphalte.Services.LayerInfo"/> contenant les propriétés de chaque calque</returns>
+            <remarks>
+            Inclut le calque "0" et tous les calques créés par l'utilisateur.
+            Pour filtrer les calques visibles, utilisez <see cref="M:OpenAsphalte.Services.LayerService.GetVisibleLayers(Autodesk.AutoCAD.DatabaseServices.Database,Autodesk.AutoCAD.DatabaseServices.Transaction)"/>.
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.Services.LayerService.GetVisibleLayers(Autodesk.AutoCAD.DatabaseServices.Database,Autodesk.AutoCAD.DatabaseServices.Transaction)">
+            <summary>
+            Récupère les calques visibles (non éteints, non gelés)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.LayerService.LayerExists(Autodesk.AutoCAD.DatabaseServices.Database,Autodesk.AutoCAD.DatabaseServices.Transaction,System.String)">
+            <summary>
+            Vérifie si un calque existe
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.LayerService.SetCurrentLayer(Autodesk.AutoCAD.DatabaseServices.Database,Autodesk.AutoCAD.DatabaseServices.Transaction,System.String)">
+            <summary>
+            Définit le calque courant
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.LayerService.SetLayerOn(Autodesk.AutoCAD.DatabaseServices.Database,Autodesk.AutoCAD.DatabaseServices.Transaction,System.String,System.Boolean)">
+            <summary>
+            Active/désactive un calque
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.LayerService.SetLayerFrozen(Autodesk.AutoCAD.DatabaseServices.Database,Autodesk.AutoCAD.DatabaseServices.Transaction,System.String,System.Boolean)">
+            <summary>
+            Gèle/dégèle un calque
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.LayerInfo">
+            <summary>
+            Informations sur un calque AutoCAD
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.LayerInfo.Name">
+            <summary>Nom du calque</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.LayerInfo.Color">
+            <summary>Couleur du calque</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.LayerInfo.ObjectId">
+            <summary>ObjectId du calque</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.LayerInfo.IsOn">
+            <summary>Calque allumé</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.LayerInfo.IsFrozen">
+            <summary>Calque gelé</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.LayerInfo.IsLocked">
+            <summary>Calque verrouillé</summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.UpdateService">
+            <summary>
+            Service de gestion des mises a jour et du telechargement de modules.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.UpdateService.CheckForUpdatesAsync">
+            <summary>
+            Verifie les mises a jour disponibles.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.UpdateService.InstallCoreUpdateAsync(System.String)">
+            <summary>
+            Telecharge et lance l'installateur pour le Core.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.UpdateService.InstallModuleAsync(OpenAsphalte.Services.ModuleDefinition)">
+            <summary>
+            Installe ou met a jour un module.
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.UrlValidationService">
+            <summary>
+            Service de validation des URLs pour la s�curit�.
+            Centralise les contr�les de s�curit� pour �viter les duplications.
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Services.UrlValidationService.AllowedUpdateHosts">
+            <summary>
+            Liste blanche des domaines autoris�s pour les mises � jour
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.UrlValidationService.IsValidUpdateUrl(System.String)">
+            <summary>
+            Valide qu'une URL de mise � jour est s�curis�e.
+            </summary>
+            <param name="url">URL � valider</param>
+            <returns>True si l'URL est valide et s�curis�e, false sinon</returns>
+            <remarks>
+            Crit�res de validation :
+            - URL non nulle et non vide
+            - URL absolue valide
+            - Protocole HTTPS uniquement
+            - Domaine dans la liste blanche
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.Services.UrlValidationService.IsSecureUrl(System.String)">
+            <summary>
+            Valide qu'une URL est s�curis�e (HTTPS uniquement).
+            </summary>
+            <param name="url">URL � valider</param>
+            <returns>True si l'URL utilise HTTPS, false sinon</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.UrlValidationService.IsAllowedHost(System.String)">
+            <summary>
+            V�rifie si un domaine est dans la liste blanche des mises � jour.
+            </summary>
+            <param name="host">Nom de domaine � v�rifier</param>
+            <returns>True si le domaine est autoris�</returns>
+        </member>
+        <member name="T:OpenAsphalte.UI.ComWrapper`1">
+            <summary>
+            Wrapper IDisposable pour les objets COM AutoCAD.
+            Assure une libération propre des ressources COM même en cas d'exception.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.ComWrapper`1.ReplaceWith(`0)">
+            <summary>
+            Libère manuellement l'objet COM et le remplace par un autre.
+            Utile pour réassigner sans créer un nouveau wrapper.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.ComWrapper`1.SafeRelease">
+            <summary>
+            Libère l'objet COM de manière sécurisée
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.UI.MenuBuilder">
+            <summary>
+            Construction dynamique du menu contextuel Open Asphalte.
+            Génère automatiquement le menu basé sur les modules découverts.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.MenuBuilder.CreateMenu">
+            <summary>
+            Crée le menu Open Asphalte basé sur les modules découverts.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.MenuBuilder.IsOpenRoadMenu(System.String)">
+            <summary>
+            Vérifie si un nom correspond au menu Open Asphalte (toutes langues et noms personnalisés)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.MenuBuilder.IsMenuInMenuBar(Autodesk.AutoCAD.Interop.AcadMenuBar,System.String)">
+            <summary>
+            Vérifie si un menu est présent dans la barre de menus
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.MenuBuilder.ClearMenuItems(Autodesk.AutoCAD.Interop.AcadPopupMenu)">
+            <summary>
+            Vide tous les éléments d'un menu
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.MenuBuilder.RemoveMenu">
+            <summary>
+            Supprime le menu Open Asphalte de la barre de menus.
+            Note: Le menu reste dans le groupe de menus (limitation API COM AutoCAD).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.MenuBuilder.RebuildMenu">
+            <summary>
+            Reconstruit le menu (utilisé après changement de langue)
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.UI.RibbonBuilder">
+            <summary>
+            Construction dynamique du ruban (Ribbon) Open Asphalte.
+            Génère automatiquement le ruban basé sur les modules découverts.
+            </summary>
+            <remarks>
+            Le ruban supporte une mise à jour incrémentale lors du changement de langue
+            pour éviter le scintillement causé par une reconstruction complète.
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.GetTabTitle">
+            <summary>
+            Retourne le titre de l'onglet (nom personnalisé ou défaut)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.GetLargeImage">
+            <summary>
+            Charge et redimensionne l'image du logo Open Asphalte (32x32 pour grands boutons)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.GetSmallImage">
+            <summary>
+            Charge et redimensionne l'image du logo Open Asphalte (16x16 pour petits boutons)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.LoadAndResizeImage(System.String,System.Int32,System.Int32)">
+            <summary>
+            Charge une image et la redimensionne aux dimensions spécifiées
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.GetLogoImage">
+            <summary>
+            Retourne l'image du logo pour compatibilité (utilise la grande image)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.CreateRibbon">
+            <summary>
+            Cree le ruban Open Asphalte base sur les modules decouverts.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.CreateModulePanel(OpenAsphalte.Abstractions.IModule,System.Collections.Generic.List{OpenAsphalte.Discovery.CommandDescriptor})">
+            <summary>
+            Crée un panneau pour un module
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.CreateSystemPanel">
+            <summary>
+            Crée le panneau système
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.CreateSystemButtonSmall(System.String,System.String,System.String)">
+            <summary>
+            Crée un petit bouton système (16x16)
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.CreateButton(OpenAsphalte.Discovery.CommandDescriptor)">
+            <summary>
+            Cree un bouton de ruban a partir d'un descripteur de commande
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.CreateTooltip(System.String,System.String)">
+            <summary>
+            Crée une infobulle formatée
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.RemoveRibbon">
+            <summary>
+            Supprime le ruban Open Asphalte
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.RebuildRibbon">
+            <summary>
+            Reconstruit le ruban (utilisé après changement de langue).
+            Utilise une mise à jour incrémentale si possible pour éviter le scintillement.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.TryUpdateLocalizedTexts">
+            <summary>
+            Met à jour uniquement les textes localisés du ruban sans recréer la structure.
+            </summary>
+            <returns>True si la mise à jour a réussi, false si reconstruction nécessaire</returns>
+        </member>
+        <member name="M:OpenAsphalte.UI.RibbonBuilder.UpdateSystemButtonText(System.String,System.String,System.String)">
+            <summary>
+            Met à jour le texte d'un bouton système en cache
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.UI.RibbonCommandHandler">
+            <summary>
+            Gestionnaire de commandes pour les boutons du ruban
+            </summary>
+        </member>
+        <member name="E:OpenAsphalte.UI.RibbonCommandHandler.CanExecuteChanged">
+            <summary>
+            Événement requis par ICommand (non utilisé car CanExecute retourne toujours true)
+            </summary>
+        </member>
+    </members>
+</doc>

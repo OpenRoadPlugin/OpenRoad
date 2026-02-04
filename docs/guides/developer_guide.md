@@ -1,6 +1,6 @@
-﻿# Guide Développeur Open Road
+﻿# Guide Développeur Open Asphalte
 
-Ce guide complet vous accompagne dans la création de modules pour étendre Open Road.
+Ce guide complet vous accompagne dans la création de modules pour étendre Open Asphalte.
 
 ---
 
@@ -24,7 +24,7 @@ Ce guide complet vous accompagne dans la création de modules pour étendre Open
 
 ### Principe fondamental
 
-> **Le c�ur d'Open Road ne doit JAMAIS être modifié pour ajouter un module.**
+> **Le cœur d'Open Asphalte ne doit JAMAIS être modifié pour ajouter un module.**
 
 Les modules sont des DLL séparées, découvertes automatiquement au démarrage. Cette architecture garantit :
 
@@ -39,7 +39,7 @@ Les modules sont des DLL séparées, découvertes automatiquement au démarrage.
 ┌─────────────────────────────────────────────────────────────────┐
 │                          AutoCAD                                │
 ├─────────────────────────────────────────────────────────────────┤
-│                      OpenRoad.Core.dll                          │
+│                      OAS.Core.dll                                 │
 │      ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          │
 │      │  Discovery  │  │     UI      │  │  Services   │          │
 │      │   Module    │  │   Builder   │  │  partagés   │          │
@@ -57,10 +57,10 @@ Les modules sont des DLL séparées, découvertes automatiquement au démarrage.
 
 ### Flux de démarrage
 
-1. AutoCAD charge `OpenRoad.Core.dll` via `NETLOAD`
+1. AutoCAD charge `OAS.Core.dll` via `NETLOAD`
 2. `Plugin.Initialize()` est appelé
 3. `ModuleDiscovery` scanne le dossier `Modules/`
-4. Pour chaque `OpenRoad.*.dll` trouvée :
+4. Pour chaque `OAS.*.dll` trouvée :
    - Recherche des classes implémentant `IModule`
    - Instanciation et validation des dépendances
    - Chargement des traductions du module
@@ -68,7 +68,7 @@ Les modules sont des DLL séparées, découvertes automatiquement au démarrage.
 5. `MenuBuilder` et `RibbonBuilder` génèrent l'interface dynamiquement
 6. Les commandes sont prêtes à être utilisées
 
-**Si aucun module n'est présent**, seules les commandes système sont disponibles (`OR_HELP`, `OR_VERSION`, etc.).
+**Si aucun module n'est présent**, seules les commandes système sont disponibles (`OAS_HELP`, `OAS_VERSION`, etc.).
 
 ---
 
@@ -82,7 +82,7 @@ Les modules sont des DLL séparées, découvertes automatiquement au démarrage.
 
 ### Fichiers nécessaires
 
-- `OpenRoad.Core.dll` compilé (dans le dossier `bin/`)
+- `OAS.Core.dll` compilé (dans le dossier `bin/`)
 
 ### DLL AutoCAD à référencer
 
@@ -102,10 +102,10 @@ C:\Program Files\Autodesk\AutoCAD 2025\
 ### Structure des dossiers
 
 ```
-OpenRoad/
+OpenAsphalte/
 ??? src/
-?   ??? OpenRoad.Core/                    # ??? C�UR DU PLUGIN ???
-?       ??? OpenRoad.Core.csproj          # Projet principal
+?   ??? OpenAsphalte.Core/                    # ??? CŒUR DU PLUGIN ???
+?       ??? OpenAsphalte.Core.csproj          # Projet principal
 ?       ??? Plugin.cs                     # Point d'entrée IExtensionApplication
 ?       ?
 ?       ??? Abstractions/                 # Interfaces publiques pour modules
@@ -135,17 +135,17 @@ OpenRoad/
 ?       ?   ??? RibbonBuilder.cs          # Ruban auto-généré
 ?       ?
 ?       ??? Commands/                     # Commandes système
-?           ??? SystemCommands.cs         # OR_HELP, OR_VERSION, etc.
+?           ??? SystemCommands.cs         # OAS_HELP, OAS_VERSION, etc.
 ?           ??? SettingsWindow.xaml
 ?           ??? SettingsWindow.xaml.cs
 ?
 ??? templates/                            # Templates pour créer des modules
-?   ??? OpenRoad.Module.Template.csproj
+?   ??? OAS.Module.Template.csproj
 ?   ??? ModuleTemplate.cs
 ?   ??? CommandTemplate.cs
 ?
 ??? bin/
-    ??? OpenRoad.Core.dll                 # DLL principale
+    ??? OAS.Core.dll                          # DLL principale
     ??? Modules/                          # Dossier des modules externes
         ??? (vos DLL de modules ici)
 ```
@@ -154,11 +154,11 @@ OpenRoad/
 
 | Commande | Description |
 |----------|-------------|
-| `OR_HELP` | Liste des commandes disponibles |
-| `OR_VERSION` | Version et modules chargés |
-| `OR_SETTINGS` | Paramètres utilisateur |
-| `OR_RELOAD` | Recharge la configuration |
-| `OR_UPDATE` | Vérifie les mises à jour |
+| `OAS_HELP` | Liste des commandes disponibles |
+| `OAS_VERSION` | Version et modules chargés |
+| `OAS_SETTINGS` | Paramètres utilisateur |
+| `OAS_RELOAD` | Recharge la configuration |
+| `OAS_UPDATE` | Vérifie les mises à jour |
 
 ---
 
@@ -170,8 +170,8 @@ Créez un nouveau projet dans un dossier séparé :
 
 ```
 modules/
-└── OpenRoad.Voirie/                # Votre projet de module
-    ├── OpenRoad.Voirie.csproj      # Fichier projet
+└── OAS.Voirie/                     # Votre projet de module
+    ├── OAS.Voirie.csproj           # Fichier projet
     ├── VoirieModule.cs             # Classe principale du module
     └── Commands/
         └── ParkingCommand.cs       # Vos commandes
@@ -188,9 +188,9 @@ modules/
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     
-    <!-- IMPORTANT: Le nom DOIT commencer par "OpenRoad." -->
-    <AssemblyName>OpenRoad.Voirie</AssemblyName>
-    <RootNamespace>OpenRoad.Modules.Voirie</RootNamespace>
+    <!-- IMPORTANT: Le nom DOIT commencer par "OAS." -->
+    <AssemblyName>OAS.Voirie</AssemblyName>
+    <RootNamespace>OpenAsphalte.Modules.Voirie</RootNamespace>
     
     <!-- Output dans le dossier Modules -->
     <OutputPath>..\..\bin\Modules\</OutputPath>
@@ -199,8 +199,8 @@ modules/
 
   <!-- Référence au Core (ne pas copier) -->
   <ItemGroup>
-    <Reference Include="OpenRoad.Core">
-      <HintPath>..\..\bin\OpenRoad.Core.dll</HintPath>
+    <Reference Include="OAS.Core">
+      <HintPath>..\..\bin\OAS.Core.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
@@ -237,12 +237,12 @@ modules/
 ### 3. Classe Module
 
 ```csharp
-using OpenRoad.Abstractions;
+using OpenAsphalte.Abstractions;
 
-namespace OpenRoad.Modules.Voirie;
+namespace OpenAsphalte.Modules.Voirie;
 
 /// <summary>
-/// Module de création de voirie pour Open Road.
+/// Module de création de voirie pour Open Asphalte.
 /// </summary>
 public class VoirieModule : ModuleBase
 {
@@ -363,11 +363,11 @@ public class VoirieModule : ModuleBase
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.DatabaseServices;
-using OpenRoad.Abstractions;
-using OpenRoad.Logging;
-using OpenRoad.Services;
+using OpenAsphalte.Abstractions;
+using OpenAsphalte.Logging;
+using OpenAsphalte.Services;
 
-namespace OpenRoad.Modules.Voirie.Commands;
+namespace OpenAsphalte.Modules.Voirie.Commands;
 
 /// <summary>
 /// Commande de création de places de parking
@@ -375,9 +375,9 @@ namespace OpenRoad.Modules.Voirie.Commands;
 public class ParkingCommand : CommandBase
 {
     /// <summary>
-    /// Méthode exécutée quand l'utilisateur tape OR_PARKING
+    /// Méthode exécutée quand l'utilisateur tape OAS_PARKING
     /// </summary>
-    [CommandMethod("OR_PARKING")]
+    [CommandMethod("OAS_PARKING")]
     [CommandInfo("Stationnement",
         Description = "Crée des places de parking le long d'une polyligne",
         DisplayNameKey = "voirie.parking.title",
@@ -480,7 +480,7 @@ public abstract class CommandBase
 
 ### Vue d'ensemble
 
-Open Road supporte **3 langues** : Français (fr), Anglais (en), Espagnol (es).
+Open Asphalte supporte **3 langues** : Français (fr), Anglais (en), Espagnol (es).
 Le **Core est entièrement localisé** (UI, commandes système, logs).
 
 Le système de traduction est **dynamique** : lorsque l'utilisateur change de langue dans les paramètres :
@@ -508,7 +508,7 @@ var text = T("voirie.parking.title");
 var formatted = T("voirie.msg.count", count);  // "voirie.msg.count" = "{0} éléments créés"
 
 // Directement via Localization
-using L10n = OpenRoad.Localization.Localization;
+using L10n = OpenAsphalte.Localization.Localization;
 var text = L10n.T("key", "valeur par défaut");
 ```
 
@@ -583,7 +583,7 @@ private void OnLanguageChanged(string oldLanguage, string newLanguage)
 ### Propriétés et méthodes utiles de Localization
 
 ```csharp
-using L10n = OpenRoad.Localization.Localization;
+using L10n = OpenAsphalte.Localization.Localization;
 
 // Langue courante
 string currentLang = L10n.CurrentLanguage;  // "fr", "en" ou "es"
@@ -611,7 +611,7 @@ bool isSupported = L10n.IsLanguageSupported("de");  // false
 ### Logger
 
 ```csharp
-using OpenRoad.Logging;
+using OpenAsphalte.Logging;
 
 Logger.Debug("Message debug");   // Seulement si DevMode=true
 Logger.Info("Information");      // [INFO] Information
@@ -624,7 +624,7 @@ Logger.Raw("Message brut");      // Sans préfixe
 ### GeometryService
 
 ```csharp
-using OpenRoad.Services;
+using OpenAsphalte.Services;
 using Autodesk.AutoCAD.Geometry;
 
 // Distance et angles
@@ -656,7 +656,7 @@ Point3d centroid = GeometryService.CalculateCentroid(points);
 ### LayerService
 
 ```csharp
-using OpenRoad.Services;
+using OpenAsphalte.Services;
 using AcColor = Autodesk.AutoCAD.Colors.Color;
 
 ExecuteInTransaction(tr =>
@@ -664,7 +664,7 @@ ExecuteInTransaction(tr =>
     // Créer ou obtenir un calque
     var layerId = LayerService.EnsureLayer(
         Database!, tr, 
-        "OR_PARKING",                                    // Nom du calque
+        "OAS_PARKING",                                    // Nom du calque
         AcColor.FromColorIndex(AcColorMethod.ByAci, 3),  // Couleur (vert)
         "DASHED"                                         // Type de ligne (optionnel)
     );
@@ -676,14 +676,14 @@ ExecuteInTransaction(tr =>
     var layers = LayerService.GetVisibleLayers(Database!, tr);
     
     // Définir le calque courant
-    LayerService.SetCurrentLayer(Database!, tr, "OR_PARKING");
+    LayerService.SetCurrentLayer(Database!, tr, "OAS_PARKING");
 });
 ```
 
 ### Configuration
 
 ```csharp
-using OpenRoad.Configuration;
+using OpenAsphalte.Configuration;
 
 // Paramètres globaux
 string lang = Configuration.Language;   // "fr", "en", "es"
@@ -704,7 +704,7 @@ Configuration.OnSettingChanged += (key, value) =>
 ### ModuleDiscovery
 
 ```csharp
-using OpenRoad.Discovery;
+using OpenAsphalte.Discovery;
 
 // Liste des modules chargés
 var modules = ModuleDiscovery.Modules;
@@ -753,7 +753,7 @@ public class SignalisationModule : ModuleBase
 
 > ⚠️ **Règle importante** : Les modules officiels doivent éviter au maximum les bibliothèques tierces.
 
-#### Pour les modules officiels (distribués avec Open Road)
+#### Pour les modules officiels (distribués avec Open Asphalte)
 
 | Priorité | Action |
 |----------|--------|
@@ -795,7 +795,7 @@ Les entreprises peuvent développer leurs propres modules pour un usage interne.
 ```
 ╔══════════════════════════════════════════════════════════════════╗
 ║  Les modules privés développés par des entreprises tierces       ║
-║  sont HORS DU PÉRIMÈTRE DE SUPPORT d'Open Road.                  ║
+║  sont HORS DU PÉRIMÈTRE DE SUPPORT d'Open Asphalte.                  ║
 ║                                                                  ║
 ║  Si votre module privé casse votre installation :                ║
 ║  → C'est votre responsabilité.                                   ║
@@ -826,27 +826,27 @@ Si votre module privé cause des problèmes :
 
 ```csharp
 // Modules
-namespace OpenRoad.Modules.Voirie;            // Module principal
-namespace OpenRoad.Modules.Voirie.Commands;   // Commandes du module
-namespace OpenRoad.Modules.Voirie.Services;   // Services spécifiques (optionnel)
+namespace OpenAsphalte.Modules.Voirie;            // Module principal
+namespace OpenAsphalte.Modules.Voirie.Commands;   // Commandes du module
+namespace OpenAsphalte.Modules.Voirie.Services;   // Services spécifiques (optionnel)
 ```
 
 ### Nommage
 
 | Élément | Convention | Exemple |
 |---------|------------|---------|
-| Assembly | `OpenRoad.{Module}` | `OpenRoad.Voirie` |
-| Namespace | `OpenRoad.Modules.{Module}` | `OpenRoad.Modules.Voirie` |
-| Commande AutoCAD | `OR_{MODULE}_{ACTION}` | `OR_VOIRIE_PARKING` |
+| Assembly | `OAS.{Module}` | `OAS.Voirie` |
+| Namespace | `OpenAsphalte.Modules.{Module}` | `OpenAsphalte.Modules.Voirie` |
+| Commande AutoCAD | `OAS_{MODULE}_{ACTION}` | `OAS_VOIRIE_PARKING` |
 | Clé traduction | `{module}.{section}.{key}` | `voirie.parking.title` |
-| Calque | `OR_{MODULE}_{ELEMENT}` | `OR_VOIRIE_PARKING` |
+| Calque | `OAS_{MODULE}_{ELEMENT}` | `OAS_VOIRIE_PARKING` |
 
 ### Alias recommandés
 
 ```csharp
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using AcColor = Autodesk.AutoCAD.Colors.Color;
-using L10n = OpenRoad.Localization.Localization;
+using L10n = OpenAsphalte.Localization.Localization;
 ```
 
 ### Bonnes pratiques
@@ -887,26 +887,26 @@ tr.Commit();
 ### Compiler un module
 
 ```bash
-cd modules/OpenRoad.Voirie
+cd modules/OAS.Voirie
 dotnet build -c Release
 ```
 
-La DLL sera générée dans `bin/Modules/OpenRoad.Voirie.dll`.
+La DLL sera générée dans `bin/Modules/OAS.Voirie.dll`.
 
 ### Tester dans AutoCAD
 
 1. Compiler le module
 2. Dans AutoCAD, taper `NETLOAD`
-3. Sélectionner `OpenRoad.Core.dll`
-4. Taper `OR_HELP` pour voir les commandes disponibles
-5. Taper `OR_VERSION` pour voir les modules chargés
+3. Sélectionner `OAS.Core.dll`
+4. Taper `OAS_HELP` pour voir les commandes disponibles
+5. Taper `OAS_VERSION` pour voir les modules chargés
 
 ### Distribution
 
 Pour distribuer votre module :
 
 1. **Fichier à fournir** : Uniquement la DLL du module
-2. **Instructions utilisateur** : "Placer dans le dossier `Modules/` d'Open Road"
+2. **Instructions utilisateur** : "Placer dans le dossier `Modules/` d'Open Asphalte"
 3. **Dépendances** : Documenter les modules requis
 
 ---
@@ -917,23 +917,23 @@ Pour distribuer votre module :
 
 Vérifiez que :
 
-1. ✅ Le fichier `.dll` est nommé `OpenRoad.*.dll`
+1. ✅ Le fichier `.dll` est nommé `OAS.*.dll`
 2. ✅ La DLL est dans le dossier `Modules/`
 3. ✅ La classe du module hérite de `ModuleBase`
 4. ✅ `GetCommandTypes()` retourne le type de votre commande
-5. ✅ L'attribut `[CommandMethod("OR_...")]` est présent sur la méthode
+5. ✅ L'attribut `[CommandMethod("OAS_...")]` est présent sur la méthode
 6. ✅ `ShowInMenu = true` dans `[CommandInfo]` (c'est le défaut)
 
 ### Comment débugger mon module ?
 
-1. Activez le mode développeur : `OR_SETTINGS` 👉 Mode développeur : Oui
+1. Activez le mode développeur : `OAS_SETTINGS` 👉 Mode développeur : Oui
 2. Utilisez `Logger.Debug()` pour afficher des messages (visibles seulement en mode dev)
-3. Utilisez `OR_VERSION` pour voir les modules chargés
+3. Utilisez `OAS_VERSION` pour voir les modules chargés
 
 ### Comment accéder à un autre module ?
 
 ```csharp
-using OpenRoad.Discovery;
+using OpenAsphalte.Discovery;
 
 // Par ID
 var voirieModule = ModuleDiscovery.GetModule("voirie");
@@ -944,7 +944,7 @@ var voirie = ModuleDiscovery.GetModule<VoirieModule>();
 
 ### Puis-je modifier le Core pour mon besoin ?
 
-**Non.** C'est le principe fondamental d'Open Road. Si vous avez besoin d'une fonctionnalité :
+**Non.** C'est le principe fondamental d'Open Asphalte. Si vous avez besoin d'une fonctionnalité :
 
 1. Vérifiez si elle existe déjà dans les services partagés
 2. Proposez une amélioration via une Pull Request
@@ -964,17 +964,17 @@ var voirie = ModuleDiscovery.GetModule<VoirieModule>();
 
 ### Licence Apache 2.0 et responsabilité
 
-En développant un module pour Open Road, vous reconnaissancez que :
+En développant un module pour Open Asphalte, vous reconnaissancez que :
 
-1. **Open Road est fourni "tel quel"** sans garantie d'aucune sorte
-2. **Les auteurs d'Open Road ne sont pas responsables** des modules tiers
+1. **Open Asphalte est fourni "tel quel"** sans garantie d'aucune sorte
+2. **Les auteurs d'Open Asphalte ne sont pas responsables** des modules tiers
 3. **Vous êtes seul responsable** de votre module et de ses conséquences
-4. **Le nom "Open Road" est une marque réservée** — Vous ne pouvez pas l'utiliser pour nommer vos modules
+4. **Le nom "Open Asphalte" est une marque réservée** — Vous ne pouvez pas l'utiliser pour nommer vos modules
 
 ### Responsabilité des modules tiers
 
 - Les modules que vous créez sont **sous votre propre responsabilité**
-- Open Road **ne garantit pas** le bon fonctionnement de vos modules
+- Open Asphalte **ne garantit pas** le bon fonctionnement de vos modules
 - Les utilisateurs de vos modules doivent être informés des risques
 
 ### Recommandations
@@ -985,4 +985,4 @@ Si vous distribuez votre module publiquement :
 2. **Documentez les risques** potentiels liés à votre module
 3. **Testez abondamment** avant toute distribution
 4. **Ne faites aucune promesse** de résultat ou de performance
-5. **N'utilisez pas le nom "Open Road"** dans le nom de votre module (utilisez votre propre nom/marque)
+5. **N'utilisez pas le nom "Open Asphalte"** dans le nom de votre module (utilisez votre propre nom/marque)

@@ -1,11 +1,11 @@
 ﻿{
-  "name": "Open Road",
+  "name": "Open Asphalte",
   "version": "0.0.2-dev",
   "build": "2026.02.04",
   "channel": "dev",
   "framework": ".NET 8.0 - Windows",
   "minAutoCADVersion": "2025",
-  "repository": "https://github.com/openroadplugin/openroad",
-  "updateUrl": "https://github.com/openroadplugin/openroad/releases/latest",
+  "repository": "https://github.com/openasphalteplugin/openasphalte",
+  "updateUrl": "https://github.com/openasphalteplugin/openasphalte/releases/latest",
   "releaseNotes": "Version 0.0.1 - Première version alpha du Core modulaire"
 }

@@ -1,7 +1,7 @@
-﻿# Open Road
+﻿# Open Asphalte
 
 <p align="center">
-  <img src="OpenRoad_Logo.png" alt="Open Road" width="200"/>
+  <img src="OAS_Logo.png" alt="Open Asphalte" width="200"/>
 </p>
 
 **Plugin modulaire pour AutoCAD**  Voirie et aménagement urbain
@@ -14,7 +14,7 @@
 
 ##  Vue d'ensemble
 
-Open Road est un **framework extensible** pour AutoCAD, conçu pour les professionnels de la voirie et de l'aménagement urbain. Son architecture modulaire permet d'ajouter facilement de nouvelles fonctionnalités **sans jamais modifier le cœur du programme**.
+Open Asphalte est un **framework extensible** pour AutoCAD, conçu pour les professionnels de la voirie et de l'aménagement urbain. Son architecture modulaire permet d'ajouter facilement de nouvelles fonctionnalités **sans jamais modifier le cœur du programme**.
 
 ###  Philosophie
 
@@ -47,20 +47,20 @@ Le programme s'adapte automatiquement aux modules présents.
 
 ### Installation rapide
 
-1. **Téléchargez** la dernière version depuis [Releases](https://github.com/openroadplugin/openroad/releases)
-2. **Extrayez** le contenu dans un dossier (ex: C:\OpenRoad\)
+1. **Téléchargez** la dernière version depuis [Releases](https://github.com/openasphalteplugin/openasphalte/releases)
+2. **Extrayez** le contenu dans un dossier (ex: C:\OpenAsphalte\)
 3. Dans AutoCAD, tapez **NETLOAD**
-4. Sélectionnez **OpenRoad.Core.dll**
-5. Tapez **OR_HELP** pour voir les commandes disponibles
+4. Sélectionnez **OAS.Core.dll**
+5. Tapez **OAS_HELP** pour voir les commandes disponibles
 
 ### Structure des fichiers
 
 `
-OpenRoad/
- OpenRoad.Core.dll      # Cœur du plugin (obligatoire)
+OpenAsphalte/
+ OAS.Core.dll              # Cœur du plugin (obligatoire)
  Modules/               # Dossier des modules (créé automatiquement)
-     OpenRoad.Voirie.dll
-     OpenRoad.Dessin.dll
+     OAS.Voirie.dll
+     OAS.Dessin.dll
      ...
 `
 
@@ -68,7 +68,7 @@ OpenRoad/
 
 Ajoutez à votre fichier cad.lsp ou caddoc.lsp :
 `lisp
-(command "NETLOAD" "C:\\chemin\\vers\\OpenRoad.Core.dll")
+(command "NETLOAD" "C:\\chemin\\vers\\OAS.Core.dll")
 `
 
 ---
@@ -81,15 +81,15 @@ Ces commandes sont **toujours disponibles**, même sans aucun module installé :
 
 | Commande | Description |
 |----------|-------------|
-| OR_HELP | Affiche la liste des commandes disponibles |
-| OR_VERSION | Informations de version et modules chargés |
-| OR_SETTINGS | Ouvre la fenêtre des paramètres |
-| OR_RELOAD | Recharge la configuration |
-| OR_UPDATE | Vérifie les mises à jour |
+| OAS_HELP | Affiche la liste des commandes disponibles |
+| OAS_VERSION | Informations de version et modules chargés |
+| OAS_SETTINGS | Ouvre la fenêtre des paramètres |
+| OAS_RELOAD | Recharge la configuration |
+| OAS_UPDATE | Vérifie les mises à jour |
 
 ### Interface automatique
 
-Open Road génère automatiquement :
+Open Asphalte génère automatiquement :
 - Un **menu** avec le **nom localisé** de l'application
 - Un **onglet ruban** avec le **nom localisé** de l'application
 
@@ -101,12 +101,12 @@ L'interface s'adapte dynamiquement :
 
 ##  Modules
 
-Les modules étendent les fonctionnalités d'Open Road. Ils sont **découverts automatiquement** au démarrage.
+Les modules étendent les fonctionnalités d'Open Asphalte. Ils sont **découverts automatiquement** au démarrage.
 
 ### Installation d'un module
 
 1. Téléchargez le fichier .dll du module
-2. Placez-le dans le dossier **Modules/** (à côté de OpenRoad.Core.dll)
+2. Placez-le dans le dossier **Modules/** (à côté de OAS.Core.dll)
 3. Redémarrez AutoCAD
 
 Le module apparaîtra automatiquement dans l'interface ! 
@@ -131,7 +131,7 @@ Consultez le **[Guide développeur](docs/guides/developer_guide.md)** pour crée
 - 🇬🇧 English
 - 🇪🇸 Español
 
-Changez la langue avec `OR_SETTINGS` ou dans le fichier de configuration.
+Changez la langue avec `OAS_SETTINGS` ou dans le fichier de configuration.
 Tous les textes du **Core** (UI, commandes système, logs) sont localisés.
 
 ---
@@ -140,7 +140,7 @@ Tous les textes du **Core** (UI, commandes système, logs) sont localisés.
 
 La configuration est stockée dans :
 ```
-%APPDATA%\Open Road\config.json
+%APPDATA%\Open Asphalte\config.json
 ```
 
 ### Paramètres disponibles
@@ -150,15 +150,28 @@ La configuration est stockée dans :
 | language | Langue (fr, en, es) | fr |
 | devMode | Mode développeur (logs détaillés) | false |
 | checkUpdatesOnStartup | Vérifier les mises à jour au démarrage | true |
+| mainMenuName | Nom personnalisé du menu et ruban | Open Asphalte |
+
+### Personnalisation du nom du menu
+
+Lors de l'installation, vous pouvez personnaliser le nom du menu principal qui s'affichera dans AutoCAD. Si vous entrez un nom (ex: "MonEntreprise"), le menu et le ruban afficheront "MonEntreprise - OA".
+
+Vous pouvez également modifier ce paramètre manuellement dans le fichier `config.json` :
+
+```json
+{
+  "mainMenuName": "MonEntreprise - OA"
+}
+```
 
 ---
 
 ##  Architecture
 
 `
-OpenRoad/
+OpenAsphalte/
  src/
-    OpenRoad.Core/           # Cœur du plugin (NE JAMAIS MODIFIER)
+    OAS.Core/                    # Cœur du plugin (NE JAMAIS MODIFIER)
         Plugin.cs            # Point d'entrée IExtensionApplication
         Abstractions/        # Interfaces pour créer des modules
            IModule.cs       # Interface module
@@ -173,15 +186,15 @@ OpenRoad/
            GeometryService.cs
            LayerService.cs
         UI/                  # Construction dynamique du menu et ruban
-        Commands/            # Commandes système (OR_HELP, OR_SETTINGS...)
+        Commands/            # Commandes système (OAS_HELP, OAS_SETTINGS...)
 
  templates/                   # Templates pour créer de nouveaux modules
-    OpenRoad.Module.Template.csproj
+    OAS.Module.Template.csproj
     ModuleTemplate.cs
     CommandTemplate.cs
 
  bin/
-     OpenRoad.Core.dll        # DLL principale compilée
+     OAS.Core.dll                # DLL principale compilée
      Modules/                 # Dossier des modules (DLL externes)
 `
 
@@ -189,11 +202,11 @@ OpenRoad/
 
 `
 AutoCAD démarre
-     NETLOAD OpenRoad.Core.dll
+     NETLOAD OAS.Core.dll
          1. Chargement configuration
          2. Initialisation localisation
          3. Scan du dossier Modules/
-            Pour chaque OpenRoad.*.dll trouvée :
+            Pour chaque OAS.*.dll trouvée :
                 Recherche des classes IModule
                 Validation des dépendances
                 Chargement des traductions
@@ -216,11 +229,11 @@ AutoCAD démarre
 ### Compiler le Core
 
 ```bash
-cd src/OpenRoad.Core
+cd src/OAS.Core
 dotnet build -c Release
 ```
 
-Le fichier OpenRoad.Core.dll sera généré dans bin/.
+Le fichier OAS.Core.dll sera généré dans bin/.
 
 ---
 
@@ -247,7 +260,7 @@ Voir aussi le fichier [NOTICE](NOTICE) pour les mentions et marques.
 
 Ce logiciel est fourni **"tel quel"**, sans aucune garantie d'aucune sorte, expresse ou implicite. 
 
-**Open Road et ses contributeurs ne peuvent en aucun cas être tenus responsables** de :
+**Open Asphalte et ses contributeurs ne peuvent en aucun cas être tenus responsables** de :
 - Tout dommage direct, indirect, accessoire ou consécutif
 - Toute perte de données ou de profits
 - Toute interruption d'activité
@@ -258,5 +271,5 @@ L'utilisation de ce plugin dans AutoCAD se fait **à vos propres risques**. Vér
 
 ##  Support
 
--  Issues: [GitHub Issues](https://github.com/openroadplugin/openroad/issues)
--  Discussions: [GitHub Discussions](https://github.com/openroadplugin/openroad/discussions)
+-  Issues: [GitHub Issues](https://github.com/openasphalteplugin/openasphalte/issues)
+-  Discussions: [GitHub Discussions](https://github.com/openasphalteplugin/openasphalte/discussions)

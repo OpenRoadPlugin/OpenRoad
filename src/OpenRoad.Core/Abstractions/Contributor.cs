@@ -1,4 +1,4 @@
-namespace OpenRoad.Abstractions;
+﻿namespace OpenAsphalte.Abstractions;
 
 /// <summary>
 /// Represents a person or entity contributing to the project.

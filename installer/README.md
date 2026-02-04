@@ -1,6 +1,6 @@
-# Open Road Installer
+# Open Asphalte Installer
 
-Ce dossier contient les fichiers nécessaires pour créer l'installateur du plugin Open Road.
+Ce dossier contient les fichiers nécessaires pour créer l'installateur du plugin Open Asphalte.
 
 ## Compatibilité
 
@@ -16,7 +16,9 @@ Ce dossier contient les fichiers nécessaires pour créer l'installateur du plug
 ## Structure
 
 *   `PackageContents.xml` : Fichier de définition du Bundle Autodesk. C'est ce qui permet à AutoCAD de charger le plugin automatiquement.
-*   `OpenRoad.iss` : Script Inno Setup qui génère l'exécutable `.exe`.
+*   `OAS.iss` : Script Inno Setup qui génère l'exécutable `.exe`.
+*   `WizardImage.bmp` : Image 164x314 affichée sur le côté gauche du wizard.
+*   `WizardSmallImage.bmp` : Petite image 55x58 en haut à droite du wizard.
 
 ## Comment créer l'installeur
 
@@ -24,17 +26,56 @@ Ce dossier contient les fichiers nécessaires pour créer l'installateur du plug
     ```bash
     dotnet build -c Release
     ```
-2.  Ouvrez le fichier `OpenRoad.iss` avec Inno Setup Compiler.
+2.  Ouvrez le fichier `OAS.iss` avec Inno Setup Compiler.
 3.  Cliquez sur le bouton **Compile** (ou appuyez sur `F9`).
-4.  L'installateur `OpenRoad_Setup_v0.0.1.exe` sera généré dans ce dossier `installer/Output` (ou à la racine selon la config).
+4.  L'installateur `OAS_Setup_v{version}.exe` sera généré dans `installer/Output/`.
 
-## Fonctionnement
+Ou utilisez le script automatisé :
+```bash
+.\scripts\build-install.bat
+```
 
-L'installateur va créer la structure suivante sur le poste utilisateur :
-`%APPDATA%\Autodesk\ApplicationPlugins\OpenRoad.bundle\`
-*   `PackageContents.xml`
-*   `Contents\`
-    *   `OpenRoad.Core.dll`
-    *   `Modules\` ...
+## Fonctionnalités de l'installateur
+
+### Détection des versions AutoCAD
+L'installateur scanne automatiquement le registre pour détecter les versions d'AutoCAD compatibles (2025+) et affiche un résumé à l'utilisateur.
+
+### Acceptation de licence
+L'utilisateur doit accepter la licence Apache 2.0 avant de continuer l'installation.
+
+### Personnalisation du nom du menu
+L'installateur propose une page optionnelle permettant de personnaliser le nom du menu principal. Si l'utilisateur entre un nom (ex: "MonEntreprise"), le menu et le ruban dans AutoCAD afficheront "MonEntreprise - OA".
+
+Cette valeur est stockée dans `%APPDATA%\Open Asphalte\config.json` sous la clé `mainMenuName`.
+
+### Vérification AutoCAD en cours d'exécution
+L'installateur vérifie si AutoCAD est en cours d'exécution et demande à l'utilisateur de le fermer avant de continuer (installation et désinstallation).
+
+## Structure installée
+
+L'installateur crée la structure suivante sur le poste utilisateur :
+
+```
+%APPDATA%\Autodesk\ApplicationPlugins\OAS.bundle\
+├── PackageContents.xml
+└── Contents\
+    ├── OAS.Core.dll
+    ├── OAS.Core.deps.json
+    ├── OAS.Core.runtimeconfig.json
+    ├── version.json
+    ├── Modules\           # Dossier pour les modules (téléchargés via OAS_MODULES)
+    └── Resources\
+        └── OAS_Logo.png
+
+%APPDATA%\Open Asphalte\
+└── config.json            # Configuration utilisateur
+```
+
+AutoCAD détecte automatiquement le dossier `.bundle` au démarrage.
+
+## Notes techniques
+
+- L'installateur utilise les **fonctions natives Inno Setup** pour manipuler les fichiers JSON de configuration (aucune dépendance PowerShell).
+- Les modules ne sont PAS inclus dans l'installateur. Ils sont téléchargés via le Gestionnaire de Modules (`OAS_MODULES`) depuis GitHub.
 
 AutoCAD détecte automatiquement ce dossier au démarrage.

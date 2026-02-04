@@ -1,4 +1,4 @@
-// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,15 +12,15 @@
 using Autodesk.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
-using OpenRoad.Abstractions;
-using OpenRoad.Discovery;
-using OpenRoad.Logging;
-using L10n = OpenRoad.Localization.Localization;
+using OpenAsphalte.Abstractions;
+using OpenAsphalte.Discovery;
+using OpenAsphalte.Logging;
+using L10n = OpenAsphalte.Localization.Localization;
 
-namespace OpenRoad.UI;
+namespace OpenAsphalte.UI;
 
 /// <summary>
-/// Construction dynamique du ruban (Ribbon) Open Road.
+/// Construction dynamique du ruban (Ribbon) Open Asphalte.
 /// Génère automatiquement le ruban basé sur les modules découverts.
 /// </summary>
 /// <remarks>
@@ -29,8 +29,8 @@ namespace OpenRoad.UI;
 /// </remarks>
 public static class RibbonBuilder
 {
-    private const string TabId = "OPENROAD_TAB";
-    private const string LogoResourcePath = "pack://application:,,,/OpenRoad.Core;component/Resources/OpenRoad_Logo.png";
+    private const string TabId = "OPENASPHALTE_TAB";
+    private const string LogoResourcePath = "pack://application:,,,/OpenAsphalte.Core;component/Resources/OpenAsphalte_Logo.png";
     private static bool _ribbonCreated = false;
     
     // Cache pour mise à jour incrémentale des textes
@@ -42,7 +42,7 @@ public static class RibbonBuilder
     private static BitmapImage? _smallImage = null;  // 16x16
     
     /// <summary>
-    /// Charge et redimensionne l'image du logo Open Road (32x32 pour grands boutons)
+    /// Charge et redimensionne l'image du logo Open Asphalte (32x32 pour grands boutons)
     /// </summary>
     private static BitmapImage? GetLargeImage()
     {
@@ -60,7 +60,7 @@ public static class RibbonBuilder
     }
     
     /// <summary>
-    /// Charge et redimensionne l'image du logo Open Road (16x16 pour petits boutons)
+    /// Charge et redimensionne l'image du logo Open Asphalte (16x16 pour petits boutons)
     /// </summary>
     private static BitmapImage? GetSmallImage()
     {
@@ -105,7 +105,7 @@ public static class RibbonBuilder
     private static BitmapImage? GetLogoImage() => GetLargeImage();
     
     /// <summary>
-    /// Cree le ruban Open Road base sur les modules decouverts.
+    /// Cree le ruban Open Asphalte base sur les modules decouverts.
     /// </summary>
     public static void CreateRibbon()
     {
@@ -126,7 +126,7 @@ public static class RibbonBuilder
             // Creer l'onglet
             var tab = new RibbonTab
             {
-                Title = L10n.T("app.name", "Open Road"),
+                Title = L10n.T("app.name", "Open Asphalte"),
                 Id = TabId
             };
             
@@ -260,12 +260,12 @@ public static class RibbonBuilder
             Size = RibbonItemSize.Large,
             Orientation = System.Windows.Controls.Orientation.Vertical,
             CommandHandler = new RibbonCommandHandler(),
-            CommandParameter = "OR_SETTINGS",
+            CommandParameter = "OAS_SETTINGS",
             ToolTip = CreateTooltip(L10n.T("system.settings"), L10n.T("system.settings.desc")),
             LargeImage = largeIcon,
             Image = smallIcon
         };
-        _buttonCache["OR_SETTINGS"] = settingsButton;
+        _buttonCache["OAS_SETTINGS"] = settingsButton;
         source.Items.Add(settingsButton);
         
         // Bouton À propos - Grand bouton
@@ -277,12 +277,12 @@ public static class RibbonBuilder
             Size = RibbonItemSize.Large,
             Orientation = System.Windows.Controls.Orientation.Vertical,
             CommandHandler = new RibbonCommandHandler(),
-            CommandParameter = "OR_VERSION",
+            CommandParameter = "OAS_VERSION",
             ToolTip = CreateTooltip(L10n.T("about.title"), L10n.T("system.version.desc")),
             LargeImage = largeIcon,
             Image = smallIcon
         };
-        _buttonCache["OR_VERSION"] = aboutButton;
+        _buttonCache["OAS_VERSION"] = aboutButton;
         source.Items.Add(aboutButton);
         
         // Panneau avec les boutons secondaires (Aide, Recharger, Mise à jour)
@@ -291,7 +291,7 @@ public static class RibbonBuilder
         // Aide
         var helpButton = CreateSystemButtonSmall(
             L10n.T("system.help"),
-            "OR_HELP",
+            "OAS_HELP",
             L10n.T("system.help.desc")
         );
         rowPanel.Items.Add(helpButton);
@@ -300,7 +300,7 @@ public static class RibbonBuilder
         // Recharger
         var reloadButton = CreateSystemButtonSmall(
             L10n.T("system.reload"),
-            "OR_RELOAD",
+            "OAS_RELOAD",
             L10n.T("system.reload.desc")
         );
         rowPanel.Items.Add(reloadButton);
@@ -309,7 +309,7 @@ public static class RibbonBuilder
         // Mise à jour
         var updateButton = CreateSystemButtonSmall(
             L10n.T("system.update"),
-            "OR_UPDATE",
+            "OAS_UPDATE",
             L10n.T("system.update.desc")
         );
         rowPanel.Items.Add(updateButton);
@@ -376,7 +376,7 @@ public static class RibbonBuilder
             }
         }
         
-        // Utiliser le logo Open Road comme fallback
+        // Utiliser le logo Open Asphalte comme fallback
         largeIcon ??= GetLargeImage();
         smallIcon ??= GetSmallImage();
         
@@ -403,7 +403,7 @@ public static class RibbonBuilder
     }
     
     /// <summary>
-    /// Supprime le ruban Open Road
+    /// Supprime le ruban Open Asphalte
     /// </summary>
     public static void RemoveRibbon()
     {
@@ -473,7 +473,7 @@ public static class RibbonBuilder
             if (tab == null) return false;
             
             // Mettre à jour le titre de l'onglet
-            tab.Title = L10n.T("app.name", "Open Road");
+            tab.Title = L10n.T("app.name", "Open Asphalte");
             
             // Mettre à jour les panneaux en cache
             foreach (var kvp in _panelCache)
@@ -517,11 +517,11 @@ public static class RibbonBuilder
             }
             
             // Mettre à jour les boutons système
-            UpdateSystemButtonText("OR_SETTINGS", L10n.T("system.settings"), L10n.T("system.settings.desc"));
-            UpdateSystemButtonText("OR_VERSION", L10n.T("about.title"), L10n.T("system.version.desc"));
-            UpdateSystemButtonText("OR_HELP", L10n.T("system.help"), L10n.T("system.help.desc"));
-            UpdateSystemButtonText("OR_RELOAD", L10n.T("system.reload"), L10n.T("system.reload.desc"));
-            UpdateSystemButtonText("OR_UPDATE", L10n.T("system.update"), L10n.T("system.update.desc"));
+            UpdateSystemButtonText("OAS_SETTINGS", L10n.T("system.settings"), L10n.T("system.settings.desc"));
+            UpdateSystemButtonText("OAS_VERSION", L10n.T("about.title"), L10n.T("system.version.desc"));
+            UpdateSystemButtonText("OAS_HELP", L10n.T("system.help"), L10n.T("system.help.desc"));
+            UpdateSystemButtonText("OAS_RELOAD", L10n.T("system.reload"), L10n.T("system.reload.desc"));
+            UpdateSystemButtonText("OAS_UPDATE", L10n.T("system.update"), L10n.T("system.update.desc"));
             
             return true;
         }

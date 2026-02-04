@@ -1,9 +1,9 @@
-<Window x:Class="OpenRoad.Core.Commands.CreditsWindow"
+<Window x:Class="OpenAsphalte.Core.Commands.CreditsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OpenRoad.Core.Commands"
+        xmlns:local="clr-namespace:OpenAsphalte.Core.Commands"
         mc:Ignorable="d"
         Title="{Binding WindowTitle}" Height="500" Width="700"
         WindowStartupLocation="CenterScreen"
@@ -20,7 +20,7 @@
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Margin" Value="0,10,0,5"/>
         </Style>
-        
+
         <DataTemplate x:Key="ContributorTemplate">
             <Border Padding="5" Margin="2" BorderBrush="#EEEEEE" BorderThickness="0,0,0,1">
                 <Grid>
@@ -51,8 +51,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Open Road Core Team" Style="{StaticResource HeaderStyle}"/>
-                    <ListBox Grid.Row="1" ItemsSource="{Binding CoreContributors}" 
+                    <TextBlock Text="Open Asphalte Core Team" Style="{StaticResource HeaderStyle}"/>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding CoreContributors}"
                              ItemTemplate="{StaticResource ContributorTemplate}"
                              HorizontalContentAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
@@ -79,7 +79,7 @@
                             <StackPanel Visibility="{Binding HasSelectedModule, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <TextBlock Text="{Binding SelectedModule.Name}" Style="{StaticResource HeaderStyle}"/>
                                 <TextBlock Text="{Binding SelectedModule.Description}" TextWrapping="Wrap" Margin="0,0,0,15"/>
-                                
+
                                 <TextBlock Text="Version" FontWeight="Bold"/>
                                 <TextBlock Text="{Binding SelectedModule.Version}" Margin="0,0,0,10"/>
 
@@ -94,8 +94,8 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        
-        <Button Content="{Binding CloseButtonText}" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+
+        <Button Content="{Binding CloseButtonText}" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Width="80" Height="25" Click="CloseButton_Click" Margin="0,0,10,5" Grid.ZIndex="100"/>
     </Grid>
 </Window>

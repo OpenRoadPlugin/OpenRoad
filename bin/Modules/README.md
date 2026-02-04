@@ -1,10 +1,10 @@
-﻿# Dossier des Modules Open Road
+﻿# Dossier des Modules Open Asphalte
 
-Ce dossier est destiné à contenir les modules Open Road (fichiers .dll).
+Ce dossier est destiné à contenir les modules Open Asphalte (fichiers .dll).
 
 ## Comment ça fonctionne
 
-Au démarrage, Open Road scanne automatiquement ce dossier et charge tous les fichiers OpenRoad.*.dll trouvés. Les modules découverts apparaîtront automatiquement dans le menu et le ruban d'AutoCAD (interface localisée selon la langue).
+Au démarrage, Open Asphalte scanne automatiquement ce dossier et charge tous les fichiers OAS.*.dll trouvés. Les modules découverts apparaîtront automatiquement dans le menu et le ruban d'AutoCAD (interface localisée selon la langue).
 
 ## Installation d'un module
 
@@ -26,8 +26,8 @@ Consultez le [Guide développeur](../../docs/guides/developer_guide.md) dans la 
 
 ## Notes importantes
 
-- Les DLL **doivent** être nommées OpenRoad.*.dll pour être détectées
-- Chaque module doit référencer OpenRoad.Core.dll (sans le copier)
+- Les DLL **doivent** être nommées OAS.*.dll pour être détectées
+- Chaque module doit référencer OAS.Core.dll (sans le copier)
 - Les modules sont découverts et chargés **automatiquement** au démarrage
 - L'interface et les logs du Core sont **multilingues** (FR/EN/ES)
 - Si un module a des dépendances manquantes, il ne sera pas chargé

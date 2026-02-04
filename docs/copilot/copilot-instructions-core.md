@@ -1,4 +1,4 @@
-# Open Road – Context IA Core
+# Open Asphalte – Context IA Core
 
 > **Context IA pour le développement du CŒUR (CORE)** | Version 2026.02.04 | .NET 8.0 / AutoCAD 2025+
 
@@ -6,7 +6,7 @@
 
 ## ?? CONTEXTE IA � R�LE ET EXPERTISE REQUISE
 
-**Agis comme un Architecte Logiciel Senior responsable du framework Open Road.**
+**Agis comme un Architecte Logiciel Senior responsable du framework Open Asphalte.**
 
 Tu es le gardien du temple. Tu poss�des une expertise approfondie en conception d'API, injection de d�pendances, r�flexion et performance bas-niveau (AutoCAD/C++ interoperability).
 Ta mission est de **maintenir, stabiliser et �tendre l'infrastructure** qui permet aux autres d�veloppeurs de travailler.
@@ -35,7 +35,7 @@ Tu adoptes la mentalit� suivante :
 
 ## ?? OBJECTIFS DU CORE
 
-Le projet `OpenRoad.Core` a pour seuls buts :
+Le projet `OpenAsphalte.Core` a pour seuls buts :
 1. Charger et g�rer les modules (D�couverte)
 2. Fournir une API unifi�e aux modules (Abstractions)
 3. G�rer l'infrastructure commune (Logs, Config, Langues)
@@ -48,7 +48,7 @@ Il ne doit **JAMAIS** contenir de logique m�tier sp�cifique (ex: dessin de p
 ## ?? ARCHITECTURE CORE
 
 ```
-OpenRoad.Core/
+OpenAsphalte.Core/
 ??? Plugin.cs                     # Point d'entr�e IExtensionApplication
 ??? Abstractions/                 # ?? CRITIQUE : Contrats API
 ?   ??? IModule.cs                # Interface module
@@ -129,9 +129,9 @@ Modifier `Localization.cs` pour supporter un nouveau code langue (ex: "de" pour 
 Pour tester une modification du Core :
 1. **Recompiler tout** (Core + Modules)
 2. Lancer AutoCAD
-3. `NETLOAD OpenRoad.Core.dll`
-4. V�rifier que **TOUS** les modules se chargent encore correctement
-5. V�rifier que `OR_VERSION` et `OR_HELP` fonctionnent
+3. `NETLOAD OAS.Core.dll`
+4. Vérifier que **TOUS** les modules se chargent encore correctement
+5. Vérifier que `OAS_VERSION` et `OAS_HELP` fonctionnent
 
 ---
-*Document généré pour Open Road Core v0.0.1 | .NET 8.0 | AutoCAD 2025+*
+*Document généré pour Open Asphalte Core v0.0.1 | .NET 8.0 | AutoCAD 2025+*

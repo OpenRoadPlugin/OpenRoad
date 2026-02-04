@@ -1,4 +1,4 @@
-﻿// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,20 +11,20 @@
 
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.EditorInput;
-using OpenRoad.Abstractions;
-using OpenRoad.Configuration;
-using OpenRoad.Discovery;
-using OpenRoad.Logging;
-using OpenRoad.Services;
-using OpenRoad.UI;
-using L10n = OpenRoad.Localization.Localization;
+using OpenAsphalte.Abstractions;
+using OpenAsphalte.Configuration;
+using OpenAsphalte.Discovery;
+using OpenAsphalte.Logging;
+using OpenAsphalte.Services;
+using OpenAsphalte.UI;
+using L10n = OpenAsphalte.Localization.Localization;
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using System.Diagnostics;
 
-namespace OpenRoad.Commands;
+namespace OpenAsphalte.Commands;
 
 /// <summary>
-/// Commandes systeme integrees au coeur d'Open Road.
+/// Commandes systeme integrees au coeur d'Open Asphalte.
 /// Ces commandes sont toujours disponibles, meme sans module charge.
 /// </summary>
 public class SystemCommands : CommandBase
@@ -32,7 +32,7 @@ public class SystemCommands : CommandBase
     /// <summary>
     /// Affiche l'aide avec la liste de toutes les commandes disponibles
     /// </summary>
-    [CommandMethod("OR_HELP")]
+    [CommandMethod("OAS_HELP")]
     [CommandInfo("Help", 
         Description = "Shows the list of available commands",
         DisplayNameKey = "system.help",
@@ -54,12 +54,12 @@ public class SystemCommands : CommandBase
         // Commandes systeme
         ed.WriteMessage($"\n{Line($"  {L10n.T("system.help.section.system").ToUpperInvariant()}")}");
         ed.WriteMessage("\n+--------------------------------------------------------------------+");
-        ed.WriteMessage($"\n{Line($"  OR_HELP      - {L10n.T("system.help.desc")}")}");
-        ed.WriteMessage($"\n{Line($"  OR_VERSION   - {L10n.T("system.version.desc")}")}");
-        ed.WriteMessage($"\n{Line($"  OR_SETTINGS  - {L10n.T("system.settings.desc")}")}");
-        ed.WriteMessage($"\n{Line($"  OR_MODULES   - {L10n.T("system.modules.desc")}")}");
-        ed.WriteMessage($"\n{Line($"  OR_RELOAD    - {L10n.T("system.reload.desc")}")}");
-        ed.WriteMessage($"\n{Line($"  OR_UPDATE    - {L10n.T("system.update.desc")}")}");
+        ed.WriteMessage($"\n{Line($"  OAS_HELP      - {L10n.T("system.help.desc")}")}");
+        ed.WriteMessage($"\n{Line($"  OAS_VERSION   - {L10n.T("system.version.desc")}")}");
+        ed.WriteMessage($"\n{Line($"  OAS_SETTINGS  - {L10n.T("system.settings.desc")}")}");
+        ed.WriteMessage($"\n{Line($"  OAS_MODULES   - {L10n.T("system.modules.desc")}")}");
+        ed.WriteMessage($"\n{Line($"  OAS_RELOAD    - {L10n.T("system.reload.desc")}")}");
+        ed.WriteMessage($"\n{Line($"  OAS_UPDATE    - {L10n.T("system.update.desc")}")}")
         
         // Commandes des modules
         var commandsByModule = ModuleDiscovery.GetCommandsByModule();
@@ -91,7 +91,7 @@ public class SystemCommands : CommandBase
     /// <summary>
     /// Affiche les informations de version
     /// </summary>
-    [CommandMethod("OR_VERSION")]
+    [CommandMethod("OAS_VERSION")]
     [CommandInfo("Version",
         Description = "Shows version information",
         DisplayNameKey = "about.title",
@@ -113,7 +113,7 @@ public class SystemCommands : CommandBase
     /// <summary>
     /// Ouvre la fenetre des parametres
     /// </summary>
-    [CommandMethod("OR_SETTINGS")]
+    [CommandMethod("OAS_SETTINGS")]
     [CommandInfo("Settings",
         Description = "Opens the settings window",
         DisplayNameKey = "system.settings",
@@ -142,7 +142,7 @@ public class SystemCommands : CommandBase
     /// <summary>
     /// Recharge la configuration
     /// </summary>
-    [CommandMethod("OR_RELOAD")]
+    [CommandMethod("OAS_RELOAD")]
     [CommandInfo("Reload",
         Description = "Reloads the configuration",
         DisplayNameKey = "system.reload",
@@ -164,7 +164,7 @@ public class SystemCommands : CommandBase
     /// <summary>
     /// Ouvre le gestionnaire de modules pour installer/mettre à jour les modules
     /// </summary>
-    [CommandMethod("OR_MODULES")]
+    [CommandMethod("OAS_MODULES")]
     [CommandInfo("Modules",
         Description = "Opens the module manager to install and update modules",
         DisplayNameKey = "system.modules",
@@ -186,7 +186,7 @@ public class SystemCommands : CommandBase
     /// <summary>
     /// Vérifie les mises à jour en ouvrant la page des releases GitHub
     /// </summary>
-    [CommandMethod("OR_UPDATE")]
+    [CommandMethod("OAS_UPDATE")]
     [CommandInfo("Update",
         Description = "Checks for available updates",
         DisplayNameKey = "system.update",

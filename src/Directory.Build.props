@@ -1,14 +1,14 @@
 <Project>
   <!--
-    Directory.Build.props - Configuration partagée pour tous les projets Open Road
+    Directory.Build.props - Configuration partagée pour tous les projets Open Asphalte
     Ce fichier est automatiquement importé par MSBuild pour tous les projets du dossier.
   -->
 
   <PropertyGroup>
     <!-- Version centralisée - chargée depuis version.json -->
-    <OpenRoadVersion>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)..\\version.json')), '"version"\s*:\s*"([^\"]+)"').Groups[1].Value)</OpenRoadVersion>
-    <OpenRoadAuthors>Open Road Contributors</OpenRoadAuthors>
-    <OpenRoadCopyright>Copyright © 2026 Open Road Contributors</OpenRoadCopyright>
+    <OpenAsphalteVersion>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)..\\version.json')), '"version"\s*:\s*"([^\"]+)"').Groups[1].Value)</OpenAsphalteVersion>
+    <OpenAsphalteAuthors>Open Asphalte Contributors</OpenAsphalteAuthors>
+    <OpenAsphalteCopyright>Copyright © 2026 Open Asphalte Contributors</OpenAsphalteCopyright>
 
     <!-- Configuration .NET commune -->
     <TargetFramework>net8.0-windows</TargetFramework>

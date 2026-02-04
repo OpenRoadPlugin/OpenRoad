@@ -1,6 +1,6 @@
 # Module Géoréférencement
 
-> Module officiel Open Road pour la gestion des systèmes de coordonnées dans AutoCAD
+> Module officiel Open Asphalte pour la gestion des systèmes de coordonnées dans AutoCAD
 
 ## Informations
 
@@ -9,7 +9,7 @@
 | **ID** | `setprojection` |
 | **Version** | 0.0.1 |
 | **Auteur** | Charles TILLY |
-| **Contributeurs** | Open Road Community |
+| **Contributeurs** | Open Asphalte Community |
 | **Catégorie** | Cartographie |
 | **Dépendances** | Aucune |
 
@@ -26,11 +26,11 @@ Le module **Géoréférencement** permet de définir et gérer les systèmes de 
 
 ## Commandes
 
-### OR_GEOREF_SETPROJECTION
+### OAS_GEOREF_SETPROJECTION
 
 Ouvre la fenetre de selection du systeme de coordonnees.
 
-**Utilisation** : Tapez `OR_GEOREF_SETPROJECTION` dans la ligne de commande AutoCAD ou utilisez le menu/ruban Open Road.
+**Utilisation** : Tapez `OAS_GEOREF_SETPROJECTION` dans la ligne de commande AutoCAD ou utilisez le menu/ruban Open Asphalte.
 
 **Interface** :
 - **Barre de recherche** : Filtrez par nom, code, pays ou region
@@ -114,7 +114,7 @@ Le module analyse les coordonnees moyennes des objets du dessin pour suggerer un
 
 ## Integration avec le Core
 
-Le module utilise le service `CoordinateService` du Core Open Road qui fournit :
+Le module utilise le service `CoordinateService` du Core Open Asphalte qui fournit :
 
 - Conversions Lambert 93 <-> WGS84
 - Conversions CC (Coniques Conformes) -> WGS84  
@@ -124,9 +124,9 @@ Le module utilise le service `CoordinateService` du Core Open Road qui fournit :
 
 ## Installation
 
-1. Placez `OpenRoad.Georeferencement.dll` dans le dossier `bin/Modules/`
-2. Redemarrez AutoCAD ou rechargez le plugin avec `OR_RELOAD`
-3. Le module apparaitra automatiquement dans le menu et le ruban Open Road
+1. Placez `OAS.Georeferencement.dll` dans le dossier `bin/Modules/`
+2. Redemarrez AutoCAD ou rechargez le plugin avec `OAS_RELOAD`
+3. Le module apparaitra automatiquement dans le menu et le ruban Open Asphalte
 
 ## Historique des versions
 

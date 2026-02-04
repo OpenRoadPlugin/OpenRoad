@@ -1,11 +1,11 @@
 # UpdateService
 
-Service de gestion des mises à jour et du téléchargement de modules pour Open Road.
+Service de gestion des mises à jour et du téléchargement de modules pour Open Asphalte.
 
 ## Namespace
 
 ```csharp
-using OpenRoad.Services;
+using OpenAsphalte.Services;
 ```
 
 ## Méthodes
@@ -116,7 +116,7 @@ L'URL du marketplace peut être configurée :
 
 ```json
 {
-  "updateUrl": "https://raw.githubusercontent.com/openroadplugin/openroad/main/docs/marketplace.json"
+  "updateUrl": "https://raw.githubusercontent.com/openasphalteplugin/openasphalte/main/docs/marketplace.json"
 }
 ```
 

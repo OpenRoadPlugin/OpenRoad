@@ -1,4 +1,4 @@
-// Copyright 2026 Open Road Contributors
+ï»¿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -9,16 +9,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace OpenRoad.Services;
+namespace OpenAsphalte.Services;
 
 /// <summary>
-/// Service de validation des URLs pour la sécurité.
-/// Centralise les contrôles de sécurité pour éviter les duplications.
+/// Service de validation des URLs pour la sï¿½curitï¿½.
+/// Centralise les contrï¿½les de sï¿½curitï¿½ pour ï¿½viter les duplications.
 /// </summary>
 public static class UrlValidationService
 {
     /// <summary>
-    /// Liste blanche des domaines autorisés pour les mises à jour
+    /// Liste blanche des domaines autorisï¿½s pour les mises ï¿½ jour
     /// </summary>
     private static readonly string[] AllowedUpdateHosts = 
     { 
@@ -28,12 +28,12 @@ public static class UrlValidationService
     };
     
     /// <summary>
-    /// Valide qu'une URL de mise à jour est sécurisée.
+    /// Valide qu'une URL de mise ï¿½ jour est sï¿½curisï¿½e.
     /// </summary>
-    /// <param name="url">URL à valider</param>
-    /// <returns>True si l'URL est valide et sécurisée, false sinon</returns>
+    /// <param name="url">URL ï¿½ valider</param>
+    /// <returns>True si l'URL est valide et sï¿½curisï¿½e, false sinon</returns>
     /// <remarks>
-    /// Critères de validation :
+    /// Critï¿½res de validation :
     /// - URL non nulle et non vide
     /// - URL absolue valide
     /// - Protocole HTTPS uniquement
@@ -47,19 +47,19 @@ public static class UrlValidationService
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) 
             return false;
         
-        // N'autoriser que HTTPS pour la sécurité
+        // N'autoriser que HTTPS pour la sï¿½curitï¿½
         if (uri.Scheme != Uri.UriSchemeHttps) 
             return false;
         
-        // Vérifier que le domaine est dans la liste blanche
+        // Vï¿½rifier que le domaine est dans la liste blanche
         return AllowedUpdateHosts.Any(host => 
             uri.Host.EndsWith(host, StringComparison.OrdinalIgnoreCase));
     }
     
     /// <summary>
-    /// Valide qu'une URL est sécurisée (HTTPS uniquement).
+    /// Valide qu'une URL est sï¿½curisï¿½e (HTTPS uniquement).
     /// </summary>
-    /// <param name="url">URL à valider</param>
+    /// <param name="url">URL ï¿½ valider</param>
     /// <returns>True si l'URL utilise HTTPS, false sinon</returns>
     public static bool IsSecureUrl(string? url)
     {
@@ -73,10 +73,10 @@ public static class UrlValidationService
     }
     
     /// <summary>
-    /// Vérifie si un domaine est dans la liste blanche des mises à jour.
+    /// Vï¿½rifie si un domaine est dans la liste blanche des mises ï¿½ jour.
     /// </summary>
-    /// <param name="host">Nom de domaine à vérifier</param>
-    /// <returns>True si le domaine est autorisé</returns>
+    /// <param name="host">Nom de domaine ï¿½ vï¿½rifier</param>
+    /// <returns>True si le domaine est autorisï¿½</returns>
     public static bool IsAllowedHost(string? host)
     {
         if (string.IsNullOrWhiteSpace(host)) 

@@ -1,4 +1,4 @@
-﻿// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -17,17 +17,17 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using OpenRoad.Configuration;
-using OpenRoad.Discovery;
-using OpenRoad.Localization;
-using OpenRoad.Logging;
-using OpenRoad.Services;
-using L10n = OpenRoad.Localization.Localization;
+using OpenAsphalte.Configuration;
+using OpenAsphalte.Discovery;
+using OpenAsphalte.Localization;
+using OpenAsphalte.Logging;
+using OpenAsphalte.Services;
+using L10n = OpenAsphalte.Localization.Localization;
 
-namespace OpenRoad.Commands;
+namespace OpenAsphalte.Commands;
 
 /// <summary>
-/// Fenêtre des paramètres Open Road
+/// Fenêtre des paramètres Open Asphalte
 /// </summary>
 public partial class SettingsWindow : Window
 {
@@ -50,6 +50,9 @@ public partial class SettingsWindow : Window
         if (tabIndex == 1) // Onglet Modules
         {
             tabModules.IsSelected = true;
+            // Déclencher le chargement des modules immédiatement
+            // car l'événement OnTabSelectionChanged peut ne pas se déclencher
+            Loaded += async (s, e) => await RefreshModulesListAsync();
         }
     }
 
@@ -202,7 +205,7 @@ public partial class SettingsWindow : Window
 
             if (result.CoreUpdateAvailable)
             {
-                 txtUpdateStatus.Text = L10n.T("settings.modules.coreAvailable", "Mise à jour Open Road dispo !");
+                 txtUpdateStatus.Text = L10n.T("settings.modules.coreAvailable", "Mise à jour Open Asphalte dispo !");
             }
             else
             {
@@ -264,7 +267,7 @@ public partial class SettingsWindow : Window
         if (result.Success && result.CoreUpdateAvailable && result.Manifest != null)
         {
             if (System.Windows.MessageBox.Show(
-                L10n.T("settings.modules.coreUpdateMsg", "Une nouvelle version d'Open Road est disponible. Mettre à jour ?"),
+                L10n.T("settings.modules.coreUpdateMsg", "Une nouvelle version d'Open Asphalte est disponible. Mettre à jour ?"),
                 "Mise à jour",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Information) == MessageBoxResult.Yes)
@@ -299,7 +302,7 @@ public partial class SettingsWindow : Window
                      // Construire le message de confirmation
                      var depNames = string.Join(", ", missingDeps.Select(d => d.Name));
                      var message = L10n.TFormat("modules.manager.dependencies.confirm",
-                         item.Name, depNames, missingDeps.Count);
+                         new object[] { item.Name, depNames, missingDeps.Count });
 
                      var result = System.Windows.MessageBox.Show(
                          message,
@@ -607,10 +610,62 @@ public class ModuleItemViewModel : System.ComponentModel.INotifyPropertyChanged
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
     public string VersionDisplay { get; set; } = "";
-    public string StatusIcon { get; set; } = "";
-    public System.Windows.Media.Brush StatusColor { get; set; } = System.Windows.Media.Brushes.Black;
-    public bool CanUpdate { get; set; }
-    public string ActionText { get; set; } = "";
+
+    private string _statusIcon = "";
+    public string StatusIcon
+    {
+        get => _statusIcon;
+        set
+        {
+            if (_statusIcon != value)
+            {
+                _statusIcon = value;
+                OnPropertyChanged(nameof(StatusIcon));
+            }
+        }
+    }
+
+    private System.Windows.Media.Brush _statusColor = System.Windows.Media.Brushes.Black;
+    public System.Windows.Media.Brush StatusColor
+    {
+        get => _statusColor;
+        set
+        {
+            if (_statusColor != value)
+            {
+                _statusColor = value;
+                OnPropertyChanged(nameof(StatusColor));
+            }
+        }
+    }
+
+    private bool _canUpdate;
+    public bool CanUpdate
+    {
+        get => _canUpdate;
+        set
+        {
+            if (_canUpdate != value)
+            {
+                _canUpdate = value;
+                OnPropertyChanged(nameof(CanUpdate));
+            }
+        }
+    }
+
+    private string _actionText = "";
+    public string ActionText
+    {
+        get => _actionText;
+        set
+        {
+            if (_actionText != value)
+            {
+                _actionText = value;
+                OnPropertyChanged(nameof(ActionText));
+            }
+        }
+    }
 
     private bool _isSelected;
     public bool IsSelected
@@ -621,11 +676,14 @@ public class ModuleItemViewModel : System.ComponentModel.INotifyPropertyChanged
             if (_isSelected != value)
             {
                 _isSelected = value;
-                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(IsSelected)));
+                OnPropertyChanged(nameof(IsSelected));
             }
         }
     }
 
     public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
-}
 
+    private void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+    }
