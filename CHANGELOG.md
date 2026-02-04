@@ -7,7 +7,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ## [0.0.2] - En développement
 
-### Ajouté
+### Modifications CORE
 - **Changement de nom** pour empecher toute confusion avec des soft existants.
     - Open Road s'appelle maintenant **Open Asphalte**
 - **Personnalisation du menu** : L'installateur permet de définir un nom personnalisé (ex: "MonEntreprise - OA")
@@ -29,8 +29,9 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - Onglet Modules de Settings non rafraîchi : ajout du chargement automatique à l'ouverture directe
 - Nom du menu persistant après désinstallation : suppression du fichier `config.json` lors de la désinstallation
 
-### À venir
-- De nouveaux modules officiels
+### Nouveaux modules
+- Module de Cotations entre 2 polylignes
+- Module d'acrochage intelligent (snap amélioré) pour les modules OAS
 
 ---
 

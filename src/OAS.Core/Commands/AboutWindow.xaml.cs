@@ -163,6 +163,7 @@ public partial class AboutWindow : Window
 
         btnUpdate.Content = "⬇ " + L10n.T("about.checkUpdate");
         btnCredits.Content = "❤ " + L10n.T("about.credits", "Credits");
+        btnReportBug.Content = "🐛 " + L10n.T("about.reportBug");
         btnClose.Content = L10n.T("about.close");
     }
 
@@ -171,6 +172,27 @@ public partial class AboutWindow : Window
         var creditsWindow = new OpenAsphalte.Commands.CreditsWindow();
         creditsWindow.Owner = this;
         creditsWindow.ShowDialog();
+    }
+
+    /// <summary>
+    /// Ouvre la page des issues GitHub pour signaler un bug
+    /// </summary>
+    private void OnReportBugClick(object sender, RoutedEventArgs e)
+    {
+        const string issuesUrl = "https://github.com/OpenRoadPlugin/OpenAsphalte/issues";
+        try
+        {
+            Process.Start(new ProcessStartInfo(issuesUrl) { UseShellExecute = true });
+            Logger.Info(L10n.T("about.reportBug.opening"));
+        }
+        catch (System.Exception ex)
+        {
+            System.Windows.MessageBox.Show(
+                L10n.TFormat("about.reportBug.error", ex.Message),
+                L10n.T("cmd.error"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
     }
 
     /// <summary>

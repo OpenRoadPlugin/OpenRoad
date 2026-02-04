@@ -30,7 +30,7 @@
     <!-- Identification du module -->
     <AssemblyName>OAS.Georeferencement</AssemblyName>
     <RootNamespace>OpenAsphalte.Modules.Georeferencement</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>0.0.1</Version>
     <Authors>Charles TILLY</Authors>
     <Company>Open Asphalte Contributors</Company>
     <Description>Module de géoréférencement pour Open Asphalte - Gestion des systèmes de coordonnées</Description>

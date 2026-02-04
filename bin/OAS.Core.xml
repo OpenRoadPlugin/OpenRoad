@@ -510,6 +510,11 @@
             Met à jour les textes localisés
             </summary>
         </member>
+        <member name="M:OpenAsphalte.Commands.AboutWindow.OnReportBugClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Ouvre la page des issues GitHub pour signaler un bug
+            </summary>
+        </member>
         <member name="M:OpenAsphalte.Commands.AboutWindow.OnUpdateClick(System.Object,System.Windows.RoutedEventArgs)">
             <summary>
             Ouvre la page des mises a jour

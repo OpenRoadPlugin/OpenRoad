@@ -229,6 +229,9 @@ public static class Localization
             ["about.invalidUrl"] = "L'URL de mise à jour est invalide ou non sécurisée.",
             ["about.alphaWarning"] = "⚠ VERSION ALPHA - Pour tests uniquement",
             ["about.betaWarning"] = "⚠ VERSION BETA - Peut contenir des bugs",
+            ["about.reportBug"] = "Signaler un bug",
+            ["about.reportBug.opening"] = "Ouverture de la page des issues GitHub...",
+            ["about.reportBug.error"] = "Impossible d'ouvrir la page des issues : {0}",
 
             // Settings window
             ["settings.title"] = "Paramètres Open Asphalte",
@@ -465,6 +468,9 @@ public static class Localization
             ["about.invalidUrl"] = "The update URL is invalid or insecure.",
             ["about.alphaWarning"] = "⚠ ALPHA VERSION - For testing only",
             ["about.betaWarning"] = "⚠ BETA VERSION - May contain bugs",
+            ["about.reportBug"] = "Report a bug",
+            ["about.reportBug.opening"] = "Opening GitHub issues page...",
+            ["about.reportBug.error"] = "Unable to open issues page: {0}",
 
             // Settings window
             ["settings.title"] = "Open Asphalte Settings",
@@ -701,6 +707,9 @@ public static class Localization
             ["about.invalidUrl"] = "La URL de actualización es inválida o insegura.",
             ["about.alphaWarning"] = "⚠ VERSIÓN ALPHA - Solo para pruebas",
             ["about.betaWarning"] = "⚠ VERSIÓN BETA - Puede contener errores",
+            ["about.reportBug"] = "Reportar un error",
+            ["about.reportBug.opening"] = "Abriendo la página de issues de GitHub...",
+            ["about.reportBug.error"] = "No se puede abrir la página de issues: {0}",
 
             // Ventana de Configuración
             ["settings.title"] = "Configuración Open Asphalte",

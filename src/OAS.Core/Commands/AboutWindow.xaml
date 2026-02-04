@@ -14,7 +14,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title=""
-        Height="450" Width="480"
+        Height="450" Width="560"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         ShowInTaskbar="False">
@@ -36,7 +36,7 @@
                     VerticalAlignment="Top"
                     Margin="0,0,15,0"
                     CornerRadius="8"
-                    Background="#F5F5F5">
+                    Background="White">
                 <Image x:Name="imgLogo"
                        Stretch="Uniform"
                        Margin="5"/>
@@ -163,7 +163,13 @@
                      <Button x:Name="btnCredits"
                             Content="Credits"
                             Padding="15,8"
+                            Margin="0,0,10,0"
                             Click="OnCreditsClick"/>
+
+                     <Button x:Name="btnReportBug"
+                            Content=""
+                            Padding="15,8"
+                            Click="OnReportBugClick"/>
                 </StackPanel>
 
                 <Button x:Name="btnClose"
