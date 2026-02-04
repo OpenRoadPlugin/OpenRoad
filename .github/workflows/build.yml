@@ -1,5 +1,7 @@
-# Build et validation du projet Open Road
-# Ce workflow s'ex�cute sur chaque push et pull request
+# Validation du projet Open Road
+# Ce workflow s'execute sur chaque push et pull request
+# Note: Le build complet necessite AutoCAD (DLL proprietaires)
+#       Ce workflow valide uniquement la structure du projet
 
 name: Build
 
@@ -10,40 +12,55 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-    runs-on: windows-latest
-    
+  validate:
+    runs-on: ubuntu-latest
+
     steps:
     - name: Checkout du code
       uses: actions/checkout@v4
-    
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
-    
-    - name: Cache NuGet packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-    
-    - name: Restaurer les d�pendances
-      run: dotnet restore src/OpenRoad.Core/OpenRoad.Core.csproj
-    
-    - name: Build (Debug)
-      run: dotnet build src/OpenRoad.Core/OpenRoad.Core.csproj --configuration Debug --no-restore
-    
-    - name: Build (Release)
-      run: dotnet build src/OpenRoad.Core/OpenRoad.Core.csproj --configuration Release --no-restore
-    
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: OpenRoad-Build
-        path: |
-          bin/OpenRoad.Core.dll
-          bin/OpenRoad.Core.xml
-        retention-days: 7
+
+    - name: Verifier la structure du projet
+      run: |
+        echo "=== Validation de la structure Open Road ==="
+
+        # Verifier les fichiers essentiels
+        files=("README.md" "LICENSE" "CHANGELOG.md" "version.json")
+        for file in "${files[@]}"; do
+          if [ -f "$file" ]; then
+            echo "✓ $file present"
+          else
+            echo "✗ $file MANQUANT" && exit 1
+          fi
+        done
+
+        # Verifier le Core compile
+        if [ -f "bin/OpenRoad.Core.dll" ]; then
+          echo "✓ bin/OpenRoad.Core.dll present"
+        else
+          echo "✗ bin/OpenRoad.Core.dll MANQUANT - Compilez localement avant de push" && exit 1
+        fi
+
+        # Verifier la structure des sources
+        if [ -d "src/OpenRoad.Core" ]; then
+          echo "✓ Sources Core presentes"
+        else
+          echo "✗ Sources Core manquantes" && exit 1
+        fi
+
+        echo ""
+        echo "=== Validation reussie ==="
+      shell: bash
+
+    - name: Lister les modules disponibles
+      run: |
+        echo "=== Modules compiles disponibles ==="
+        if [ -d "bin/Modules" ]; then
+          ls -la bin/Modules/*.dll 2>/dev/null || echo "Aucun module compile"
+        fi
+      shell: bash
+
+    - name: Afficher la version
+      run: |
+        echo "=== Version du projet ==="
+        cat version.json
+      shell: bash

@@ -1,5 +1,6 @@
-# Création automatique des releases avec installateur
-# Ce workflow s'exécute lors de la création d'un tag vX.X.X
+# Creation automatique des releases avec installateur
+# Ce workflow s'execute lors de la creation d'un tag vX.X.X
+# Note: Utilise les fichiers PRE-COMPILES (pas de build car DLL AutoCAD proprietaires)
 
 name: Release
 
@@ -18,34 +19,42 @@ jobs:
     - name: Checkout du code
       uses: actions/checkout@v4
 
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
-
     - name: Extraire la version du tag
       id: get_version
       run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       shell: bash
 
-    - name: Restaurer les dependances
-      run: dotnet restore src/OpenRoad.Core/OpenRoad.Core.csproj
-
-    - name: Build Release
-      run: dotnet build src/OpenRoad.Core/OpenRoad.Core.csproj --configuration Release --no-restore
+    - name: Verifier que le Core est compile
+      run: |
+        if (!(Test-Path "bin/OpenRoad.Core.dll")) {
+          Write-Error "ERREUR: bin/OpenRoad.Core.dll non trouve. Compilez localement avant de creer un tag."
+          exit 1
+        }
+        Write-Host "✓ OpenRoad.Core.dll trouve"
+      shell: pwsh
 
     - name: Creer le package de release
       run: |
         mkdir release
         mkdir release\Modules
         mkdir release\Data
+        
+        REM Copier le Core pre-compile
         copy bin\OpenRoad.Core.dll release\
-        copy bin\OpenRoad.Core.xml release\
+        if exist bin\OpenRoad.Core.xml copy bin\OpenRoad.Core.xml release\
+        
+        REM Copier les modules pre-compiles
         copy bin\Modules\README.md release\Modules\
+        if exist bin\Modules\*.dll copy bin\Modules\*.dll release\Modules\
+        
+        REM Copier les donnees
         if exist bin\Data\*.json copy bin\Data\*.json release\Data\
+        
+        REM Copier la documentation
         copy README.md release\
         copy LICENSE release\
         copy CHANGELOG.md release\
+        copy version.json release\
       shell: cmd
 
     - name: Creer l'archive ZIP
@@ -53,8 +62,7 @@ jobs:
       shell: pwsh
 
     - name: Installer Inno Setup
-      run: |
-        choco install innosetup -y --no-progress
+      run: choco install innosetup -y --no-progress
       shell: pwsh
 
     - name: Mettre a jour la version dans l'installateur
@@ -69,13 +77,15 @@ jobs:
         & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\OpenRoad.iss
       shell: pwsh
 
-    - name: Renommer l'installateur avec la version
+    - name: Preparer les fichiers de release
+      id: prepare_files
       run: |
-        $files = Get-ChildItem "installer\Output\OpenRoad_Setup*.exe" -ErrorAction SilentlyContinue
-        if ($files) {
-          $files | ForEach-Object {
-            Move-Item $_.FullName "installer\Output\OpenRoad_Setup_v${{ steps.get_version.outputs.VERSION }}.exe" -Force
-          }
+        $installerPath = Get-ChildItem "installer\Output\*.exe" | Select-Object -First 1
+        if ($installerPath) {
+          $newName = "OpenRoad_Setup_v${{ steps.get_version.outputs.VERSION }}.exe"
+          $newPath = "installer\Output\$newName"
+          Move-Item $installerPath.FullName $newPath -Force
+          Write-Host "Installateur: $newPath"
         }
       shell: pwsh
 
@@ -83,7 +93,23 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         name: Open Road v${{ steps.get_version.outputs.VERSION }}
-        body_path: CHANGELOG.md
+        body: |
+          ## Open Road v${{ steps.get_version.outputs.VERSION }}
+          
+          ### Installation
+          
+          **Option 1 - Installateur Windows (recommande)**
+          1. Telechargez `OpenRoad_Setup_v${{ steps.get_version.outputs.VERSION }}.exe`
+          2. Executez l'installateur
+          3. Suivez les instructions
+          
+          **Option 2 - Installation manuelle**
+          1. Telechargez `OpenRoad-${{ steps.get_version.outputs.VERSION }}.zip`
+          2. Extrayez dans un dossier (ex: C:\OpenRoad)
+          3. Dans AutoCAD, tapez `NETLOAD` et selectionnez `OpenRoad.Core.dll`
+          
+          ### Changelog
+          Voir [CHANGELOG.md](https://github.com/OpenRoadPlugin/OpenRoad/blob/main/CHANGELOG.md)
         files: |
           OpenRoad-${{ steps.get_version.outputs.VERSION }}.zip
           installer/Output/OpenRoad_Setup_v${{ steps.get_version.outputs.VERSION }}.exe

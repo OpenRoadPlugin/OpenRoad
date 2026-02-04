@@ -10,8 +10,13 @@ bin/*.pdb
 bin/*.exe
 bin/*.xml
 bin/*.json
+
+# Exceptions - fichiers necessaires pour les releases GitHub
+!bin/OpenRoad.Core.dll
+!bin/OpenRoad.Core.xml
+!bin/version.json
 !bin/Modules/
-!bin/Modules/README.md
+!bin/Modules/**
 !bin/Data/
 !bin/Data/**
 
