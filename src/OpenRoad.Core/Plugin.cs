@@ -55,25 +55,25 @@ public class Plugin : IExtensionApplication
     private static bool _diagnosticsEnabled;
     private static int _firstChanceCount;
     private const int MaxFirstChanceLogs = 5;
-    
+
     /// <summary>
     /// Version du coeur Open Road (chargée depuis version.json)
     /// </summary>
     public static string Version => _version.Value;
-    
+
     /// <summary>
     /// Nom de l'application
     /// </summary>
     public static string AppName => "Open Road";
-    
+
     /// <summary>
     /// Chemin du dossier contenant OpenRoad.Core.dll
     /// </summary>
     public static string BasePath { get; private set; } = "";
-    
+
     private static bool _idleEventSubscribed = false;
     private static readonly object _idleLock = new object();
-    
+
     /// <summary>
     /// Charge la version depuis version.json de manière thread-safe
     /// </summary>
@@ -83,12 +83,12 @@ public class Plugin : IExtensionApplication
         {
             var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
             var versionFile = Path.Combine(basePath, "version.json");
-            
+
             if (File.Exists(versionFile))
             {
                 var json = File.ReadAllText(versionFile);
                 using var doc = JsonDocument.Parse(json);
-                
+
                 if (doc.RootElement.TryGetProperty("version", out var versionElement))
                 {
                     return versionElement.GetString() ?? "0.0.1";
@@ -100,10 +100,10 @@ public class Plugin : IExtensionApplication
             // En cas d'erreur, utiliser la version par défaut
             StartupLog.Write($"LoadVersionFromJson error: {ex.Message}");
         }
-        
+
         return "0.0.1";
     }
-    
+
     /// <summary>
     /// Appelé au chargement du plugin par AutoCAD
     /// </summary>
@@ -117,35 +117,35 @@ public class Plugin : IExtensionApplication
             // 1. Determiner le chemin de base
             BasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
             StartupLog.Write($"BasePath: {BasePath}");
-            
+
             // 2. La version est chargée automatiquement via Lazy<T>
-            
+
             // 3. Charger la configuration utilisateur
             Configuration.Configuration.Load();
             Logger.DebugMode = Configuration.Configuration.DevMode;
             StartupLog.Write("Configuration loaded");
-            
+
             // 4. Initialiser le systeme de localisation
             L10n.Initialize();
             StartupLog.Write("Localization initialized");
-            
+
             // 5. Decouvrir et charger les modules (DLL separees)
             ModuleDiscovery.DiscoverAndLoad(BasePath);
             StartupLog.Write("Module discovery completed");
-            
+
             // 6. Initialiser tous les modules decouverts
             ModuleDiscovery.InitializeAll();
             StartupLog.Write("Modules initialized");
-            
+
             // 7. Afficher le message de bienvenue
             ShowWelcomeMessage();
             StartupLog.Write("Welcome message displayed");
-            
+
             // 8. Creer le menu et ruban une fois AutoCAD pret
             _idleEventSubscribed = true;
             AcadApp.Idle += OnApplicationIdle;
             StartupLog.Write("Idle event subscribed");
-            
+
             // 9. Verification des mises a jour au demarrage (si active)
             if (Configuration.Configuration.CheckUpdatesOnStartup)
             {
@@ -215,7 +215,7 @@ public class Plugin : IExtensionApplication
 
         Logger.Info($"Diagnostics activés. Log: {Logger.LogFilePath}");
     }
-    
+
     /// <summary>
     /// Affiche le message de bienvenue dans la console AutoCAD
     /// </summary>
@@ -233,16 +233,16 @@ public class Plugin : IExtensionApplication
             }
             return $"| {text.PadRight(innerWidth - 1)}|";
         }
-        
+
         var modules = ModuleDiscovery.Modules;
         var commands = ModuleDiscovery.AllCommands;
-        
+
         ed.WriteMessage("\n");
         ed.WriteMessage("\n+--------------------------------------------------------------------+");
         ed.WriteMessage($"\n{Line(L10n.TFormat("welcome.title", Version))}");
         ed.WriteMessage($"\n{Line(L10n.T("welcome.subtitle"))}");
         ed.WriteMessage("\n+--------------------------------------------------------------------+");
-        
+
         if (modules.Count > 0)
         {
             ed.WriteMessage($"\n{Line(L10n.TFormat("welcome.modulesLoaded", modules.Count))}");
@@ -257,14 +257,14 @@ public class Plugin : IExtensionApplication
             ed.WriteMessage($"\n{Line(L10n.T("welcome.noModules"))}");
             ed.WriteMessage($"\n{Line(L10n.T("welcome.dropModules"))}");
         }
-        
+
         ed.WriteMessage("\n+--------------------------------------------------------------------+");
         ed.WriteMessage($"\n{Line(L10n.TFormat("welcome.commandsAvailable", commands.Count))}");
         ed.WriteMessage($"\n{Line(L10n.T("welcome.helpHint"))}");
         ed.WriteMessage("\n+--------------------------------------------------------------------+");
         ed.WriteMessage("\n");
     }
-    
+
     /// <summary>
     /// Cree le menu et le ruban une fois AutoCAD completement charge
     /// </summary>
@@ -273,28 +273,28 @@ public class Plugin : IExtensionApplication
         lock (_idleLock)
         {
             if (!_idleEventSubscribed) return;
-            
+
             AcadApp.Idle -= OnApplicationIdle;
             _idleEventSubscribed = false;
         }
-        
+
         try
         {
             StartupLog.Write("Idle: begin UI creation");
             // Creer le menu contextuel
             MenuBuilder.CreateMenu();
             StartupLog.Write("Menu created");
-            
+
             // Creer le ruban
             RibbonBuilder.CreateRibbon();
             StartupLog.Write("Ribbon created");
-            
+
             // S'abonner a l'evenement de changement de langue
             L10n.OnLanguageChanged += OnLanguageChanged;
             StartupLog.Write("Language change subscribed");
-            
+
             Logger.Debug(L10n.T("plugin.uiCreated"));
-            
+
             // Proposer d'ouvrir le gestionnaire de modules si aucun module n'est installé
             CheckFirstRunNoModules();
         }
@@ -304,7 +304,7 @@ public class Plugin : IExtensionApplication
             Logger.Error(L10n.TFormat("plugin.uiCreateError", ex.Message));
         }
     }
-    
+
     /// <summary>
     /// Vérifie si c'est le premier démarrage sans modules et propose d'ouvrir le gestionnaire
     /// </summary>
@@ -315,27 +315,18 @@ public class Plugin : IExtensionApplication
             // Vérifier si des modules sont chargés
             if (ModuleDiscovery.Modules.Count > 0)
                 return;
-            
-            // Vérifier si on a déjà proposé (via config)
-            var hasShownPrompt = Configuration.Configuration.Get("firstRunModulePromptShown", false);
-            if (hasShownPrompt)
-                return;
-            
-            // Marquer comme affiché pour ne pas répéter
-            Configuration.Configuration.Set("firstRunModulePromptShown", true);
-            Configuration.Configuration.Save();
-            
-            // Afficher la proposition
+
+            // Afficher la proposition à chaque démarrage si aucun module
             var result = System.Windows.MessageBox.Show(
                 L10n.T("firstrun.noModules.message"),
                 L10n.T("firstrun.noModules.title"),
                 System.Windows.MessageBoxButton.YesNo,
                 System.Windows.MessageBoxImage.Question);
-            
+
             if (result == System.Windows.MessageBoxResult.Yes)
             {
-                // Ouvrir le gestionnaire de modules
-                var window = new ModuleManagerWindow();
+                // Ouvrir les paramètres directement sur l'onglet Modules
+                var window = new SettingsWindow(1); // 1 = index de l'onglet Modules
                 AcadApp.ShowModalWindow(window);
             }
         }
@@ -345,7 +336,7 @@ public class Plugin : IExtensionApplication
             // Ne pas bloquer le démarrage
         }
     }
-    
+
     /// <summary>
     /// Appele lorsque la langue change.
     /// Reconstruit l'interface utilisateur avec les nouvelles traductions.
@@ -357,11 +348,11 @@ public class Plugin : IExtensionApplication
         try
         {
             Logger.Debug(L10n.TFormat("plugin.languageChange", oldLanguage, newLanguage));
-            
+
             // Reconstruire le menu et le ruban avec les nouvelles traductions
             MenuBuilder.RebuildMenu();
             RibbonBuilder.RebuildRibbon();
-            
+
             Logger.Info(L10n.TFormat("plugin.uiUpdated", L10n.LanguageNames.GetValueOrDefault(newLanguage, newLanguage)));
         }
         catch (System.Exception ex)
@@ -369,7 +360,7 @@ public class Plugin : IExtensionApplication
             Logger.Error(L10n.TFormat("plugin.uiUpdateError", ex.Message));
         }
     }
-    
+
     /// <summary>
     /// Appele a la fermeture d'AutoCAD
     /// </summary>
@@ -386,24 +377,24 @@ public class Plugin : IExtensionApplication
                     _idleEventSubscribed = false;
                 }
             }
-            
+
             // 2. Se desabonner de l'evenement de langue
             L10n.OnLanguageChanged -= OnLanguageChanged;
-            
+
             // 3. Supprimer l'interface
             MenuBuilder.RemoveMenu();
             RibbonBuilder.RemoveRibbon();
-            
+
             // 4. Fermer tous les modules
             ModuleDiscovery.ShutdownAll();
-            
+
             // 5. Sauvegarder la configuration
             Configuration.Configuration.Save();
-            
+
             // 6. Nettoyer les evenements
             Configuration.Configuration.ClearEventSubscribers();
             L10n.ClearEventSubscribers();
-            
+
             Logger.Debug(L10n.T("plugin.shutdownClean"));
         }
         catch (System.Exception ex)

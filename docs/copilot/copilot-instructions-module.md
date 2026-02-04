@@ -1,6 +1,6 @@
 # Open Road � Context IA Module
 
-> **Context IA pour le développement de MODULES** | Version 2026.02.03 | .NET 8.0 / AutoCAD 2026+
+> **Context IA pour le développement de MODULES** | Version 2026.02.03 | .NET 8.0 / AutoCAD 2024+
 
 ---
 
@@ -77,7 +77,7 @@ WriteMessage($"\n{T("select.point")}: ");
 |--------------|----------------------------------------------|
 | Framework    | .NET 8.0-windows                             |
 | Langage      | C# 12 (latest)                               |
-| Cible        | AutoCAD 2026+                                |
+| Cible        | AutoCAD 2024+                                |
 | Architecture | Plugin modulaire avec d�couverte automatique |
 | Interface    | Menu contextuel + Ruban dynamiques           |
 | Multilingue  | FR, EN, ES                                   |

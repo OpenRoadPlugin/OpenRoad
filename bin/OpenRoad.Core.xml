@@ -546,12 +546,17 @@
         </member>
         <member name="M:OpenRoad.Commands.ModuleManagerWindow.GetCategoryFromDefinition(OpenRoad.Services.ModuleDefinition)">
             <summary>
-            Extrait la catégorie du module (depuis les tags ou un champ dédié)
+            Extrait la catégorie du module
             </summary>
         </member>
         <member name="M:OpenRoad.Commands.ModuleManagerWindow.ApplyFilter">
             <summary>
-            Applique le filtre sélectionné
+            Applique le filtre sélectionné et regroupe par catégorie
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.ModuleManagerWindow.GetCategoryIcon(System.String)">
+            <summary>
+            Retourne l'icône pour une catégorie
             </summary>
         </member>
         <member name="M:OpenRoad.Commands.ModuleManagerWindow.SetLoadingState(System.Boolean,System.String)">
@@ -569,9 +574,29 @@
             Affiche le message vide
             </summary>
         </member>
+        <member name="M:OpenRoad.Commands.ModuleManagerWindow.GetMissingDependencies(OpenRoad.Services.ModuleDefinition)">
+            <summary>
+            Récupère les dépendances manquantes pour un module
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.ModuleManagerWindow.InstallModuleWithDependenciesAsync(OpenRoad.Services.ModuleDefinition,System.Collections.Generic.List{OpenRoad.Services.ModuleDefinition})">
+            <summary>
+            Installe un module et ses dépendances
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.ModuleManagerWindow.OnInstallCategoryClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Installe tous les modules d'une catégorie
+            </summary>
+        </member>
         <member name="M:OpenRoad.Commands.ModuleManagerWindow.InitializeComponent">
             <summary>
             InitializeComponent
+            </summary>
+        </member>
+        <member name="T:OpenRoad.Commands.CategoryViewModel">
+            <summary>
+            ViewModel pour une catégorie de modules
             </summary>
         </member>
         <member name="T:OpenRoad.Commands.ModuleViewModel">
@@ -590,6 +615,11 @@
             </summary>
             <summary>
             SettingsWindow
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.SettingsWindow.#ctor(System.Int32)">
+            <summary>
+            Constructeur permettant d'ouvrir directement sur un onglet spécifique
             </summary>
         </member>
         <member name="M:OpenRoad.Commands.SettingsWindow.UpdateLocalizedText">
@@ -615,6 +645,36 @@
         <member name="M:OpenRoad.Commands.SettingsWindow.OnCancelClick(System.Object,System.Windows.RoutedEventArgs)">
             <summary>
             Annule les modifications
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.SettingsWindow.OnTabSelectionChanged(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <summary>
+            Gère le changement d'onglet - rafraîchit la liste des modules quand on arrive sur l'onglet Modules
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.SettingsWindow.RefreshModulesListAsync">
+            <summary>
+            Rafraîchit la liste des modules depuis le catalogue
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.SettingsWindow.GetMissingDependencies(OpenRoad.Services.ModuleDefinition,OpenRoad.Services.MarketplaceManifest)">
+            <summary>
+            Récupère les dépendances manquantes pour un module
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.SettingsWindow.OnModuleSelectionChanged(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Gère le changement de sélection des modules (checkbox)
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.SettingsWindow.UpdateSelectionUI">
+            <summary>
+            Met à jour l'interface selon la sélection
+            </summary>
+        </member>
+        <member name="M:OpenRoad.Commands.SettingsWindow.OnInstallSelectedClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Installe tous les modules sélectionnés
             </summary>
         </member>
         <member name="M:OpenRoad.Commands.SettingsWindow.InitializeComponent">

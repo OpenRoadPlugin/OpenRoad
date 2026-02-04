@@ -1,0 +1,70 @@
+name: CI - Build & Validate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & Validate
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/OpenRoad.sln
+
+      - name: Build Core
+        run: dotnet build src/OpenRoad.sln -c Release --no-restore
+
+      - name: Build all Modules
+        shell: pwsh
+        run: |
+          $modules = Get-ChildItem -Path modules -Filter *.csproj -Recurse
+          foreach ($module in $modules) {
+            Write-Host "Building $($module.Name)..."
+            dotnet build $module.FullName -c Release
+            if ($LASTEXITCODE -ne 0) {
+              Write-Error "Failed to build $($module.Name)"
+              exit 1
+            }
+          }
+          Write-Host "All modules built successfully!"
+
+  # Vérifie que le Core n'a pas été modifié sans autorisation
+  core-protection:
+    name: Core Protection Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check Core modifications
+        run: |
+          # Liste des fichiers Core modifiés
+          CORE_CHANGES=$(git diff --name-only origin/main...HEAD | grep -E "^src/OpenRoad\.Core/" || true)
+
+          if [ -n "$CORE_CHANGES" ]; then
+            echo "⚠️ ATTENTION: Modifications détectées dans le Core!"
+            echo ""
+            echo "Fichiers modifiés:"
+            echo "$CORE_CHANGES"
+            echo ""
+            echo "Ces modifications nécessitent une review approfondie par un maintainer."
+            echo "::warning::Core modifications detected - requires maintainer approval"
+          else
+            echo "✅ Aucune modification du Core détectée."
+          fi

@@ -34,17 +34,17 @@ public static class Localization
     private static readonly string[] _supportedLanguages = { "fr", "en", "es" };
     private static string _currentLanguage = "fr";
     private static readonly object _languageLock = new();
-    
+
     /// <summary>
     /// Préfixes des clés système protégées (ne peuvent pas être écrasées par les modules)
     /// </summary>
-    private static readonly string[] _systemKeyPrefixes = 
+    private static readonly string[] _systemKeyPrefixes =
     {
         "app.", "cmd.", "error.", "select.", "system.", "about.", "settings.",
-        "modules.", "common.", "config.", "module.", "ui.", "plugin.", 
+        "modules.", "common.", "config.", "module.", "ui.", "plugin.",
         "welcome.", "log."
     };
-    
+
     /// <summary>
     /// événement déclenché lorsque la langue change.
     /// Les modules peuvent s'y abonner pour Mettre à jour leur UI.
@@ -58,12 +58,12 @@ public static class Localization
     /// </code>
     /// </example>
     public static event Action<string, string>? OnLanguageChanged;
-    
+
     /// <summary>
     /// Langues supportées
     /// </summary>
     public static IReadOnlyList<string> SupportedLanguages => _supportedLanguages;
-    
+
     /// <summary>
     /// Langue active (depuis la configuration)
     /// </summary>
@@ -77,7 +77,7 @@ public static class Localization
             }
         }
     }
-    
+
     /// <summary>
     /// Noms des langues pour l'affichage dans l'UI
     /// </summary>
@@ -87,7 +87,7 @@ public static class Localization
         ["en"] = "English",
         ["es"] = "Español"
     };
-    
+
     /// <summary>
     /// Nettoie les abonnés aux événements (appelé lors de la fermeture)
     /// </summary>
@@ -95,7 +95,7 @@ public static class Localization
     {
         OnLanguageChanged = null;
     }
-    
+
     /// <summary>
     /// Initialise les traductions de base du framework
     /// </summary>
@@ -103,7 +103,7 @@ public static class Localization
     {
         // Synchroniser avec la configuration
         _currentLanguage = Configuration.Configuration.Language;
-        
+
         // === Français ===
         RegisterTranslations("fr", new Dictionary<string, string>
         {
@@ -112,23 +112,23 @@ public static class Localization
             ["app.loaded"] = "Plugin chargé",
             ["app.version"] = "Version",
             ["app.welcome"] = "Bienvenue dans Open Road",
-            
+
             // Commandes générales
             ["cmd.cancelled"] = "Commande annulée",
             ["cmd.error"] = "Erreur",
             ["cmd.success"] = "Opération réussie",
-            
+
             // Erreurs
             ["error.noDocument"] = "Aucun document actif",
             ["error.invalidSelection"] = "Sélection invalide",
             ["error.moduleNotFound"] = "Module non trouvé",
-            
+
             // Sélection
             ["select.point"] = "Sélectionnez un point",
             ["select.object"] = "Sélectionnez un objet",
             ["select.polyline"] = "Sélectionnez une polyligne",
             ["select.line"] = "Sélectionnez une ligne",
-            
+
             // Système
             ["system.name"] = "Système",
             ["system.help"] = "Aide",
@@ -158,7 +158,7 @@ public static class Localization
             ["system.update.opening"] = "Ouverture de la page des releases...",
             ["system.update.url"] = "URL: {0}",
             ["system.update.openError"] = "Impossible d'ouvrir le navigateur: {0}",
-            
+
             // Module Manager
             ["modules.manager.title"] = "Gestionnaire de Modules",
             ["modules.manager.subtitle"] = "Installez et gérez les modules Open Road depuis le catalogue officiel.",
@@ -180,6 +180,20 @@ public static class Localization
             ["modules.manager.installError"] = "Erreur lors de l'installation: {0}",
             ["modules.manager.retry"] = "Réessayer",
             ["modules.manager.openError"] = "Erreur ouverture gestionnaire: {0}",
+            ["modules.manager.dependencies.title"] = "Dépendances requises",
+            ["modules.manager.dependencies.confirm"] = "Le module \"{0}\" nécessite {2} dépendance(s) :\n\n• {1}\n\nVoulez-vous les installer maintenant ?",
+            ["modules.manager.dependencies.message"] = "Le module \"{0}\" nécessite les modules suivants pour fonctionner :\n\n{1}\n\nVoulez-vous installer ces modules maintenant ?",
+            ["modules.manager.dependencies.single"] = "Le module \"{0}\" nécessite le module \"{1}\" pour fonctionner.\n\nVoulez-vous l'installer maintenant ?",
+            ["modules.manager.dependencies.installing"] = "Installation des dépendances...",
+            ["modules.manager.dependencies.success"] = "Modules installés avec succès: {0}",
+            ["modules.manager.dependencies.notFound"] = "Dépendance introuvable dans le catalogue: {0}",
+            ["modules.manager.restartRequired.multiple"] = "Les modules suivants ont été installés :\n{0}\n\nRedémarrez AutoCAD pour les activer.",
+            ["modules.manager.category.installAll"] = "Installer la catégorie",
+            ["modules.manager.category.installCount"] = "Installer tout ({0})",
+            ["modules.manager.category.confirmInstall"] = "Voulez-vous installer les {0} module(s) de la catégorie \"{1}\" ?\n\n• {2}",
+            ["modules.manager.category.allInstalled"] = "Tous les modules de cette catégorie sont déjà installés.",
+            ["modules.manager.category.installed"] = "{0} module(s) installé(s) depuis la catégorie {1}",
+            ["modules.requires"] = "Requiert",
             ["modules.filter.all"] = "Tous",
             ["modules.filter.installed"] = "Installés",
             ["modules.filter.available"] = "Disponibles",
@@ -187,7 +201,7 @@ public static class Localization
             ["modules.action.install"] = "Installer",
             ["modules.action.update"] = "Mettre à jour",
             ["modules.action.installed"] = "Installé",
-            
+
             // Update errors
             ["update.error.notFound"] = "Catalogue de modules introuvable (404). Vérifiez votre connexion ou réessayez plus tard.",
             ["update.error.forbidden"] = "Accès au catalogue refusé (403).",
@@ -195,11 +209,11 @@ public static class Localization
             ["update.error.http"] = "Erreur réseau: {0}",
             ["update.error.timeout"] = "Délai d'attente dépassé. Le serveur ne répond pas.",
             ["update.moduleInstalled"] = "Module {0} installé",
-            
+
             // First run
             ["firstrun.noModules.title"] = "Bienvenue dans Open Road !",
             ["firstrun.noModules.message"] = "Aucun module n'est installé.\n\nVoulez-vous ouvrir le Gestionnaire de Modules pour installer des extensions ?",
-            
+
             // About window
             ["about.title"] = "À propos",
             ["about.subtitle"] = "Plugin modulaire pour AutoCAD",
@@ -215,7 +229,7 @@ public static class Localization
             ["about.invalidUrl"] = "L'URL de mise à jour est invalide ou non sécurisée.",
             ["about.alphaWarning"] = "⚠ VERSION ALPHA - Pour tests uniquement",
             ["about.betaWarning"] = "⚠ VERSION BETA - Peut contenir des bugs",
-            
+
             // Settings window
             ["settings.title"] = "Paramètres Open Road",
             ["settings.language"] = "Langue",
@@ -227,17 +241,24 @@ public static class Localization
             ["settings.info"] = "Version {0} • {1} module(s) • {2} commande(s)\nConfiguration: {3}",
             ["settings.saveError"] = "Erreur lors de la sauvegarde: {0}",
             ["settings.openError"] = "Erreur ouverture Paramètres: {0}",
-            
+            ["settings.modules.status"] = "{0}/{1} modules installés",
+            ["settings.modules.installSelected"] = "Installer la sélection",
+            ["settings.modules.selectedCount"] = "{0} module(s) sélectionné(s)",
+            ["settings.modules.dependenciesRequired"] = "Les modules suivants seront également installés (dépendances requises) :\n\n• {0}\n\nContinuer ?",
+            ["settings.modules.confirmInstall"] = "Installer {0} module(s) ?\n\n• {1}",
+            ["settings.modules.installTitle"] = "Installation",
+            ["settings.modules.installed"] = "{0} module(s) installé(s)",
+
             // Modules
             ["modules.loaded"] = "{0} module(s) chargé(s)",
             ["modules.commands"] = "{0} commande(s) disponible(s)",
-            
+
             // Common
             ["common.yes"] = "Oui",
             ["common.no"] = "Non",
             ["common.success"] = "Succès",
             ["common.error"] = "Erreur",
-            
+
             // Configuration
             ["config.empty"] = "Fichier config vide, nouvelle configuration créée",
             ["config.loaded"] = "Configuration chargée depuis {0}",
@@ -249,7 +270,7 @@ public static class Localization
             ["config.reloaded"] = "Configuration rechargée",
             ["config.migrating"] = "Migration de la configuration v{0} vers v{1}...",
             ["config.migrated"] = "Configuration migrée avec succès",
-            
+
             // Modules discovery
             ["module.searchPath"] = "Recherche des modules dans: {0}",
             ["module.folderCreated"] = "Dossier Modules créé",
@@ -277,7 +298,7 @@ public static class Localization
             ["module.unsigned"] = "⚠️ Module non signé: {0} (non vérifié)",
             ["module.signed"] = "✓ Module signé: {0}",
             ["module.unsignedBlocked"] = "Module non signé bloqué: {0} (désactivez 'allowUnsignedModules' pour autoriser)",
-            
+
             // UI
             ["ui.menu.created"] = "Menu Open Road créé",
             ["ui.menu.createError"] = "Erreur création menu: {0}",
@@ -286,7 +307,7 @@ public static class Localization
             ["ui.ribbon.updated"] = "Ruban mis à jour (incrémental)",
             ["ui.ribbon.createError"] = "Erreur création ruban: {0}",
             ["ui.ribbon.panelError"] = "Erreur création panneau {0}: {1}",
-            
+
             // Plugin lifecycle
             ["plugin.updateCheckDisabled"] = "Vérification des mises à jour désactivée pour la v1 (pas de serveur)",
             ["plugin.initError"] = "Erreur initialisation Open Road: {0}",
@@ -296,7 +317,7 @@ public static class Localization
             ["plugin.uiUpdated"] = "Interface mise à jour ({0})",
             ["plugin.uiUpdateError"] = "Erreur mise à jour interface: {0}",
             ["plugin.shutdownClean"] = "Open Road fermé proprement",
-            
+
             // Welcome
             ["welcome.title"] = "OPEN ROAD v{0}",
             ["welcome.subtitle"] = "Plugin modulaire pour AutoCAD",
@@ -305,7 +326,7 @@ public static class Localization
             ["welcome.dropModules"] = "Placez vos modules (.dll) dans le dossier Modules/",
             ["welcome.commandsAvailable"] = "{0} commande(s) disponible(s)",
             ["welcome.helpHint"] = "Tapez OR_HELP pour la liste complète",
-            
+
             // Logs
             ["log.stack"] = "Stack: {0}",
             ["log.level.debug"] = "[DEBUG]",
@@ -313,11 +334,11 @@ public static class Localization
             ["log.level.success"] = "[OK]",
             ["log.level.warn"] = "[WARN]",
             ["log.level.error"] = "[ERROR]",
-            
+
             // Errors (transactions)
             ["error.noDatabase"] = "Database non disponible",
         }, isSystemRegistration: true);
-        
+
         // === ENGLISH ===
         RegisterTranslations("en", new Dictionary<string, string>
         {
@@ -326,23 +347,23 @@ public static class Localization
             ["app.loaded"] = "Plugin loaded",
             ["app.version"] = "Version",
             ["app.welcome"] = "Welcome to Open Road",
-            
+
             // Commands
             ["cmd.cancelled"] = "Command cancelled",
             ["cmd.error"] = "Error",
             ["cmd.success"] = "Operation successful",
-            
+
             // Errors
             ["error.noDocument"] = "No active document",
             ["error.invalidSelection"] = "Invalid selection",
             ["error.moduleNotFound"] = "Module not found",
-            
+
             // Selection
             ["select.point"] = "Select a point",
             ["select.object"] = "Select an object",
             ["select.polyline"] = "Select a polyline",
             ["select.line"] = "Select a line",
-            
+
             // System
             ["system.name"] = "System",
             ["system.help"] = "Help",
@@ -372,7 +393,7 @@ public static class Localization
             ["system.update.opening"] = "Opening releases page...",
             ["system.update.url"] = "URL: {0}",
             ["system.update.openError"] = "Unable to open browser: {0}",
-            
+
             // Module Manager
             ["modules.manager.title"] = "Module Manager",
             ["modules.manager.subtitle"] = "Install and manage Open Road modules from the official catalog.",
@@ -394,6 +415,20 @@ public static class Localization
             ["modules.manager.installError"] = "Installation error: {0}",
             ["modules.manager.retry"] = "Retry",
             ["modules.manager.openError"] = "Error opening manager: {0}",
+            ["modules.manager.dependencies.title"] = "Required Dependencies",
+            ["modules.manager.dependencies.confirm"] = "The module \"{0}\" requires {2} dependency(ies):\n\n• {1}\n\nDo you want to install them now?",
+            ["modules.manager.dependencies.message"] = "The module \"{0}\" requires the following modules to work:\n\n{1}\n\nDo you want to install these modules now?",
+            ["modules.manager.dependencies.single"] = "The module \"{0}\" requires the module \"{1}\" to work.\n\nDo you want to install it now?",
+            ["modules.manager.dependencies.installing"] = "Installing dependencies...",
+            ["modules.manager.dependencies.success"] = "Modules installed successfully: {0}",
+            ["modules.manager.dependencies.notFound"] = "Dependency not found in catalog: {0}",
+            ["modules.manager.restartRequired.multiple"] = "The following modules have been installed:\n{0}\n\nRestart AutoCAD to activate them.",
+            ["modules.manager.category.installAll"] = "Install category",
+            ["modules.manager.category.installCount"] = "Install all ({0})",
+            ["modules.manager.category.confirmInstall"] = "Do you want to install the {0} module(s) from the \"{1}\" category?\n\n• {2}",
+            ["modules.manager.category.allInstalled"] = "All modules in this category are already installed.",
+            ["modules.manager.category.installed"] = "{0} module(s) installed from category {1}",
+            ["modules.requires"] = "Requires",
             ["modules.filter.all"] = "All",
             ["modules.filter.installed"] = "Installed",
             ["modules.filter.available"] = "Available",
@@ -401,7 +436,7 @@ public static class Localization
             ["modules.action.install"] = "Install",
             ["modules.action.update"] = "Update",
             ["modules.action.installed"] = "Installed",
-            
+
             // Update errors
             ["update.error.notFound"] = "Module catalog not found (404). Check your connection or try again later.",
             ["update.error.forbidden"] = "Access to catalog denied (403).",
@@ -409,11 +444,11 @@ public static class Localization
             ["update.error.http"] = "Network error: {0}",
             ["update.error.timeout"] = "Request timed out. Server not responding.",
             ["update.moduleInstalled"] = "Module {0} installed",
-            
+
             // First run
             ["firstrun.noModules.title"] = "Welcome to Open Road!",
             ["firstrun.noModules.message"] = "No modules are installed.\n\nWould you like to open the Module Manager to install extensions?",
-            
+
             // About window
             ["about.title"] = "About",
             ["about.subtitle"] = "Modular plugin for AutoCAD",
@@ -429,7 +464,7 @@ public static class Localization
             ["about.invalidUrl"] = "The update URL is invalid or insecure.",
             ["about.alphaWarning"] = "⚠ ALPHA VERSION - For testing only",
             ["about.betaWarning"] = "⚠ BETA VERSION - May contain bugs",
-            
+
             // Settings window
             ["settings.title"] = "Open Road Settings",
             ["settings.language"] = "Language",
@@ -441,17 +476,24 @@ public static class Localization
             ["settings.info"] = "Version {0} • {1} module(s) • {2} command(s)\nConfiguration: {3}",
             ["settings.saveError"] = "Error while saving: {0}",
             ["settings.openError"] = "Error opening settings: {0}",
-            
+            ["settings.modules.status"] = "{0}/{1} modules installed",
+            ["settings.modules.installSelected"] = "Install selection",
+            ["settings.modules.selectedCount"] = "{0} module(s) selected",
+            ["settings.modules.dependenciesRequired"] = "The following modules will also be installed (required dependencies):\n\n• {0}\n\nContinue?",
+            ["settings.modules.confirmInstall"] = "Install {0} module(s)?\n\n• {1}",
+            ["settings.modules.installTitle"] = "Installation",
+            ["settings.modules.installed"] = "{0} module(s) installed",
+
             // Modules
             ["modules.loaded"] = "{0} module(s) loaded",
             ["modules.commands"] = "{0} command(s) available",
-            
+
             // Common
             ["common.yes"] = "Yes",
             ["common.no"] = "No",
             ["common.success"] = "Success",
             ["common.error"] = "Error",
-            
+
             // Configuration
             ["config.empty"] = "Empty config file, new configuration created",
             ["config.loaded"] = "Configuration loaded from {0}",
@@ -463,7 +505,7 @@ public static class Localization
             ["config.reloaded"] = "Configuration reloaded",
             ["config.migrating"] = "Migrating configuration from v{0} to v{1}...",
             ["config.migrated"] = "Configuration migrated successfully",
-            
+
             // Modules discovery
             ["module.searchPath"] = "Searching modules in: {0}",
             ["module.folderCreated"] = "Modules folder created",
@@ -491,7 +533,7 @@ public static class Localization
             ["module.unsigned"] = "⚠️ Unsigned module: {0} (not verified)",
             ["module.signed"] = "✓ Signed module: {0}",
             ["module.unsignedBlocked"] = "Unsigned module blocked: {0} (set 'allowUnsignedModules' to allow)",
-            
+
             // UI
             ["ui.menu.created"] = "Open Road menu created",
             ["ui.menu.createError"] = "Error creating menu: {0}",
@@ -500,7 +542,7 @@ public static class Localization
             ["ui.ribbon.updated"] = "Ribbon updated (incremental)",
             ["ui.ribbon.createError"] = "Error creating ribbon: {0}",
             ["ui.ribbon.panelError"] = "Error creating panel {0}: {1}",
-            
+
             // Plugin lifecycle
             ["plugin.updateCheckDisabled"] = "Update check disabled for v1 (no server)",
             ["plugin.initError"] = "Open Road initialization error: {0}",
@@ -510,7 +552,7 @@ public static class Localization
             ["plugin.uiUpdated"] = "Interface updated ({0})",
             ["plugin.uiUpdateError"] = "Error updating interface: {0}",
             ["plugin.shutdownClean"] = "Open Road closed cleanly",
-            
+
             // Welcome
             ["welcome.title"] = "OPEN ROAD v{0}",
             ["welcome.subtitle"] = "Modular plugin for AutoCAD",
@@ -519,7 +561,7 @@ public static class Localization
             ["welcome.dropModules"] = "Place your modules (.dll) in the Modules/ folder",
             ["welcome.commandsAvailable"] = "{0} command(s) available",
             ["welcome.helpHint"] = "Type OR_HELP for the full list",
-            
+
             // Logs
             ["log.stack"] = "Stack: {0}",
             ["log.level.debug"] = "[DEBUG]",
@@ -527,11 +569,11 @@ public static class Localization
             ["log.level.success"] = "[OK]",
             ["log.level.warn"] = "[WARN]",
             ["log.level.error"] = "[ERROR]",
-            
+
             // Errors (transactions)
             ["error.noDatabase"] = "Database not available",
         }, isSystemRegistration: true);
-        
+
         // === Español ===
         RegisterTranslations("es", new Dictionary<string, string>
         {
@@ -540,23 +582,23 @@ public static class Localization
             ["app.loaded"] = "Plugin cargado",
             ["app.version"] = "Versión",
             ["app.welcome"] = "Bienvenido a Open Road",
-            
+
             // Comandos
             ["cmd.cancelled"] = "Comando cancelado",
             ["cmd.error"] = "Error",
             ["cmd.success"] = "Operación exitosa",
-            
+
             // Errores
             ["error.noDocument"] = "No hay documento activo",
             ["error.invalidSelection"] = "Selección inválida",
             ["error.moduleNotFound"] = "módulo no encontrado",
-            
+
             // Selección
             ["select.point"] = "Seleccione un punto",
             ["select.object"] = "Seleccione un objeto",
             ["select.polyline"] = "Seleccione una polilínea",
             ["select.line"] = "Seleccione una línea",
-            
+
             // Sistema
             ["system.name"] = "Sistema",
             ["system.help"] = "Ayuda",
@@ -586,7 +628,7 @@ public static class Localization
             ["system.update.opening"] = "Abriendo la página de releases...",
             ["system.update.url"] = "URL: {0}",
             ["system.update.openError"] = "No se puede abrir el navegador: {0}",
-            
+
             // Gestor de Módulos
             ["modules.manager.title"] = "Gestor de Módulos",
             ["modules.manager.subtitle"] = "Instale y gestione los módulos de Open Road desde el catálogo oficial.",
@@ -608,6 +650,20 @@ public static class Localization
             ["modules.manager.installError"] = "Error de instalación: {0}",
             ["modules.manager.retry"] = "Reintentar",
             ["modules.manager.openError"] = "Error al abrir el gestor: {0}",
+            ["modules.manager.dependencies.title"] = "Dependencias requeridas",
+            ["modules.manager.dependencies.confirm"] = "El módulo \"{0}\" requiere {2} dependencia(s):\n\n• {1}\n\n¿Desea instalarlas ahora?",
+            ["modules.manager.dependencies.message"] = "El módulo \"{0}\" requiere los siguientes módulos para funcionar:\n\n{1}\n\n¿Desea instalar estos módulos ahora?",
+            ["modules.manager.dependencies.single"] = "El módulo \"{0}\" requiere el módulo \"{1}\" para funcionar.\n\n¿Desea instalarlo ahora?",
+            ["modules.manager.dependencies.installing"] = "Instalando dependencias...",
+            ["modules.manager.dependencies.success"] = "Módulos instalados correctamente: {0}",
+            ["modules.manager.dependencies.notFound"] = "Dependencia no encontrada en el catálogo: {0}",
+            ["modules.manager.restartRequired.multiple"] = "Los siguientes módulos han sido instalados:\n{0}\n\nReinicie AutoCAD para activarlos.",
+            ["modules.manager.category.installAll"] = "Instalar categoría",
+            ["modules.manager.category.installCount"] = "Instalar todo ({0})",
+            ["modules.manager.category.confirmInstall"] = "¿Desea instalar los {0} módulo(s) de la categoría \"{1}\"?\n\n• {2}",
+            ["modules.manager.category.allInstalled"] = "Todos los módulos de esta categoría ya están instalados.",
+            ["modules.manager.category.installed"] = "{0} módulo(s) instalado(s) desde la categoría {1}",
+            ["modules.requires"] = "Requiere",
             ["modules.filter.all"] = "Todos",
             ["modules.filter.installed"] = "Instalados",
             ["modules.filter.available"] = "Disponibles",
@@ -615,7 +671,7 @@ public static class Localization
             ["modules.action.install"] = "Instalar",
             ["modules.action.update"] = "Actualizar",
             ["modules.action.installed"] = "Instalado",
-            
+
             // Update errors
             ["update.error.notFound"] = "Catálogo de módulos no encontrado (404). Verifique su conexión o inténtelo más tarde.",
             ["update.error.forbidden"] = "Acceso al catálogo denegado (403).",
@@ -623,11 +679,11 @@ public static class Localization
             ["update.error.http"] = "Error de red: {0}",
             ["update.error.timeout"] = "Tiempo de espera agotado. El servidor no responde.",
             ["update.moduleInstalled"] = "Módulo {0} instalado",
-            
+
             // First run
             ["firstrun.noModules.title"] = "¡Bienvenido a Open Road!",
             ["firstrun.noModules.message"] = "No hay módulos instalados.\n\n¿Desea abrir el Gestor de Módulos para instalar extensiones?",
-            
+
             // Ventana Acerca de
             ["about.title"] = "Acerca de",
             ["about.subtitle"] = "Plugin modular para AutoCAD",
@@ -643,7 +699,7 @@ public static class Localization
             ["about.invalidUrl"] = "La URL de actualización es inválida o insegura.",
             ["about.alphaWarning"] = "⚠ VERSIÓN ALPHA - Solo para pruebas",
             ["about.betaWarning"] = "⚠ VERSIÓN BETA - Puede contener errores",
-            
+
             // Ventana de Configuración
             ["settings.title"] = "Configuración Open Road",
             ["settings.language"] = "Idioma",
@@ -655,17 +711,24 @@ public static class Localization
             ["settings.info"] = "Versión {0} • {1} módulo(s) • {2} comando(s)\nConfiguración: {3}",
             ["settings.saveError"] = "Error al guardar: {0}",
             ["settings.openError"] = "Error al abrir Configuración: {0}",
-            
+            ["settings.modules.status"] = "{0}/{1} módulos instalados",
+            ["settings.modules.installSelected"] = "Instalar selección",
+            ["settings.modules.selectedCount"] = "{0} módulo(s) seleccionado(s)",
+            ["settings.modules.dependenciesRequired"] = "Los siguientes módulos también se instalarán (dependencias requeridas):\n\n• {0}\n\n¿Continuar?",
+            ["settings.modules.confirmInstall"] = "¿Instalar {0} módulo(s)?\n\n• {1}",
+            ["settings.modules.installTitle"] = "Instalación",
+            ["settings.modules.installed"] = "{0} módulo(s) instalado(s)",
+
             // módulos
             ["modules.loaded"] = "{0} módulo(s) cargado(s)",
             ["modules.commands"] = "{0} comando(s) disponible(s)",
-            
+
             // Common
             ["common.yes"] = "Sí",
             ["common.no"] = "No",
             ["common.success"] = "Éxito",
             ["common.error"] = "Error",
-            
+
             // Configuración
             ["config.empty"] = "Archivo de Configuración vacío, nueva Configuración creada",
             ["config.loaded"] = "Configuración cargada desde {0}",
@@ -675,7 +738,7 @@ public static class Localization
             ["config.saved"] = "Configuración guardada",
             ["config.saveError"] = "Error al guardar la Configuración: {0}",
             ["config.reloaded"] = "Configuración recargada",
-            
+
             // Descubrimiento de módulos
             ["module.searchPath"] = "Buscando módulos en: {0}",
             ["module.folderCreated"] = "Carpeta Modules creada",
@@ -696,7 +759,7 @@ public static class Localization
             ["module.initError"] = "Error al inicializar el módulo '{0}': {1}",
             ["module.shutdown"] = "Módulo '{0}' cerrado",
             ["module.shutdownError"] = "Error al cerrar el módulo '{0}': {1}",
-            
+
             // UI
             ["ui.menu.created"] = "Menú Open Road creado",
             ["ui.menu.createError"] = "Error al crear el menú: {0}",
@@ -705,7 +768,7 @@ public static class Localization
             ["ui.ribbon.updated"] = "Cinta actualizada (incremental)",
             ["ui.ribbon.createError"] = "Error al crear la cinta: {0}",
             ["ui.ribbon.panelError"] = "Error al crear el panel {0}: {1}",
-            
+
             // Ciclo de vida del plugin
             ["plugin.updateCheckDisabled"] = "Verificación de actualizaciones desactivada para la v1 (sin servidor)",
             ["plugin.initError"] = "Error de inicialización de Open Road: {0}",
@@ -715,7 +778,7 @@ public static class Localization
             ["plugin.uiUpdated"] = "Interfaz actualizada ({0})",
             ["plugin.uiUpdateError"] = "Error al actualizar la interfaz: {0}",
             ["plugin.shutdownClean"] = "Open Road se cerró correctamente",
-            
+
             // Bienvenida
             ["welcome.title"] = "OPEN ROAD v{0}",
             ["welcome.subtitle"] = "Plugin modular para AutoCAD",
@@ -724,7 +787,7 @@ public static class Localization
             ["welcome.dropModules"] = "Coloque sus módulos (.dll) en la carpeta Modules/",
             ["welcome.commandsAvailable"] = "{0} comando(s) disponible(s)",
             ["welcome.helpHint"] = "Escriba OR_HELP para la lista completa",
-            
+
             // Logs
             ["log.stack"] = "Pila: {0}",
             ["log.level.debug"] = "[DEPURAR]",
@@ -732,11 +795,11 @@ public static class Localization
             ["log.level.success"] = "[OK]",
             ["log.level.warn"] = "[ADVERTENCIA]",
             ["log.level.error"] = "[ERROR]",
-            
+
             // Configuración (nuevas claves)
             ["config.migrating"] = "Migrando configuración de v{0} a v{1}...",
             ["config.migrated"] = "Configuración migrada correctamente",
-            
+
             // Módulos (nuevas claves)
             ["module.dllFoundInPath"] = "{0} archivo(s) DLL encontrado(s) en {1}",
             ["module.pathAdded"] = "Ruta de módulos añadida: {0}",
@@ -745,12 +808,12 @@ public static class Localization
             ["module.unsigned"] = "⚠️ Módulo sin firmar: {0} (no verificado)",
             ["module.signed"] = "✓ Módulo firmado: {0}",
             ["module.unsignedBlocked"] = "Módulo sin firmar bloqueado: {0} (configure 'allowUnsignedModules' para permitir)",
-            
+
             // Errores (transacciones)
             ["error.noDatabase"] = "Base de datos no disponible",
         }, isSystemRegistration: true);
     }
-    
+
     /// <summary>
     /// Enregistre des traductions pour une langue.
     /// Les clés système (préfixes: app., cmd., error., etc.) ne peuvent pas être écrasées par les modules.
@@ -761,7 +824,7 @@ public static class Localization
     public static void RegisterTranslations(string language, IDictionary<string, string> translations, bool isSystemRegistration = false)
     {
         var langDict = _translations.GetOrAdd(language, _ => new ConcurrentDictionary<string, string>());
-        
+
         foreach (var (key, value) in translations)
         {
             // Protéger les clés système contre l'écrasement par les modules
@@ -777,7 +840,7 @@ public static class Localization
             langDict[key] = value;
         }
     }
-    
+
     /// <summary>
     /// Vérifie si une clé est une clé système protégée
     /// </summary>
@@ -785,7 +848,7 @@ public static class Localization
     {
         return _systemKeyPrefixes.Any(prefix => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
     }
-    
+
     /// <summary>
     /// Traduit une clé dans la langue active
     /// </summary>
@@ -795,7 +858,7 @@ public static class Localization
     public static string T(string key, string? defaultValue = null)
     {
         var lang = CurrentLanguage;
-        
+
         // Chercher dans la langue active
         if (_translations.TryGetValue(lang, out var langDict))
         {
@@ -804,7 +867,7 @@ public static class Localization
                 return value;
             }
         }
-        
+
         // Fallback vers Français
         if (lang != "fr" && _translations.TryGetValue("fr", out var frDict))
         {
@@ -813,10 +876,10 @@ public static class Localization
                 return frValue;
             }
         }
-        
+
         return defaultValue ?? key;
     }
-    
+
     /// <summary>
     /// Traduit avec des Paramètres formatés.
     /// Note: Ne pas passer une seule chaîne, utilisez T(key, defaultValue) à la place.
@@ -830,7 +893,7 @@ public static class Localization
         {
             return T(key);
         }
-        
+
         var template = T(key);
         try
         {
@@ -842,7 +905,7 @@ public static class Localization
             return template;
         }
     }
-    
+
     /// <summary>
     /// Change la langue active et notifie les abonnés.
     /// </summary>
@@ -859,31 +922,31 @@ public static class Localization
         {
             return false;
         }
-        
+
         lock (_languageLock)
         {
             if (_currentLanguage == language)
             {
                 return false;
             }
-            
+
             var oldLanguage = _currentLanguage;
             _currentLanguage = language;
-            
+
             // Sauvegarder dans la configuration si demandé
             if (saveToConfig)
             {
                 Configuration.Configuration.Set("language", language);
                 Configuration.Configuration.Save();
             }
-            
+
             // Déclencher l'événement de changement de langue
             OnLanguageChanged?.Invoke(oldLanguage, language);
         }
-        
+
         return true;
     }
-    
+
     /// <summary>
     /// Vérifie si une langue est supportée
     /// </summary>
@@ -893,7 +956,7 @@ public static class Localization
     {
         return _supportedLanguages.Contains(language);
     }
-    
+
     /// <summary>
     /// Obtient toutes les clés de traduction enregistrées pour une langue
     /// </summary>

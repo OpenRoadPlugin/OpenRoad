@@ -4,7 +4,7 @@
   "build": "2026.02.04",
   "channel": "alpha",
   "framework": ".NET 8.0 - Windows",
-  "minAutoCADVersion": "2026",
+  "minAutoCADVersion": "2024",
   "repository": "https://github.com/openroadplugin/openroad",
   "updateUrl": "https://github.com/openroadplugin/openroad/releases/latest",
   "releaseNotes": "Version 0.0.1 - Première version alpha du Core modulaire"

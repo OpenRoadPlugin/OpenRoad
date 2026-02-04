@@ -3,13 +3,13 @@
     Directory.Build.props - Configuration partagée pour tous les projets Open Road
     Ce fichier est automatiquement importé par MSBuild pour tous les projets du dossier.
   -->
-  
+
   <PropertyGroup>
     <!-- Version centralisée - chargée depuis version.json -->
     <OpenRoadVersion>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)..\\version.json')), '"version"\s*:\s*"([^\"]+)"').Groups[1].Value)</OpenRoadVersion>
     <OpenRoadAuthors>Open Road Contributors</OpenRoadAuthors>
     <OpenRoadCopyright>Copyright © 2026 Open Road Contributors</OpenRoadCopyright>
-    
+
     <!-- Configuration .NET commune -->
     <TargetFramework>net8.0-windows</TargetFramework>
     <LangVersion>latest</LangVersion>
@@ -17,27 +17,28 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
-  
+
   <!-- Détection automatique du chemin AutoCAD -->
   <PropertyGroup>
-    <!-- Chercher AutoCAD 2026 dans les emplacements standards -->
-    <AutoCADPath Condition="Exists('C:\Program Files\Autodesk\AutoCAD 2026')">C:\Program Files\Autodesk\AutoCAD 2026</AutoCADPath>
-    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('D:\Program Files\Autodesk\AutoCAD 2026')">D:\Program Files\Autodesk\AutoCAD 2026</AutoCADPath>
-    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('$(ProgramFiles)\Autodesk\AutoCAD 2026')">$(ProgramFiles)\Autodesk\AutoCAD 2026</AutoCADPath>
-    
-    <!-- AutoCAD 2027 (future compatibilité) -->
-    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2027')">C:\Program Files\Autodesk\AutoCAD 2027</AutoCADPath>
-    
+    <!-- Chercher AutoCAD 2024+ dans les emplacements standards -->
+    <AutoCADPath Condition="Exists('C:\Program Files\Autodesk\AutoCAD 2024')">C:\Program Files\Autodesk\AutoCAD 2024</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('D:\Program Files\Autodesk\AutoCAD 2024')">D:\Program Files\Autodesk\AutoCAD 2024</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('$(ProgramFiles)\Autodesk\AutoCAD 2024')">$(ProgramFiles)\Autodesk\AutoCAD 2024</AutoCADPath>
+
+    <!-- AutoCAD 2025/2026 (compatibilité ascendante) -->
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2025')">C:\Program Files\Autodesk\AutoCAD 2025</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2026')">C:\Program Files\Autodesk\AutoCAD 2026</AutoCADPath>
+
     <!-- Variable d'environnement personnalisée (prioritaire si définie) -->
     <AutoCADPath Condition="'$(AUTOCAD_PATH)' != ''">$(AUTOCAD_PATH)</AutoCADPath>
   </PropertyGroup>
-  
+
   <!-- Avertissement si AutoCAD non trouvé -->
   <Target Name="CheckAutoCADPath" BeforeTargets="BeforeBuild">
-    <Warning Condition="'$(AutoCADPath)' == ''" 
-             Text="AutoCAD 2026+ non trouvé. Définissez la variable d'environnement AUTOCAD_PATH ou installez AutoCAD 2026+." />
-    <Message Condition="'$(AutoCADPath)' != ''" 
-             Text="AutoCAD détecté : $(AutoCADPath)" 
+    <Warning Condition="'$(AutoCADPath)' == ''"
+             Text="AutoCAD 2024+ non trouvé. Définissez la variable d'environnement AUTOCAD_PATH ou installez AutoCAD 2024+." />
+    <Message Condition="'$(AutoCADPath)' != ''"
+             Text="AutoCAD détecté : $(AutoCADPath)"
              Importance="high" />
   </Target>
 
