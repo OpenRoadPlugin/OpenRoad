@@ -1,5 +1,5 @@
-# Création automatique des releases
-# Ce workflow s'exécute lors de la création d'un tag vX.X.X
+# CrÃ©ation automatique des releases avec installateur
+# Ce workflow s'exÃ©cute lors de la crÃ©ation d'un tag vX.X.X
 
 name: Release
 
@@ -13,50 +13,80 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: write
-    
+
     steps:
     - name: Checkout du code
       uses: actions/checkout@v4
-    
+
     - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-    
+
     - name: Extraire la version du tag
       id: get_version
       run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       shell: bash
-    
-    - name: Restaurer les dépendances
+
+    - name: Restaurer les dependances
       run: dotnet restore src/OpenRoad.Core/OpenRoad.Core.csproj
-    
+
     - name: Build Release
       run: dotnet build src/OpenRoad.Core/OpenRoad.Core.csproj --configuration Release --no-restore
-    
-    - name: Créer le package de release
+
+    - name: Creer le package de release
       run: |
         mkdir release
-        mkdir release/Modules
+        mkdir release\Modules
+        mkdir release\Data
         copy bin\OpenRoad.Core.dll release\
         copy bin\OpenRoad.Core.xml release\
         copy bin\Modules\README.md release\Modules\
+        if exist bin\Data\*.json copy bin\Data\*.json release\Data\
         copy README.md release\
         copy LICENSE release\
         copy CHANGELOG.md release\
       shell: cmd
-    
-    - name: Créer l'archive ZIP
+
+    - name: Creer l'archive ZIP
       run: Compress-Archive -Path release\* -DestinationPath OpenRoad-${{ steps.get_version.outputs.VERSION }}.zip
       shell: pwsh
-    
-    - name: Créer la release GitHub
+
+    - name: Installer Inno Setup
+      run: |
+        choco install innosetup -y --no-progress
+      shell: pwsh
+
+    - name: Mettre a jour la version dans l'installateur
+      run: |
+        $content = Get-Content -Path installer/OpenRoad.iss -Raw
+        $content = $content -replace '#define MyAppVersion ".*"', '#define MyAppVersion "${{ steps.get_version.outputs.VERSION }}"'
+        Set-Content -Path installer/OpenRoad.iss -Value $content
+      shell: pwsh
+
+    - name: Creer l'installateur Windows
+      run: |
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\OpenRoad.iss
+      shell: pwsh
+
+    - name: Renommer l'installateur avec la version
+      run: |
+        $files = Get-ChildItem "installer\Output\OpenRoad_Setup*.exe" -ErrorAction SilentlyContinue
+        if ($files) {
+          $files | ForEach-Object {
+            Move-Item $_.FullName "installer\Output\OpenRoad_Setup_v${{ steps.get_version.outputs.VERSION }}.exe" -Force
+          }
+        }
+      shell: pwsh
+
+    - name: Creer la release GitHub
       uses: softprops/action-gh-release@v1
       with:
         name: Open Road v${{ steps.get_version.outputs.VERSION }}
         body_path: CHANGELOG.md
         files: |
           OpenRoad-${{ steps.get_version.outputs.VERSION }}.zip
+          installer/Output/OpenRoad_Setup_v${{ steps.get_version.outputs.VERSION }}.exe
         draft: false
         prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
       env:
