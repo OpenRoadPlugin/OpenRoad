@@ -5,15 +5,14 @@
 # ------------------------------------------------------------
 #  Build outputs
 # ------------------------------------------------------------
-bin/*.dll
 bin/*.pdb
 bin/*.exe
-bin/*.xml
-bin/*.json
 
 # Exceptions - fichiers necessaires pour les releases GitHub
 !bin/OpenRoad.Core.dll
 !bin/OpenRoad.Core.xml
+!bin/OpenRoad.Core.deps.json
+!bin/OpenRoad.Core.runtimeconfig.json
 !bin/version.json
 !bin/Modules/
 !bin/Modules/**
