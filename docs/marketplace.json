@@ -1,0 +1,46 @@
+{
+  "core": {
+    "latest": "0.0.1",
+    "downloadUrl": "https://github.com/openroadplugin/openroad/releases/latest/download/OpenRoad_Setup.exe",
+    "releaseNotes": "Initial beta release.",
+    "releaseDate": "2026-02-03"
+  },
+  "modules": [
+    {
+      "id": "georeferencement",
+      "name": "Module Géoréférencement",
+      "description": "Gestion des systèmes de coordonnées et géoréférencement des dessins. Permet de définir, détecter et appliquer des projections cartographiques (Lambert 93, CC, UTM, etc.).",
+      "version": "1.0.0",
+      "minCoreVersion": "0.0.1",
+      "downloadUrl": "https://github.com/openroadplugin/module-georeferencement/releases/latest/download/OpenRoad.Georeferencement.dll",
+      "iconUrl": "https://raw.githubusercontent.com/openroadplugin/module-georeferencement/main/icon.png",
+      "author": "Charles TILLY",
+      "category": "Cartographie",
+      "tags": ["projection", "coordonnées", "CGEOCS", "Lambert", "UTM", "géoréférencement"]
+    },
+    {
+      "id": "voirie",
+      "name": "Module Voirie",
+      "description": "Conception de voirie urbaine, carrefours et giratoires.",
+      "version": "1.0.0",
+      "minCoreVersion": "0.0.1",
+      "downloadUrl": "https://github.com/openroadplugin/module-voirie/releases/latest/download/OpenRoad.Voirie.dll",
+      "iconUrl": "https://raw.githubusercontent.com/openroadplugin/module-voirie/main/icon.png",
+      "author": "Open Road Team",
+      "category": "Voirie",
+      "tags": ["voirie", "carrefour", "giratoire", "route"]
+    },
+    {
+      "id": "reseaux",
+      "name": "Module Réseaux",
+      "description": "Dimensionnement et dessin de réseaux d'assainissement.",
+      "version": "1.0.0",
+      "minCoreVersion": "0.0.1",
+      "downloadUrl": "https://github.com/openroadplugin/module-reseaux/releases/latest/download/OpenRoad.Reseaux.dll",
+      "iconUrl": "https://raw.githubusercontent.com/openroadplugin/module-reseaux/main/icon.png",
+      "author": "Open Road Team",
+      "category": "Réseaux",
+      "tags": ["assainissement", "réseaux", "canalisation", "hydraulique"]
+    }
+  ]
+}

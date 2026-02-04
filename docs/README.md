@@ -1,0 +1,80 @@
+# 📚 Documentation Open Road
+
+> Documentation technique pour les développeurs de modules Open Road
+
+---
+
+## 🗂️ Structure de la documentation
+
+```
+docs/
+├── README.md                          # Ce fichier (index)
+├── api/                               # Référence API
+│   └── services/                      # Services du Core
+│       ├── GeometryService.md         # Calculs géométriques, voirie, hydraulique
+│       ├── LayerService.md            # Gestion des calques
+│       ├── CoordinateService.md       # Conversions de coordonnées
+│       └── UpdateService.md           # Vérification des mises à jour
+├── guides/                            # Guides pratiques
+│   └── developer_guide.md             # Guide complet du développeur
+├── copilot/                           # Contextes IA et Vibe-Coding
+│   ├── VIBE_CODING_GUIDE.md           # Guide Vibe-Coding avec Copilot
+│   ├── copilot-instructions-core.md   # Pour le développement du Core
+│   └── copilot-instructions-module.md # Pour le développement de Modules
+├── modules/                           # Documentation des modules
+│   ├── georeferencement.md            # Module Géoréférencement
+│   └── streetview.md                  # Module Street View
+└── architecture/                      # Architecture technique
+    └── overview.md                    # Vue d'ensemble
+```
+
+---
+
+## 🚀 Démarrage rapide
+
+### Pour les développeurs de modules
+
+1. **Lire le guide Vibe-Coding** : [copilot/VIBE_CODING_GUIDE.md](copilot/VIBE_CODING_GUIDE.md)
+2. **Lire le contexte IA** : [../.github/copilot-instructions.md](../.github/copilot-instructions.md)
+3. **Comprendre les services** : [api/services/](api/services/)
+4. **Utiliser les templates** : [../templates/](../templates/)
+
+---
+
+## 🧩 Référence API
+
+### Services disponibles
+
+| Service | Description | Documentation |
+|---------|-------------|---------------|
+| **GeometryService** | Calculs géométriques, voirie, hydraulique, cubature | [📄 Voir](api/services/GeometryService.md) |
+| **LayerService** | Création et gestion des calques AutoCAD | [📄 Voir](api/services/LayerService.md) |
+| **CoordinateService** | Conversions de coordonnées projetées/WGS84 | [📄 Voir](api/services/CoordinateService.md) |
+| **UpdateService** | Vérification des mises à jour | [📄 Voir](api/services/UpdateService.md) |
+| **Logger** | Logs dans la console AutoCAD | *à documenter* |
+| **Configuration** | Paramètres utilisateur (JSON) | *à documenter* |
+| **Localization** | Traductions FR/EN/ES | *à documenter* |
+
+---
+
+## 📖 Guides
+
+| Guide | Description | Statut |
+|-------|-------------|--------|
+| Démarrage rapide | Installation et premier module | ⏳ à venir |
+| Créer un module | Tutoriel pas à pas | ⏳ à venir |
+| Bonnes pratiques | Conventions et patterns | ⏳ à venir |
+| Tests | Comment tester son module | ⏳ à venir |
+
+---
+
+## 🔗 Liens utiles
+
+- **Repository GitHub** : [Open Road](https://github.com/openroad/openroad)
+- **Changelog** : [CHANGELOG.md](../CHANGELOG.md)
+- **Contributing** : [CONTRIBUTING.md](../CONTRIBUTING.md)
+- **License** : Apache 2.0
+
+---
+
+*Documentation Open Road v0.0.1*

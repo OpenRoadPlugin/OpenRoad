@@ -1,0 +1,34 @@
+# EditorConfig - Open Road
+# https://editorconfig.org
+
+root = true
+
+# Tous les fichiers
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Fichiers C#
+[*.cs]
+charset = utf-8-bom
+indent_size = 4
+
+# Fichiers XML/XAML
+[*.{xml,xaml,props,targets,csproj,sln}]
+indent_size = 2
+
+# Fichiers JSON
+[*.json]
+indent_size = 2
+
+# Fichiers Markdown
+[*.md]
+trim_trailing_whitespace = false
+
+# Fichiers de script
+[*.{ps1,cmd,bat}]
+end_of_line = crlf

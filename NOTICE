@@ -1,0 +1,46 @@
+Open Road
+Copyright 2026 Open Road Contributors
+
+This product includes software developed by the Open Road project
+(https://github.com/openroadplugin/openroad).
+
+================================================================================
+                              TRADEMARK NOTICE
+================================================================================
+
+"Open Road" and the Open Road logo are trademarks of the Open Road project.
+
+The Apache License 2.0 does NOT grant permission to use the trade names,
+trademarks, service marks, or product names "Open Road", except as required
+for reasonable and customary use in describing the origin of the Work.
+
+PROHIBITED WITHOUT WRITTEN PERMISSION:
+- Using "Open Road" in the name of derivative products
+- Using "Open Road" in a way that suggests official endorsement
+- Using the Open Road logo in derivative products
+- Creating products named "Open Road [Something]" or "[Something] Open Road"
+
+PERMITTED:
+- Stating "Based on Open Road" or "Compatible with Open Road"
+- Stating "Uses Open Road technology"
+- Linking to the official Open Road repository
+
+For trademark usage requests, please open an issue on the official repository.
+
+================================================================================
+                           THIRD-PARTY NOTICES
+================================================================================
+
+This software uses the following third-party components:
+
+- AutoCAD .NET API (Autodesk)
+  Licensed under Autodesk's terms of use.
+  https://www.autodesk.com/
+
+================================================================================
+                          CONTRIBUTOR ATTRIBUTIONS
+================================================================================
+
+See the Git history for a full list of contributors.
+
+================================================================================

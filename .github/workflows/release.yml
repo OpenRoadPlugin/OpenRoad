@@ -1,0 +1,63 @@
+# Création automatique des releases
+# Ce workflow s'exécute lors de la création d'un tag vX.X.X
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Extraire la version du tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      shell: bash
+    
+    - name: Restaurer les dépendances
+      run: dotnet restore src/OpenRoad.Core/OpenRoad.Core.csproj
+    
+    - name: Build Release
+      run: dotnet build src/OpenRoad.Core/OpenRoad.Core.csproj --configuration Release --no-restore
+    
+    - name: Créer le package de release
+      run: |
+        mkdir release
+        mkdir release/Modules
+        copy bin\OpenRoad.Core.dll release\
+        copy bin\OpenRoad.Core.xml release\
+        copy bin\Modules\README.md release\Modules\
+        copy README.md release\
+        copy LICENSE release\
+        copy CHANGELOG.md release\
+      shell: cmd
+    
+    - name: Créer l'archive ZIP
+      run: Compress-Archive -Path release\* -DestinationPath OpenRoad-${{ steps.get_version.outputs.VERSION }}.zip
+      shell: pwsh
+    
+    - name: Créer la release GitHub
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Open Road v${{ steps.get_version.outputs.VERSION }}
+        body_path: CHANGELOG.md
+        files: |
+          OpenRoad-${{ steps.get_version.outputs.VERSION }}.zip
+        draft: false
+        prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,49 @@
+# Build et validation du projet Open Road
+# Ce workflow s'exécute sur chaque push et pull request
+
+name: Build
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    
+    - name: Restaurer les dépendances
+      run: dotnet restore src/OpenRoad.Core/OpenRoad.Core.csproj
+    
+    - name: Build (Debug)
+      run: dotnet build src/OpenRoad.Core/OpenRoad.Core.csproj --configuration Debug --no-restore
+    
+    - name: Build (Release)
+      run: dotnet build src/OpenRoad.Core/OpenRoad.Core.csproj --configuration Release --no-restore
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: OpenRoad-Build
+        path: |
+          bin/OpenRoad.Core.dll
+          bin/OpenRoad.Core.xml
+        retention-days: 7

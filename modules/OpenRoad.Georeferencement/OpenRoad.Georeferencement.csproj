@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ==============================================================================
+  OPEN ROAD - MODULE GéORÉFÉRENCEMENT
+  ==============================================================================
+  
+  Module officiel pour la gestion des systèmes de coordonnées et le géoréférencement.
+  
+  Auteur: Charles TILLY
+  Version: 0.0.1
+  
+  Ce module permet de :
+  - Définir le système de projection du dessin (CGEOCS)
+  - Détecter automatiquement la projection probable
+  - Convertir des coordonnées entre systèmes
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Configuration .NET -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    
+    <!-- Suppression des warnings de conflits d'assemblies AutoCAD -->
+    <NoWarn>$(NoWarn);MSB3277</NoWarn>
+    
+    <!-- Identification du module -->
+    <AssemblyName>OpenRoad.Georeferencement</AssemblyName>
+    <RootNamespace>OpenRoad.Modules.Georeferencement</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>Charles TILLY</Authors>
+    <Company>Open Road Contributors</Company>
+    <Description>Module de géoréférencement pour Open Road - Gestion des systèmes de coordonnées</Description>
+    <Copyright>Copyright © 2026 Open Road Contributors</Copyright>
+    
+    <!-- Output dans le dossier Modules -->
+    <OutputPath>..\..\bin\Modules\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!-- Référence au Core Open Road -->
+  <ItemGroup>
+    <Reference Include="OpenRoad.Core">
+      <HintPath>..\..\bin\OpenRoad.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Détection automatique du chemin AutoCAD -->
+  <PropertyGroup>
+    <AutoCADPath Condition="Exists('C:\Program Files\Autodesk\AutoCAD 2026')">C:\Program Files\Autodesk\AutoCAD 2026</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('D:\Program Files\Autodesk\AutoCAD 2026')">D:\Program Files\Autodesk\AutoCAD 2026</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('$(ProgramFiles)\Autodesk\AutoCAD 2026')">$(ProgramFiles)\Autodesk\AutoCAD 2026</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2027')">C:\Program Files\Autodesk\AutoCAD 2027</AutoCADPath>
+    <AutoCADPath Condition="'$(AUTOCAD_PATH)' != ''">$(AUTOCAD_PATH)</AutoCADPath>
+  </PropertyGroup>
+
+  <!-- Références AutoCAD (Private=false car déjà chargées) -->
+  <ItemGroup>
+    <Reference Include="accoremgd">
+      <HintPath>$(AutoCADPath)\accoremgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="acdbmgd">
+      <HintPath>$(AutoCADPath)\acdbmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="acmgd">
+      <HintPath>$(AutoCADPath)\acmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AcWindows">
+      <HintPath>$(AutoCADPath)\AcWindows.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>$(AutoCADPath)\AdWindows.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Avertissement si AutoCAD non trouvé -->
+  <Target Name="CheckAutoCADPath" BeforeTargets="BeforeBuild">
+    <Warning Condition="'$(AutoCADPath)' == ''" 
+             Text="AutoCAD 2026+ non trouvé. Définissez la variable d'environnement AUTOCAD_PATH." />
+    <Message Condition="'$(AutoCADPath)' != ''" 
+             Text="AutoCAD détecté : $(AutoCADPath)" 
+             Importance="high" />
+  </Target>
+
+</Project>
