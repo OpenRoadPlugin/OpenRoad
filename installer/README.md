@@ -2,6 +2,12 @@
 
 Ce dossier contient les fichiers nécessaires pour créer l'installateur du plugin Open Road.
 
+## Compatibilité
+
+- **AutoCAD 2024** ou supérieur (R24.0+)
+- **.NET 8.0** (inclus avec AutoCAD 2024+)
+- Windows 10/11 64-bit
+
 ## Prérequis
 
 1.  **Inno Setup Compiler** (gratuit) : Télécharger et installer depuis [jrsoftware.org](https://jrsoftware.org/isdl.php).

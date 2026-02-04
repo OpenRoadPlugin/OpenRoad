@@ -132,7 +132,7 @@ end;
 // Vérifie si AutoCAD (ou variantes) est en cours d'exécution
 function IsAutoCADRunning: Boolean;
 begin
-  Result := IsProcessRunning('acad.exe') or 
+  Result := IsProcessRunning('acad.exe') or
             IsProcessRunning('accoreconsole.exe') or
             IsProcessRunning('acadlt.exe');
 end;
@@ -141,14 +141,14 @@ end;
 function GetAutoCADRunningMessage: String;
 begin
   case ActiveLanguage of
-    'french': Result := 'AutoCAD est actuellement en cours d''exécution.' + #13#10 + #13#10 + 
+    'french': Result := 'AutoCAD est actuellement en cours d''exécution.' + #13#10 + #13#10 +
                         'Veuillez fermer AutoCAD avant de continuer la désinstallation.' + #13#10 + #13#10 +
                         'Cliquez sur OK une fois AutoCAD fermé, ou Annuler pour quitter.';
-    'spanish': Result := 'AutoCAD está actualmente en ejecución.' + #13#10 + #13#10 + 
+    'spanish': Result := 'AutoCAD está actualmente en ejecución.' + #13#10 + #13#10 +
                          'Por favor cierre AutoCAD antes de continuar con la desinstalación.' + #13#10 + #13#10 +
                          'Haga clic en Aceptar cuando AutoCAD esté cerrado, o Cancelar para salir.';
   else
-    Result := 'AutoCAD is currently running.' + #13#10 + #13#10 + 
+    Result := 'AutoCAD is currently running.' + #13#10 + #13#10 +
               'Please close AutoCAD before continuing the uninstallation.' + #13#10 + #13#10 +
               'Click OK once AutoCAD is closed, or Cancel to exit.';
   end;
@@ -157,12 +157,12 @@ end;
 function GetAutoCADStillRunningMessage: String;
 begin
   case ActiveLanguage of
-    'french': Result := 'AutoCAD est toujours en cours d''exécution.' + #13#10 + #13#10 + 
+    'french': Result := 'AutoCAD est toujours en cours d''exécution.' + #13#10 + #13#10 +
                         'La désinstallation ne peut pas continuer tant qu''AutoCAD n''est pas fermé.';
-    'spanish': Result := 'AutoCAD todavía está en ejecución.' + #13#10 + #13#10 + 
+    'spanish': Result := 'AutoCAD todavía está en ejecución.' + #13#10 + #13#10 +
                          'La desinstalación no puede continuar mientras AutoCAD esté abierto.';
   else
-    Result := 'AutoCAD is still running.' + #13#10 + #13#10 + 
+    Result := 'AutoCAD is still running.' + #13#10 + #13#10 +
               'Uninstallation cannot continue while AutoCAD is open.';
   end;
 end;
@@ -191,7 +191,7 @@ end;
 function InitializeSetup: Boolean;
 begin
   Result := True;
-  
+
   // Vérifier si AutoCAD est en cours d'exécution
   while IsAutoCADRunning do
   begin
@@ -200,7 +200,7 @@ begin
       Result := False;
       Exit;
     end;
-    
+
     // Revérifier après le clic OK
     if IsAutoCADRunning then
     begin
@@ -217,7 +217,7 @@ end;
 function InitializeUninstall: Boolean;
 begin
   Result := True;
-  
+
   // Vérifier si AutoCAD est en cours d'exécution
   while IsAutoCADRunning do
   begin
@@ -226,7 +226,7 @@ begin
       Result := False;
       Exit;
     end;
-    
+
     // Revérifier après le clic OK
     if IsAutoCADRunning then
     begin
@@ -246,19 +246,19 @@ begin
     // Chemins des bundles
     AppDataPath := ExpandConstant('{userappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle');
     LocalAppDataPath := ExpandConstant('{localappdata}\Autodesk\ApplicationPlugins\OpenRoad.bundle');
-    
+
     // Supprimer le dossier bundle principal s'il existe encore
     if DirExists(AppDataPath) then
     begin
       DelTree(AppDataPath, True, True, True);
     end;
-    
+
     // Supprimer le dossier bundle fallback s'il existe encore
     if DirExists(LocalAppDataPath) then
     begin
       DelTree(LocalAppDataPath, True, True, True);
     end;
-    
+
     // Message de confirmation
     MsgBox(GetUninstallCompleteMessage, mbInformation, MB_OK);
   end;
@@ -268,7 +268,7 @@ end;
 // DÉTECTION DES VERSIONS AUTOCAD
 // ============================================================================
 
-// Fonction pour scanner le registre et trouver les AutoCAD compatibles (R25.0+ / .NET 8)
+// Fonction pour scanner le registre et trouver les AutoCAD compatibles (R24.0+ / .NET 8)
 function CheckAutoCADVersions: String;
 var
   RegPath: String;
@@ -286,21 +286,21 @@ begin
   // AutoCAD est toujours dans HKLM sur les installations standards
   // Note: ArchitecturesInstallIn64BitMode=x64 assure qu'on lit le registre 64-bit
   RegPath := 'SOFTWARE\Autodesk\AutoCAD';
-  
+
   if RegGetSubkeyNames(HKEY_LOCAL_MACHINE, RegPath, VersionKeys) then
   begin
     for I := 0 to GetArrayLength(VersionKeys) - 1 do
     begin
       VersionKey := VersionKeys[I];
-      // Format attendu : Rxx.x (ex: R25.0)
+      // Format attendu : Rxx.x (ex: R24.0)
       if (Length(VersionKey) >= 3) and (VersionKey[1] = 'R') then
       begin
-        ReleaseVer := Copy(VersionKey, 2, 2); // Extrait "25" de "R25.0"
+        ReleaseVer := Copy(VersionKey, 2, 2); // Extrait "24" de "R24.0"
         MajorVer := StrToIntDef(ReleaseVer, 0);
-        
-        // AutoCAD 2025 correspond à R25.0
-        // On cherche R25+ pour le support .NET 8
-        if MajorVer >= 25 then
+
+        // AutoCAD 2024 correspond à R24.0
+        // On cherche R24+ pour le support .NET 8
+        if MajorVer >= 24 then
         begin
           if RegGetSubkeyNames(HKEY_LOCAL_MACHINE, RegPath + '\' + VersionKey, ProductKeys) then
           begin
@@ -324,21 +324,21 @@ procedure InitializeWizard;
 begin
   // Scan au démarrage
   DetectedVersions := CheckAutoCADVersions;
-  
+
   // Création page personnalisée après l'accueil
   CompatibleVersionsPage := CreateOutputMsgMemoPage(wpWelcome,
-    'Compatibilité AutoCAD', 
+    'Compatibilité AutoCAD',
     'Vérification des versions installées',
-    'L''assistant recherche des versions d''AutoCAD compatibles avec Open Road (.NET 8 / AutoCAD 2025+).',
+    'L''assistant recherche des versions d''AutoCAD compatibles avec Open Road (.NET 8 / AutoCAD 2024+).',
     '');
-    
+
   if VersionsFound then
   begin
-    CompatibleVersionsPage.RichEditViewer.Lines.Text := '✅ Versions compatibles détectées :' + #13#10 + #13#10 + DetectedVersions + #13#10 + 'Le plugin sera installé automatiquement pour ces versions.';
+    CompatibleVersionsPage.RichEditViewer.Lines.Text := '✅ Versions compatibles détectées (AutoCAD 2024+) :' + #13#10 + #13#10 + DetectedVersions + #13#10 + 'Le plugin sera installé automatiquement pour ces versions.';
   end
   else
   begin
-    CompatibleVersionsPage.RichEditViewer.Lines.Text := '⚠️ AUCUNE VERSION COMPATIBLE DÉTECTÉE !' + #13#10 + #13#10 + 'Open Road nécessite AutoCAD 2025 ou supérieur (Série R25.0+ / .NET 8).' + #13#10 + #13#10 + 'Vous pouvez continuer l''installation, mais le plugin ne sera probablement pas chargé par vos versions actuelles.';
+    CompatibleVersionsPage.RichEditViewer.Lines.Text := '⚠️ AUCUNE VERSION COMPATIBLE DÉTECTÉE !' + #13#10 + #13#10 + 'Open Road nécessite AutoCAD 2024 ou supérieur (Série R24.0+ / .NET 8).' + #13#10 + #13#10 + 'Vous pouvez continuer l''installation, mais le plugin ne sera probablement pas chargé par vos versions actuelles.';
   end;
 end;
 // You can add custom code here if needed
