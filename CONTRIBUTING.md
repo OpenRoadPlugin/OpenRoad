@@ -9,7 +9,7 @@ Merci de votre intérêt pour contribuer à Open Road !
 ### Prérequis
 
 - **.NET 8 SDK**  [Télécharger](https://dotnet.microsoft.com/download/dotnet/8.0)
-- **AutoCAD 2026**  Pour les DLL de référence
+- **AutoCAD 2024**  Pour les DLL de référence
 - **Visual Studio 2022** ou **VS Code** avec extensions :
   - C# (ms-dotnettools.csharp)
   - C# Dev Kit (ms-dotnettools.csdevkit)
@@ -26,7 +26,7 @@ Merci de votre intérêt pour contribuer à Open Road !
 
 3. Vérifiez les chemins AutoCAD dans src/OpenRoad.Core/OpenRoad.Core.csproj :
    `xml
-   <HintPath>C:\Program Files\Autodesk\AutoCAD 2026\accoremgd.dll</HintPath>
+   <HintPath>C:\Program Files\Autodesk\AutoCAD 2024\accoremgd.dll</HintPath>
    `
 
 ### Compilation
@@ -187,6 +187,70 @@ Puis ouvrez une Pull Request sur GitHub.
 - Rejoignez les [Discussions](https://github.com/openroadplugin/openroad/discussions)
 
 Merci pour votre contribution ! 
+
+---
+
+## 🏆 Reconnaissance des contributeurs
+
+Open Road valorise ses contributeurs ! Selon votre niveau de participation, vous pouvez être crédité directement dans le programme.
+
+### Crédits automatiques pour les développeurs de modules
+
+**Si vous développez un module**, vos crédits sont **automatiquement affichés** via les propriétés de votre classe module :
+
+```csharp
+public class MonModule : ModuleBase
+{
+    public override string Author => "Votre Nom";           // Affiché dans OR_VERSION et OR_MODULES
+    public override string Version => "1.0.0";              // Version de votre module
+    public override string Description => "Mon super module";
+    
+    // Vous pouvez aussi ajouter un lien dans la description :
+    // "Module de géolocalisation - https://monsite.com"
+}
+```
+
+Ces informations apparaissent dans :
+- La commande `OR_VERSION` — Liste des modules chargés avec auteurs
+- Le gestionnaire de modules `OR_MODULES` — Détails de chaque module
+- Le marketplace (si votre module est publié)
+
+### Niveaux de reconnaissance additionnels
+
+| Niveau | Critères | Reconnaissance |
+|--------|----------|----------------|
+| **Contributeur** | 1-3 contributions acceptées (PR, corrections, traductions) | Nom dans le fichier NOTICE |
+| **Contributeur actif** | 4-10 contributions significatives | Nom + lien vers profil GitHub dans `OR_ABOUT` |
+| **Développeur Core** | Contributions majeures au Core | Nom + lien site personnel dans `OR_ABOUT` et documentation |
+| **Testeur reconnu** | Tests réguliers + rapports de bugs détaillés (5+) | Mention dans `OR_ABOUT` section testeurs |
+
+### Comment demander vos crédits ?
+
+1. **Lors de votre Pull Request**, ajoutez dans la description :
+   ```
+   ## Crédits souhaités
+   - Nom/Pseudo : [Votre nom]
+   - Site web : [URL de votre site] (optionnel)
+   - Rôle : Développeur / Testeur / Traducteur
+   ```
+
+2. **Après plusieurs contributions**, ouvrez une Issue avec le label `credits` en listant vos contributions.
+
+### Informations affichées
+
+Vous pouvez choisir d'afficher :
+- ✅ Votre nom ou pseudonyme
+- ✅ Un lien vers votre site personnel ou portfolio
+- ✅ Un lien vers votre profil GitHub
+- ✅ Votre entreprise (si applicable)
+
+Toutes ces informations sont **optionnelles**. Vous pouvez contribuer anonymement si vous le préférez.
+
+### Où apparaissent les crédits ?
+
+- **Fichier [NOTICE](NOTICE)** — Liste complète des contributeurs
+- **Commande `OR_ABOUT`** — Fenêtre "À propos" dans AutoCAD
+- **Documentation** — Page des contributeurs (pour contributions majeures)
 
 ---
 

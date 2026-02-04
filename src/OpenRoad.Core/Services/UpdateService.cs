@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
@@ -28,7 +28,7 @@ public static class UpdateService
         {
             var url = Configuration.Configuration.Get("updateUrl", MarketplaceUrl);
             var manifest = await _httpClient.GetFromJsonAsync<MarketplaceManifest>(url);
-            
+
             if (manifest == null)
             {
                 return new UpdateCheckResult { Success = false, ErrorMessage = "Manifest is empty" };
@@ -52,16 +52,16 @@ public static class UpdateService
             {
                 // Chercher si le module est installe
                 var installed = ModuleDiscovery.Modules.FirstOrDefault(m => m.Id.Equals(moduleDef.Id, StringComparison.OrdinalIgnoreCase));
-                
+
                 if (installed != null)
                 {
-                    if (Version.TryParse(moduleDef.Version, out var remoteVer) && 
+                    if (Version.TryParse(moduleDef.Version, out var remoteVer) &&
                         Version.TryParse(installed.Version, out var localVer))
                     {
                         if (remoteVer > localVer)
                         {
-                            result.Updates.Add(new ModuleUpdateInfo 
-                            { 
+                            result.Updates.Add(new ModuleUpdateInfo
+                            {
                                 ModuleId = moduleDef.Id,
                                 CurrentVersion = localVer,
                                 NewVersion = remoteVer,
@@ -75,8 +75,8 @@ public static class UpdateService
                     // Nouveau module disponible
                     if (Version.TryParse(moduleDef.Version, out var remoteVer))
                     {
-                        result.Updates.Add(new ModuleUpdateInfo 
-                        { 
+                        result.Updates.Add(new ModuleUpdateInfo
+                        {
                             ModuleId = moduleDef.Id,
                             CurrentVersion = null,
                             NewVersion = remoteVer,
@@ -93,7 +93,7 @@ public static class UpdateService
             // Erreurs HTTP spécifiques (404, 500, etc.)
             var statusCode = httpEx.StatusCode;
             string errorMessage;
-            
+
             if (statusCode == System.Net.HttpStatusCode.NotFound)
             {
                 errorMessage = L10n.T("update.error.notFound", "Catalogue de modules introuvable (404). Vérifiez votre connexion ou réessayez plus tard.");
@@ -110,7 +110,7 @@ public static class UpdateService
             {
                 errorMessage = L10n.TFormat("update.error.http", "Erreur réseau: {0}", httpEx.Message);
             }
-            
+
             Logger.Error($"Update check failed (HTTP): {httpEx.Message}");
             return new UpdateCheckResult { Success = false, ErrorMessage = errorMessage };
         }
@@ -135,7 +135,7 @@ public static class UpdateService
         try
         {
             var tempPath = Path.Combine(Path.GetTempPath(), "OpenRoad_Setup.exe");
-            
+
             // Telecharger
             using (var stream = await _httpClient.GetStreamAsync(downloadUrl))
             using (var fileStream = new FileStream(tempPath, FileMode.Create))
@@ -178,9 +178,9 @@ public static class UpdateService
             }
 
             // Nom du fichier cible
-            var fileName = $"OpenRoad.{char.ToUpper(moduleDef.Id[0]) + moduleDef.Id.Substring(1)}.dll"; 
+            var fileName = $"OpenRoad.{char.ToUpper(moduleDef.Id[0]) + moduleDef.Id.Substring(1)}.dll";
             // Note: Idealement le nom de la DLL devrait etre dans le JSON
-            
+
             // Si l'URL se termine par .dll, on l'utilise comme nom de fichier?
             if (Helpers.TryGetFileNameFromUrl(moduleDef.DownloadUrl, out var urlFileName))
             {
@@ -195,7 +195,7 @@ public static class UpdateService
             {
                 await stream.CopyToAsync(fileStream);
             }
-            
+
             Logger.Success(L10n.TFormat("update.moduleInstalled", moduleDef.Name));
         }
         catch (System.Exception ex)
@@ -221,10 +221,10 @@ public class CoreDefinition
 {
     [JsonPropertyName("latest")]
     public string Latest { get; set; } = "0.0.0";
-    
+
     [JsonPropertyName("downloadUrl")]
     public string DownloadUrl { get; set; } = "";
-    
+
     [JsonPropertyName("releaseNotes")]
     public string ReleaseNotes { get; set; } = "";
 }
@@ -233,24 +233,27 @@ public class ModuleDefinition
 {
     [JsonPropertyName("id")]
     public string Id { get; set; } = "";
-    
+
     [JsonPropertyName("name")]
     public string Name { get; set; } = "";
-    
+
     [JsonPropertyName("description")]
     public string Description { get; set; } = "";
-    
+
     [JsonPropertyName("version")]
     public string Version { get; set; } = "";
-    
+
     [JsonPropertyName("minCoreVersion")]
     public string MinCoreVersion { get; set; } = "";
-    
+
     [JsonPropertyName("downloadUrl")]
     public string DownloadUrl { get; set; } = "";
-    
+
     [JsonPropertyName("author")]
     public string Author { get; set; } = "";
+
+    [JsonPropertyName("dependencies")]
+    public List<string> Dependencies { get; set; } = new();
 }
 
 public class UpdateCheckResult
@@ -258,10 +261,10 @@ public class UpdateCheckResult
     public bool Success { get; set; }
     public string ErrorMessage { get; set; } = "";
     public MarketplaceManifest? Manifest { get; set; }
-    
+
     public bool CoreUpdateAvailable { get; set; }
     public Version? LatestCoreVersion { get; set; }
-    
+
     public List<ModuleUpdateInfo> Updates { get; set; } = new();
 }
 
@@ -273,18 +276,18 @@ public class ModuleUpdateInfo
     public bool IsNewInstall { get; set; }
 }
 
-internal static class Helpers 
+internal static class Helpers
 {
     public static bool TryGetFileNameFromUrl(string url, out string fileName)
     {
         fileName = "";
-        try 
+        try
         {
             var uri = new Uri(url);
             fileName = Path.GetFileName(uri.LocalPath);
             return !string.IsNullOrEmpty(fileName);
         }
-        catch 
+        catch
         {
             return false;
         }

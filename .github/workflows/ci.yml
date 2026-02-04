@@ -1,0 +1,65 @@
+name: CI - Validate PR
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  # NOTE: La compilation nécessite les DLL AutoCAD (non disponibles sur GitHub Actions)
+  # Le build doit être fait localement sur une machine avec AutoCAD installé
+  # Ce workflow vérifie uniquement les règles de contribution
+
+  # Vérifie que le Core n'a pas été modifié sans autorisation
+  core-protection:
+    name: Core Protection Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check Core modifications
+        run: |
+          # Liste des fichiers Core modifiés
+          CORE_CHANGES=$(git diff --name-only origin/main...HEAD | grep -E "^src/OpenRoad\.Core/" || true)
+
+          if [ -n "$CORE_CHANGES" ]; then
+            echo "⚠️ ATTENTION: Modifications détectées dans le Core!"
+            echo ""
+            echo "Fichiers modifiés:"
+            echo "$CORE_CHANGES"
+            echo ""
+            echo "Ces modifications nécessitent une review approfondie par un maintainer."
+            echo "::warning::Core modifications detected - requires maintainer approval"
+          else
+            echo "✅ Aucune modification du Core détectée."
+          fi
+
+  # Vérifie la structure des fichiers
+  validate-structure:
+    name: Validate File Structure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check version.json exists
+        run: |
+          if [ ! -f "version.json" ]; then
+            echo "❌ version.json manquant!"
+            exit 1
+          fi
+          echo "✅ version.json présent"
+
+      - name: Check required folders
+        run: |
+          for folder in "src" "docs" "bin"; do
+            if [ ! -d "$folder" ]; then
+              echo "❌ Dossier $folder manquant!"
+              exit 1
+            fi
+          done
+          echo "✅ Structure de dossiers correcte"

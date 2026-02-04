@@ -1,0 +1,26 @@
+# CODEOWNERS - Définit qui doit approuver les modifications
+# Documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ============================================
+# PROTECTION DU CORE - Approbation OBLIGATOIRE
+# ============================================
+# Toute modification du Core nécessite l'approbation d'un Lead Dev
+/src/OpenRoad.Core/                    @openroadplugin/lead-dev
+/src/Directory.Build.props             @openroadplugin/lead-dev
+
+# Fichiers critiques
+/.github/                              @openroadplugin/lead-dev
+/installer/                            @openroadplugin/lead-dev
+/version.json                          @openroadplugin/lead-dev
+
+# ============================================
+# MODULES - Review recommandée mais pas bloquante
+# ============================================
+# Les modules peuvent être modifiés plus librement
+# /modules/                            (pas de CODEOWNER = review optionnelle)
+
+# ============================================
+# DOCUMENTATION
+# ============================================
+/docs/                                 @openroadplugin/lead-dev
+/.github/copilot-instructions.md       @openroadplugin/lead-dev

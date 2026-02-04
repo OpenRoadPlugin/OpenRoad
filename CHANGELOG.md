@@ -5,16 +5,15 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
-## [Non publié]
+## [0.0.2 - Non publié]
 
 ### À venir
-- Vérification automatique des mises à jour via HTTP
-- Icônes personnalisées pour les modules
-- Support des thèmes sombre/clair
+- De nouveaux modules officiels.
+- Possiblité de personnaliser le nom du menu [name - OR]
 
 ---
 
-## [0.0.1] - 2026-02-03
+## [0.0.1] - 2026-02-04
 
 ### Ajouté
 - **Architecture modulaire** : Système de découverte automatique des modules (DLL)
@@ -40,7 +39,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Documentation** : README, DEVELOPER.md, CONTRIBUTING.md
 
 ### Technique
-- Cible : AutoCAD 2026+ (.NET 8.0)
+- Cible : AutoCAD 2024+ (.NET 8.0)
 - Détection automatique du chemin d'installation AutoCAD
 - Gestion propre du cycle de vie (Initialize/Terminate)
 - Libération correcte des objets COM (menus)

@@ -1,4 +1,4 @@
-// Copyright 2026 Open Road Contributors
+﻿// Copyright 2026 Open Road Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -20,6 +20,7 @@ using OpenRoad.Logging;
 using OpenRoad.Services;
 using L10n = OpenRoad.Localization.Localization;
 using MessageBox = System.Windows.MessageBox;
+using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using Button = System.Windows.Controls.Button;
 using Color = System.Windows.Media.Color;
@@ -33,20 +34,20 @@ namespace OpenRoad.Commands;
 public partial class ModuleManagerWindow : Window
 {
     private ObservableCollection<ModuleViewModel> _allModules = new();
-    private ObservableCollection<ModuleViewModel> _filteredModules = new();
+    private ObservableCollection<CategoryViewModel> _categories = new();
     private MarketplaceManifest? _manifest;
     private bool _isLoading = false;
-    
+
     public ModuleManagerWindow()
     {
         InitializeComponent();
-        lstModules.ItemsSource = _filteredModules;
+        lstCategories.ItemsSource = _categories;
         UpdateLocalizedText();
-        
-        // Charger automatiquement au démarrage
+
+        // Charger automatiquement dès l'ouverture
         Loaded += async (s, e) => await RefreshModulesAsync();
     }
-    
+
     /// <summary>
     /// Met à jour les textes de la fenêtre selon la langue
     /// </summary>
@@ -55,11 +56,11 @@ public partial class ModuleManagerWindow : Window
         Title = L10n.T("modules.manager.title", "Gestionnaire de Modules");
         txtTitle.Text = L10n.T("modules.manager.title", "Gestionnaire de Modules");
         txtSubtitle.Text = L10n.T("modules.manager.subtitle", "Installez et gérez les modules Open Road depuis le catalogue officiel.");
-        btnRefresh.Content = "🔄 " + L10n.T("modules.manager.refresh", "Actualiser");
-        txtFilter.Text = L10n.T("modules.manager.filter", "Filtrer:") ;
+        btnRefresh.ToolTip = L10n.T("modules.manager.refresh", "Actualiser");
+        txtFilter.Text = L10n.T("modules.manager.filter", "Filtrer:");
         btnClose.Content = L10n.T("settings.cancel", "Fermer");
-        txtEmptyMessage.Text = L10n.T("modules.manager.empty", "Cliquez sur Actualiser pour charger le catalogue");
-        
+        txtEmptyMessage.Text = L10n.T("modules.manager.loading", "Chargement du catalogue...");
+
         // Filtres
         if (cmbFilter.Items.Count >= 4)
         {
@@ -68,12 +69,12 @@ public partial class ModuleManagerWindow : Window
             ((ComboBoxItem)cmbFilter.Items[2]).Content = L10n.T("modules.filter.available", "Disponibles");
             ((ComboBoxItem)cmbFilter.Items[3]).Content = L10n.T("modules.filter.updates", "Mises à jour");
         }
-        
+
         // Chemin modules
         var modulesPath = ModuleDiscovery.ModulesPath ?? "N/A";
         txtModulesPath.Text = $"{L10n.T("modules.manager.folder", "Dossier modules")}: {modulesPath} ";
     }
-    
+
     /// <summary>
     /// Actualise la liste des modules depuis le catalogue
     /// </summary>
@@ -81,39 +82,39 @@ public partial class ModuleManagerWindow : Window
     {
         if (_isLoading) return;
         _isLoading = true;
-        
+
         SetLoadingState(true, L10n.T("modules.manager.loading", "Chargement du catalogue..."));
         _allModules.Clear();
-        _filteredModules.Clear();
-        
+        _categories.Clear();
+
         try
         {
             var result = await UpdateService.CheckForUpdatesAsync();
-            
+
             if (!result.Success)
             {
                 ShowError(result.ErrorMessage);
                 return;
             }
-            
+
             _manifest = result.Manifest;
-            
+
             if (_manifest == null)
             {
                 ShowEmpty(L10n.T("modules.manager.noManifest", "Catalogue vide ou inaccessible"));
                 return;
             }
-            
+
             // Construire la liste des modules
             foreach (var moduleDef in _manifest.Modules)
             {
                 var installedModule = ModuleDiscovery.Modules
                     .FirstOrDefault(m => m.Id.Equals(moduleDef.Id, StringComparison.OrdinalIgnoreCase));
-                    
+
                 var isInstalled = installedModule != null;
                 var updateInfo = result.Updates.FirstOrDefault(u => u.ModuleId == moduleDef.Id);
                 var hasUpdate = updateInfo != null && !updateInfo.IsNewInstall;
-                
+
                 var vm = new ModuleViewModel
                 {
                     Definition = moduleDef,
@@ -127,17 +128,17 @@ public partial class ModuleManagerWindow : Window
                     IsInstalled = isInstalled,
                     HasUpdate = hasUpdate,
                 };
-                
+
                 vm.UpdateDisplay();
                 _allModules.Add(vm);
             }
-            
+
             ApplyFilter();
-            
+
             // Mise à jour du statut
             var installedCount = _allModules.Count(m => m.IsInstalled);
             var updateCount = _allModules.Count(m => m.HasUpdate);
-            txtStatus.Text = L10n.TFormat("modules.manager.status", 
+            txtStatus.Text = L10n.TFormat("modules.manager.status",
                 "{0} module(s) disponible(s), {1} installé(s), {2} mise(s) à jour",
                 _allModules.Count, installedCount, updateCount);
         }
@@ -152,26 +153,32 @@ public partial class ModuleManagerWindow : Window
             SetLoadingState(false);
         }
     }
-    
+
     /// <summary>
-    /// Extrait la catégorie du module (depuis les tags ou un champ dédié)
+    /// Extrait la catégorie du module
     /// </summary>
     private string GetCategoryFromDefinition(ModuleDefinition def)
     {
-        // Le marketplace.json n'a pas de champ category dans ModuleDefinition actuel
-        // On pourrait l'ajouter ou utiliser le premier tag
-        return def.GetType().GetProperty("Category")?.GetValue(def)?.ToString() ?? "Extension";
+        // Utiliser la réflexion pour accéder à la propriété Category si elle existe
+        var categoryProp = def.GetType().GetProperty("Category");
+        if (categoryProp != null)
+        {
+            var value = categoryProp.GetValue(def)?.ToString();
+            if (!string.IsNullOrEmpty(value))
+                return value;
+        }
+        return "Extension";
     }
-    
+
     /// <summary>
-    /// Applique le filtre sélectionné
+    /// Applique le filtre sélectionné et regroupe par catégorie
     /// </summary>
     private void ApplyFilter()
     {
-        _filteredModules.Clear();
-        
+        _categories.Clear();
+
         var filterTag = (cmbFilter.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "all";
-        
+
         IEnumerable<ModuleViewModel> filtered = filterTag switch
         {
             "installed" => _allModules.Where(m => m.IsInstalled),
@@ -179,22 +186,54 @@ public partial class ModuleManagerWindow : Window
             "updates" => _allModules.Where(m => m.HasUpdate),
             _ => _allModules
         };
-        
-        foreach (var module in filtered.OrderBy(m => m.Name))
+
+        // Grouper par catégorie
+        var groups = filtered
+            .GroupBy(m => m.Category)
+            .OrderBy(g => g.Key);
+
+        foreach (var group in groups)
         {
-            _filteredModules.Add(module);
+            var categoryVm = new CategoryViewModel
+            {
+                Name = group.Key,
+                Icon = GetCategoryIcon(group.Key),
+                Modules = new ObservableCollection<ModuleViewModel>(group.OrderBy(m => m.Name))
+            };
+            categoryVm.UpdateDisplay();
+            _categories.Add(categoryVm);
         }
-        
+
         // Afficher le message vide si nécessaire
-        pnlEmpty.Visibility = _filteredModules.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-        lstModules.Visibility = _filteredModules.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-        
-        if (_filteredModules.Count == 0 && _allModules.Count > 0)
+        var hasModules = _categories.Any();
+        pnlEmpty.Visibility = hasModules ? Visibility.Collapsed : Visibility.Visible;
+        lstCategories.Visibility = hasModules ? Visibility.Visible : Visibility.Collapsed;
+
+        if (!hasModules && _allModules.Count > 0)
         {
+            txtEmptyIcon.Text = "🔍";
             txtEmptyMessage.Text = L10n.T("modules.manager.noMatch", "Aucun module ne correspond au filtre");
         }
     }
-    
+
+    /// <summary>
+    /// Retourne l'icône pour une catégorie
+    /// </summary>
+    private string GetCategoryIcon(string category)
+    {
+        return category.ToLower() switch
+        {
+            "cartographie" => "🗺️",
+            "voirie" => "🛣️",
+            "topographie" => "📐",
+            "hydraulique" => "💧",
+            "réseaux" => "🔌",
+            "dessin" => "✏️",
+            "import/export" => "📁",
+            _ => "📦"
+        };
+    }
+
     /// <summary>
     /// Affiche l'état de chargement
     /// </summary>
@@ -202,18 +241,21 @@ public partial class ModuleManagerWindow : Window
     {
         pnlProgress.Visibility = isLoading ? Visibility.Visible : Visibility.Collapsed;
         btnRefresh.IsEnabled = !isLoading;
-        
+
         if (isLoading && message != null)
         {
             txtProgress.Text = message;
         }
-        
+
         if (isLoading)
         {
-            pnlEmpty.Visibility = Visibility.Collapsed;
+            pnlEmpty.Visibility = Visibility.Visible;
+            lstCategories.Visibility = Visibility.Collapsed;
+            txtEmptyIcon.Text = "⏳";
+            txtEmptyMessage.Text = message ?? L10n.T("modules.manager.loading", "Chargement...");
         }
     }
-    
+
     /// <summary>
     /// Affiche une erreur
     /// </summary>
@@ -221,71 +263,220 @@ public partial class ModuleManagerWindow : Window
     {
         txtStatus.Text = L10n.T("modules.manager.error", "Erreur de chargement");
         txtStatus.Foreground = Brushes.Red;
-        
+
         pnlEmpty.Visibility = Visibility.Visible;
-        lstModules.Visibility = Visibility.Collapsed;
-        txtEmptyMessage.Text = $"❌ {message}";
+        lstCategories.Visibility = Visibility.Collapsed;
+        txtEmptyIcon.Text = "❌";
+        txtEmptyMessage.Text = message;
     }
-    
+
     /// <summary>
     /// Affiche le message vide
     /// </summary>
     private void ShowEmpty(string message)
     {
         pnlEmpty.Visibility = Visibility.Visible;
-        lstModules.Visibility = Visibility.Collapsed;
+        lstCategories.Visibility = Visibility.Collapsed;
+        txtEmptyIcon.Text = "📦";
         txtEmptyMessage.Text = message;
     }
-    
+
     // === ÉVÉNEMENTS ===
-    
+
     private async void OnRefreshClick(object sender, RoutedEventArgs e)
     {
         await RefreshModulesAsync();
     }
-    
+
     private void OnFilterChanged(object sender, SelectionChangedEventArgs e)
     {
-        ApplyFilter();
+        if (_allModules.Count > 0)
+            ApplyFilter();
     }
-    
+
+    /// <summary>
+    /// Récupère les dépendances manquantes pour un module
+    /// </summary>
+    private List<ModuleDefinition> GetMissingDependencies(ModuleDefinition moduleDef)
+    {
+        var missing = new List<ModuleDefinition>();
+
+        if (moduleDef.Dependencies == null || moduleDef.Dependencies.Count == 0)
+            return missing;
+
+        foreach (var depId in moduleDef.Dependencies)
+        {
+            // Vérifier si la dépendance est déjà installée (chargée en mémoire)
+            var isLoadedInMemory = ModuleDiscovery.Modules
+                .Any(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
+
+            // Vérifier si la dépendance a été installée dans cette session (téléchargée mais pas encore chargée)
+            var isInstalledThisSession = _allModules
+                .Any(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase) && m.IsInstalled);
+
+            // Vérifier si le fichier DLL existe physiquement
+            var isDllPresent = false;
+            if (!string.IsNullOrEmpty(ModuleDiscovery.ModulesPath))
+            {
+                var possibleFiles = new[]
+                {
+                    $"OpenRoad.{depId}.dll",
+                    $"OpenRoad.{char.ToUpper(depId[0])}{depId.Substring(1)}.dll"
+                };
+                isDllPresent = possibleFiles.Any(f =>
+                    File.Exists(Path.Combine(ModuleDiscovery.ModulesPath, f)));
+            }
+
+            if (!isLoadedInMemory && !isInstalledThisSession && !isDllPresent)
+            {
+                // Chercher la définition dans le manifest
+                var depDef = _manifest?.Modules
+                    .FirstOrDefault(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
+
+                if (depDef != null)
+                {
+                    // Éviter les doublons
+                    if (!missing.Any(m => m.Id.Equals(depDef.Id, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        missing.Add(depDef);
+
+                        // Récursivement vérifier les dépendances de la dépendance
+                        var subDeps = GetMissingDependencies(depDef);
+                        foreach (var subDep in subDeps)
+                        {
+                            if (!missing.Any(m => m.Id.Equals(subDep.Id, StringComparison.OrdinalIgnoreCase)))
+                            {
+                                missing.Add(subDep);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return missing;
+    }
+
+    /// <summary>
+    /// Installe un module et ses dépendances
+    /// </summary>
+    private async Task<List<string>> InstallModuleWithDependenciesAsync(ModuleDefinition moduleDef, List<ModuleDefinition> dependencies)
+    {
+        var installedModules = new List<string>();
+
+        // D'abord installer les dépendances (dans l'ordre)
+        foreach (var dep in dependencies)
+        {
+            SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0}...", dep.Name));
+            await UpdateService.InstallModuleAsync(dep);
+            installedModules.Add(dep.Name);
+
+            // Mettre à jour le ViewModel correspondant
+            var depVm = _allModules.FirstOrDefault(m => m.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase));
+            if (depVm != null)
+            {
+                depVm.IsInstalled = true;
+                depVm.HasUpdate = false;
+                depVm.LocalVersion = depVm.RemoteVersion;
+                depVm.UpdateDisplay();
+            }
+        }
+
+        // Ensuite installer le module principal
+        SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0}...", moduleDef.Name));
+        await UpdateService.InstallModuleAsync(moduleDef);
+        installedModules.Add(moduleDef.Name);
+
+        return installedModules;
+    }
+
     private async void OnModuleActionClick(object sender, RoutedEventArgs e)
     {
         if (sender is not Button btn || btn.Tag is not ModuleViewModel module)
             return;
-            
+
         if (!module.CanPerformAction)
             return;
-            
+
         try
         {
+            // Vérifier les dépendances manquantes
+            var missingDeps = GetMissingDependencies(module.Definition);
+
+            if (missingDeps.Count > 0)
+            {
+                // Construire le message de confirmation
+                var depNames = string.Join(", ", missingDeps.Select(d => d.Name));
+                var message = L10n.TFormat("modules.manager.dependencies.confirm",
+                    module.Name, depNames, missingDeps.Count);
+
+                var result = MessageBox.Show(
+                    message,
+                    L10n.T("modules.manager.dependencies.title", "Dépendances requises"),
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result != MessageBoxResult.Yes)
+                {
+                    return; // L'utilisateur a annulé
+                }
+            }
+
             btn.IsEnabled = false;
-            var originalText = module.ActionText;
             module.ActionText = L10n.T("modules.manager.downloading", "Téléchargement...");
             btn.Content = module.ActionText;
-            
-            SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0}...", module.Name));
-            
-            await UpdateService.InstallModuleAsync(module.Definition);
-            
+
+            List<string> installedModules;
+
+            if (missingDeps.Count > 0)
+            {
+                // Installer avec les dépendances
+                SetLoadingState(true, L10n.T("modules.manager.dependencies.installing", "Installation des dépendances..."));
+                installedModules = await InstallModuleWithDependenciesAsync(module.Definition, missingDeps);
+            }
+            else
+            {
+                // Installation simple
+                SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0}...", module.Name));
+                await UpdateService.InstallModuleAsync(module.Definition);
+                installedModules = new List<string> { module.Name };
+            }
+
             // Succès
             module.IsInstalled = true;
             module.HasUpdate = false;
             module.LocalVersion = module.RemoteVersion;
             module.UpdateDisplay();
-            
+
             btn.Content = module.ActionText;
             btn.IsEnabled = module.CanPerformAction;
-            
+
+            // Rafraîchir l'affichage des catégories
+            ApplyFilter();
+
             Logger.Success(L10n.TFormat("modules.manager.installed", "Module {0} installé avec succès", module.Name));
-            
+
             // Message de redémarrage
-            MessageBox.Show(
-                L10n.TFormat("modules.manager.restartRequired", 
-                    "Le module {0} a été installé.\n\nRedémarrez AutoCAD pour l'activer.", module.Name),
-                L10n.T("modules.manager.installSuccess", "Installation réussie"),
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            if (installedModules.Count > 1)
+            {
+                var modulesList = string.Join("\n• ", installedModules);
+                MessageBox.Show(
+                    L10n.TFormat("modules.manager.restartRequired.multiple",
+                        "Les modules suivants ont été installés :\n{0}\n\nRedémarrez AutoCAD pour les activer.",
+                        "• " + modulesList),
+                    L10n.T("modules.manager.installSuccess", "Installation réussie"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show(
+                    L10n.TFormat("modules.manager.restartRequired",
+                        "Le module {0} a été installé.\n\nRedémarrez AutoCAD pour l'activer.", module.Name),
+                    L10n.T("modules.manager.installSuccess", "Installation réussie"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
         }
         catch (Exception ex)
         {
@@ -295,7 +486,7 @@ public partial class ModuleManagerWindow : Window
                 L10n.T("cmd.error", "Erreur"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
-                
+
             module.ActionText = L10n.T("modules.manager.retry", "Réessayer");
             btn.Content = module.ActionText;
             btn.IsEnabled = true;
@@ -305,7 +496,121 @@ public partial class ModuleManagerWindow : Window
             SetLoadingState(false);
         }
     }
-    
+
+    /// <summary>
+    /// Installe tous les modules d'une catégorie
+    /// </summary>
+    private async void OnInstallCategoryClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn || btn.Tag is not CategoryViewModel category)
+            return;
+
+        var modulesToInstall = category.Modules.Where(m => m.CanPerformAction && !m.IsInstalled).ToList();
+
+        if (modulesToInstall.Count == 0)
+        {
+            MessageBox.Show(
+                L10n.T("modules.manager.category.allInstalled", "Tous les modules de cette catégorie sont déjà installés."),
+                L10n.T("modules.manager.title", "Gestionnaire de Modules"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            return;
+        }
+
+        // Confirmer l'installation
+        var result = MessageBox.Show(
+            L10n.TFormat("modules.manager.category.confirmInstall",
+                "Voulez-vous installer les {0} module(s) de la catégorie \"{1}\" ?\n\n• {2}",
+                modulesToInstall.Count, category.Name, string.Join("\n• ", modulesToInstall.Select(m => m.Name))),
+            L10n.T("modules.manager.category.installAll", "Installer la catégorie"),
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (result != MessageBoxResult.Yes)
+            return;
+
+        try
+        {
+            btn.IsEnabled = false;
+            var installedModules = new List<string>();
+
+            // Collecter toutes les dépendances manquantes
+            var allDependencies = new List<ModuleDefinition>();
+            foreach (var module in modulesToInstall)
+            {
+                var deps = GetMissingDependencies(module.Definition);
+                foreach (var dep in deps)
+                {
+                    if (!allDependencies.Any(d => d.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase)) &&
+                        !modulesToInstall.Any(m => m.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        allDependencies.Add(dep);
+                    }
+                }
+            }
+
+            // Installer les dépendances d'abord
+            foreach (var dep in allDependencies)
+            {
+                SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0}...", dep.Name));
+                await UpdateService.InstallModuleAsync(dep);
+                installedModules.Add(dep.Name);
+
+                var depVm = _allModules.FirstOrDefault(m => m.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase));
+                if (depVm != null)
+                {
+                    depVm.IsInstalled = true;
+                    depVm.HasUpdate = false;
+                    depVm.LocalVersion = depVm.RemoteVersion;
+                    depVm.UpdateDisplay();
+                }
+            }
+
+            // Installer les modules de la catégorie
+            foreach (var module in modulesToInstall)
+            {
+                SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0}...", module.Name));
+                await UpdateService.InstallModuleAsync(module.Definition);
+                installedModules.Add(module.Name);
+
+                module.IsInstalled = true;
+                module.HasUpdate = false;
+                module.LocalVersion = module.RemoteVersion;
+                module.UpdateDisplay();
+            }
+
+            // Rafraîchir l'affichage
+            ApplyFilter();
+
+            // Message de succès
+            var modulesList = string.Join("\n• ", installedModules);
+            MessageBox.Show(
+                L10n.TFormat("modules.manager.restartRequired.multiple",
+                    "Les modules suivants ont été installés :\n{0}\n\nRedémarrez AutoCAD pour les activer.",
+                    "• " + modulesList),
+                L10n.T("modules.manager.installSuccess", "Installation réussie"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            Logger.Success(L10n.TFormat("modules.manager.category.installed",
+                "{0} module(s) installé(s) depuis la catégorie {1}", installedModules.Count, category.Name));
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Category install error: {ex}");
+            MessageBox.Show(
+                L10n.TFormat("modules.manager.installError", "Erreur lors de l'installation: {0}", ex.Message),
+                L10n.T("cmd.error", "Erreur"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            btn.IsEnabled = true;
+            SetLoadingState(false);
+        }
+    }
+
     private void OnOpenFolderClick(object sender, RoutedEventArgs e)
     {
         try
@@ -333,10 +638,44 @@ public partial class ModuleManagerWindow : Window
             Logger.Error($"Open folder error: {ex.Message}");
         }
     }
-    
+
     private void OnCloseClick(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+}
+
+/// <summary>
+/// ViewModel pour une catégorie de modules
+/// </summary>
+public class CategoryViewModel
+{
+    public string Name { get; set; } = "";
+    public string Icon { get; set; } = "📦";
+    public ObservableCollection<ModuleViewModel> Modules { get; set; } = new();
+
+    // Propriétés calculées
+    public string ModuleCountText { get; set; } = "";
+    public string InstallAllText { get; set; } = "";
+    public Visibility InstallAllVisibility { get; set; } = Visibility.Collapsed;
+
+    public void UpdateDisplay()
+    {
+        var total = Modules.Count;
+        var installed = Modules.Count(m => m.IsInstalled);
+        var available = total - installed;
+
+        ModuleCountText = $"{installed}/{total}";
+
+        if (available > 0)
+        {
+            InstallAllText = L10n.TFormat("modules.manager.category.installCount", "Installer tout ({0})", available);
+            InstallAllVisibility = Visibility.Visible;
+        }
+        else
+        {
+            InstallAllVisibility = Visibility.Collapsed;
+        }
     }
 }
 
@@ -355,21 +694,36 @@ public class ModuleViewModel
     public string? LocalVersion { get; set; }
     public bool IsInstalled { get; set; }
     public bool HasUpdate { get; set; }
-    
+
     // Propriétés calculées pour l'affichage
     public string VersionDisplay { get; set; } = "";
     public string StatusIcon { get; set; } = "";
-    public System.Windows.Media.Brush StatusBackground { get; set; } = Brushes.Gray;
+    public Brush StatusBackground { get; set; } = Brushes.Gray;
     public string ActionText { get; set; } = "";
     public bool CanPerformAction { get; set; }
-    public System.Windows.Media.Brush ActionBackground { get; set; } = Brushes.LightGray;
-    public System.Windows.Media.Brush ActionForeground { get; set; } = Brushes.Black;
-    
+    public Brush ActionBackground { get; set; } = Brushes.LightGray;
+    public Brush ActionForeground { get; set; } = Brushes.Black;
+
+    // Dépendances
+    public string DependenciesText { get; set; } = "";
+    public Visibility HasDependenciesVisibility { get; set; } = Visibility.Collapsed;
+
     /// <summary>
     /// Met à jour les propriétés d'affichage selon l'état
     /// </summary>
     public void UpdateDisplay()
     {
+        // Afficher les dépendances
+        if (Definition.Dependencies != null && Definition.Dependencies.Count > 0)
+        {
+            DependenciesText = $"⚠️ {L10n.T("modules.requires", "Requiert")}: {string.Join(", ", Definition.Dependencies)}";
+            HasDependenciesVisibility = IsInstalled ? Visibility.Collapsed : Visibility.Visible;
+        }
+        else
+        {
+            HasDependenciesVisibility = Visibility.Collapsed;
+        }
+
         if (IsInstalled)
         {
             if (HasUpdate)
