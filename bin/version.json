@@ -1,10 +1,10 @@
 ﻿{
   "name": "Open Road",
-  "version": "0.0.1",
+  "version": "0.0.2-dev",
   "build": "2026.02.04",
-  "channel": "alpha",
+  "channel": "dev",
   "framework": ".NET 8.0 - Windows",
-  "minAutoCADVersion": "2024",
+  "minAutoCADVersion": "2025",
   "repository": "https://github.com/openroadplugin/openroad",
   "updateUrl": "https://github.com/openroadplugin/openroad/releases/latest",
   "releaseNotes": "Version 0.0.1 - Première version alpha du Core modulaire"

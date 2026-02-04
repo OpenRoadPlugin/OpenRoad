@@ -20,14 +20,14 @@
 
   <!-- Détection automatique du chemin AutoCAD -->
   <PropertyGroup>
-    <!-- Chercher AutoCAD 2024+ dans les emplacements standards -->
-    <AutoCADPath Condition="Exists('C:\Program Files\Autodesk\AutoCAD 2024')">C:\Program Files\Autodesk\AutoCAD 2024</AutoCADPath>
-    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('D:\Program Files\Autodesk\AutoCAD 2024')">D:\Program Files\Autodesk\AutoCAD 2024</AutoCADPath>
-    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('$(ProgramFiles)\Autodesk\AutoCAD 2024')">$(ProgramFiles)\Autodesk\AutoCAD 2024</AutoCADPath>
+    <!-- Chercher AutoCAD 2025+ dans les emplacements standards (.NET 8) -->
+    <AutoCADPath Condition="Exists('C:\Program Files\Autodesk\AutoCAD 2025')">C:\Program Files\Autodesk\AutoCAD 2025</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('D:\Program Files\Autodesk\AutoCAD 2025')">D:\Program Files\Autodesk\AutoCAD 2025</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('$(ProgramFiles)\Autodesk\AutoCAD 2025')">$(ProgramFiles)\Autodesk\AutoCAD 2025</AutoCADPath>
 
-    <!-- AutoCAD 2025/2026 (compatibilité ascendante) -->
-    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2025')">C:\Program Files\Autodesk\AutoCAD 2025</AutoCADPath>
+    <!-- AutoCAD 2026+ (compatibilité ascendante) -->
     <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2026')">C:\Program Files\Autodesk\AutoCAD 2026</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2027')">C:\Program Files\Autodesk\AutoCAD 2027</AutoCADPath>
 
     <!-- Variable d'environnement personnalisée (prioritaire si définie) -->
     <AutoCADPath Condition="'$(AUTOCAD_PATH)' != ''">$(AUTOCAD_PATH)</AutoCADPath>
@@ -36,7 +36,7 @@
   <!-- Avertissement si AutoCAD non trouvé -->
   <Target Name="CheckAutoCADPath" BeforeTargets="BeforeBuild">
     <Warning Condition="'$(AutoCADPath)' == ''"
-             Text="AutoCAD 2024+ non trouvé. Définissez la variable d'environnement AUTOCAD_PATH ou installez AutoCAD 2024+." />
+             Text="AutoCAD 2025+ non trouvé. Définissez la variable d'environnement AUTOCAD_PATH ou installez AutoCAD 2025+." />
     <Message Condition="'$(AutoCADPath)' != ''"
              Text="AutoCAD détecté : $(AutoCADPath)"
              Importance="high" />

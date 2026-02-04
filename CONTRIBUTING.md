@@ -9,7 +9,7 @@ Merci de votre intérêt pour contribuer à Open Road !
 ### Prérequis
 
 - **.NET 8 SDK**  [Télécharger](https://dotnet.microsoft.com/download/dotnet/8.0)
-- **AutoCAD 2024**  Pour les DLL de référence
+- **AutoCAD 2025**  Pour les DLL de référence
 - **Visual Studio 2022** ou **VS Code** avec extensions :
   - C# (ms-dotnettools.csharp)
   - C# Dev Kit (ms-dotnettools.csdevkit)
@@ -26,7 +26,7 @@ Merci de votre intérêt pour contribuer à Open Road !
 
 3. Vérifiez les chemins AutoCAD dans src/OpenRoad.Core/OpenRoad.Core.csproj :
    `xml
-   <HintPath>C:\Program Files\Autodesk\AutoCAD 2024\accoremgd.dll</HintPath>
+   <HintPath>C:\Program Files\Autodesk\AutoCAD 2025\accoremgd.dll</HintPath>
    `
 
 ### Compilation

@@ -6,7 +6,7 @@
 
 **Plugin modulaire pour AutoCAD**  Voirie et aménagement urbain
 
-[![AutoCAD 2024+](https://img.shields.io/badge/AutoCAD-2024+-blue.svg)](https://www.autodesk.com/products/autocad)
+[![AutoCAD 2025+](https://img.shields.io/badge/AutoCAD-2025+-blue.svg)](https://www.autodesk.com/products/autocad)
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
@@ -42,7 +42,7 @@ Le programme s'adapte automatiquement aux modules présents.
 
 ### Prérequis
 
-- **AutoCAD 2024** ou supérieur
+- **AutoCAD 2025** ou supérieur
 - Windows 10/11
 
 ### Installation rapide
@@ -211,7 +211,7 @@ AutoCAD démarre
 
 - Visual Studio 2022 ou VS Code avec C#
 - .NET 8.0 SDK
-- AutoCAD 2024 (pour les DLL de référence)
+- AutoCAD 2025 (pour les DLL de référence)
 
 ### Compiler le Core
 

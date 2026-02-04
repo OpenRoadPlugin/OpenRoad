@@ -8,6 +8,8 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ## [0.0.2] - En développement
 
 ### Ajouté
+- **Changement de nom** pour empecher toute confusion avec des soft existants.
+    - Open Road s'appelle maintenant **Asphalte**
 - **Gestionnaire de modules amélioré** :
   - Auto-refresh de la liste lors de l'arrivée sur l'onglet Modules
   - Gestion automatique des dépendances (téléchargement récursif)
@@ -52,7 +54,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Documentation** : README, DEVELOPER.md, CONTRIBUTING.md
 
 ### Technique
-- Cible : AutoCAD 2024+ (.NET 8.0)
+- Cible : AutoCAD 2025+ (.NET 8.0)
 - Détection automatique du chemin d'installation AutoCAD
 - Gestion propre du cycle de vie (Initialize/Terminate)
 - Libération correcte des objets COM (menus)

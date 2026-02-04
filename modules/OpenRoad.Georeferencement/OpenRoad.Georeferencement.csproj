@@ -51,11 +51,11 @@
 
   <!-- Détection automatique du chemin AutoCAD -->
   <PropertyGroup>
-    <AutoCADPath Condition="Exists('C:\Program Files\Autodesk\AutoCAD 2024')">C:\Program Files\Autodesk\AutoCAD 2024</AutoCADPath>
-    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('D:\Program Files\Autodesk\AutoCAD 2024')">D:\Program Files\Autodesk\AutoCAD 2024</AutoCADPath>
-    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('$(ProgramFiles)\Autodesk\AutoCAD 2024')">$(ProgramFiles)\Autodesk\AutoCAD 2024</AutoCADPath>
-    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2025')">C:\Program Files\Autodesk\AutoCAD 2025</AutoCADPath>
+    <AutoCADPath Condition="Exists('C:\Program Files\Autodesk\AutoCAD 2025')">C:\Program Files\Autodesk\AutoCAD 2025</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('D:\Program Files\Autodesk\AutoCAD 2025')">D:\Program Files\Autodesk\AutoCAD 2025</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('$(ProgramFiles)\Autodesk\AutoCAD 2025')">$(ProgramFiles)\Autodesk\AutoCAD 2025</AutoCADPath>
     <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2026')">C:\Program Files\Autodesk\AutoCAD 2026</AutoCADPath>
+    <AutoCADPath Condition="'$(AutoCADPath)' == '' And Exists('C:\Program Files\Autodesk\AutoCAD 2027')">C:\Program Files\Autodesk\AutoCAD 2027</AutoCADPath>
     <AutoCADPath Condition="'$(AUTOCAD_PATH)' != ''">$(AUTOCAD_PATH)</AutoCADPath>
   </PropertyGroup>
 
@@ -86,7 +86,7 @@
   <!-- Avertissement si AutoCAD non trouvé -->
   <Target Name="CheckAutoCADPath" BeforeTargets="BeforeBuild">
     <Warning Condition="'$(AutoCADPath)' == ''"
-             Text="AutoCAD 2024+ non trouvé. Définissez la variable d'environnement AUTOCAD_PATH." />
+             Text="AutoCAD 2025+ non trouvé. Définissez la variable d'environnement AUTOCAD_PATH." />
     <Message Condition="'$(AutoCADPath)' != ''"
              Text="AutoCAD détecté : $(AutoCADPath)"
              Importance="high" />

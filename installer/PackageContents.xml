@@ -10,10 +10,10 @@
 >
     <CompanyDetails Name="Open Road Team" Url="https://github.com/openroadplugin/openroad" Email="contact@openroad.dev" />
 
-    <!-- Support for AutoCAD 2024 (R24.0) and newer (.NET 8 era) -->
+    <!-- Support for AutoCAD 2025 (R25.0) and newer (.NET 8 era) -->
     <Components Description="Open Road Core System">
-        <!-- R24.0 = AutoCAD 2024+ (.NET 8). Platform="AutoCAD*" supports Map3D, Civil3D, etc. -->
-        <RuntimeRequirements SeriesMin="R24.0" Platform="AutoCAD*" OS="Win64" />
+        <!-- R25.0 = AutoCAD 2025+ (.NET 8). Platform="AutoCAD*" supports Map3D, Civil3D, etc. -->
+        <RuntimeRequirements SeriesMin="R25.0" Platform="AutoCAD*" OS="Win64" />
         <ComponentEntry
             AppName="OpenRoad.Core"
             AppType=".Net"

@@ -268,7 +268,7 @@ end;
 // DÉTECTION DES VERSIONS AUTOCAD
 // ============================================================================
 
-// Fonction pour scanner le registre et trouver les AutoCAD compatibles (R24.0+ / .NET 8)
+// Fonction pour scanner le registre et trouver les AutoCAD compatibles (R25.0+ / .NET 8)
 function CheckAutoCADVersions: String;
 var
   RegPath: String;
@@ -292,15 +292,15 @@ begin
     for I := 0 to GetArrayLength(VersionKeys) - 1 do
     begin
       VersionKey := VersionKeys[I];
-      // Format attendu : Rxx.x (ex: R24.0)
+      // Format attendu : Rxx.x (ex: R25.0)
       if (Length(VersionKey) >= 3) and (VersionKey[1] = 'R') then
       begin
-        ReleaseVer := Copy(VersionKey, 2, 2); // Extrait "24" de "R24.0"
+        ReleaseVer := Copy(VersionKey, 2, 2); // Extrait "25" de "R25.0"
         MajorVer := StrToIntDef(ReleaseVer, 0);
 
-        // AutoCAD 2024 correspond à R24.0
-        // On cherche R24+ pour le support .NET 8
-        if MajorVer >= 24 then
+        // AutoCAD 2025 correspond à R25.0
+        // On cherche R25+ pour le support .NET 8
+        if MajorVer >= 25 then
         begin
           if RegGetSubkeyNames(HKEY_LOCAL_MACHINE, RegPath + '\' + VersionKey, ProductKeys) then
           begin
@@ -329,16 +329,16 @@ begin
   CompatibleVersionsPage := CreateOutputMsgMemoPage(wpWelcome,
     'Compatibilité AutoCAD',
     'Vérification des versions installées',
-    'L''assistant recherche des versions d''AutoCAD compatibles avec Open Road (.NET 8 / AutoCAD 2024+).',
+    'L''assistant recherche des versions d''AutoCAD compatibles avec Open Road (.NET 8 / AutoCAD 2025+).',
     '');
 
   if VersionsFound then
   begin
-    CompatibleVersionsPage.RichEditViewer.Lines.Text := '✅ Versions compatibles détectées (AutoCAD 2024+) :' + #13#10 + #13#10 + DetectedVersions + #13#10 + 'Le plugin sera installé automatiquement pour ces versions.';
+    CompatibleVersionsPage.RichEditViewer.Lines.Text := '✅ Versions compatibles détectées (AutoCAD 2025+) :' + #13#10 + #13#10 + DetectedVersions + #13#10 + 'Le plugin sera installé automatiquement pour ces versions.';
   end
   else
   begin
-    CompatibleVersionsPage.RichEditViewer.Lines.Text := '⚠️ AUCUNE VERSION COMPATIBLE DÉTECTÉE !' + #13#10 + #13#10 + 'Open Road nécessite AutoCAD 2024 ou supérieur (Série R24.0+ / .NET 8).' + #13#10 + #13#10 + 'Vous pouvez continuer l''installation, mais le plugin ne sera probablement pas chargé par vos versions actuelles.';
+    CompatibleVersionsPage.RichEditViewer.Lines.Text := '⚠️ AUCUNE VERSION COMPATIBLE DÉTECTÉE !' + #13#10 + #13#10 + 'Open Road nécessite AutoCAD 2025 ou supérieur (Série R25.0+ / .NET 8).' + #13#10 + #13#10 + 'Vous pouvez continuer l''installation, mais le plugin ne sera probablement pas chargé par vos versions actuelles.';
   end;
 end;
 // You can add custom code here if needed

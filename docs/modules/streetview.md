@@ -56,7 +56,7 @@ Le module supporte les langues :
 
 ## Prérequis
 
-- AutoCAD 2024+
+- AutoCAD 2025+
 - Module Géoréférencement installé
 - Dessin géoréférencé (système de coordonnées défini)
 - Connexion Internet pour ouvrir Street View

@@ -78,7 +78,7 @@ Les modules sont des DLL séparées, découvertes automatiquement au démarrage.
 
 - **Visual Studio 2022** ou **VS Code** avec extension C#
 - **.NET 8.0 SDK**
-- **AutoCAD 2024** installé (pour les DLL de référence)
+- **AutoCAD 2025** installé (pour les DLL de référence)
 
 ### Fichiers nécessaires
 
@@ -87,7 +87,7 @@ Les modules sont des DLL séparées, découvertes automatiquement au démarrage.
 ### DLL AutoCAD à référencer
 
 ```
-C:\Program Files\Autodesk\AutoCAD 2024\
+C:\Program Files\Autodesk\AutoCAD 2025\
 ??? accoremgd.dll
 ??? acdbmgd.dll
 ??? acmgd.dll
@@ -209,23 +209,23 @@ modules/
   <!-- Références AutoCAD (ne pas copier) -->
   <ItemGroup>
     <Reference Include="accoremgd">
-      <HintPath>C:\Program Files\Autodesk\AutoCAD 2024\accoremgd.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\AutoCAD 2025\accoremgd.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="acdbmgd">
-      <HintPath>C:\Program Files\Autodesk\AutoCAD 2024\acdbmgd.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\AutoCAD 2025\acdbmgd.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="acmgd">
-      <HintPath>C:\Program Files\Autodesk\AutoCAD 2024\acmgd.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\AutoCAD 2025\acmgd.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="AcWindows">
-      <HintPath>C:\Program Files\Autodesk\AutoCAD 2024\AcWindows.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\AutoCAD 2025\AcWindows.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="AdWindows">
-      <HintPath>C:\Program Files\Autodesk\AutoCAD 2024\AdWindows.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\AutoCAD 2025\AdWindows.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

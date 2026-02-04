@@ -1,6 +1,6 @@
-# Open Road � Context IA Core
+# Open Road – Context IA Core
 
-> **Context IA pour le développement du CŒUR (CORE)** | Version 2026.02.03 | .NET 8.0 / AutoCAD 2024+
+> **Context IA pour le développement du CŒUR (CORE)** | Version 2026.02.04 | .NET 8.0 / AutoCAD 2025+
 
 ---
 
@@ -134,4 +134,4 @@ Pour tester une modification du Core :
 5. V�rifier que `OR_VERSION` et `OR_HELP` fonctionnent
 
 ---
-*Document généré pour Open Road Core v0.0.1 | .NET 8.0 | AutoCAD 2024+*
+*Document généré pour Open Road Core v0.0.1 | .NET 8.0 | AutoCAD 2025+*

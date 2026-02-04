@@ -4,8 +4,8 @@ Ce dossier contient les fichiers nécessaires pour créer l'installateur du plug
 
 ## Compatibilité
 
-- **AutoCAD 2024** ou supérieur (R24.0+)
-- **.NET 8.0** (inclus avec AutoCAD 2024+)
+- **AutoCAD 2025** ou supérieur (R25.0+)
+- **.NET 8.0** (inclus avec AutoCAD 2025+)
 - Windows 10/11 64-bit
 
 ## Prérequis
