@@ -5,6 +5,12 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [0.0.3] - En développement
+
+### À faire
+- Nouveaux modules
+- Améliorations Core
+
 ## [0.0.2] - 2026-02-06
 
 ### Modifications CORE
