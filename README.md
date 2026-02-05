@@ -316,10 +316,8 @@ L'utilisation de ce plugin dans AutoCAD se fait **à vos propres risques**. Vér
 
 ##  Support
 
--  Issues: [GitHub Issues](https://github.com/openasphalteplugin/openasphalte/issues)
+-  Issues: [GitHub Issues](https://github.com/openasphaltelugin/openasphalte/issues)
 -  Discussions: [GitHub Discussions](https://github.com/openasphalteplugin/openasphalte/discussions)
-
----
 
 ## ✨ Partenaires
 
