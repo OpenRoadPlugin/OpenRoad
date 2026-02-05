@@ -53,110 +53,132 @@ public class Cota2LignCommand : CommandBase
             // Charger les paramètres depuis le dessin
             var settings = Cota2LignSettings.LoadFromDrawing(Database!);
 
-            // ═══════════════════════════════════════════════════════
-            // SÉLECTION POLYLIGNE 1 (RÉFÉRENCE)
-            // ═══════════════════════════════════════════════════════
-            WriteMessage($"\n{T("cota2lign.select.pl1")} [{T("cota2lign.option.params")}]: ");
+            // Sauvegarder l'OSMODE utilisateur pour le restaurer à la fin
+            int originalOsmode = Convert.ToInt32(AcadApp.GetSystemVariable("OSMODE"));
 
-            var pl1Result = SelectPolylineWithOptions(T("cota2lign.select.pl1"));
-            if (pl1Result == null) return;
-
-            if (pl1Result.Value.openSettings)
+            try
             {
-                // Ouvrir les paramètres
-                OpenSettingsWindow(settings);
-                return;
-            }
-
-            var polyline1Id = pl1Result.Value.objectId;
-
-            // ═══════════════════════════════════════════════════════
-            // SÉLECTION POLYLIGNE 2 (CIBLE)
-            // ═══════════════════════════════════════════════════════
-            var pl2Result = SelectPolyline(T("cota2lign.select.pl2"), polyline1Id);
-            if (pl2Result == null)
-            {
-                Logger.Info(T("cota2lign.cancelled"));
-                return;
-            }
-
-            var polyline2Id = pl2Result.Value;
-
-            // ═══════════════════════════════════════════════════════
-            // SÉLECTION POINTS DÉPART/ARRIVÉE
-            // ═══════════════════════════════════════════════════════
-            var startPoint = GetPointOnPolyline(T("cota2lign.select.start"), polyline1Id, settings);
-            if (startPoint == null)
-            {
-                Logger.Info(T("cota2lign.cancelled"));
-                return;
-            }
-
-            var endPoint = GetPointOnPolyline(T("cota2lign.select.end"), polyline1Id, settings);
-            if (endPoint == null)
-            {
-                Logger.Info(T("cota2lign.cancelled"));
-                return;
-            }
-
-            // ═══════════════════════════════════════════════════════
-            // GÉNÉRATION DES STATIONS ET CRÉATION DES COTATIONS
-            // ═══════════════════════════════════════════════════════
-            int dimCount = 0;
-
-            ExecuteInTransaction(tr =>
-            {
-                var polyline1 = (Polyline)tr.GetObject(polyline1Id, OpenMode.ForRead);
-                var polyline2 = (Polyline)tr.GetObject(polyline2Id, OpenMode.ForRead);
-
-                // Calculer les distances sur la polyligne 1
-                double startDist = GetDistanceAtPoint(polyline1, startPoint.Value);
-                double endDist = GetDistanceAtPoint(polyline1, endPoint.Value);
-
-                // Générer les stations
-                var stations = StationService.BuildStations(
-                    polyline1,
-                    startDist,
-                    endDist,
-                    settings.Interdistance,
-                    settings.DimensionAtVertices
-                );
-
-                if (stations.Count == 0)
+                // ═══════════════════════════════════════════════════════
+                // SÉLECTION POLYLIGNE 1 (RÉFÉRENCE) - avec boucle paramètres
+                // ═══════════════════════════════════════════════════════
+                ObjectId polyline1Id;
+                while (true)
                 {
-                    Logger.Warning(T("cota2lign.nostations"));
+                    var pl1Result = SelectPolylineWithOptions(T("cota2lign.select.pl1"));
+                    if (pl1Result == null) return;
+
+                    if (pl1Result.Value.openSettings)
+                    {
+                        // Ouvrir les paramètres puis reprendre la sélection
+                        OpenSettingsWindow(settings);
+                        // Recharger les paramètres après modification
+                        settings = Cota2LignSettings.LoadFromDrawing(Database!);
+                        continue;
+                    }
+
+                    polyline1Id = pl1Result.Value.objectId;
+                    break;
+                }
+
+                // ═══════════════════════════════════════════════════════
+                // SÉLECTION POLYLIGNE 2 (CIBLE)
+                // ═══════════════════════════════════════════════════════
+                var pl2Result = SelectPolyline(T("cota2lign.select.pl2"), polyline1Id);
+                if (pl2Result == null)
+                {
+                    Logger.Info(T("cota2lign.cancelled"));
                     return;
                 }
 
-                // Préparation du BlockTableRecord
-                var btr = (BlockTableRecord)tr.GetObject(Database!.CurrentSpaceId, OpenMode.ForWrite);
+                var polyline2Id = pl2Result.Value;
 
-                // Déterminer le calque de destination
-                string targetLayer = GetTargetLayer(tr, settings);
-
-                // Créer les cotations avec annulation groupée
-                foreach (var stationDist in stations)
+                // ═══════════════════════════════════════════════════════
+                // SÉLECTION POINTS DÉPART/ARRIVÉE
+                // ═══════════════════════════════════════════════════════
+                // Si OAS Snap est actif, désactiver temporairement l'OSNAP AutoCAD
+                if (settings.UseOasSnap && SnapIntegrationService.IsDynamicSnapAvailable)
                 {
-                    var pt1 = polyline1.GetPointAtDist(stationDist);
-                    var pt2 = polyline2.GetClosestPointTo(pt1, false);
-
-                    // Calculer la direction perpendiculaire pour le placement
-                    var tangentAngle = GeometryService.GetTangentAngle(polyline1, stationDist);
-                    var perpAngle = tangentAngle + (settings.ReverseSide ? -Math.PI / 2 : Math.PI / 2);
-
-                    // Créer la cotation alignée
-                    var dimension = CreateAlignedDimension(pt1, pt2, settings.DimensionOffset, perpAngle);
-                    dimension.Layer = targetLayer;
-
-                    btr.AppendEntity(dimension);
-                    tr.AddNewlyCreatedDBObject(dimension, true);
-                    dimCount++;
+                    AcadApp.SetSystemVariable("OSMODE", 0);
                 }
-            });
 
-            if (dimCount > 0)
+                var startPoint = GetPointOnPolyline(T("cota2lign.select.start"), polyline1Id, settings);
+                if (startPoint == null)
+                {
+                    Logger.Info(T("cota2lign.cancelled"));
+                    return;
+                }
+
+                var endPoint = GetPointOnPolyline(T("cota2lign.select.end"), polyline1Id, settings);
+                if (endPoint == null)
+                {
+                    Logger.Info(T("cota2lign.cancelled"));
+                    return;
+                }
+
+                // ═══════════════════════════════════════════════════════
+                // GÉNÉRATION DES STATIONS ET CRÉATION DES COTATIONS
+                // ═══════════════════════════════════════════════════════
+                int dimCount = 0;
+
+                ExecuteInTransaction(tr =>
+                {
+                    var polyline1 = (Polyline)tr.GetObject(polyline1Id, OpenMode.ForRead);
+                    var polyline2 = (Polyline)tr.GetObject(polyline2Id, OpenMode.ForRead);
+
+                    // Calculer les distances sur la polyligne 1
+                    double startDist = GetDistanceAtPoint(polyline1, startPoint.Value);
+                    double endDist = GetDistanceAtPoint(polyline1, endPoint.Value);
+
+                    // Générer les stations
+                    var stations = StationService.BuildStations(
+                        polyline1,
+                        startDist,
+                        endDist,
+                        settings.Interdistance,
+                        settings.DimensionAtVertices
+                    );
+
+                    if (stations.Count == 0)
+                    {
+                        Logger.Warning(T("cota2lign.nostations"));
+                        return;
+                    }
+
+                    // Préparation du BlockTableRecord
+                    var btr = (BlockTableRecord)tr.GetObject(Database!.CurrentSpaceId, OpenMode.ForWrite);
+
+                    // Déterminer le calque de destination
+                    string targetLayer = GetTargetLayer(tr, settings);
+
+                    // Créer les cotations avec annulation groupée
+                    foreach (var stationDist in stations)
+                    {
+                        var pt1 = polyline1.GetPointAtDist(stationDist);
+                        var pt2 = polyline2.GetClosestPointTo(pt1, false);
+
+                        // Calculer la direction perpendiculaire pour le placement
+                        var tangentAngle = GeometryService.GetTangentAngle(polyline1, stationDist);
+                        var perpAngle = tangentAngle + (settings.ReverseSide ? -Math.PI / 2 : Math.PI / 2);
+
+                        // Créer la cotation alignée
+                        var dimension = CreateAlignedDimension(pt1, pt2, settings.DimensionOffset, perpAngle);
+                        dimension.Layer = targetLayer;
+
+                        btr.AppendEntity(dimension);
+                        tr.AddNewlyCreatedDBObject(dimension, true);
+                        dimCount++;
+                    }
+                });
+
+                if (dimCount > 0)
+                {
+                    Logger.Success(TFormat("cota2lign.success", dimCount));
+                }
+            }
+            finally
             {
-                Logger.Success(TFormat("cota2lign.success", dimCount));
+                // Toujours restaurer l'OSMODE utilisateur
+                AcadApp.SetSystemVariable("OSMODE", originalOsmode);
             }
         });
     }
@@ -265,20 +287,21 @@ public class Cota2LignCommand : CommandBase
     }
 
     /// <summary>
-    /// Détermine le calque de destination pour les cotations
+    /// Détermine le calque de destination pour les cotations.
+    /// Crée le calque s'il n'existe pas.
     /// </summary>
     private string GetTargetLayer(Transaction tr, Cota2LignSettings settings)
     {
         if (string.IsNullOrWhiteSpace(settings.TargetLayer))
         {
             // Utiliser le calque courant
-            var layerTable = (LayerTable)tr.GetObject(Database!.LayerTableId, OpenMode.ForRead);
-            var currentLayerId = Database.Clayer;
+            var currentLayerId = Database!.Clayer;
             var currentLayer = (LayerTableRecord)tr.GetObject(currentLayerId, OpenMode.ForRead);
             return currentLayer.Name;
         }
 
-        // Utiliser le calque spécifié (le créer si nécessaire via LayerService)
+        // Utiliser le calque spécifié - le créer s'il n'existe pas
+        LayerService.EnsureLayer(Database!, tr, settings.TargetLayer);
         return settings.TargetLayer;
     }
 

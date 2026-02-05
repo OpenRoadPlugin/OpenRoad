@@ -687,9 +687,19 @@
             Rafraîchit la liste des modules depuis le catalogue
             </summary>
         </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.OnModuleActionClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Gère le clic sur le bouton d'action d'un module (installer/désinstaller/mettre à jour)
+            </summary>
+        </member>
         <member name="M:OpenAsphalte.Commands.SettingsWindow.GetMissingDependencies(OpenAsphalte.Services.ModuleDefinition,OpenAsphalte.Services.MarketplaceManifest)">
             <summary>
             Récupère les dépendances manquantes pour un module
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.SettingsWindow.UninstallModuleAsync(OpenAsphalte.Commands.ModuleItemViewModel,System.Windows.Controls.Button)">
+            <summary>
+            Désinstalle un module
             </summary>
         </member>
         <member name="M:OpenAsphalte.Commands.SettingsWindow.OnModuleSelectionChanged(System.Object,System.Windows.RoutedEventArgs)">
@@ -1076,6 +1086,11 @@
             Decouvre et charge tous les modules
             </summary>
             <param name="basePath">Chemin de base (dossier contenant OAS.Core.dll)</param>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.CleanupDeletedModules(System.String)">
+            <summary>
+            Supprime les fichiers marqués pour suppression (.del) lors des sessions précédentes
+            </summary>
         </member>
         <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.MigrateOldModuleNames(System.String)">
             <summary>

@@ -263,9 +263,6 @@ public partial class SettingsWindow : Window
                         StatusColor = isInstalled ? (updateInfo != null ? System.Windows.Media.Brushes.Orange : System.Windows.Media.Brushes.Green) : System.Windows.Media.Brushes.Blue,
                         NameBrush = moduleDef.IsCustomSource ? System.Windows.Media.Brushes.Purple : System.Windows.Media.Brushes.Black,
                         IsSelected = false,
-                        StatusIcon = isInstalled ? (updateInfo != null ? "!" : "✓") : "+",
-                        StatusColor = isInstalled ? (updateInfo != null ? System.Windows.Media.Brushes.Orange : System.Windows.Media.Brushes.Green) : System.Windows.Media.Brushes.Blue,
-                        NameBrush = moduleDef.IsCustomSource ? System.Windows.Media.Brushes.Purple : System.Windows.Media.Brushes.Black,
                         NameWeight = moduleDef.IsCustomSource ? System.Windows.FontWeights.Bold : System.Windows.FontWeights.Normal,
                         CanUpdate = !isInstalled || updateInfo != null,
                         ActionText = isInstalled
@@ -316,106 +313,147 @@ public partial class SettingsWindow : Window
         }
     }
 
-    private async voVérifier si c'est une désinstallation
-                 var isUninstall = item.ActionText == L10n.T("modules.action.uninstall", "Désinstaller");
-                 if (isUninstall)
-                 {
-                     await UninstallModuleAsync(item, btn);
-                     return;
-                 }
-
-                 // id OnModuleActionClick(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// Gère le clic sur le bouton d'action d'un module (installer/désinstaller/mettre à jour)
+    /// </summary>
+    private async void OnModuleActionClick(object sender, RoutedEventArgs e)
     {
         if (sender is System.Windows.Controls.Button btn && btn.CommandParameter is ModuleItemViewModel item)
         {
-             try
-             {
-                 // Récupérer le manifest pour vérifier les dépendances
-                 var checkResult = await UpdateService.CheckForUpdatesAsync();
-                 if (!checkResult.Success || checkResult.Manifest == null)
-                 {
-                     System.Windows.MessageBox.Show(L10n.T("settings.modules.error", "Erreur réseau"), "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                     return;
-                 }
+            try
+            {
+                // Vérifier si c'est une désinstallation
+                var isUninstall = item.ActionText == L10n.T("modules.action.uninstall", "Désinstaller");
+                if (isUninstall)
+                {
+                    await UninstallModuleAsync(item, btn);
+                    return;
+                }
 
-                 // Vérifier les dépendances manquantes
-                 var missingDeps = GetMissingDependencies(item.Definition, checkResult.Manifest);
-                 var installedModules = new List<string>();
+                // Récupérer le manifest pour vérifier les dépendances
+                var checkResult = await UpdateService.CheckForUpdatesAsync();
+                if (!checkResult.Success || checkResult.Manifest == null)
+                {
+                    System.Windows.MessageBox.Show(L10n.T("settings.modules.error", "Erreur réseau"), "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
-                 if (missingDeps.Count > 0)
-                 {
-                     // Construire le message de confirmation
-                     var depNames = string.Join(", ", missingDeps.Select(d => d.Name));
-                     var message = L10n.TFormat("modules.manager.dependencies.confirm",
-                         new object[] { item.Name, depNames, missingDeps.Count });
+                // Vérifier les dépendances manquantes
+                var missingDeps = GetMissingDependencies(item.Definition, checkResult.Manifest);
+                var installedModules = new List<string>();
 
-                     var result = System.Windows.MessageBox.Show(
-                         message,
-                         L10n.T("modules.manager.dependencies.title", "Dépendances requises"),
-                         MessageBoxButton.YesNo,
-                         MessageBoxImage.Question);
+                if (missingDeps.Count > 0)
+                {
+                    // Construire le message de confirmation
+                    var depNames = string.Join(", ", missingDeps.Select(d => d.Name));
+                    var message = L10n.TFormat("modules.manager.dependencies.confirm",
+                        new object[] { item.Name, depNames, missingDeps.Count });
 
-                     if (result != MessageBoxResult.Yes)
-                     {
-                         return; // L'utilisateur a annulé
-                     }
+                    var result = System.Windows.MessageBox.Show(
+                        message,
+                        L10n.T("modules.manager.dependencies.title", "Dépendances requises"),
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
 
-                     // Installer les dépendances d'abord
-                     foreach (var dep in missingDeps)
-                     {
-                         btn.Content = L10n.TFormat("modules.manager.installing", "Installation de {0}...", dep.Name);
-                         await UpdateService.InstallModuleAsync(dep);
-                         installedModules.Add(dep.Name);
+                    if (result != MessageBoxResult.Yes)
+                    {
+                        return; // L'utilisateur a annulé
+                    }
 
-                         // Mettre à jour le ViewModel correspondant dans la liste
-                         var depVm = _moduleList.FirstOrDefault(m => m.Definition.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase));
-                         if (depVm != null)
-                         {
-                 // Mise à jour de l'état "installé" permet maintenant la désinstallation
-                 btn.Content = L10n.T("modules.action.uninstall", "Désinstaller");
-                 item.CanUpdate = true;
-                 item.StatusIcon = "✓";
-                 item.StatusColor = System.Windows.Media.Brushes.Green;
-                 item.ActionText = L10n.T("modules.action.uninstall", "Désinstaller").installed", "Installé");
-                         }
-                     }
-                 }
+                    // Installer les dépendances d'abord
+                    foreach (var dep in missingDeps)
+                    {
+                        btn.Content = L10n.TFormat("modules.manager.installing", "Installation de {0}...", dep.Name);
+                        await UpdateService.InstallModuleAsync(dep);
+                        installedModules.Add(dep.Name);
 
-                 btn.IsEnabled = false;
-                 btn.Content = L10n.T("modules.manager.downloading", "Téléchargement...");
+                        // Mettre à jour le ViewModel correspondant dans la liste
+                        var depVm = _moduleList.FirstOrDefault(m => m.Definition.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase));
+                        if (depVm != null)
+                        {
+                            depVm.CanUpdate = true;
+                            depVm.StatusIcon = "✓";
+                            depVm.StatusColor = System.Windows.Media.Brushes.Green;
+                            depVm.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
+                        }
+                    }
+                }
 
-                 await UpdateService.InstallModuleAsync(item.Definition);
-                 installedModules.Add(item.Name);
+                btn.IsEnabled = false;
+                btn.Content = L10n.T("modules.manager.downloading", "Téléchargement...");
 
-                 btn.Content = L10n.T("modules.action.installed", "Installé");
-                 item.CanUpdate = false;
-                 item.StatusIcon = "✓";
-                 item.StatusColor = System.Windows.Media.Brushes.Green;
+                await UpdateService.InstallModuleAsync(item.Definition);
+                installedModules.Add(item.Name);
 
-                 // Message de succès
-                 if (installedModules.Count > 1)
-                 {
-                     var modulesList = string.Join("\n• ", installedModules);
-                     System.Windows.MessageBox.Show(
-                         L10n.TFormat("modules.manager.restartRequired.multiple",
-                             "Les modules suivants ont été installés :\n{0}\n\nRedémarrez AutoCAD pour les activer.",
-                             "• " + modulesList),
-                         L10n.T("modules.manager.installSuccess", "Installation réussie"),
-                         MessageBoxButton.OK,
-                         MessageBoxImage.Information);
-                 }
-                 else
-                 {
-                     System.Windows.MessageBox.Show(
-                         L10n.TFormat("modules.manager.restartRequired", "Le module {0} a été installé.\n\nRedémarrez AutoCAD pour l'activer.", item.Name),
-                         L10n.T("common.success", "Succès"),
-                         MessageBoxButton.OK,
-                         MessageBoxImage.Information);
-                 }
-             }
-        Désinstalle un module
+                // Mise à jour de l'état "installé" permet maintenant la désinstallation
+                btn.Content = L10n.T("modules.action.uninstall", "Désinstaller");
+                item.CanUpdate = true;
+                item.StatusIcon = "✓";
+                item.StatusColor = System.Windows.Media.Brushes.Green;
+                item.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
+
+                // Message de succès
+                if (installedModules.Count > 1)
+                {
+                    var modulesList = string.Join("\n• ", installedModules);
+                    System.Windows.MessageBox.Show(
+                        L10n.TFormat("modules.manager.restartRequired.multiple",
+                            "Les modules suivants ont été installés :\n{0}\n\nRedémarrez AutoCAD pour les activer.",
+                            "• " + modulesList),
+                        L10n.T("modules.manager.installSuccess", "Installation réussie"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show(
+                        L10n.TFormat("modules.manager.restartRequired", "Le module {0} a été installé.\n\nRedémarrez AutoCAD pour l'activer.", item.Name),
+                        L10n.T("common.success", "Succès"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                btn.Content = L10n.T("modules.manager.retry", "Réessayer");
+                btn.IsEnabled = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Récupère les dépendances manquantes pour un module
     /// </summary>
-    private async Task UninstallModuleAsync(ModuleItemViewModel item, Button btn)
+    private List<ModuleDefinition> GetMissingDependencies(ModuleDefinition module, MarketplaceManifest manifest)
+    {
+        var missingDeps = new List<ModuleDefinition>();
+
+        if (module.Dependencies == null || module.Dependencies.Count == 0)
+            return missingDeps;
+
+        foreach (var depId in module.Dependencies)
+        {
+            // Vérifier si la dépendance est déjà installée
+            var isInstalled = ModuleDiscovery.Modules.Any(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
+            if (isInstalled)
+                continue;
+
+            // Trouver la définition de la dépendance dans le manifest
+            var depDef = manifest.Modules.FirstOrDefault(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
+            if (depDef != null)
+            {
+                missingDeps.Add(depDef);
+            }
+        }
+
+        return missingDeps;
+    }
+
+    /// <summary>
+    /// Désinstalle un module
+    /// </summary>
+    private async Task UninstallModuleAsync(ModuleItemViewModel item, System.Windows.Controls.Button btn)
     {
         var moduleId = item.Definition.Id;
         var moduleName = item.Name;
@@ -532,30 +570,6 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    ///      catch(System.Exception ex)
-             {
-                 System.Windows.MessageBox.Show(ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                 btn.Content = L10n.T("modules.manager.retry", "Réessayer");
-                 btn.IsEnabled = true;uninstall", "Désinstaller");
-                    depVm.CanUpdate = true;
-                }
-            }
-
-            // Ensuite installer les modules sélectionnés
-            foreach (var module in selectedModules)
-            {
-                txtUpdateStatus.Text = L10n.TFormat("modules.manager.installing", "Installation de {0}...", module.Name);
-                await UpdateService.InstallModuleAsync(module.Definition);
-                installedModules.Add(module.Name);
-
-                module.CanUpdate = true;
-                module.IsSelected = false;
-                module.StatusIcon = "✓";
-                module.StatusColor = System.Windows.Media.Brushes.Green;
-                module.ActionText = L10n.T("modules.action.uninstall", "DésinstalleronInstalledIds);
-    }
-
-    /// <summary>
     /// Gère le changement de sélection des modules (checkbox)
     /// </summary>
     private void OnModuleSelectionChanged(object sender, RoutedEventArgs e)
@@ -662,11 +676,11 @@ public partial class SettingsWindow : Window
                 var depVm = _moduleList.FirstOrDefault(m => m.Definition.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase));
                 if (depVm != null)
                 {
-                    depVm.CanUpdate = false;
+                    depVm.CanUpdate = true;
                     depVm.IsSelected = false;
                     depVm.StatusIcon = "✓";
                     depVm.StatusColor = System.Windows.Media.Brushes.Green;
-                    depVm.ActionText = L10n.T("modules.action.installed", "Installé");
+                    depVm.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
                 }
             }
 
@@ -677,11 +691,11 @@ public partial class SettingsWindow : Window
                 await UpdateService.InstallModuleAsync(module.Definition);
                 installedModules.Add(module.Name);
 
-                module.CanUpdate = false;
+                module.CanUpdate = true;
                 module.IsSelected = false;
                 module.StatusIcon = "✓";
                 module.StatusColor = System.Windows.Media.Brushes.Green;
-                module.ActionText = L10n.T("modules.action.installed", "Installé");
+                module.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
             }
 
             // Rafraîchir l'affichage
@@ -806,4 +820,5 @@ public class ModuleItemViewModel : System.ComponentModel.INotifyPropertyChanged
     private void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-    }}
+    }
+}

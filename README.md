@@ -1,7 +1,10 @@
+[![fr](https://img.shields.io/badge/lang-fr-green.svg)](README.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](README.en.md)
+
 # Open Asphalte
 
 <p align="center">
-  <img src="OAS_Logo.png" alt="Open Asphalte" width="200"/>
+  <img src="OAS_Logo.png" alt="Open Asphalte" width="400"/>
 </p>
 
 **Plugin modulaire pour AutoCAD**  Voirie et aménagement urbain

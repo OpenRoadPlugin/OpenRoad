@@ -117,7 +117,8 @@ public static class SnapIntegrationService
     }
 
     /// <summary>
-    /// Sélection avec le module DynamicSnap
+    /// Sélection avec le module DynamicSnap.
+    /// Utilise la réflexion pour éviter une dépendance directe sur le module.
     /// </summary>
     private static Point3d? GetPointWithDynamicSnap(
         ObjectId polylineId,
@@ -151,7 +152,7 @@ public static class SnapIntegrationService
             var isAvailable = isAvailableProp.GetValue(null);
             if (isAvailable == null || !(bool)isAvailable)
             {
-                Logger.Debug("[Cota2Lign] DynamicSnap non disponible");
+                Logger.Debug("[Cota2Lign] DynamicSnap.IsAvailable = false");
                 return null;
             }
 
@@ -192,56 +193,61 @@ public static class SnapIntegrationService
 
             var snapMode = Enum.ToObject(snapModeType, modeValue);
 
-            // Obtenir la polyligne et appeler GetPointOnPolylineOrFallback
-            Point3d? result = null;
-
-            using (var tr = database.TransactionManager.StartTransaction())
+            // Récupérer la polyligne dans une transaction courte pour la lecture
+            // Note: On garde la transaction ouverte pendant toute l'opération de sélection
+            // pour éviter les problèmes d'accès à l'entité pendant le GetPoint interactif
+            using var tr = database.TransactionManager.StartTransaction();
+            try
             {
-                try
+                var polyline = tr.GetObject(polylineId, OpenMode.ForRead) as Polyline;
+                if (polyline == null)
                 {
-                    var polyline = tr.GetObject(polylineId, OpenMode.ForRead) as Polyline;
-                    if (polyline == null)
-                    {
-                        tr.Commit();
-                        return null;
-                    }
-
-                    // Appeler GetPointOnPolylineOrFallback
-                    var method = snapHelperType.GetMethod("GetPointOnPolylineOrFallback",
-                        System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-
-                    if (method != null)
-                    {
-                        var args = new object[] { polyline, prompt, editor, snapMode };
-                        var pointResult = method.Invoke(null, args);
-
-                        if (pointResult is Point3d pt)
-                        {
-                            result = pt;
-                        }
-                    }
-
-                    tr.Commit();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Debug($"[Cota2Lign] Erreur dans transaction DynamicSnap: {ex.Message}");
                     tr.Abort();
                     return null;
                 }
-            }
 
-            // Projeter le résultat sur la polyligne pour plus de précision
-            if (result.HasValue)
+                // Appeler GetPointOnPolylineOrFallback via réflexion
+                var method = snapHelperType.GetMethod("GetPointOnPolylineOrFallback",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+
+                if (method == null)
+                {
+                    Logger.Debug("[Cota2Lign] Méthode GetPointOnPolylineOrFallback non trouvée");
+                    tr.Abort();
+                    return null;
+                }
+
+                var args = new object[] { polyline, prompt, editor, snapMode };
+                var pointResult = method.Invoke(null, args);
+
+                Point3d? result = null;
+                if (pointResult is Point3d pt)
+                {
+                    // Projeter le résultat sur la polyligne pour garantir la précision
+                    result = polyline.GetClosestPointTo(pt, false);
+                }
+
+                tr.Commit();
+                return result;
+            }
+            catch (System.Reflection.TargetInvocationException tie)
             {
-                result = ProjectPointOnPolyline(polylineId, result.Value, database);
+                // Extraction de l'exception interne pour un meilleur diagnostic
+                var innerEx = tie.InnerException ?? tie;
+                Logger.Debug($"[Cota2Lign] Erreur DynamicSnap: {innerEx.Message}");
+                try { tr.Abort(); } catch { }
+                return null;
             }
-
-            return result;
+            catch (Exception ex)
+            {
+                Logger.Debug($"[Cota2Lign] Erreur dans transaction DynamicSnap: {ex.Message}");
+                try { tr.Abort(); } catch { }
+                return null;
+            }
         }
         catch (Exception ex)
         {
-            Logger.Debug($"[Cota2Lign] Erreur DynamicSnap: {ex.Message}");
+            Logger.Debug($"[Cota2Lign] Erreur générale DynamicSnap: {ex.Message}");
             return null;
         }
     }

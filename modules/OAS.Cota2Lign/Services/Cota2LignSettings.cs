@@ -124,13 +124,28 @@ public class Cota2LignSettings
             // Accéder au dictionnaire NOD (Named Object Dictionary)
             var nod = (DBDictionary)tr.GetObject(database.NamedObjectsDictionaryId, OpenMode.ForRead);
 
-            if (!nod.Contains(DictionaryKey))
+            // Protection contre les accès concurrents : utiliser TryGetValue pattern
+            ObjectId xrecordId = ObjectId.Null;
+            try
+            {
+                if (nod.Contains(DictionaryKey))
+                {
+                    xrecordId = nod.GetAt(DictionaryKey);
+                }
+            }
+            catch (Autodesk.AutoCAD.Runtime.Exception ex) when (ex.ErrorStatus == Autodesk.AutoCAD.Runtime.ErrorStatus.KeyNotFound)
+            {
+                // L'entrée a été supprimée entre Contains et GetAt (rare mais possible)
+                tr.Commit();
+                return settings;
+            }
+
+            if (xrecordId.IsNull || !xrecordId.IsValid)
             {
                 tr.Commit();
                 return settings;
             }
 
-            var xrecordId = nod.GetAt(DictionaryKey);
             var xrecord = (Xrecord)tr.GetObject(xrecordId, OpenMode.ForRead);
 
             // Lire les données
