@@ -10,6 +10,7 @@
 // limitations under the License.
 
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
@@ -213,26 +214,9 @@ public class StreetViewCommand : CommandBase
     /// <returns>ProjectionInfo ou null si non définie</returns>
     private ProjectionInfo? GetCurrentProjection()
     {
-        // Récupérer le code du système de coordonnées via CGEOCS
-        string? csCode = null;
-
-        try
-        {
-            object? value = AcadApp.GetSystemVariable("CGEOCS");
-            if (value is string cs && !string.IsNullOrWhiteSpace(cs))
-            {
-                csCode = cs;
-            }
-        }
-        catch
-        {
-            // Variable non disponible
-        }
-
+        var csCode = GetCurrentProjectionCode();
         if (string.IsNullOrWhiteSpace(csCode))
-        {
             return null;
-        }
 
         // Rechercher dans la base de projections connues
         var projection = CoordinateService.Projections
@@ -248,13 +232,7 @@ public class StreetViewCommand : CommandBase
         }
 
         // Si toujours pas trouvé, créer une projection générique
-        if (projection == null)
-        {
-            // Essayer d'extraire des infos du code
-            projection = CreateGenericProjection(csCode);
-        }
-
-        return projection;
+        return projection ?? CreateGenericProjection(csCode);
     }
 
     /// <summary>
@@ -277,7 +255,7 @@ public class StreetViewCommand : CommandBase
         }
 
         // RGF93 / CCxx - Accepter toutes les variantes (RGF93.CC49, RGF93-CC49, CC49, etc.)
-        var ccMatch = System.Text.RegularExpressions.Regex.Match(upperCode, @"CC(\d{2})");
+        var ccMatch = Regex.Match(upperCode, @"CC(\d{2})");
         if (ccMatch.Success && int.TryParse(ccMatch.Groups[1].Value, out int zone) && zone >= 42 && zone <= 50)
         {
             return new ProjectionInfo
@@ -293,7 +271,7 @@ public class StreetViewCommand : CommandBase
         if (upperCode.Contains("UTM"))
         {
             // Extraire la zone UTM si possible
-            var utmMatch = System.Text.RegularExpressions.Regex.Match(upperCode, @"UTM[\-_]?(\d{1,2})([NS])?");
+            var utmMatch = Regex.Match(upperCode, @"UTM[\-_]?(\d{1,2})([NS])?");
             if (utmMatch.Success)
             {
                 return new ProjectionInfo
@@ -455,7 +433,7 @@ public class StreetViewCommand : CommandBase
                 FileName = url,
                 UseShellExecute = true
             };
-            Process.Start(psi);
+            using var _ = Process.Start(psi);
             return true;
         }
         catch
@@ -463,7 +441,7 @@ public class StreetViewCommand : CommandBase
             // Fallback avec explorer.exe
             try
             {
-                Process.Start("explorer.exe", $"\"{url}\"");
+                using var _ = Process.Start("explorer.exe", $"\"{url}\"");
                 return true;
             }
             catch

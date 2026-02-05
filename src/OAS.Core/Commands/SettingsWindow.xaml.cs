@@ -505,32 +505,36 @@ public partial class SettingsWindow : Window
             // 3. Procéder à la "désinstallation" (renommage .dll -> .dll.del)
             var filePath = loadedModuleDescriptor.FilePath;
 
-            // On renomme le fichier DLL principal
-            if (File.Exists(filePath))
+            // Opérations fichier en arrière-plan pour ne pas bloquer l'UI
+            await Task.Run(() =>
             {
-                var delPath = filePath + ".del";
-                if (File.Exists(delPath)) File.Delete(delPath); // Nettoyer si existe déjà
-
-                File.Move(filePath, delPath);
-
-                // On essaie aussi de renommer le PDB s'il existe
-                var pdbPath = Path.ChangeExtension(filePath, ".pdb");
-                if (File.Exists(pdbPath))
+                // On renomme le fichier DLL principal
+                if (File.Exists(filePath))
                 {
-                    var pdbDelPath = pdbPath + ".del";
-                    if (File.Exists(pdbDelPath)) File.Delete(pdbDelPath);
-                    File.Move(pdbPath, pdbDelPath);
-                }
+                    var delPath = filePath + ".del";
+                    if (File.Exists(delPath)) File.Delete(delPath); // Nettoyer si existe déjà
 
-                // On essaie aussi de renommer le deps.json s'il existe
-                var depsPath = Path.ChangeExtension(filePath, ".deps.json");
-                if (File.Exists(depsPath))
-                {
-                     var depsDelPath = depsPath + ".del";
-                     if (File.Exists(depsDelPath)) File.Delete(depsDelPath);
-                     File.Move(depsPath, depsDelPath);
+                    File.Move(filePath, delPath);
+
+                    // On essaie aussi de renommer le PDB s'il existe
+                    var pdbPath = Path.ChangeExtension(filePath, ".pdb");
+                    if (File.Exists(pdbPath))
+                    {
+                        var pdbDelPath = pdbPath + ".del";
+                        if (File.Exists(pdbDelPath)) File.Delete(pdbDelPath);
+                        File.Move(pdbPath, pdbDelPath);
+                    }
+
+                    // On essaie aussi de renommer le deps.json s'il existe
+                    var depsPath = Path.ChangeExtension(filePath, ".deps.json");
+                    if (File.Exists(depsPath))
+                    {
+                        var depsDelPath = depsPath + ".del";
+                        if (File.Exists(depsDelPath)) File.Delete(depsDelPath);
+                        File.Move(depsPath, depsDelPath);
+                    }
                 }
-            }
+            });
 
             // 4. Mettre à jour l'interface
             item.ActionText = L10n.T("modules.action.install", "Installer");

@@ -684,10 +684,10 @@ public class ModuleViewModel
                 // Mise à jour disponible
                 VersionDisplay = $"v{LocalVersion} → v{RemoteVersion}";
                 StatusIcon = "↑";
-                StatusBackground = new SolidColorBrush(Color.FromRgb(255, 152, 0)); // Orange
+                StatusBackground = CreateFrozenBrush(255, 152, 0); // Orange
                 ActionText = L10n.T("modules.action.update", "Mettre à jour");
                 CanPerformAction = true;
-                ActionBackground = new SolidColorBrush(Color.FromRgb(255, 152, 0));
+                ActionBackground = CreateFrozenBrush(255, 152, 0);
                 ActionForeground = Brushes.White;
             }
             else
@@ -695,10 +695,10 @@ public class ModuleViewModel
                 // Installé et à jour
                 VersionDisplay = $"v{LocalVersion}";
                 StatusIcon = "✓";
-                StatusBackground = new SolidColorBrush(Color.FromRgb(76, 175, 80)); // Vert
+                StatusBackground = CreateFrozenBrush(76, 175, 80); // Vert
                 ActionText = L10n.T("modules.action.installed", "Installé");
                 CanPerformAction = false;
-                ActionBackground = new SolidColorBrush(Color.FromRgb(200, 200, 200));
+                ActionBackground = CreateFrozenBrush(200, 200, 200);
                 ActionForeground = Brushes.Gray;
             }
         }
@@ -707,11 +707,18 @@ public class ModuleViewModel
             // Non installé
             VersionDisplay = $"v{RemoteVersion}";
             StatusIcon = "+";
-            StatusBackground = new SolidColorBrush(Color.FromRgb(33, 150, 243)); // Bleu
+            StatusBackground = CreateFrozenBrush(33, 150, 243); // Bleu
             ActionText = L10n.T("modules.action.install", "Installer");
             CanPerformAction = true;
-            ActionBackground = new SolidColorBrush(Color.FromRgb(33, 150, 243));
+            ActionBackground = CreateFrozenBrush(33, 150, 243);
             ActionForeground = Brushes.White;
         }
+    }
+
+    private static SolidColorBrush CreateFrozenBrush(byte r, byte g, byte b)
+    {
+        var brush = new SolidColorBrush(Color.FromRgb(r, g, b));
+        brush.Freeze();
+        return brush;
     }
 }

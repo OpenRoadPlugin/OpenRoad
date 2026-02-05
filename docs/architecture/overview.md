@@ -46,8 +46,11 @@ Le cœur du système, chargé une seule fois par AutoCAD via `NETLOAD`.
 | `Configuration` | Gestion des paramètres utilisateur (JSON) |
 | `Localization` | Système de traduction FR/EN/ES |
 | `Logger` | Logging dans la console AutoCAD |
-| `Services/` | Services partagés (Geometry, Layer, etc.) |
+| `Services/` | Services partagés (Geometry, Layer, Coordinate, etc.) — classes partielles |
 | `UI/` | Constructeurs de menu et ruban dynamiques |
+| `Commands/` | Commandes système et fenêtres (Settings, About, ModuleManager, Credits) |
+| `Diagnostics/` | Logging de démarrage (`StartupLog.cs`) |
+| `Resources/` | Ressources partagées : `OasStyles.xaml` (styles WPF), logo, crédits |
 
 ### 2. Modules (`bin/Modules/*.dll`)
 
@@ -111,11 +114,24 @@ CommandBase (abstract)
 
 | Service | Description |
 |---------|-------------|
-| `GeometryService` | Calculs géométriques, clothoïdes, hydraulique |
+| `GeometryService` | Calculs géométriques, clothoïdes, hydraulique (5 fichiers partiels) |
 | `LayerService` | Gestion des calques AutoCAD |
-| `CoordinateService` | Projections cartographiques |
+| `CoordinateService` | Projections cartographiques (3 fichiers partiels) |
 | `UpdateService` | Vérification et installation des mises à jour |
 | `UrlValidationService` | Validation sécurisée des URLs |
+
+> **Organisation en classes partielles** : `GeometryService` et `CoordinateService` sont organisés en plusieurs fichiers partiels (`partial class`) pour une meilleure maintenabilité. L'API publique reste identique.
+
+### Ressources partagées
+
+Le fichier `OasStyles.xaml` (`src/OAS.Core/Resources/`) est un `ResourceDictionary` WPF partagé contenant :
+- **Palette de couleurs** : Brushes nommés `Oas*` (frozen pour les performances)
+- **Styles** : Champs, boutons, labels réutilisables par tous les modules
+
+Les modules y accèdent via :
+```xml
+<ResourceDictionary Source="pack://application:,,,/OAS.Core;component/Resources/OasStyles.xaml"/>
+```
 
 ## Traductions
 

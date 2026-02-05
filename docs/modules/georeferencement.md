@@ -122,6 +122,15 @@ Le module utilise le service `CoordinateService` du Core Open Asphalte qui fourn
 - Base de données des projections (`projections.json`)
 - Algorithme de détection automatique
 
+### Organisation interne du module
+
+Le service `GeoLocationService` est organisé en 2 fichiers partiels (`partial class`) :
+
+| Fichier | Contenu |
+|---------|----------|
+| `GeoLocationService.cs` | Service principal (get/set système de coordonnées, GEOMAP) |
+| `GeoLocationService.Conversions.cs` | Conversions DMS, DD, radians |
+
 ## Installation
 
 1. Placez `OAS.Georeferencement.dll` dans le dossier `bin/Modules/`

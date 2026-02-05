@@ -115,6 +115,7 @@ Les modules étendent les fonctionnalités d'Open Asphalte. Ils sont **découver
 | **Street View** | Lien dynamique AutoCAD ↔ Google Maps | [Voir doc](docs/modules/streetview.md) |
 | **Cotation** | Outils de cotation voirie (Entre 2 lignes) | [Voir doc](docs/modules/cota2lign.md) |
 | **Dynamic Snap** | Moteur d'accrochage intelligent (Système) | [Voir doc](docs/modules/dynamicsnap.md) |
+| **Organiseur** | Gestion avancée des présentations (Tri, Renommage) | [Voir doc](docs/modules/prezorganizer.md) |
 
 ### Installation d'un module
 
@@ -206,11 +207,31 @@ OpenAsphalte/
       Configuration/          # Gestion de la configuration
       Localization/           # Système de traduction
       Logging/                # Logs unifiés
+      Diagnostics/            # Logging de démarrage
+        StartupLog.cs
+      Resources/              # Ressources partagées
+        OasStyles.xaml          # Styles WPF partagés (couleurs, brushes)
+        OAS_Logo.png
+        CoreCredits.cs
       Services/               # Services partagés
-        GeometryService.cs
+        GeometryService.cs                    # 5 fichiers partiels
+        GeometryService.Intersections.cs
+        GeometryService.Voirie.cs
+        GeometryService.Hydraulics.cs
+        GeometryService.Earthwork.cs
+        CoordinateService.cs                  # 3 fichiers partiels
+        CoordinateService.ProjectionData.cs
+        CoordinateService.Transformations.cs
         LayerService.cs
+        UpdateService.cs
+        UrlValidationService.cs
       UI/                     # Construction dynamique du menu et ruban
-      Commands/               # Commandes système (OAS_HELP, OAS_SETTINGS...)
+      Commands/               # Commandes système
+        SystemCommands.cs
+        SettingsWindow.xaml(.cs)
+        AboutWindow.xaml(.cs)
+        ModuleManagerWindow.xaml(.cs)
+        CreditsWindow.xaml(.cs)
 
   templates/                  # Templates pour créer de nouveaux modules
     OAS.Module.Template.csproj

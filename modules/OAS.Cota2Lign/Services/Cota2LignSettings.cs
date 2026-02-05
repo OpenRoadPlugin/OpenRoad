@@ -9,8 +9,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Globalization;
 using Autodesk.AutoCAD.DatabaseServices;
+using OpenAsphalte.Logging;
 
 namespace OpenAsphalte.Modules.Cota2Lign.Services;
 
@@ -35,9 +35,6 @@ public class Cota2LignSettings
     private const bool DefaultDimensionAtVertices = false;
     private const bool DefaultReverseSide = false;
     private const bool DefaultUseOasSnap = false;
-    private const bool DefaultSnapVertex = true;
-    private const bool DefaultSnapMidpoint = true;
-    private const bool DefaultSnapNearest = true;
 
     #endregion
 
@@ -70,24 +67,9 @@ public class Cota2LignSettings
 
     /// <summary>
     /// Utiliser l'accrochage OAS au lieu de l'OSNAP AutoCAD
-    /// (requiert le module DynamicSnap)
+    /// (requiert le module DynamicSnap — modes configurés globalement)
     /// </summary>
     public bool UseOasSnap { get; set; } = DefaultUseOasSnap;
-
-    /// <summary>
-    /// Activer l'accrochage aux sommets (Mode Sommet)
-    /// </summary>
-    public bool SnapVertex { get; set; } = DefaultSnapVertex;
-
-    /// <summary>
-    /// Activer l'accrochage aux milieux de segments (Mode Milieu)
-    /// </summary>
-    public bool SnapMidpoint { get; set; } = DefaultSnapMidpoint;
-
-    /// <summary>
-    /// Activer l'accrochage au point le plus proche (Mode Proche)
-    /// </summary>
-    public bool SnapNearest { get; set; } = DefaultSnapNearest;
 
     #endregion
 
@@ -104,9 +86,6 @@ public class Cota2LignSettings
         DimensionAtVertices = DefaultDimensionAtVertices;
         ReverseSide = DefaultReverseSide;
         UseOasSnap = DefaultUseOasSnap;
-        SnapVertex = DefaultSnapVertex;
-        SnapMidpoint = DefaultSnapMidpoint;
-        SnapNearest = DefaultSnapNearest;
     }
 
     /// <summary>
@@ -195,35 +174,15 @@ public class Cota2LignSettings
                 if (index < values.Length && values[index].TypeCode == (int)DxfCode.Int32)
                 {
                     settings.UseOasSnap = (int)values[index].Value != 0;
-                    index++;
-                }
-
-                // SnapVertex
-                if (index < values.Length && values[index].TypeCode == (int)DxfCode.Int32)
-                {
-                    settings.SnapVertex = (int)values[index].Value != 0;
-                    index++;
-                }
-
-                // SnapMidpoint
-                if (index < values.Length && values[index].TypeCode == (int)DxfCode.Int32)
-                {
-                    settings.SnapMidpoint = (int)values[index].Value != 0;
-                    index++;
-                }
-
-                // SnapNearest
-                if (index < values.Length && values[index].TypeCode == (int)DxfCode.Int32)
-                {
-                    settings.SnapNearest = (int)values[index].Value != 0;
                 }
             }
 
             tr.Commit();
         }
-        catch
+        catch (Exception ex)
         {
             // En cas d'erreur, retourner les valeurs par défaut
+            Logger.Debug($"[Cota2Lign] Error loading settings from drawing: {ex.Message}");
             tr.Abort();
         }
 
@@ -259,65 +218,12 @@ public class Cota2LignSettings
                 new TypedValue((int)DxfCode.Text, TargetLayer ?? string.Empty),
                 new TypedValue((int)DxfCode.Int32, DimensionAtVertices ? 1 : 0),
                 new TypedValue((int)DxfCode.Int32, ReverseSide ? 1 : 0),
-                new TypedValue((int)DxfCode.Int32, UseOasSnap ? 1 : 0),
-                new TypedValue((int)DxfCode.Int32, SnapVertex ? 1 : 0),
-                new TypedValue((int)DxfCode.Int32, SnapMidpoint ? 1 : 0),
-                new TypedValue((int)DxfCode.Int32, SnapNearest ? 1 : 0)
+                new TypedValue((int)DxfCode.Int32, UseOasSnap ? 1 : 0)
             );
 
             // Ajouter au dictionnaire
             nod.SetAt(DictionaryKey, xrecord);
             tr.AddNewlyCreatedDBObject(xrecord, true);
-
-            tr.Commit();
-        }
-        catch
-        {
-            tr.Abort();
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// Vérifie si des paramètres sont stockés dans le dessin
-    /// </summary>
-    /// <param name="database">Base de données AutoCAD</param>
-    /// <returns>True si des paramètres existent</returns>
-    public static bool ExistsInDrawing(Database database)
-    {
-        using var tr = database.TransactionManager.StartTransaction();
-        try
-        {
-            var nod = (DBDictionary)tr.GetObject(database.NamedObjectsDictionaryId, OpenMode.ForRead);
-            bool exists = nod.Contains(DictionaryKey);
-            tr.Commit();
-            return exists;
-        }
-        catch
-        {
-            tr.Abort();
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Supprime les paramètres stockés dans le dessin
-    /// </summary>
-    /// <param name="database">Base de données AutoCAD</param>
-    public static void DeleteFromDrawing(Database database)
-    {
-        using var tr = database.TransactionManager.StartTransaction();
-        try
-        {
-            var nod = (DBDictionary)tr.GetObject(database.NamedObjectsDictionaryId, OpenMode.ForWrite);
-
-            if (nod.Contains(DictionaryKey))
-            {
-                var oldId = nod.GetAt(DictionaryKey);
-                nod.Remove(DictionaryKey);
-                var oldRecord = tr.GetObject(oldId, OpenMode.ForWrite);
-                oldRecord.Erase();
-            }
 
             tr.Commit();
         }

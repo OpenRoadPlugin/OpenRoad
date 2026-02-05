@@ -149,17 +149,12 @@
                 Padding="20,15">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                     <Button x:Name="btnUpdate"
-                            Content=""
-                            Padding="15,8"
-                            Margin="0,0,10,0"
-                            Click="OnUpdateClick"/>
-
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                      <Button x:Name="btnCredits"
                             Content="Credits"
                             Padding="15,8"
@@ -172,13 +167,20 @@
                             Click="OnReportBugClick"/>
                 </StackPanel>
 
-                <Button x:Name="btnClose"
-                        Grid.Column="1"
-                        Content=""
-                        Width="100"
-                        IsDefault="True"
-                        IsCancel="True"
-                        Click="OnCloseClick"/>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                     <Button x:Name="btnUpdate"
+                            Content=""
+                            Padding="15,8"
+                            Margin="0,0,10,0"
+                            Click="OnUpdateClick"/>
+
+                     <Button x:Name="btnClose"
+                            Content=""
+                            Width="100"
+                            IsDefault="True"
+                            IsCancel="True"
+                            Click="OnCloseClick"/>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

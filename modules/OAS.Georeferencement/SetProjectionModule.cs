@@ -42,11 +42,11 @@ public class SetProjectionModule : ModuleBase
     /// <summary>
     /// Contributeurs du module
     /// </summary>
-    public override IEnumerable<Contributor> Contributors => new[]
-    {
+    public override IEnumerable<Contributor> Contributors =>
+    [
         new Contributor("Charles TILLY", "Lead Developer", "https://linkedin.com/in/charlestilly"),
         new Contributor("IA Copilot", "Code Assistant")
-    };
+    ];
 
     /// <summary>
     /// Version du module
@@ -86,10 +86,7 @@ public class SetProjectionModule : ModuleBase
     /// </summary>
     public override IEnumerable<Type> GetCommandTypes()
     {
-        return new[]
-        {
-            typeof(SetProjectionCommand),
-        };
+        return [typeof(SetProjectionCommand)];
     }
 
     // ═══════════════════════════════════════════════════════════

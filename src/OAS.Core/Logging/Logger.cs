@@ -24,6 +24,9 @@ public static class Logger
 {
     private static readonly object _fileLock = new();
     private static string? _logFilePath;
+    private static StreamWriter? _logWriter;
+    private static int _writeCount;
+    private const int RotateCheckInterval = 50;
     private static readonly int MaxLogFileSizeBytes = 5 * 1024 * 1024; // 5 MB
 
     /// <summary>
@@ -143,18 +146,53 @@ public static class Logger
         {
             lock (_fileLock)
             {
-                // Rotation du log si trop gros
-                RotateLogIfNeeded();
+                // Rotation vérifiée tous les N writes pour éviter le check I/O systématique
+                if (++_writeCount >= RotateCheckInterval)
+                {
+                    _writeCount = 0;
+                    RotateLogIfNeeded();
+                }
 
+                EnsureLogWriter();
                 var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                var logLine = $"[{timestamp}] [{level}] {message}{Environment.NewLine}";
-                File.AppendAllText(LogFilePath, logLine);
+                _logWriter!.WriteLine($"[{timestamp}] [{level}] {message}");
+                _logWriter.Flush();
             }
         }
         catch
         {
             // Ne pas propager les erreurs de logging fichier
+            CloseLogWriter();
         }
+    }
+
+    /// <summary>
+    /// Initialise ou réutilise le StreamWriter persistant
+    /// </summary>
+    private static void EnsureLogWriter()
+    {
+        if (_logWriter != null) return;
+
+        var logDir = Path.GetDirectoryName(LogFilePath);
+        if (logDir != null) Directory.CreateDirectory(logDir);
+
+        _logWriter = new StreamWriter(LogFilePath, append: true, System.Text.Encoding.UTF8)
+        {
+            AutoFlush = false
+        };
+    }
+
+    /// <summary>
+    /// Ferme proprement le StreamWriter
+    /// </summary>
+    private static void CloseLogWriter()
+    {
+        try
+        {
+            _logWriter?.Dispose();
+        }
+        catch { /* Ignore */ }
+        _logWriter = null;
     }
 
     /// <summary>
@@ -169,14 +207,15 @@ public static class Logger
             var fileInfo = new FileInfo(LogFilePath);
             if (fileInfo.Length < MaxLogFileSizeBytes) return;
 
-            // Renommer l'ancien fichier avec timestamp
+            // Fermer le writer avant de déplacer le fichier
+            CloseLogWriter();
+
             var archivePath = Path.Combine(
                 Path.GetDirectoryName(LogFilePath)!,
                 $"openasphalte_{DateTime.Now:yyyy-MM-dd_HHmmss}.log.old"
             );
             File.Move(LogFilePath, archivePath);
 
-            // Nettoyer les vieux fichiers (garder les 5 derniers)
             CleanupOldLogs();
         }
         catch

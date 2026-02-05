@@ -10,6 +10,7 @@
 // limitations under the License.
 
 using OpenAsphalte.Abstractions;
+using OpenAsphalte.Modules.DynamicSnap.Commands;
 using OpenAsphalte.Modules.DynamicSnap.Services;
 using OpenAsphalte.Logging;
 
@@ -63,11 +64,11 @@ public class DynamicSnapModule : ModuleBase
     /// <summary>
     /// Contributeurs du module
     /// </summary>
-    public override IEnumerable<Contributor> Contributors => new[]
-    {
+    public override IEnumerable<Contributor> Contributors =>
+    [
         new Contributor("Charles TILLY", "Lead Developer", "https://linkedin.com/in/charlestilly"),
         new Contributor("IA Copilot", "Code Assistant")
-    };
+    ];
 
     /// <summary>
     /// Version du module
@@ -104,13 +105,11 @@ public class DynamicSnapModule : ModuleBase
     // ═══════════════════════════════════════════════════════════
 
     /// <summary>
-    /// Ce module ne fournit pas de commandes utilisateur directes.
-    /// Il s'agit d'un module de service utilisé par d'autres modules.
+    /// Retourne la commande de paramètres d'accrochage.
     /// </summary>
     public override IEnumerable<Type> GetCommandTypes()
     {
-        // Aucune commande exposée - ce module est une API de service
-        return Array.Empty<Type>();
+        return [typeof(DynamicSnapSettingsCommand)];
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -156,6 +155,13 @@ public class DynamicSnapModule : ModuleBase
                 ["dynamicsnap.name"] = "Accrochage Dynamique OAS",
                 ["dynamicsnap.loaded"] = "[DynamicSnap] Module d'accrochage dynamique chargé",
 
+                // Menu
+                ["menu.dessin"] = "Dessin",
+
+                // Commande
+                ["dynamicsnap.cmd.title"] = "Accrochage OAS",
+                ["dynamicsnap.cmd.desc"] = "Configure les paramètres de l'accrochage dynamique OAS",
+
                 // Service
                 ["dynamicsnap.init"] = "[DynamicSnap] Service initialisé",
                 ["dynamicsnap.shutdown"] = "[DynamicSnap] Service arrêté",
@@ -181,6 +187,45 @@ public class DynamicSnapModule : ModuleBase
                 ["dynamicsnap.select.vertex"] = "Sélectionnez un sommet",
                 ["dynamicsnap.select.point"] = "Sélectionnez un point d'accrochage",
                 ["dynamicsnap.cancelled"] = "Sélection annulée",
+
+                // Fenêtre paramètres
+                ["dynamicsnap.settings.title"] = "Paramètres d'accrochage OAS",
+                ["dynamicsnap.settings.header"] = "Paramètres d'accrochage OAS",
+                ["dynamicsnap.settings.modes"] = "Modes d'accrochage actifs",
+                ["dynamicsnap.settings.appearance"] = "Apparence des marqueurs",
+                ["dynamicsnap.settings.vertex"] = "Sommets (Vertex)",
+                ["dynamicsnap.settings.vertex.tooltip"] = "Accrochage aux sommets des polylignes et extrémités",
+                ["dynamicsnap.settings.endpoint"] = "Extrémités (Endpoint)",
+                ["dynamicsnap.settings.endpoint.tooltip"] = "Accrochage aux extrémités des entités",
+                ["dynamicsnap.settings.midpoint"] = "Milieux de segments (Midpoint)",
+                ["dynamicsnap.settings.midpoint.tooltip"] = "Accrochage aux milieux des segments",
+                ["dynamicsnap.settings.nearest"] = "Point le plus proche (Nearest)",
+                ["dynamicsnap.settings.nearest.tooltip"] = "Accrochage au point le plus proche sur l'entité",
+                ["dynamicsnap.settings.color"] = "Couleur marqueur :",
+                ["dynamicsnap.settings.color.tooltip"] = "Couleur du marqueur d'accrochage inactif",
+                ["dynamicsnap.settings.activecolor"] = "Couleur actif :",
+                ["dynamicsnap.settings.activecolor.tooltip"] = "Couleur du marqueur d'accrochage actif",
+                ["dynamicsnap.settings.tolerance"] = "Tolérance :",
+                ["dynamicsnap.settings.tolerance.tooltip"] = "Ratio de tolérance pour la détection d'accrochage",
+                ["dynamicsnap.settings.markersize"] = "Taille marqueur :",
+                ["dynamicsnap.settings.markersize.tooltip"] = "Taille d'affichage du marqueur d'accrochage",
+                ["dynamicsnap.settings.filled"] = "Marqueurs pleins",
+                ["dynamicsnap.settings.filled.tooltip"] = "Remplir les marqueurs au lieu d'afficher uniquement le contour",
+                ["dynamicsnap.settings.lineweight"] = "Épaisseur trait :",
+                ["dynamicsnap.settings.apply"] = "Appliquer",
+                ["dynamicsnap.settings.cancel"] = "Annuler",
+                ["dynamicsnap.settings.reset"] = "Réinitialiser",
+                ["dynamicsnap.settings.reset.tooltip"] = "Réinitialiser tous les paramètres aux valeurs par défaut",
+                ["dynamicsnap.settings.saved"] = "Paramètres d'accrochage sauvegardés",
+
+                // Couleurs
+                ["dynamicsnap.color.rouge"] = "Rouge",
+                ["dynamicsnap.color.jaune"] = "Jaune",
+                ["dynamicsnap.color.vert"] = "Vert",
+                ["dynamicsnap.color.cyan"] = "Cyan",
+                ["dynamicsnap.color.bleu"] = "Bleu",
+                ["dynamicsnap.color.magenta"] = "Magenta",
+                ["dynamicsnap.color.blanc"] = "Blanc",
             },
 
             ["en"] = new Dictionary<string, string>
@@ -188,6 +233,13 @@ public class DynamicSnapModule : ModuleBase
                 // Module
                 ["dynamicsnap.name"] = "OAS Dynamic Snap",
                 ["dynamicsnap.loaded"] = "[DynamicSnap] Dynamic snap module loaded",
+
+                // Menu
+                ["menu.dessin"] = "Drawing",
+
+                // Command
+                ["dynamicsnap.cmd.title"] = "OAS Snap",
+                ["dynamicsnap.cmd.desc"] = "Configure OAS dynamic snap settings",
 
                 // Service
                 ["dynamicsnap.init"] = "[DynamicSnap] Service initialized",
@@ -214,6 +266,45 @@ public class DynamicSnapModule : ModuleBase
                 ["dynamicsnap.select.vertex"] = "Select a vertex",
                 ["dynamicsnap.select.point"] = "Select a snap point",
                 ["dynamicsnap.cancelled"] = "Selection cancelled",
+
+                // Settings window
+                ["dynamicsnap.settings.title"] = "OAS Snap Settings",
+                ["dynamicsnap.settings.header"] = "OAS Snap Settings",
+                ["dynamicsnap.settings.modes"] = "Active snap modes",
+                ["dynamicsnap.settings.appearance"] = "Marker appearance",
+                ["dynamicsnap.settings.vertex"] = "Vertices (Vertex)",
+                ["dynamicsnap.settings.vertex.tooltip"] = "Snap to polyline vertices and endpoints",
+                ["dynamicsnap.settings.endpoint"] = "Endpoints (Endpoint)",
+                ["dynamicsnap.settings.endpoint.tooltip"] = "Snap to entity endpoints",
+                ["dynamicsnap.settings.midpoint"] = "Segment midpoints (Midpoint)",
+                ["dynamicsnap.settings.midpoint.tooltip"] = "Snap to segment midpoints",
+                ["dynamicsnap.settings.nearest"] = "Nearest point (Nearest)",
+                ["dynamicsnap.settings.nearest.tooltip"] = "Snap to the nearest point on entity",
+                ["dynamicsnap.settings.color"] = "Marker color:",
+                ["dynamicsnap.settings.color.tooltip"] = "Color of the inactive snap marker",
+                ["dynamicsnap.settings.activecolor"] = "Active color:",
+                ["dynamicsnap.settings.activecolor.tooltip"] = "Color of the active snap marker",
+                ["dynamicsnap.settings.tolerance"] = "Tolerance:",
+                ["dynamicsnap.settings.tolerance.tooltip"] = "Tolerance ratio for snap detection",
+                ["dynamicsnap.settings.markersize"] = "Marker size:",
+                ["dynamicsnap.settings.markersize.tooltip"] = "Display size of the snap marker",
+                ["dynamicsnap.settings.filled"] = "Filled markers",
+                ["dynamicsnap.settings.filled.tooltip"] = "Fill markers instead of showing outline only",
+                ["dynamicsnap.settings.lineweight"] = "Line weight:",
+                ["dynamicsnap.settings.apply"] = "Apply",
+                ["dynamicsnap.settings.cancel"] = "Cancel",
+                ["dynamicsnap.settings.reset"] = "Reset",
+                ["dynamicsnap.settings.reset.tooltip"] = "Reset all settings to default values",
+                ["dynamicsnap.settings.saved"] = "Snap settings saved",
+
+                // Colors
+                ["dynamicsnap.color.rouge"] = "Red",
+                ["dynamicsnap.color.jaune"] = "Yellow",
+                ["dynamicsnap.color.vert"] = "Green",
+                ["dynamicsnap.color.cyan"] = "Cyan",
+                ["dynamicsnap.color.bleu"] = "Blue",
+                ["dynamicsnap.color.magenta"] = "Magenta",
+                ["dynamicsnap.color.blanc"] = "White",
             },
 
             ["es"] = new Dictionary<string, string>
@@ -221,6 +312,13 @@ public class DynamicSnapModule : ModuleBase
                 // Módulo
                 ["dynamicsnap.name"] = "Enganche Dinámico OAS",
                 ["dynamicsnap.loaded"] = "[DynamicSnap] Módulo de enganche dinámico cargado",
+
+                // Menú
+                ["menu.dessin"] = "Dibujo",
+
+                // Comando
+                ["dynamicsnap.cmd.title"] = "Enganche OAS",
+                ["dynamicsnap.cmd.desc"] = "Configurar los parámetros de enganche dinámico OAS",
 
                 // Servicio
                 ["dynamicsnap.init"] = "[DynamicSnap] Servicio inicializado",
@@ -247,6 +345,45 @@ public class DynamicSnapModule : ModuleBase
                 ["dynamicsnap.select.vertex"] = "Seleccione un vértice",
                 ["dynamicsnap.select.point"] = "Seleccione un punto de enganche",
                 ["dynamicsnap.cancelled"] = "Selección cancelada",
+
+                // Ventana de configuración
+                ["dynamicsnap.settings.title"] = "Configuración de Enganche OAS",
+                ["dynamicsnap.settings.header"] = "Configuración de Enganche OAS",
+                ["dynamicsnap.settings.modes"] = "Modos de enganche activos",
+                ["dynamicsnap.settings.appearance"] = "Apariencia de los marcadores",
+                ["dynamicsnap.settings.vertex"] = "Vértices (Vertex)",
+                ["dynamicsnap.settings.vertex.tooltip"] = "Enganche a los vértices de polilíneas y extremos",
+                ["dynamicsnap.settings.endpoint"] = "Extremos (Endpoint)",
+                ["dynamicsnap.settings.endpoint.tooltip"] = "Enganche a los extremos de entidades",
+                ["dynamicsnap.settings.midpoint"] = "Puntos medios (Midpoint)",
+                ["dynamicsnap.settings.midpoint.tooltip"] = "Enganche a los puntos medios de segmentos",
+                ["dynamicsnap.settings.nearest"] = "Punto más cercano (Nearest)",
+                ["dynamicsnap.settings.nearest.tooltip"] = "Enganche al punto más cercano de la entidad",
+                ["dynamicsnap.settings.color"] = "Color del marcador:",
+                ["dynamicsnap.settings.color.tooltip"] = "Color del marcador de enganche inactivo",
+                ["dynamicsnap.settings.activecolor"] = "Color activo:",
+                ["dynamicsnap.settings.activecolor.tooltip"] = "Color del marcador de enganche activo",
+                ["dynamicsnap.settings.tolerance"] = "Tolerancia:",
+                ["dynamicsnap.settings.tolerance.tooltip"] = "Ratio de tolerancia para la detección de enganche",
+                ["dynamicsnap.settings.markersize"] = "Tamaño del marcador:",
+                ["dynamicsnap.settings.markersize.tooltip"] = "Tamaño de visualización del marcador de enganche",
+                ["dynamicsnap.settings.filled"] = "Marcadores rellenos",
+                ["dynamicsnap.settings.filled.tooltip"] = "Rellenar los marcadores en lugar de mostrar solo el contorno",
+                ["dynamicsnap.settings.lineweight"] = "Grosor de línea:",
+                ["dynamicsnap.settings.apply"] = "Aplicar",
+                ["dynamicsnap.settings.cancel"] = "Cancelar",
+                ["dynamicsnap.settings.reset"] = "Restablecer",
+                ["dynamicsnap.settings.reset.tooltip"] = "Restablecer todos los parámetros a los valores predeterminados",
+                ["dynamicsnap.settings.saved"] = "Configuración de enganche guardada",
+
+                // Colores
+                ["dynamicsnap.color.rouge"] = "Rojo",
+                ["dynamicsnap.color.jaune"] = "Amarillo",
+                ["dynamicsnap.color.vert"] = "Verde",
+                ["dynamicsnap.color.cyan"] = "Cian",
+                ["dynamicsnap.color.bleu"] = "Azul",
+                ["dynamicsnap.color.magenta"] = "Magenta",
+                ["dynamicsnap.color.blanc"] = "Blanco",
             },
         };
     }

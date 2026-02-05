@@ -386,32 +386,32 @@
             </summary>
         </member>
         <member name="T:OpenAsphalte.Abstractions.ModuleBase">
-            <summary>
-            Classe de base abstraite pour tous les modules Open Asphalte.
-            Fournit une implémentation par défaut de <see cref="T:OpenAsphalte.Abstractions.IModule"/>.
-            </summary>
-            <remarks>
-            <para>
-            Pour créer un nouveau module, héritez de cette classe et implémentez
-            les propriétés abstraites (Id, Name, Description).
-            </para>
-            <para>
-            Exemple d'implémentation :
-            <code>
-            public class MonModule : ModuleBase
-            {
-                public override string Id => "monmodule";
-                public override string Name => "Mon Module";
-                public override string Description => "Description du module";
-                
-                public override IEnumerable&lt;Type&gt; GetCommandTypes()
-                {
-                    yield return typeof(MaCommande);
-                }
-            }
-            </code>
-            </para>
-            </remarks>
+             <summary>
+             Classe de base abstraite pour tous les modules Open Asphalte.
+             Fournit une implémentation par défaut de <see cref="T:OpenAsphalte.Abstractions.IModule"/>.
+             </summary>
+             <remarks>
+             <para>
+             Pour créer un nouveau module, héritez de cette classe et implémentez
+             les propriétés abstraites (Id, Name, Description).
+             </para>
+             <para>
+             Exemple d'implémentation :
+             <code>
+             public class MonModule : ModuleBase
+             {
+                 public override string Id => "monmodule";
+                 public override string Name => "Mon Module";
+                 public override string Description => "Description du module";
+            
+                 public override IEnumerable&lt;Type&gt; GetCommandTypes()
+                 {
+                     yield return typeof(MaCommande);
+                 }
+             }
+             </code>
+             </para>
+             </remarks>
         </member>
         <member name="P:OpenAsphalte.Abstractions.ModuleBase.Id">
             <inheritdoc />
@@ -471,11 +471,6 @@
             Libère les ressources managées et non-managées
             </summary>
             <param name="disposing">True si appelé depuis Dispose()</param>
-        </member>
-        <member name="M:OpenAsphalte.Abstractions.ModuleBase.Finalize">
-            <summary>
-            Finaliseur
-            </summary>
         </member>
         <member name="T:OpenAsphalte.Commands.AboutWindow">
             <summary>
@@ -1076,7 +1071,7 @@
             <param name="additionalInstalledIds">IDs de modules installés dans cette session</param>
             <returns>True si le module est disponible</returns>
         </member>
-        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.GetMissingDependenciesRecursive(OpenAsphalte.Services.ModuleDefinition,OpenAsphalte.Services.MarketplaceManifest,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.List{OpenAsphalte.Services.ModuleDefinition})">
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.GetMissingDependenciesRecursive(OpenAsphalte.Services.ModuleDefinition,OpenAsphalte.Services.MarketplaceManifest,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.List{OpenAsphalte.Services.ModuleDefinition},System.Collections.Generic.HashSet{System.String})">
             <summary>
             Récursion interne pour GetMissingDependencies
             </summary>
@@ -1365,6 +1360,16 @@
             Écrit dans le fichier de log si activé
             </summary>
         </member>
+        <member name="M:OpenAsphalte.Logging.Logger.EnsureLogWriter">
+            <summary>
+            Initialise ou réutilise le StreamWriter persistant
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Logging.Logger.CloseLogWriter">
+            <summary>
+            Ferme proprement le StreamWriter
+            </summary>
+        </member>
         <member name="M:OpenAsphalte.Logging.Logger.RotateLogIfNeeded">
             <summary>
             Effectue une rotation du fichier de log si nécessaire
@@ -1477,6 +1482,12 @@
             Ce service gère les systèmes de coordonnées compatibles avec AutoCAD (variable CGEOCS).
             Il peut charger des définitions de projections depuis un fichier JSON externe.
             </remarks>
+            <summary>
+            CoordinateService — Données de projections intégrées (built-in).
+            </summary>
+            <summary>
+            CoordinateService — Transformations de coordonnées (Lambert, CC, UTM, Vincenty).
+            </summary>
         </member>
         <member name="F:OpenAsphalte.Services.CoordinateService.EarthRadiusEquatorial">
             <summary>
@@ -1514,204 +1525,140 @@
             Charge les projections depuis le fichier JSON ou utilise les projections intégrées
             </summary>
         </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.ReloadProjections">
+            <summary>
+            Recharge les projections depuis le fichier externe ou la liste intégrée.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionByCode(System.String)">
+            <summary>
+            Recherche une projection par son code AutoCAD.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionByEpsg(System.Int32)">
+            <summary>
+            Recherche une projection par son code EPSG.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.SearchProjections(System.String)">
+            <summary>
+            Recherche des projections par texte (nom, code, pays, région).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionsByCountry">
+            <summary>
+            Retourne les projections groupées par pays.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.DetectProjection(System.Collections.Generic.IEnumerable{Autodesk.AutoCAD.Geometry.Point3d})">
+            <summary>
+            Détecte automatiquement la projection la plus probable à partir d'un ensemble de points.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.CoordinateService.DetectProjection(System.Double,System.Double)">
+            <summary>
+            Détecte automatiquement la projection la plus probable à partir de coordonnées moyennes.
+            </summary>
+        </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.LoadBuiltInProjections">
             <summary>
             Charge les projections intégrées au programme
             </summary>
         </member>
-        <member name="M:OpenAsphalte.Services.CoordinateService.ReloadProjections">
-            <summary>
-            Recharge les projections depuis le fichier externe (si modifié) ou depuis la liste intégrée (si le fichier est absent)
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionByCode(System.String)">
-            <summary>
-            Recherche une projection par son code AutoCAD
-            </summary>
-            <param name="code">Code AutoCAD (ex: "RGF93.CC49")</param>
-            <returns>Projection trouvée ou null</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionByEpsg(System.Int32)">
-            <summary>
-            Recherche une projection par son code EPSG
-            </summary>
-            <param name="epsg">Code EPSG (ex: 3949)</param>
-            <returns>Projection trouvée ou null</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.CoordinateService.SearchProjections(System.String)">
-            <summary>
-            Recherche des projections par texte (nom, code, pays, région)
-            </summary>
-            <param name="searchText">Texte de recherche</param>
-            <returns>Liste des projections correspondantes</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionsByCountry">
-            <summary>
-            Retourne les projections groupées par pays
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.CoordinateService.DetectProjection(System.Collections.Generic.IEnumerable{Autodesk.AutoCAD.Geometry.Point3d})">
-            <summary>
-            Détecte automatiquement la projection la plus probable à partir d'un ensemble de points
-            </summary>
-            <param name="points">Points à analyser</param>
-            <returns>Projection détectée ou null si aucune correspondance</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.CoordinateService.DetectProjection(System.Double,System.Double)">
-            <summary>
-            Détecte automatiquement la projection la plus probable à partir de coordonnées moyennes
-            </summary>
-            <param name="x">Coordonnée X moyenne</param>
-            <param name="y">Coordonnée Y moyenne</param>
-            <returns>Projection détectée ou null si aucune correspondance</returns>
-        </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.Lambert93ToWgs84(System.Double,System.Double)">
             <summary>
-            Convertit des coordonnées Lambert 93 en WGS84 (longitude/latitude)
+            Convertit des coordonnées Lambert 93 en WGS84 (longitude/latitude).
             </summary>
-            <param name="x">Coordonnée X (Est) en mètres</param>
-            <param name="y">Coordonnée Y (Nord) en mètres</param>
-            <returns>Tuple (longitude, latitude) en degrés décimaux</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.Wgs84ToLambert93(System.Double,System.Double)">
             <summary>
-            Convertit des coordonnées WGS84 (longitude/latitude) en Lambert 93
+            Convertit des coordonnées WGS84 (longitude/latitude) en Lambert 93.
             </summary>
-            <param name="longitude">Longitude en degrés décimaux</param>
-            <param name="latitude">Latitude en degrés décimaux</param>
-            <returns>Tuple (X, Y) en mètres</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.CCToWgs84(System.Double,System.Double,System.Int32)">
             <summary>
-            Convertit des coordonnées CC (Conique Conforme) en WGS84
+            Convertit des coordonnées CC (Conique Conforme) en WGS84.
             </summary>
             <param name="x">Coordonnée X en mètres</param>
             <param name="y">Coordonnée Y en mètres</param>
             <param name="zone">Zone CC (42 à 50)</param>
-            <returns>Tuple (longitude, latitude) en degrés décimaux</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.CalculateTValue(System.Double,System.Double)">
             <summary>
-            Calcule la valeur t pour la projection Lambert Conique Conforme
+            Calcule la valeur t pour la projection Lambert Conique Conforme.
             </summary>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.UtmToWgs84(System.Double,System.Double,System.Int32,System.Boolean)">
             <summary>
-            Convertit des coordonnées UTM en WGS84
+            Convertit des coordonnées UTM en WGS84.
             </summary>
-            <param name="easting">Coordonnée Est en mètres</param>
-            <param name="northing">Coordonnée Nord en mètres</param>
-            <param name="zone">Zone UTM (1 à 60)</param>
-            <param name="northern">True si hémisphère nord</param>
-            <returns>Tuple (longitude, latitude) en degrés décimaux</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.Wgs84ToUtm(System.Double,System.Double)">
             <summary>
-            Convertit des coordonnées WGS84 en UTM
+            Convertit des coordonnées WGS84 en UTM.
             </summary>
-            <param name="longitude">Longitude en degrés décimaux</param>
-            <param name="latitude">Latitude en degrés décimaux</param>
-            <returns>Tuple (zone, easting, northing, northern)</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.VincentyDistance(System.Double,System.Double,System.Double,System.Double)">
             <summary>
-            Calcule la distance géodésique (Vincenty) entre deux points WGS84
+            Calcule la distance géodésique (Vincenty) entre deux points WGS84.
             </summary>
-            <param name="lon1">Longitude du point 1 (degrés)</param>
-            <param name="lat1">Latitude du point 1 (degrés)</param>
-            <param name="lon2">Longitude du point 2 (degrés)</param>
-            <param name="lat2">Latitude du point 2 (degrés)</param>
             <returns>Distance en mètres</returns>
         </member>
         <member name="T:OpenAsphalte.Services.ProjectionInfo">
             <summary>
-            Informations sur un système de projection cartographique
+            Informations sur un système de projection cartographique.
             </summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.Code">
-            <summary>
-            Code AutoCAD pour CGEOCS (ex: "RGF93.CC49")
-            </summary>
+            <summary>Code AutoCAD pour CGEOCS (ex: "RGF93.CC49")</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.Name">
-            <summary>
-            Nom complet de la projection
-            </summary>
+            <summary>Nom complet de la projection</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.Country">
-            <summary>
-            Pays principal d'utilisation
-            </summary>
+            <summary>Pays principal d'utilisation</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.Region">
-            <summary>
-            Région ou zone géographique
-            </summary>
+            <summary>Région ou zone géographique</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.Epsg">
-            <summary>
-            Code EPSG (pour référence et interopérabilité)
-            </summary>
+            <summary>Code EPSG (pour référence et interopérabilité)</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.Unit">
-            <summary>
-            Unité de mesure ("m" pour mètres, "deg" pour degrés)
-            </summary>
+            <summary>Unité de mesure ("m" pour mètres, "deg" pour degrés)</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.CentralMeridian">
-            <summary>
-            Méridien central en degrés
-            </summary>
+            <summary>Méridien central en degrés</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.LatitudeOrigin">
-            <summary>
-            Latitude d'origine en degrés
-            </summary>
+            <summary>Latitude d'origine en degrés</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.FalseEasting">
-            <summary>
-            Faux Est (False Easting) en mètres
-            </summary>
+            <summary>Faux Est (False Easting) en mètres</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.FalseNorthing">
-            <summary>
-            Faux Nord (False Northing) en mètres
-            </summary>
+            <summary>Faux Nord (False Northing) en mètres</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.MinX">
-            <summary>
-            Coordonnée X minimale typique
-            </summary>
+            <summary>Coordonnée X minimale typique</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.MaxX">
-            <summary>
-            Coordonnée X maximale typique
-            </summary>
+            <summary>Coordonnée X maximale typique</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.MinY">
-            <summary>
-            Coordonnée Y minimale typique
-            </summary>
+            <summary>Coordonnée Y minimale typique</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.MaxY">
-            <summary>
-            Coordonnée Y maximale typique
-            </summary>
+            <summary>Coordonnée Y maximale typique</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.Description">
-            <summary>
-            Description détaillée
-            </summary>
+            <summary>Description détaillée</summary>
         </member>
         <member name="P:OpenAsphalte.Services.ProjectionInfo.DisplayName">
-            <summary>
-            Affichage formaté pour UI
-            </summary>
+            <summary>Affichage formaté pour UI</summary>
         </member>
         <member name="M:OpenAsphalte.Services.ProjectionInfo.ContainsPoint(System.Double,System.Double)">
-            <summary>
-            Vérifie si un point est dans les bornes typiques de cette projection
-            </summary>
+            <summary>Vérifie si un point est dans les bornes typiques de cette projection</summary>
         </member>
         <member name="T:OpenAsphalte.Services.GeometryService">
             <summary>
@@ -1720,8 +1667,21 @@
             la voirie, l'assainissement et les calculs de cubature.
             </summary>
             <remarks>
-            Documentation complète: docs/GeometryService.md
+            Ce service est découpé en partial classes thématiques :
+            GeometryService.cs, .Intersections.cs, .Voirie.cs, .Hydraulics.cs, .Earthwork.cs
             </remarks>
+            <summary>
+            GeometryService — Cubature, terrassement, tranchées et surfaces/MNT.
+            </summary>
+            <summary>
+            GeometryService — Assainissement et hydraulique (Manning-Strickler, sections, débits).
+            </summary>
+            <summary>
+            GeometryService — Intersections entre lignes, cercles, arcs et points de tangence.
+            </summary>
+            <summary>
+            GeometryService — Calculs de voirie : tracé en plan et profil en long.
+            </summary>
         </member>
         <member name="F:OpenAsphalte.Services.GeometryService.Tolerance">
             <summary>Tolérance par défaut pour les comparaisons de doubles</summary>
@@ -1944,6 +1904,167 @@
             Calcule le centroïde d'un polygone
             </summary>
         </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CrossSectionAreas(System.Collections.Generic.IList{Autodesk.AutoCAD.Geometry.Point3d},System.Double)">
+            <summary>
+            Aires déblai/remblai d'un profil en travers par la méthode des trapèzes.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.VolumeByAverageEndArea(System.Double,System.Double,System.Double)">
+            <summary>
+            Volume entre deux profils par la moyenne des aires.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.VolumeByPrismoidal(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Volume entre deux profils par la formule prismoïdale (plus précis).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TotalEarthworkVolumes(System.Collections.Generic.IList{System.ValueTuple{System.Double,System.Double,System.Double}})">
+            <summary>
+            Volumes totaux de terrassement à partir d'une série de profils.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.BulkingFactor(System.Double,System.Double)">
+            <summary>
+            Coefficient de foisonnement/compactage.
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.GeometryService.BulkingFactors">
+            <summary>
+            Coefficients de foisonnement courants.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ApplyBulking(System.Double,System.Double)">
+            <summary>
+            Applique le coefficient de foisonnement à un volume en place.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CompactedVolume(System.Double,System.Double)">
+            <summary>
+            Volume compacté à partir du volume foisonné.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.FrustumVolume(System.Double,System.Double,System.Double)">
+            <summary>
+            Volume d'un tronc de pyramide (excavation à talus).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TrenchVolume(System.Double,System.Double,System.Double)">
+            <summary>
+            Volume d'une tranchée à parois verticales.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TrenchVolumeWithSlope(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Volume d'une tranchée avec talutage.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.BeddingVolume(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Volume de lit de pose pour une canalisation.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.SurroundVolume(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Volume d'enrobage d'une canalisation.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.InterpolateZFromPlane(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Interpole l'altitude Z en un point à partir d'un plan défini par trois points.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.PlaneSlope(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Pente d'un plan défini par trois points, en %.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.PlaneAspect(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Orientation (exposition) d'un plan en grades (0 = Nord, 100 = Est).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TriangularPrismVolume(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,System.Double)">
+            <summary>
+            Volume d'un prisme triangulaire (triangle → plan horizontal de référence).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CalculateTriangleArea(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Aire d'un triangle en 2D (projeté).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CalculateTriangleArea3D(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
+            <summary>
+            Aire 3D d'un triangle (surface réelle inclinée).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ManningStricklerFlow(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Débit par Manning-Strickler : Q = K × S × Rh^(2/3) × I^(1/2).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ManningStricklerVelocity(System.Double,System.Double,System.Double)">
+            <summary>
+            Vitesse d'écoulement par Manning-Strickler : V = K × Rh^(2/3) × I^(1/2).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.HydraulicRadius(System.Double,System.Double)">
+            <summary>
+            Rayon hydraulique : Rh = Section mouillée / Périmètre mouillé.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.CircularPipeHydraulics(System.Double,System.Double)">
+            <summary>
+            Paramètres hydrauliques d'une section circulaire partiellement remplie.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.FullPipeFlow(System.Double,System.Double,System.Double)">
+            <summary>
+            Débit à pleine section pour une canalisation circulaire.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.RequiredPipeDiameter(System.Double,System.Double,System.Double)">
+            <summary>
+            Diamètre nécessaire pour un débit donné (pleine section).
+            D = (Q × 4^(5/3) / (K × π × √I))^(3/8).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.SelfCleaningSlope(System.Double,System.Double,System.Double)">
+            <summary>
+            Pente minimale d'auto-curage.
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.GeometryService.StricklerCoefficients">
+            <summary>
+            Coefficients de Strickler courants.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.ManholeDrop(System.Double,System.Double)">
+            <summary>
+            Hauteur de chute dans un regard.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.RequiresEnergyDissipation(System.Double,System.Double)">
+            <summary>
+            Vérifie si une chute nécessite un dispositif de dissipation d'énergie.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.OvoidPipeHydraulics(System.Double,System.Double)">
+            <summary>
+            Paramètres hydrauliques d'une section ovoïde (T150).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.RectangularChannelHydraulics(System.Double,System.Double,System.Double)">
+            <summary>
+            Paramètres hydrauliques d'une section rectangulaire (cadre ou dalot).
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.GeometryService.TrapezoidalChannelHydraulics(System.Double,System.Double,System.Double)">
+            <summary>
+            Paramètres hydrauliques d'une section trapézoïdale (fossé).
+            </summary>
+        </member>
         <member name="T:OpenAsphalte.Services.GeometryService.LineIntersectionResult">
             <summary>
             Résultat d'une intersection entre deux lignes.
@@ -1968,10 +2089,6 @@
             <summary>
             Calcule les intersections entre une droite et un cercle.
             </summary>
-            <param name="lineStart">Point de départ de la ligne</param>
-            <param name="lineEnd">Point de fin de la ligne</param>
-            <param name="center">Centre du cercle</param>
-            <param name="radius">Rayon du cercle</param>
         </member>
         <member name="T:OpenAsphalte.Services.GeometryService.CircleCircleIntersectionResult">
             <summary>
@@ -1987,20 +2104,16 @@
             <summary>
             Calcule les points de tangence d'un point externe à un cercle.
             </summary>
-            <returns>Tuple des deux points de tangence, ou null si le point est dans le cercle</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.CircleFrom3Points(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
             <summary>
             Calcule le cercle passant par trois points.
             </summary>
-            <returns>Tuple (centre, rayon) ou null si points colinéaires</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.ArcLength(System.Double,System.Double)">
             <summary>
             Calcule la longueur d'un arc de cercle.
             </summary>
-            <param name="radius">Rayon de l'arc</param>
-            <param name="angleRadians">Angle au centre en radians</param>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.SectorArea(System.Double,System.Double)">
             <summary>
@@ -2024,358 +2137,76 @@
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.ClothoidCoordinates(System.Double,System.Double)">
             <summary>
-            Calcule les paramètres d'une clothoïde (spirale de Cornu / transition de courbure).
+            Calcule les coordonnées sur une clothoïde (spirale de Cornu).
             </summary>
             <param name="A">Paramètre de la clothoïde (A² = R × L)</param>
             <param name="L">Longueur développée sur la clothoïde</param>
-            <returns>Tuple avec les coordonnées (X, Y) et l'angle de rotation τ</returns>
-            <remarks>
-            La clothoïde est la courbe de transition idéale pour les routes car sa courbure
-            varie linéairement avec la longueur parcourue.
-            </remarks>
+            <returns>Coordonnées (X, Y) et angle de rotation τ</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.ClothoidParameter(System.Double,System.Double)">
             <summary>
-            Calcule le paramètre A de la clothoïde à partir du rayon et de la longueur.
+            Calcule le paramètre A de la clothoïde (A² = R × L).
             </summary>
-            <param name="radius">Rayon de courbure à l'extrémité</param>
-            <param name="length">Longueur de la clothoïde</param>
-            <returns>Paramètre A (A² = R × L)</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.MinClothoidLength(System.Double,System.Double)">
             <summary>
-            Calcule la longueur minimale de transition (clothoïde) selon la règle du confort.
+            Longueur minimale de transition clothoïde selon la règle du confort.
+            L = V³ / (46.656 × R) où V en km/h.
             </summary>
-            <param name="radius">Rayon de la courbe circulaire</param>
-            <param name="speedKmh">Vitesse de référence en km/h</param>
-            <returns>Longueur minimale en mètres</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.MinCurveRadius(System.Double,System.Double,System.Double)">
             <summary>
-            Calcule le rayon minimum en fonction de la vitesse et du dévers.
+            Rayon minimum en fonction de la vitesse et du dévers.
             </summary>
-            <param name="speedKmh">Vitesse de référence en km/h</param>
-            <param name="superelevationPercent">Dévers en % (ex: 7 pour 7%)</param>
-            <param name="frictionCoef">Coefficient de frottement latéral (défaut: 0.13)</param>
-            <returns>Rayon minimum en mètres</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.RecommendedSuperelevation(System.Double,System.Double,System.Double)">
             <summary>
-            Calcule le dévers recommandé pour un rayon donné.
+            Dévers recommandé pour un rayon donné.
             </summary>
-            <param name="radius">Rayon de la courbe en mètres</param>
-            <param name="speedKmh">Vitesse de référence en km/h</param>
-            <param name="maxSuperelevation">Dévers maximum autorisé en % (défaut: 7%)</param>
-            <returns>Dévers en %</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.CurveWidening(System.Double,System.Double)">
             <summary>
-            Calcule la surlargeur nécessaire en courbe pour un véhicule type.
+            Surlargeur nécessaire en courbe. Formule : S = L² / (2R).
             </summary>
-            <param name="radius">Rayon de la courbe en mètres</param>
-            <param name="vehicleLength">Longueur du véhicule en mètres (défaut: 12m PL)</param>
-            <returns>Surlargeur en mètres</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.StoppingDistance(System.Double,System.Double,System.Double,System.Double)">
             <summary>
-            Calcule la distance de visibilité d'arrêt.
+            Distance de visibilité d'arrêt.
             </summary>
-            <param name="speedKmh">Vitesse en km/h</param>
-            <param name="reactionTime">Temps de réaction en secondes (défaut: 2s)</param>
-            <param name="frictionCoef">Coefficient de frottement (défaut: 0.35)</param>
-            <param name="slopePercent">Pente en % (positive = montée)</param>
-            <returns>Distance de visibilité d'arrêt en mètres</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.OvertakingDistance(System.Double)">
             <summary>
-            Calcule la distance de visibilité de dépassement.
+            Distance de visibilité de dépassement (formule empirique : 6 × V).
             </summary>
-            <param name="speedKmh">Vitesse en km/h</param>
-            <returns>Distance de dépassement en mètres</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.SlopePercent(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
             <summary>
-            Calcule la pente entre deux points (en %).
+            Pente entre deux points en %.
             </summary>
-            <param name="p1">Point de départ</param>
-            <param name="p2">Point d'arrivée</param>
-            <returns>Pente en % (positive = montée)</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.SlopePerMille(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
             <summary>
-            Calcule la pente en pour mille (‰).
+            Pente entre deux points en ‰.
             </summary>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.VerticalCurveParameters(System.Double,System.Double,System.Double)">
             <summary>
-            Calcule les paramètres d'un raccordement parabolique vertical.
+            Paramètres d'un raccordement parabolique vertical.
             </summary>
-            <param name="slope1">Pente d'entrée en %</param>
-            <param name="slope2">Pente de sortie en %</param>
-            <param name="length">Longueur du raccordement en mètres</param>
-            <returns>Paramètres du raccordement (rayon, flèche, type)</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.MinCrestCurveLength(System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
-            Calcule la longueur minimale d'un raccordement convexe (point haut).
+            Longueur minimale d'un raccordement convexe (point haut).
             </summary>
-            <param name="slope1">Pente d'entrée en %</param>
-            <param name="slope2">Pente de sortie en %</param>
-            <param name="stoppingDistance">Distance d'arrêt en mètres</param>
-            <param name="eyeHeight">Hauteur de l'œil du conducteur (défaut: 1.10m)</param>
-            <param name="objectHeight">Hauteur de l'objet à voir (défaut: 0.15m)</param>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.MinSagCurveLength(System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
-            Calcule la longueur minimale d'un raccordement concave (point bas).
+            Longueur minimale d'un raccordement concave (point bas).
             </summary>
-            <param name="slope1">Pente d'entrée en %</param>
-            <param name="slope2">Pente de sortie en %</param>
-            <param name="stoppingDistance">Distance d'arrêt en mètres</param>
-            <param name="headlightHeight">Hauteur des phares (défaut: 0.60m)</param>
-            <param name="headlightAngle">Angle des phares en degrés (défaut: 1°)</param>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.VerticalCurveElevation(System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
-            Calcule l'altitude sur une courbe parabolique verticale.
-            </summary>
-            <param name="startZ">Altitude au début du raccordement</param>
-            <param name="startSlope">Pente au début en %</param>
-            <param name="curveLength">Longueur totale du raccordement</param>
-            <param name="position">Position sur le raccordement (0 à curveLength)</param>
-            <param name="endSlope">Pente à la fin en %</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.ManningStricklerFlow(System.Double,System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le débit par la formule de Manning-Strickler.
-            Q = K × S × Rh^(2/3) × I^(1/2)
-            </summary>
-            <param name="stricklerK">Coefficient de Strickler (ex: 70 pour béton lisse)</param>
-            <param name="section">Section mouillée en m²</param>
-            <param name="hydraulicRadius">Rayon hydraulique en m (S/Pm)</param>
-            <param name="slopeDecimal">Pente en décimal (ex: 0.01 pour 1%)</param>
-            <returns>Débit en m³/s</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.ManningStricklerVelocity(System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule la vitesse d'écoulement par Manning-Strickler.
-            V = K × Rh^(2/3) × I^(1/2)
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.HydraulicRadius(System.Double,System.Double)">
-            <summary>
-            Calcule le rayon hydraulique.
-            Rh = Section mouillée / Périmètre mouillé
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.CircularPipeHydraulics(System.Double,System.Double)">
-            <summary>
-            Paramètres hydrauliques d'une section circulaire partiellement remplie.
-            </summary>
-            <param name="diameter">Diamètre de la canalisation en mètres</param>
-            <param name="fillRatio">Taux de remplissage (0 à 1, ex: 0.8 pour 80%)</param>
-            <returns>Section mouillée, périmètre mouillé, rayon hydraulique</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.FullPipeFlow(System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le débit à pleine section pour une canalisation circulaire.
-            </summary>
-            <param name="diameter">Diamètre en mètres</param>
-            <param name="slopePercent">Pente en %</param>
-            <param name="stricklerK">Coefficient de Strickler (défaut: 70 béton)</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.RequiredPipeDiameter(System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le diamètre nécessaire pour un débit donné (à pleine section).
-            </summary>
-            <param name="flowRate">Débit en m³/s</param>
-            <param name="slopePercent">Pente en %</param>
-            <param name="stricklerK">Coefficient de Strickler (défaut: 70)</param>
-            <returns>Diamètre minimum en mètres</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.SelfCleaningSlope(System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule la pente critique pour éviter les dépôts (auto-curage).
-            </summary>
-            <param name="diameter">Diamètre en mètres</param>
-            <param name="minVelocity">Vitesse minimale d'auto-curage (défaut: 0.60 m/s)</param>
-            <param name="stricklerK">Coefficient de Strickler (défaut: 70)</param>
-            <returns>Pente minimale en %</returns>
-        </member>
-        <member name="T:OpenAsphalte.Services.GeometryService.StricklerCoefficients">
-            <summary>
-            Coefficients de Strickler courants.
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.ManholeDrop(System.Double,System.Double)">
-            <summary>
-            Calcule la hauteur de chute dans un regard.
-            </summary>
-            <param name="upstreamInvert">Cote radier amont</param>
-            <param name="downstreamInvert">Cote radier aval</param>
-            <returns>Hauteur de chute en mètres</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.RequiresEnergyDissipation(System.Double,System.Double)">
-            <summary>
-            Détermine si une chute nécessite un dispositif de dissipation d'énergie.
-            </summary>
-            <param name="dropHeight">Hauteur de chute en mètres</param>
-            <param name="threshold">Seuil au-delà duquel une dissipation est nécessaire (défaut: 0.80m)</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.OvoidPipeHydraulics(System.Double,System.Double)">
-            <summary>
-            Paramètres hydrauliques d'une section ovoïde (T150).
-            </summary>
-            <param name="height">Hauteur nominale de l'ovoïde en mètres</param>
-            <param name="fillRatio">Taux de remplissage (0 à 1)</param>
-            <returns>Section mouillée, périmètre mouillé, rayon hydraulique</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.RectangularChannelHydraulics(System.Double,System.Double,System.Double)">
-            <summary>
-            Paramètres hydrauliques d'une section rectangulaire (cadre ou dalot).
-            </summary>
-            <param name="width">Largeur en mètres</param>
-            <param name="height">Hauteur totale en mètres</param>
-            <param name="waterDepth">Hauteur d'eau en mètres</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.TrapezoidalChannelHydraulics(System.Double,System.Double,System.Double)">
-            <summary>
-            Paramètres hydrauliques d'une section trapézoïdale (fossé).
-            </summary>
-            <param name="bottomWidth">Largeur au fond en mètres</param>
-            <param name="waterDepth">Hauteur d'eau en mètres</param>
-            <param name="sideSlope">Fruit des talus (horizontal/vertical, ex: 1 pour 1/1)</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.CrossSectionAreas(System.Collections.Generic.IList{Autodesk.AutoCAD.Geometry.Point3d},System.Double)">
-            <summary>
-            Calcule l'aire d'un profil en travers par la méthode des trapèzes.
-            Les points doivent être ordonnés (gauche à droite ou inversement).
-            </summary>
-            <param name="profilePoints">Points du profil en travers (X = distance à l'axe, Z = altitude)</param>
-            <param name="referenceLevel">Niveau de référence (ex: niveau projet)</param>
-            <returns>Tuple (aire déblai, aire remblai)</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.VolumeByAverageEndArea(System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le volume entre deux profils en travers par la méthode de la moyenne des aires.
-            </summary>
-            <param name="area1">Aire du premier profil en m²</param>
-            <param name="area2">Aire du deuxième profil en m²</param>
-            <param name="distance">Distance entre les deux profils en mètres</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.VolumeByPrismoidal(System.Double,System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le volume entre deux profils par la formule prismoïdale (plus précis).
-            </summary>
-            <param name="area1">Aire du premier profil en m²</param>
-            <param name="areaMiddle">Aire du profil médian en m²</param>
-            <param name="area2">Aire du deuxième profil en m²</param>
-            <param name="distance">Distance entre les profils extrêmes en mètres</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.TotalEarthworkVolumes(System.Collections.Generic.IList{System.ValueTuple{System.Double,System.Double,System.Double}})">
-            <summary>
-            Calcule le volume total de terrassement à partir d'une série de profils.
-            </summary>
-            <param name="sections">Liste de tuples (pk, aire déblai, aire remblai)</param>
-            <returns>Tuple (volume déblai total, volume remblai total)</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.BulkingFactor(System.Double,System.Double)">
-            <summary>
-            Calcule le coefficient de foisonnement/compactage.
-            </summary>
-            <param name="volumeInPlace">Volume en place (terrain naturel)</param>
-            <param name="volumeLoose">Volume foisonné (transport)</param>
-        </member>
-        <member name="T:OpenAsphalte.Services.GeometryService.BulkingFactors">
-            <summary>
-            Coefficients de foisonnement courants.
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.ApplyBulking(System.Double,System.Double)">
-            <summary>
-            Applique le coefficient de foisonnement à un volume en place.
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.CompactedVolume(System.Double,System.Double)">
-            <summary>
-            Calcule le volume de remblai compacté nécessaire à partir du volume en place.
-            </summary>
-            <param name="volumeLoose">Volume foisonné disponible</param>
-            <param name="compactionRatio">Taux de compactage (ex: 0.90 pour 90% du volume initial)</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.FrustumVolume(System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le volume d'un tronc de pyramide (excavation à talus).
-            </summary>
-            <param name="topArea">Aire au niveau supérieur en m²</param>
-            <param name="bottomArea">Aire au niveau inférieur en m²</param>
-            <param name="height">Hauteur de l'excavation en mètres</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.TrenchVolume(System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le volume d'une tranchée à parois verticales.
-            </summary>
-            <param name="width">Largeur de la tranchée en mètres</param>
-            <param name="depth">Profondeur moyenne en mètres</param>
-            <param name="length">Longueur de la tranchée en mètres</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.TrenchVolumeWithSlope(System.Double,System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le volume d'une tranchée avec talutage.
-            </summary>
-            <param name="bottomWidth">Largeur au fond en mètres</param>
-            <param name="depth">Profondeur en mètres</param>
-            <param name="length">Longueur en mètres</param>
-            <param name="sideSlope">Fruit des talus (H/V)</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.BeddingVolume(System.Double,System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le volume de lit de pose pour une canalisation.
-            </summary>
-            <param name="pipeOuterDiameter">Diamètre extérieur de la canalisation en mètres</param>
-            <param name="beddingThickness">Épaisseur du lit de pose en mètres</param>
-            <param name="trenchWidth">Largeur de la tranchée en mètres</param>
-            <param name="length">Longueur en mètres</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.SurroundVolume(System.Double,System.Double,System.Double,System.Double)">
-            <summary>
-            Calcule le volume d'enrobage d'une canalisation.
-            </summary>
-            <param name="pipeOuterDiameter">Diamètre extérieur en mètres</param>
-            <param name="trenchWidth">Largeur de la tranchée en mètres</param>
-            <param name="length">Longueur en mètres</param>
-            <param name="coverAbovePipe">Hauteur d'enrobage au-dessus de la génératrice supérieure en mètres</param>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.InterpolateZFromPlane(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
-            <summary>
-            Interpole l'altitude Z en un point à partir d'un plan défini par trois points.
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.PlaneSlope(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
-            <summary>
-            Calcule la pente d'un plan défini par trois points.
-            </summary>
-            <returns>Pente en % (gradient maximum)</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.PlaneAspect(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
-            <summary>
-            Calcule l'orientation (exposition) d'un plan.
-            </summary>
-            <returns>Azimut de la pente en grades (0 = Nord, 100 = Est)</returns>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.TriangularPrismVolume(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,System.Double)">
-            <summary>
-            Calcule le volume d'un prisme triangulaire (entre un triangle et un plan horizontal).
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.CalculateTriangleArea(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
-            <summary>
-            Calcule l'aire d'un triangle en 2D (projeté).
-            </summary>
-        </member>
-        <member name="M:OpenAsphalte.Services.GeometryService.CalculateTriangleArea3D(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
-            <summary>
-            Calcule l'aire 3D d'un triangle (surface réelle inclinée).
+            Altitude sur une courbe parabolique verticale.
             </summary>
         </member>
         <member name="T:OpenAsphalte.Services.LayerService">

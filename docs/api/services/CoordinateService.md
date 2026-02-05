@@ -12,6 +12,20 @@ using OpenAsphalte.Services;
 
 `CoordinateService` fournit des fonctions de conversion entre différents systèmes de coordonnées géographiques et de gestion des projections cartographiques. Il est utilisé par le module Géoréférencement mais peut être appelé par n'importe quel module.
 
+## Organisation des fichiers
+
+`CoordinateService` est implémenté en tant que classe partielle (`partial class`) répartie sur 3 fichiers :
+
+| Fichier | Contenu |
+|---------|----------|
+| `CoordinateService.cs` | API publique, recherche et détection de projections |
+| `CoordinateService.ProjectionData.cs` | Base de données des projections (~700 lignes) |
+| `CoordinateService.Transformations.cs` | Conversions Lambert93, CC, UTM et distance de Vincenty |
+
+> **Note** : L'API publique reste identique — toutes les méthodes sont accessibles via `CoordinateService.*`.
+
+---
+
 ## Constantes
 
 | Constante | Type | Valeur | Description |

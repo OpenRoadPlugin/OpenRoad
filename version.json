@@ -1,8 +1,8 @@
 ﻿{
   "name": "Open Asphalte",
   "version": "0.0.2",
-  "build": "2026.02.05",
-  "channel": "stable",
+  "build": "2026.02.06",
+  "channel": "alpha",
   "framework": ".NET 8.0 - Windows",
   "minAutoCADVersion": "2025",
   "repository": "https://github.com/openasphalteplugin/openasphalte",

@@ -184,7 +184,8 @@ public static class ModuleDiscovery
     private static readonly List<ModuleDescriptor> _loadedModules = new();
     private static readonly Dictionary<string, IModule> _moduleById = new();
     private static readonly List<CommandDescriptor> _allCommands = new();
-    private static bool _initialized = false;
+    private static IReadOnlyList<IModule>? _cachedModules;
+    private static bool _initialized;
 
     /// <summary>
     /// Chemin du dossier Modules
@@ -199,12 +200,13 @@ public static class ModuleDiscovery
     /// <summary>
     /// Liste de tous les modules (instances)
     /// </summary>
-    public static IReadOnlyList<IModule> Modules => _loadedModules
-        .Where(m => m.DependenciesSatisfied)
-        .Select(m => m.Module)
-        .OrderBy(m => m.Order)
-        .ToList()
-        .AsReadOnly();
+    public static IReadOnlyList<IModule> Modules =>
+        _cachedModules ??= _loadedModules
+            .Where(m => m.DependenciesSatisfied)
+            .Select(m => m.Module)
+            .OrderBy(m => m.Order)
+            .ToList()
+            .AsReadOnly();
 
     /// <summary>
     /// Liste de toutes les commandes decouvertes
@@ -281,7 +283,7 @@ public static class ModuleDiscovery
             var possibleFiles = new[]
             {
                 $"OAS.{moduleId}.dll",
-                $"OAS.{char.ToUpper(moduleId[0])}{moduleId.Substring(1)}.dll"
+                $"OAS.{char.ToUpper(moduleId[0])}{moduleId[1..]}.dll"
             };
 
             if (possibleFiles.Any(f => File.Exists(Path.Combine(ModulesPath, f))))
@@ -298,13 +300,20 @@ public static class ModuleDiscovery
         Services.ModuleDefinition moduleDef,
         Services.MarketplaceManifest manifest,
         HashSet<string> installedIds,
-        List<Services.ModuleDefinition> missing)
+        List<Services.ModuleDefinition> missing,
+        HashSet<string>? visiting = null)
     {
         if (moduleDef.Dependencies == null || moduleDef.Dependencies.Count == 0)
             return;
 
+        visiting ??= new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
         foreach (var depId in moduleDef.Dependencies)
         {
+            // Garde de cycle
+            if (!visiting.Add(depId))
+                continue;
+
             // Vérifier si la dépendance est déjà disponible
             if (IsModuleAvailable(depId, installedIds))
                 continue;
@@ -320,7 +329,7 @@ public static class ModuleDiscovery
             if (depDef != null)
             {
                 // D'abord récursivement vérifier les sous-dépendances
-                GetMissingDependenciesRecursive(depDef, manifest, installedIds, missing);
+                GetMissingDependenciesRecursive(depDef, manifest, installedIds, missing, visiting);
 
                 // Puis ajouter cette dépendance (après ses propres dépendances)
                 if (!missing.Any(m => m.Id.Equals(depDef.Id, StringComparison.OrdinalIgnoreCase)))
@@ -637,6 +646,7 @@ public static class ModuleDiscovery
                     // Enregistrer
                     _loadedModules.Add(descriptor);
                     _moduleById[module.Id] = module;
+                    _cachedModules = null; // Invalidate cache
 
                     Logger.Debug(L10n.TFormat("module.loaded", module.Name, module.Version, descriptor.Commands.Count));
                 }

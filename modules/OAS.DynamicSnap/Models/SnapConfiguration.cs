@@ -57,6 +57,17 @@ public sealed class SnapConfiguration
     public short ActiveMarkerColor { get; set; } = 1; // Rouge
 
     /// <summary>
+    /// Indique si les marqueurs doivent être pleins (hachurés) ou seulement en contour
+    /// </summary>
+    public bool FilledMarkers { get; set; } = false;
+
+    /// <summary>
+    /// Épaisseur de ligne des marqueurs (valeurs AutoCAD LineWeight)
+    /// 0 = défaut, 30 = 0.30mm, 50 = 0.50mm, etc.
+    /// </summary>
+    public int MarkerLineWeight { get; set; } = 30;
+
+    /// <summary>
     /// Nombre de segments pour dessiner les marqueurs circulaires
     /// </summary>
     public int MarkerSegments { get; set; } = 32;
@@ -82,21 +93,6 @@ public sealed class SnapConfiguration
     public MarkerStyle MarkerStyle { get; set; } = MarkerStyle.Circle;
 
     /// <summary>
-    /// Afficher un tooltip avec les informations du point
-    /// </summary>
-    public bool ShowTooltip { get; set; } = false;
-
-    /// <summary>
-    /// Filtrer par types d'entités AutoCAD spécifiques
-    /// </summary>
-    public IReadOnlyList<string>? EntityTypeFilter { get; set; }
-
-    /// <summary>
-    /// Filtrer par calques spécifiques
-    /// </summary>
-    public IReadOnlyList<string>? LayerFilter { get; set; }
-
-    /// <summary>
     /// Indique si l'accrochage OSNAP d'AutoCAD doit être désactivé temporairement
     /// </summary>
     public bool DisableAutoCADOsnap { get; set; } = true;
@@ -108,8 +104,7 @@ public sealed class SnapConfiguration
     {
         return new SnapConfiguration
         {
-            ActiveModes = SnapMode.PolylineFull,
-            EntityTypeFilter = new[] { "LWPOLYLINE", "POLYLINE" }
+            ActiveModes = SnapMode.PolylineFull
         };
     }
 
@@ -120,8 +115,7 @@ public sealed class SnapConfiguration
     {
         return new SnapConfiguration
         {
-            ActiveModes = SnapMode.Vertex | SnapMode.Endpoint,
-            EntityTypeFilter = new[] { "LWPOLYLINE", "POLYLINE" }
+            ActiveModes = SnapMode.Vertex | SnapMode.Endpoint
         };
     }
 
@@ -132,8 +126,7 @@ public sealed class SnapConfiguration
     {
         return new SnapConfiguration
         {
-            ActiveModes = SnapMode.All,
-            EntityTypeFilter = null
+            ActiveModes = SnapMode.All
         };
     }
 
@@ -156,10 +149,9 @@ public sealed class SnapConfiguration
             ShowAllInRange = ShowAllInRange,
             MaxVisibleMarkers = MaxVisibleMarkers,
             MarkerStyle = MarkerStyle,
-            ShowTooltip = ShowTooltip,
-            EntityTypeFilter = EntityTypeFilter?.ToList(),
-            LayerFilter = LayerFilter?.ToList(),
-            DisableAutoCADOsnap = DisableAutoCADOsnap
+            DisableAutoCADOsnap = DisableAutoCADOsnap,
+            FilledMarkers = FilledMarkers,
+            MarkerLineWeight = MarkerLineWeight
         };
     }
 }

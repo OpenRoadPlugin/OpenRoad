@@ -12,15 +12,15 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
-using OpenAsphalte.Discovery;
 using OpenAsphalte.Logging;
+using OpenAsphalte.Modules.DynamicSnap.Services;
 using L10n = OpenAsphalte.Localization.Localization;
 
 namespace OpenAsphalte.Modules.Cota2Lign.Services;
 
 /// <summary>
 /// Service d'accrochage intelligent pour le module Cota2Lign.
-/// Utilise le module DynamicSnap si disponible et activé dans les settings,
+/// Utilise le module DynamicSnap (via SnapHelper) si disponible et activé,
 /// sinon fallback vers OSNAP AutoCAD.
 /// </summary>
 public static class SnapIntegrationService
@@ -60,8 +60,7 @@ public static class SnapIntegrationService
     {
         try
         {
-            var module = ModuleDiscovery.GetModule("dynamicsnap");
-            _isDynamicSnapAvailable = module != null && module.IsInitialized;
+            _isDynamicSnapAvailable = SnapHelper.IsAvailable;
 
             if (_isDynamicSnapAvailable == true)
             {
@@ -74,15 +73,16 @@ public static class SnapIntegrationService
                     "[Cota2Lign] Module DynamicSnap non disponible - accrochage AutoCAD utilisé"));
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.Debug($"[Cota2Lign] Exception checking DynamicSnap availability: {ex.Message}");
             _isDynamicSnapAvailable = false;
         }
     }
 
     /// <summary>
     /// Sélectionne un point sur une polyligne avec l'accrochage configuré.
-    /// Utilise DynamicSnap si disponible et activé dans les settings,
+    /// Utilise DynamicSnap (paramètres globaux) si disponible et activé,
     /// sinon OSNAP AutoCAD.
     /// </summary>
     /// <param name="polylineId">ObjectId de la polyligne</param>
@@ -103,7 +103,7 @@ public static class SnapIntegrationService
 
         if (useOasSnap)
         {
-            var result = GetPointWithDynamicSnap(polylineId, prompt, editor, database, settings!);
+            var result = GetPointWithDynamicSnap(polylineId, prompt, editor, database);
             if (result.HasValue)
             {
                 return result;
@@ -117,137 +117,49 @@ public static class SnapIntegrationService
     }
 
     /// <summary>
-    /// Sélection avec le module DynamicSnap.
-    /// Utilise la réflexion pour éviter une dépendance directe sur le module.
+    /// Sélection avec le module DynamicSnap via SnapHelper (appel direct).
+    /// Les modes d'accrochage utilisés sont ceux configurés globalement (config.json).
     /// </summary>
     private static Point3d? GetPointWithDynamicSnap(
         ObjectId polylineId,
         string prompt,
         Editor editor,
-        Database database,
-        Cota2LignSettings settings)
+        Database database)
     {
         try
         {
-            // Accès dynamique au module DynamicSnap via réflexion
-            var snapHelperType = Type.GetType(
-                "OpenAsphalte.Modules.DynamicSnap.Services.SnapHelper, OAS.DynamicSnap");
-
-            if (snapHelperType == null)
-            {
-                Logger.Debug("[Cota2Lign] Type SnapHelper non trouvé");
-                return null;
-            }
-
-            // Vérifier IsAvailable
-            var isAvailableProp = snapHelperType.GetProperty("IsAvailable",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-
-            if (isAvailableProp == null)
-            {
-                Logger.Debug("[Cota2Lign] Propriété IsAvailable non trouvée");
-                return null;
-            }
-
-            var isAvailable = isAvailableProp.GetValue(null);
-            if (isAvailable == null || !(bool)isAvailable)
+            if (!SnapHelper.IsAvailable)
             {
                 Logger.Debug("[Cota2Lign] DynamicSnap.IsAvailable = false");
                 return null;
             }
 
-            // Construire le SnapMode selon les settings
-            var snapModeType = Type.GetType(
-                "OpenAsphalte.Modules.DynamicSnap.Models.SnapMode, OAS.DynamicSnap");
-
-            if (snapModeType == null)
-            {
-                Logger.Debug("[Cota2Lign] Type SnapMode non trouvé");
-                return null;
-            }
-
-            // Combiner les modes selon les settings
-            int modeValue = 0;
-
-            if (settings.SnapVertex)
-            {
-                // Vertex = 1, Endpoint = 2 (on prend les deux)
-                modeValue |= 1 | 2;
-            }
-            if (settings.SnapMidpoint)
-            {
-                // Midpoint = 4
-                modeValue |= 4;
-            }
-            if (settings.SnapNearest)
-            {
-                // Nearest = 8
-                modeValue |= 8;
-            }
-
-            // Au moins un mode doit être actif
-            if (modeValue == 0)
-            {
-                modeValue = 1 | 2 | 4 | 8; // PolylineFull par défaut
-            }
-
-            var snapMode = Enum.ToObject(snapModeType, modeValue);
-
-            // Récupérer la polyligne dans une transaction courte pour la lecture
-            // Note: On garde la transaction ouverte pendant toute l'opération de sélection
-            // pour éviter les problèmes d'accès à l'entité pendant le GetPoint interactif
+            // Ouvrir la polyligne en lecture
             using var tr = database.TransactionManager.StartTransaction();
-            try
+            var polyline = tr.GetObject(polylineId, OpenMode.ForRead) as Polyline;
+            if (polyline == null)
             {
-                var polyline = tr.GetObject(polylineId, OpenMode.ForRead) as Polyline;
-                if (polyline == null)
-                {
-                    tr.Abort();
-                    return null;
-                }
+                tr.Abort();
+                return null;
+            }
 
-                // Appeler GetPointOnPolylineOrFallback via réflexion
-                var method = snapHelperType.GetMethod("GetPointOnPolylineOrFallback",
-                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            // Appel direct à SnapHelper (modes = null → paramètres globaux config.json)
+            var result = SnapHelper.GetPointOnPolylineOrFallback(polyline, prompt, editor);
 
-                if (method == null)
-                {
-                    Logger.Debug("[Cota2Lign] Méthode GetPointOnPolylineOrFallback non trouvée");
-                    tr.Abort();
-                    return null;
-                }
-
-                var args = new object[] { polyline, prompt, editor, snapMode };
-                var pointResult = method.Invoke(null, args);
-
-                Point3d? result = null;
-                if (pointResult is Point3d pt)
-                {
-                    // Projeter le résultat sur la polyligne pour garantir la précision
-                    result = polyline.GetClosestPointTo(pt, false);
-                }
-
+            if (result.HasValue)
+            {
+                // Projeter le résultat sur la polyligne pour garantir la précision
+                var projected = polyline.GetClosestPointTo(result.Value, false);
                 tr.Commit();
-                return result;
+                return projected;
             }
-            catch (System.Reflection.TargetInvocationException tie)
-            {
-                // Extraction de l'exception interne pour un meilleur diagnostic
-                var innerEx = tie.InnerException ?? tie;
-                Logger.Debug($"[Cota2Lign] Erreur DynamicSnap: {innerEx.Message}");
-                try { tr.Abort(); } catch { }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Logger.Debug($"[Cota2Lign] Erreur dans transaction DynamicSnap: {ex.Message}");
-                try { tr.Abort(); } catch { }
-                return null;
-            }
+
+            tr.Commit();
+            return null;
         }
         catch (Exception ex)
         {
-            Logger.Debug($"[Cota2Lign] Erreur générale DynamicSnap: {ex.Message}");
+            Logger.Debug($"[Cota2Lign] Erreur DynamicSnap: {ex.Message}");
             return null;
         }
     }
@@ -301,52 +213,18 @@ public static class SnapIntegrationService
                 tr.Commit();
                 return projectedPoint;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.Debug($"[Cota2Lign] Error projecting point on polyline: {ex.Message}");
                 tr.Abort();
                 return point; // Retourner le point original en cas d'erreur
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.Debug($"[Cota2Lign] Error opening transaction for projection: {ex.Message}");
             return point;
         }
     }
 
-    /// <summary>
-    /// Obtient la distance curviligne d'un point sur une polyligne
-    /// </summary>
-    public static double GetDistanceAlongPolyline(
-        ObjectId polylineId,
-        Point3d point,
-        Database database)
-    {
-        try
-        {
-            using var tr = database.TransactionManager.StartTransaction();
-            try
-            {
-                var polyline = tr.GetObject(polylineId, OpenMode.ForRead) as Polyline;
-                if (polyline == null)
-                {
-                    tr.Abort();
-                    return 0;
-                }
-
-                var closestPoint = polyline.GetClosestPointTo(point, false);
-                var distance = polyline.GetDistAtPoint(closestPoint);
-                tr.Commit();
-                return distance;
-            }
-            catch
-            {
-                tr.Abort();
-                return 0;
-            }
-        }
-        catch
-        {
-            return 0;
-        }
-    }
 }

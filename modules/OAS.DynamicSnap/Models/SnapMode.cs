@@ -131,30 +131,6 @@ public static class SnapModeExtensions
     }
 
     /// <summary>
-    /// Ajoute un mode
-    /// </summary>
-    public static SnapMode AddMode(this SnapMode mode, SnapMode flag)
-    {
-        return mode | flag;
-    }
-
-    /// <summary>
-    /// Retire un mode
-    /// </summary>
-    public static SnapMode RemoveMode(this SnapMode mode, SnapMode flag)
-    {
-        return mode & ~flag;
-    }
-
-    /// <summary>
-    /// Bascule un mode
-    /// </summary>
-    public static SnapMode ToggleMode(this SnapMode mode, SnapMode flag)
-    {
-        return mode ^ flag;
-    }
-
-    /// <summary>
     /// Retourne le nom localisé du mode
     /// </summary>
     public static string GetDisplayName(this SnapMode mode)

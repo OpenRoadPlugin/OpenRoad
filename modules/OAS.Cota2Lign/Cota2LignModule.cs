@@ -43,11 +43,11 @@ public class Cota2LignModule : ModuleBase
     /// <summary>
     /// Contributeurs du module
     /// </summary>
-    public override IEnumerable<Contributor> Contributors => new[]
-    {
+    public override IEnumerable<Contributor> Contributors =>
+    [
         new Contributor("Charles TILLY", "Lead Developer", "https://linkedin.com/in/charlestilly"),
         new Contributor("IA Copilot", "Code Assistant")
-    };
+    ];
 
     /// <summary>
     /// Version du module
@@ -87,10 +87,10 @@ public class Cota2LignModule : ModuleBase
     /// </summary>
     public override IEnumerable<Type> GetCommandTypes()
     {
-        return new[]
-        {
+        return
+        [
             typeof(Cota2LignCommand),
-        };
+        ];
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -168,10 +168,9 @@ public class Cota2LignModule : ModuleBase
 
                 // Paramètres d'accrochage OAS
                 ["cota2lign.settings.useoassnap"] = "Utiliser l'accrochage OAS",
-                ["cota2lign.settings.snapvertex"] = "Sommets (vertices)",
-                ["cota2lign.settings.snapmidpoint"] = "Milieux de segments",
-                ["cota2lign.settings.snapnearest"] = "Point le plus proche",
+                ["cota2lign.settings.useoassnap.tooltip"] = "Utiliser le module DynamicSnap pour l'accrochage intelligent",
                 ["cota2lign.settings.oassnap.unavailable"] = "Module DynamicSnap non installé - fonctionnalité désactivée",
+                ["cota2lign.settings.reset.tooltip"] = "Réinitialiser tous les paramètres aux valeurs par défaut",
 
                 // Validation
                 ["cota2lign.validation.error"] = "Erreur de validation",
@@ -243,10 +242,9 @@ public class Cota2LignModule : ModuleBase
 
                 // OAS snap settings
                 ["cota2lign.settings.useoassnap"] = "Use OAS snapping",
-                ["cota2lign.settings.snapvertex"] = "Vertices",
-                ["cota2lign.settings.snapmidpoint"] = "Segment midpoints",
-                ["cota2lign.settings.snapnearest"] = "Nearest point",
+                ["cota2lign.settings.useoassnap.tooltip"] = "Use DynamicSnap module for smart snapping",
                 ["cota2lign.settings.oassnap.unavailable"] = "DynamicSnap module not installed - feature disabled",
+                ["cota2lign.settings.reset.tooltip"] = "Reset all settings to default values",
 
                 // Validation
                 ["cota2lign.validation.error"] = "Validation error",
@@ -318,10 +316,9 @@ public class Cota2LignModule : ModuleBase
 
                 // Parámetros de enganche OAS
                 ["cota2lign.settings.useoassnap"] = "Usar enganche OAS",
-                ["cota2lign.settings.snapvertex"] = "Vértices",
-                ["cota2lign.settings.snapmidpoint"] = "Puntos medios de segmentos",
-                ["cota2lign.settings.snapnearest"] = "Punto más cercano",
+                ["cota2lign.settings.useoassnap.tooltip"] = "Usar el módulo DynamicSnap para enganche inteligente",
                 ["cota2lign.settings.oassnap.unavailable"] = "Módulo DynamicSnap no instalado - función desactivada",
+                ["cota2lign.settings.reset.tooltip"] = "Restablecer todos los parámetros a los valores predeterminados",
 
                 // Validación
                 ["cota2lign.validation.error"] = "Error de validación",

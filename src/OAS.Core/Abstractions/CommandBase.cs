@@ -140,15 +140,11 @@ public abstract class CommandBase
         }
         catch (TransactionException tex)
         {
-            // Erreur métier explicite - ne pas rollback silencieusement
             Logger.Warning(tex.Message);
-            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             throw;
         }
         catch
         {
-            // Autres exceptions - rollback implicite
-            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             throw;
         }
     }
@@ -177,12 +173,10 @@ public abstract class CommandBase
         catch (TransactionException tex)
         {
             Logger.Warning(tex.Message);
-            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             throw;
         }
         catch
         {
-            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             throw;
         }
     }
@@ -213,14 +207,12 @@ public abstract class CommandBase
         catch (TransactionException tex)
         {
             errorMessage = tex.Message;
-            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             Logger.Debug($"Transaction error: {tex.Message}");
             return false;
         }
         catch (System.Exception ex)
         {
             errorMessage = ex.Message;
-            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             Logger.Debug($"Transaction failed: {ex.Message}");
             return false;
         }
@@ -295,8 +287,8 @@ public abstract class CommandBase
     /// <returns>Texte traduit ou valeur par défaut</returns>
     private static string Translate(string key, string? defaultValue = null)
     {
-        var value = global::OpenAsphalte.Localization.Localization.TFormat(key, defaultValue ?? string.Empty);
-        if (defaultValue != null && value == key)
+        var value = global::OpenAsphalte.Localization.Localization.T(key);
+        if (value == key && defaultValue != null)
         {
             return defaultValue;
         }

@@ -5,6 +5,22 @@
 Le `GeometryService` est une bibliothèque statique de calculs géométriques, hydrauliques et de cubature.
 Toutes les méthodes sont accessibles via `OpenAsphalte.Services.GeometryService`.
 
+## Organisation des fichiers
+
+`GeometryService` est implémenté en tant que classe partielle (`partial class`) répartie sur 5 fichiers pour une meilleure maintenabilité :
+
+| Fichier | Contenu |
+|---------|----------|
+| `GeometryService.cs` | Constantes, distances, angles, points, polylignes, tests, aires, cercles/arcs, surfaces/MNT |
+| `GeometryService.Intersections.cs` | Intersections de droites, segments et cercles, points de tangence |
+| `GeometryService.Voirie.cs` | Clothoïdes, rayon de courbure, dévers, distances d'arrêt/dépassement, courbes verticales |
+| `GeometryService.Hydraulics.cs` | Manning-Strickler, hydraulique des conduites et canaux, coefficients de Strickler |
+| `GeometryService.Earthwork.cs` | Profils en travers, volumes (cubature), foisonnement, tranchées |
+
+> **Note** : L'API publique reste identique — toutes les méthodes sont accessibles via `GeometryService.*`.
+
+---
+
 ## Table des matières
 
 1. [Constantes](#constantes)

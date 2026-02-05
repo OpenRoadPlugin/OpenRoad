@@ -120,16 +120,33 @@ OpenAsphalte/
             - Localization.cs               # Système de traduction
         - Logging/                        # Logs console AutoCAD
             - Logger.cs
+        - Diagnostics/                    # Logging de démarrage
+            - StartupLog.cs                 # Bootstrap logging
+        - Resources/                      # Ressources partagées
+            - OasStyles.xaml                # Styles WPF partagés (couleurs, brushes)
+            - OAS_Logo.png                  # Logo du plugin
+            - CoreCredits.cs                # Crédits du Core
         - Services/                       # Services partagés pour modules
-            - GeometryService.cs            # Calculs géométriques
+            - GeometryService.cs            # (partial) Constantes, distances, aires...
+            - GeometryService.Intersections.cs  # (partial) Intersections
+            - GeometryService.Voirie.cs     # (partial) Tracé en plan, profil en long
+            - GeometryService.Hydraulics.cs # (partial) Hydraulique
+            - GeometryService.Earthwork.cs  # (partial) Cubature, terrassement
+            - CoordinateService.cs          # (partial) API, recherche, détection
+            - CoordinateService.ProjectionData.cs   # (partial) Base de données projections
+            - CoordinateService.Transformations.cs  # (partial) Conversions Lambert/CC/UTM
             - LayerService.cs               # Gestion des calques
+            - UpdateService.cs              # Vérification des mises à jour
+            - UrlValidationService.cs       # Validation sécurisée des URLs
         - UI/                             # Construction UI dynamique
             - MenuBuilder.cs                # Menu contextuel auto-généré
             - RibbonBuilder.cs              # Ruban auto-généré
         - Commands/                       # Commandes système
             - SystemCommands.cs             # OAS_HELP, OAS_VERSION, etc.
-            - SettingsWindow.xaml
-            - SettingsWindow.xaml.cs
+            - SettingsWindow.xaml(.cs)       # Fenêtre paramètres
+            - AboutWindow.xaml(.cs)         # Fenêtre "À propos"
+            - ModuleManagerWindow.xaml(.cs) # Gestionnaire de modules
+            - CreditsWindow.xaml(.cs)       # Fenêtre crédits
 
 - templates/                          # Templates pour créer des modules
     - OAS.Module.Template.csproj
@@ -672,6 +689,34 @@ ExecuteInTransaction(tr =>
     LayerService.SetCurrentLayer(Database!, tr, "OAS_PARKING");
 });
 ```
+
+### CoordinateService
+
+```csharp
+using OpenAsphalte.Services;
+
+// Rechercher des projections
+var results = CoordinateService.SearchProjections("lambert");
+
+// Obtenir une projection par code
+var lambert93 = CoordinateService.GetProjectionByCode("Lambert-93");
+
+// Détecter la projection à partir de coordonnées
+var detected = CoordinateService.DetectProjection(652000, 6862000);
+
+// Conversions Lambert 93 <-> WGS84
+var (lat, lon) = CoordinateService.Lambert93ToWgs84(652000, 6862000);
+var (x, y) = CoordinateService.Wgs84ToLambert93(48.8566, 2.3522);
+
+// Conversions UTM <-> WGS84
+var (e, n, zone) = CoordinateService.Wgs84ToUtm(48.8566, 2.3522);
+var (lat2, lon2) = CoordinateService.UtmToWgs84(452000, 5412000, 31, true);
+
+// Distance géodésique (Vincenty)
+double dist = CoordinateService.VincentyDistance(48.8566, 2.3522, 45.7640, 4.8357);
+```
+
+> 📖 Référence complète : [CoordinateService API](../api/services/CoordinateService.md)
 
 ### Configuration
 

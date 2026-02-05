@@ -110,6 +110,11 @@ public partial class SetProjectionWindow : Window
         UnitLabel.Text = T("georef.window.details.unit");
         DescriptionLabel.Text = T("georef.window.details.description");
         BoundsHeader.Text = T("georef.window.details.bounds");
+
+        // En-têtes de colonnes
+        ColumnName.Header = T("georef.window.list.header.name");
+        ColumnCode.Header = T("georef.window.list.header.code");
+        ColumnCountry.Header = T("georef.window.list.header.country");
     }
 
     /// <summary>

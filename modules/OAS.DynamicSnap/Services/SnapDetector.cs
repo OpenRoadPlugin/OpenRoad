@@ -11,6 +11,7 @@
 
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+using OpenAsphalte.Logging;
 using OpenAsphalte.Modules.DynamicSnap.Models;
 
 namespace OpenAsphalte.Modules.DynamicSnap.Services;
@@ -170,9 +171,9 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromNearest(nearestPt, dist, polyline.ObjectId, param, distAlongCurve));
                 }
             }
-            catch
+            catch (System.Exception ex)
             {
-                // Ignorer si GetClosestPointTo échoue
+                Logger.Debug($"Snap detection: {ex.Message}");
             }
         }
     }
@@ -233,9 +234,9 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromNearest(nearestPt, dist, line.ObjectId, param, distAlongCurve));
                 }
             }
-            catch
+            catch (System.Exception ex)
             {
-                // GetClosestPointTo peut échouer si le curseur est trop loin
+                Logger.Debug($"Snap detection: {ex.Message}");
             }
         }
     }
@@ -295,7 +296,10 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromNearest(nearestPt, dist, circle.ObjectId, param, 0));
                 }
             }
-            catch { }
+            catch (System.Exception ex)
+            {
+                Logger.Debug($"Snap detection: {ex.Message}");
+            }
         }
     }
 
@@ -349,9 +353,9 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromMidpoint(midpoint, dist, arc.ObjectId, 0, arc.Length / 2.0));
                 }
             }
-            catch
+            catch (System.Exception ex)
             {
-                // GetPointAtParameter peut échouer pour certaines géométries d'arc
+                Logger.Debug($"Snap detection: {ex.Message}");
             }
         }
 
@@ -370,9 +374,9 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromNearest(nearestPt, dist, arc.ObjectId, param, distAlongCurve));
                 }
             }
-            catch
+            catch (System.Exception ex)
             {
-                // GetClosestPointTo peut échouer si le curseur est trop loin
+                Logger.Debug($"Snap detection: {ex.Message}");
             }
         }
     }
@@ -444,7 +448,10 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromEndpoint(curve.EndPoint, endDist, curve.ObjectId, false));
                 }
             }
-            catch { }
+            catch (System.Exception ex)
+            {
+                Logger.Debug($"Snap detection: {ex.Message}");
+            }
         }
 
         // Point le plus proche
@@ -462,7 +469,10 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromNearest(nearestPt, dist, curve.ObjectId, param, distAlongCurve));
                 }
             }
-            catch { }
+            catch (System.Exception ex)
+            {
+                Logger.Debug($"Snap detection: {ex.Message}");
+            }
         }
     }
 

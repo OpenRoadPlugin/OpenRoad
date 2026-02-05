@@ -115,6 +115,7 @@ Modules extend Open Asphalte's capabilities. They are **automatically discovered
 | **Street View** | Dynamic AutoCAD ↔ Google Maps link | [See doc](docs/modules/streetview.md) |
 | **Dimensioning** | Road dimensioning tools (Between 2 lines) | [See doc](docs/modules/cota2lign.md) |
 | **Dynamic Snap** | Intelligent snapping engine (System) | [See doc](docs/modules/dynamicsnap.md) |
+| **Organizer** | Advanced layout management (Sort, Rename) | [See doc](docs/modules/prezorganizer.md) |
 
 ### Installing a Module
 
@@ -206,11 +207,31 @@ OpenAsphalte/
       Configuration/          # Configuration management
       Localization/           # Translation system
       Logging/                # Unified logs
+      Diagnostics/            # Bootstrap logging
+        StartupLog.cs
+      Resources/              # Shared resources
+        OasStyles.xaml          # Shared WPF styles (colors, brushes)
+        OAS_Logo.png
+        CoreCredits.cs
       Services/               # Shared services
-        GeometryService.cs
+        GeometryService.cs                    # 5 partial files
+        GeometryService.Intersections.cs
+        GeometryService.Voirie.cs
+        GeometryService.Hydraulics.cs
+        GeometryService.Earthwork.cs
+        CoordinateService.cs                  # 3 partial files
+        CoordinateService.ProjectionData.cs
+        CoordinateService.Transformations.cs
         LayerService.cs
+        UpdateService.cs
+        UrlValidationService.cs
       UI/                     # Dynamic menu and ribbon construction
-      Commands/               # System commands (OAS_HELP, OAS_SETTINGS...)
+      Commands/               # System commands
+        SystemCommands.cs
+        SettingsWindow.xaml(.cs)
+        AboutWindow.xaml(.cs)
+        ModuleManagerWindow.xaml(.cs)
+        CreditsWindow.xaml(.cs)
 
   templates/                  # Templates for creating new modules
     OAS.Module.Template.csproj

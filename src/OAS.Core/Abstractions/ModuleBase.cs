@@ -28,7 +28,7 @@ namespace OpenAsphalte.Abstractions;
 ///     public override string Id => "monmodule";
 ///     public override string Name => "Mon Module";
 ///     public override string Description => "Description du module";
-///     
+///
 ///     public override IEnumerable&lt;Type&gt; GetCommandTypes()
 ///     {
 ///         yield return typeof(MaCommande);
@@ -43,83 +43,83 @@ public abstract class ModuleBase : IModule
     private bool _initialized = false;
 
     #region Propriétés abstraites (à implémenter)
-    
+
     /// <inheritdoc />
     public abstract string Id { get; }
-    
+
     /// <inheritdoc />
     public abstract string Name { get; }
-    
+
     /// <inheritdoc />
     public abstract string Description { get; }
-    
+
     #endregion
 
     #region Propriétés avec valeurs par défaut
-    
+
     /// <inheritdoc />
     public virtual string Version => "1.0.0";
-    
+
     /// <inheritdoc />
     public virtual string Author => "Open Asphalte Contributors";
-    
+
     /// <inheritdoc />
     public virtual int Order => 100;
-    
+
     /// <inheritdoc />
     public virtual string? IconPath => null;
-    
+
     /// <inheritdoc />
     public virtual string? NameKey => null;
-    
+
     /// <inheritdoc />
     public virtual IReadOnlyList<string> Dependencies => Array.Empty<string>();
-    
+
     /// <inheritdoc />
     public virtual string MinCoreVersion => "1.0.0";
 
     /// <inheritdoc />
     public virtual IEnumerable<Contributor> Contributors => Enumerable.Empty<Contributor>();
-    
+
     /// <inheritdoc />
     public bool IsInitialized => _initialized;
-    
+
     #endregion
 
     #region Cycle de vie
-    
+
     /// <inheritdoc />
     public virtual void Initialize()
     {
         _initialized = true;
     }
-    
+
     /// <inheritdoc />
     public virtual void Shutdown()
     {
         _initialized = false;
     }
-    
+
     #endregion
 
     #region Commandes et Traductions
-    
+
     /// <inheritdoc />
     public virtual IEnumerable<Type> GetCommandTypes()
     {
         return Enumerable.Empty<Type>();
     }
-    
+
     /// <inheritdoc />
     public virtual IDictionary<string, IDictionary<string, string>> GetTranslations()
     {
         return new Dictionary<string, IDictionary<string, string>>();
     }
-    
+
     #endregion
 
     #region IDisposable
-    
+
     /// <summary>
     /// Libère les ressources du module
     /// </summary>
@@ -128,7 +128,7 @@ public abstract class ModuleBase : IModule
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-    
+
     /// <summary>
     /// Libère les ressources managées et non-managées
     /// </summary>
@@ -136,22 +136,14 @@ public abstract class ModuleBase : IModule
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed) return;
-        
+
         if (disposing)
         {
             Shutdown();
         }
-        
+
         _disposed = true;
     }
-    
-    /// <summary>
-    /// Finaliseur
-    /// </summary>
-    ~ModuleBase()
-    {
-        Dispose(false);
-    }
-    
+
     #endregion
 }

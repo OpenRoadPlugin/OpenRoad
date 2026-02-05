@@ -115,15 +115,19 @@ public partial class AboutWindow : Window
         if (lowerChannel == "alpha")
         {
             badgeWarning.Visibility = Visibility.Visible;
-            badgeWarning.Background = new System.Windows.Media.SolidColorBrush(
+            var brush = new System.Windows.Media.SolidColorBrush(
                 System.Windows.Media.Color.FromRgb(231, 76, 60)); // Rouge
+            brush.Freeze();
+            badgeWarning.Background = brush;
             txtBadge.Text = "⚠ ALPHA";
         }
         else if (lowerChannel == "beta")
         {
             badgeWarning.Visibility = Visibility.Visible;
-            badgeWarning.Background = new System.Windows.Media.SolidColorBrush(
+            var brush = new System.Windows.Media.SolidColorBrush(
                 System.Windows.Media.Color.FromRgb(243, 156, 18)); // Orange
+            brush.Freeze();
+            badgeWarning.Background = brush;
             txtBadge.Text = "⚠ BETA";
         }
         else

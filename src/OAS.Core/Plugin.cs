@@ -12,6 +12,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.ExceptionServices;
 using Autodesk.AutoCAD.Runtime;
@@ -57,6 +58,7 @@ public class Plugin : IExtensionApplication
     private static int _firstChanceCount;
     private const int MaxFirstChanceLogs = 5;
     private static EventHandler<FirstChanceExceptionEventArgs>? _firstChanceHandler;
+    private static EventHandler? _updateIdleHandler;
 
     /// <summary>
     /// Version du coeur Open Asphalte (chargée depuis version.json)
@@ -73,8 +75,8 @@ public class Plugin : IExtensionApplication
     /// </summary>
     public static string BasePath { get; private set; } = "";
 
-    private static bool _idleEventSubscribed = false;
-    private static readonly object _idleLock = new object();
+    private static volatile bool _idleEventSubscribed;
+    private static readonly object _idleLock = new();
 
     /// <summary>
     /// Charge la version depuis version.json de manière thread-safe
@@ -205,9 +207,9 @@ public class Plugin : IExtensionApplication
         {
             try
             {
-                if (_firstChanceCount >= MaxFirstChanceLogs) return;
-                _firstChanceCount++;
-                StartupLog.Write($"FirstChanceException[{_firstChanceCount}/{MaxFirstChanceLogs}]: {args.Exception}");
+                var count = Interlocked.Increment(ref _firstChanceCount);
+                if (count > MaxFirstChanceLogs) return;
+                StartupLog.Write($"FirstChanceException[{count}/{MaxFirstChanceLogs}]: {args.Exception}");
             }
             catch
             {
@@ -232,7 +234,7 @@ public class Plugin : IExtensionApplication
         {
             if (text.Length > innerWidth - 1)
             {
-                text = text.Substring(0, innerWidth - 4) + "...";
+                text = string.Concat(text.AsSpan(0, innerWidth - 4), "...");
             }
             return $"| {text.PadRight(innerWidth - 1)}|";
         }
@@ -359,11 +361,17 @@ public class Plugin : IExtensionApplication
 
             if (result.UpdateAvailable)
             {
-                // Afficher la notification sur le thread UI
-                AcadApp.Idle += (_, _) =>
+                // Afficher la notification sur le thread UI (handler auto-détaché)
+                _updateIdleHandler = (_, _) =>
                 {
+                    if (_updateIdleHandler != null)
+                    {
+                        AcadApp.Idle -= _updateIdleHandler;
+                        _updateIdleHandler = null;
+                    }
                     UpdateService.ShowUpdateNotification(result);
                 };
+                AcadApp.Idle += _updateIdleHandler;
             }
             else if (result.IncompatibleAutoCAD)
             {

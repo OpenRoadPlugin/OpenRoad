@@ -180,6 +180,18 @@ OpenAsphalte/
 
 ---
 
+## 📦 MODULES OFFICIELS (Référence pour non-duplication)
+
+| Module | ID | Namespace | Description |
+|--------|----|-----------|-------------|
+| **Géoréférencement** | `georeferencement` | `OAS.Georeferencement` | Systèmes de coordonnées, grilles |
+| **Street View** | `streetview` | `OAS.StreetView` | Google Street View dynamique |
+| **Cotation** | `cota2lign` | `OAS.Cota2Lign` | Cotation automatique voirie |
+| **Dynamic Snap** | `dynamicsnap` | `OAS.DynamicSnap` | Moteur d'accrochage intelligent |
+| **Organiseur** | `prezorganizer` | `OAS.PrezOrganizer` | Gestion des présentations |
+
+---
+
 ## 🛠️ CRÉER UN MODULE (Workflow complet)
 
 ### Étape 1 : Structure projet

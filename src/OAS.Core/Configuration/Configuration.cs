@@ -9,7 +9,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Concurrent;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -33,9 +32,9 @@ public static class Configuration
     private static readonly string ConfigFile = Path.Combine(ConfigFolder, "config.json");
     private const long MaxConfigSizeBytes = 512 * 1024; // 512 KB
 
-    private static ConcurrentDictionary<string, object> _settings = new();
-    private static bool _loaded = false;
-    private static bool _isLoading = false;
+    private static Dictionary<string, object> _settings = new();
+    private static bool _loaded;
+    private static bool _isLoading;
     private static readonly object _loadLock = new();
 
     /// <summary>
@@ -114,7 +113,7 @@ public static class Configuration
                         ReadCommentHandling = JsonCommentHandling.Skip
                     };
                     var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(json, options) ?? new();
-                    _settings = new ConcurrentDictionary<string, object>(dict);
+                    _settings = new Dictionary<string, object>(dict);
                     _loaded = true;
                     Logger.Debug(string.Format(L10n.T("config.loaded", "Configuration chargee depuis {0}"), ConfigFile));
                     StartupLog.Write("Configuration.Load: deserialized");
@@ -268,34 +267,37 @@ public static class Configuration
     {
         EnsureLoaded();
 
-        if (_settings.TryGetValue(key, out var value))
+        object? value;
+        lock (_loadLock)
         {
-            try
-            {
-                if (value is JsonElement element)
-                {
-                    var result = JsonSerializer.Deserialize<T>(element.GetRawText());
-                    return result ?? defaultValue;
-                }
-                return (T)Convert.ChangeType(value, typeof(T));
-            }
-            catch (JsonException jsonEx)
-            {
-                Logger.Debug($"Config key '{key}': JSON conversion error - {jsonEx.Message}");
+            if (!_settings.TryGetValue(key, out value))
                 return defaultValue;
-            }
-            catch (InvalidCastException castEx)
-            {
-                Logger.Debug($"Config key '{key}': Type conversion error - {castEx.Message}");
-                return defaultValue;
-            }
-            catch (System.Exception ex)
-            {
-                Logger.Debug($"Config key '{key}': Unexpected error - {ex.Message}");
-                return defaultValue;
-            }
         }
-        return defaultValue;
+
+        try
+        {
+            if (value is JsonElement element)
+            {
+                var result = JsonSerializer.Deserialize<T>(element.GetRawText());
+                return result ?? defaultValue;
+            }
+            return (T)Convert.ChangeType(value, typeof(T));
+        }
+        catch (JsonException jsonEx)
+        {
+            Logger.Debug($"Config key '{key}': JSON conversion error - {jsonEx.Message}");
+            return defaultValue;
+        }
+        catch (InvalidCastException castEx)
+        {
+            Logger.Debug($"Config key '{key}': Type conversion error - {castEx.Message}");
+            return defaultValue;
+        }
+        catch (System.Exception ex)
+        {
+            Logger.Debug($"Config key '{key}': Unexpected error - {ex.Message}");
+            return defaultValue;
+        }
     }
 
     /// <summary>
@@ -307,8 +309,18 @@ public static class Configuration
     public static void Set<T>(string key, T value)
     {
         EnsureLoaded();
-        _settings[key] = value!;
-        OnSettingChanged?.Invoke(key, value);
+        lock (_loadLock)
+        {
+            _settings[key] = value!;
+        }
+        try
+        {
+            OnSettingChanged?.Invoke(key, value);
+        }
+        catch (System.Exception ex)
+        {
+            Logger.Debug($"OnSettingChanged handler error for '{key}': {ex.Message}");
+        }
     }
 
     /// <summary>
@@ -317,7 +329,10 @@ public static class Configuration
     public static bool Remove(string key)
     {
         EnsureLoaded();
-        return _settings.TryRemove(key, out _);
+        lock (_loadLock)
+        {
+            return _settings.Remove(key);
+        }
     }
 
     /// <summary>
@@ -326,7 +341,10 @@ public static class Configuration
     public static bool Contains(string key)
     {
         EnsureLoaded();
-        return _settings.ContainsKey(key);
+        lock (_loadLock)
+        {
+            return _settings.ContainsKey(key);
+        }
     }
 
     private static void EnsureLoaded()

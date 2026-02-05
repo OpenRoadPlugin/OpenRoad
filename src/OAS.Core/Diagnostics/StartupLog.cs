@@ -23,6 +23,7 @@ internal static class StartupLog
     private static readonly string LogPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "Open Asphalte", "logs", "openasphalte_startup.log");
+    private static bool _directoryEnsured;
 
 #pragma warning disable CA2255 // ModuleInitializer utilisé intentionnellement pour diagnostics au chargement
     [ModuleInitializer]
@@ -32,6 +33,7 @@ internal static class StartupLog
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(LogPath)!);
+            _directoryEnsured = true;
             File.AppendAllText(LogPath,
                 $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] Assembly loaded: OpenAsphalte.Core\n");
         }
@@ -45,7 +47,11 @@ internal static class StartupLog
     {
         try
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(LogPath)!);
+            if (!_directoryEnsured)
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(LogPath)!);
+                _directoryEnsured = true;
+            }
             lock (FileLock)
             {
                 File.AppendAllText(LogPath,

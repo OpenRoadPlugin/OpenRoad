@@ -5,7 +5,7 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
-## [0.0.2] - 2026-02-05
+## [0.0.2] - 2026-02-06
 
 ### Modifications CORE
 - **Vérification des mises à jour au démarrage** : Nouvelle fonctionnalité qui vérifie automatiquement si une nouvelle version est disponible via l'API GitHub.
@@ -37,6 +37,16 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   - HttpClient avec `PooledConnectionLifetime` pour éviter les problèmes DNS stale
   - Désabonnement du handler `FirstChanceException` dans `Terminate()`
   - Nettoyage des caches ribbon lors du rebuild
+- **OasStyles.xaml** : Nouveau `ResourceDictionary` WPF partagé (palette de couleurs `Oas*`, styles de champs/boutons/labels, brushes figés avec `Freeze()`)
+- **Thread safety renforcé** : Utilisation de `volatile` et `Interlocked` dans le Core en complément du `ConcurrentDictionary`
+- **Logger optimisé** : `StreamWriter` persistant pour de meilleures performances d'écriture
+- **Tooltips localisés** : Tous les tooltips codés en dur dans Cota2Lign, DynamicSnap et SetProjection sont maintenant traduits via `L10n.T()`
+- **Freeze() WPF** : Appel systématique de `Freeze()` sur les `SolidColorBrush` pour les performances
+
+### Refactorisé
+- **GeometryService** : Réorganisation en 5 fichiers partiels (`partial class`) — Intersections, Voirie, Hydraulics, Earthwork
+- **CoordinateService** : Réorganisation en 3 fichiers partiels — ProjectionData, Transformations
+- **GeoLocationService** (module Géoréférencement) : Réorganisation en 2 fichiers partiels — Conversions
 
 ### Corrigé
 - Bug TFormat avec placeholders {0} {1} non remplacés dans les messages de dépendances (surcharge ambiguë)
@@ -58,8 +68,11 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Empty catch blocks** : Ajout de commentaires explicatifs dans SnapDetector.cs pour les catch vides
 - **Traductions XAML Cota2Lign** : Labels "Interdistance", "Décalage", "Calque" maintenant traduisibles (FR/EN/ES)
 - **Traductions XAML SetProjection** : Labels "Système actuel", "Détecté", "Détails", etc. maintenant traduisibles (FR/EN/ES)
+- **Fuite d'événement update** : Correction de la fuite lors de la désinscription des événements de mise à jour
+- **CommandBase.Translate** : Correction du bug de traduction dans `CommandBase`
 
 ### Supprimé
+- **Code mort** : Extensions SnapMode, propriétés mortes SnapConfiguration, méthode morte SnapHelper, méthodes mortes GeoLocationService, imports inutilisés
 - Fichiers obsolètes du renommage OpenRoad → OpenAsphalte :
   - `src/OpenRoad.Core/` (dossier entier)
   - `src/OpenRoad.sln`

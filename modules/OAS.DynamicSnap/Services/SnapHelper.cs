@@ -96,12 +96,14 @@ public static class SnapHelper
         Polyline polyline,
         string prompt,
         Editor editor,
-        SnapMode modes = SnapMode.PolylineFull)
+        SnapMode? modes = null)
     {
         if (IsAvailable)
         {
-            // Utiliser l'accrochage OAS
-            var config = new SnapConfiguration { ActiveModes = modes };
+            // null = utiliser la configuration globale (config.json)
+            SnapConfiguration? config = modes.HasValue
+                ? new SnapConfiguration { ActiveModes = modes.Value }
+                : null;
             var snapResult = DynamicSnapService.GetPointOnEntity(polyline, prompt, config);
 
             if (snapResult != null)
@@ -148,11 +150,14 @@ public static class SnapHelper
         Entity entity,
         string prompt,
         Editor editor,
-        SnapMode modes = SnapMode.Basic)
+        SnapMode? modes = null)
     {
         if (IsAvailable)
         {
-            var config = new SnapConfiguration { ActiveModes = modes };
+            // null = utiliser la configuration globale (config.json)
+            SnapConfiguration? config = modes.HasValue
+                ? new SnapConfiguration { ActiveModes = modes.Value }
+                : null;
             var snapResult = DynamicSnapService.GetPointOnEntity(entity, prompt, config);
 
             if (snapResult != null)
@@ -262,23 +267,4 @@ public static class SnapHelper
         return null;
     }
 
-    /// <summary>
-    /// Obtient les paramètres de tolérance et taille de marqueur adaptés à la vue actuelle
-    /// </summary>
-    public static (double tolerance, double markerSize) GetDynamicParameters(
-        double toleranceRatio = 0.02,
-        double markerRatio = 0.015)
-    {
-        double viewSize;
-        try
-        {
-            viewSize = Convert.ToDouble(AcadApp.GetSystemVariable("VIEWSIZE"));
-        }
-        catch
-        {
-            viewSize = 100.0; // Valeur par défaut
-        }
-
-        return (viewSize * toleranceRatio, viewSize * markerRatio);
-    }
 }

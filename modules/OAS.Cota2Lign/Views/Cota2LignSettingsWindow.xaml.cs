@@ -49,7 +49,7 @@ public partial class Cota2LignSettingsWindow : Window
         // Charger les valeurs dans les contrôles
         LoadSettingsToUI();
 
-        // Configurer l'état des contrôles OAS Snap
+        // Configurer l'état du contrôle OAS Snap
         ConfigureOasSnapControls();
     }
 
@@ -79,9 +79,18 @@ public partial class Cota2LignSettingsWindow : Window
 
         // Traductions pour l'accrochage OAS
         UseOasSnapCheckBox.Content = L10n.T("cota2lign.settings.useoassnap", "Utiliser l'accrochage OAS");
-        SnapVertexCheckBox.Content = L10n.T("cota2lign.settings.snapvertex", "Sommets (vertices)");
-        SnapMidpointCheckBox.Content = L10n.T("cota2lign.settings.snapmidpoint", "Milieux de segments");
-        SnapNearestCheckBox.Content = L10n.T("cota2lign.settings.snapnearest", "Point le plus proche");
+
+        // Tooltips
+        InterdistanceLabel.ToolTip = L10n.T("cota2lign.settings.interdist.tooltip", "Distance entre chaque cotation (0 pour désactiver)");
+        InterdistanceTextBox.ToolTip = InterdistanceLabel.ToolTip;
+        OffsetLabel.ToolTip = L10n.T("cota2lign.settings.offset.tooltip", "Distance de décalage du texte de cotation");
+        OffsetTextBox.ToolTip = OffsetLabel.ToolTip;
+        LayerLabel.ToolTip = L10n.T("cota2lign.settings.layer.tooltip", "Calque sur lequel créer les cotations (vide = calque courant)");
+        LayerTextBox.ToolTip = LayerLabel.ToolTip;
+        VerticesCheckBox.ToolTip = L10n.T("cota2lign.settings.vertices.tooltip", "Ajouter une cotation à chaque sommet de la polyligne");
+        ReverseSideCheckBox.ToolTip = L10n.T("cota2lign.settings.reverse.tooltip", "Place les cotations de l'autre côté de la polyligne");
+        UseOasSnapCheckBox.ToolTip = L10n.T("cota2lign.settings.useoassnap.tooltip", "Active l'accrochage intelligent OAS (nécessite le module DynamicSnap)");
+        ResetButton.ToolTip = L10n.T("cota2lign.settings.reset.tooltip", "Rétablir les valeurs par défaut");
     }
 
     /// <summary>
@@ -97,9 +106,6 @@ public partial class Cota2LignSettingsWindow : Window
 
         // Accrochage OAS
         UseOasSnapCheckBox.IsChecked = _settings.UseOasSnap;
-        SnapVertexCheckBox.IsChecked = _settings.SnapVertex;
-        SnapMidpointCheckBox.IsChecked = _settings.SnapMidpoint;
-        SnapNearestCheckBox.IsChecked = _settings.SnapNearest;
 
         // Placeholder pour le calque
         if (string.IsNullOrWhiteSpace(_settings.TargetLayer))
@@ -109,32 +115,18 @@ public partial class Cota2LignSettingsWindow : Window
     }
 
     /// <summary>
-    /// Configure l'état des contrôles d'accrochage OAS selon la disponibilité du module
+    /// Configure l'état du contrôle d'accrochage OAS selon la disponibilité du module
     /// </summary>
     private void ConfigureOasSnapControls()
     {
         if (!_isDynamicSnapAvailable)
         {
-            // Module non installé : griser tout le groupe
-            OasSnapGroupBox.IsEnabled = false;
+            // Module non installé : griser le checkbox
+            UseOasSnapCheckBox.IsEnabled = false;
             UseOasSnapCheckBox.IsChecked = false;
             UseOasSnapCheckBox.ToolTip = L10n.T("cota2lign.settings.oassnap.unavailable",
-                "Module DynamicSnap non installé");
+                "Module DynamicSnap non installé - fonctionnalité désactivée");
         }
-        else
-        {
-            // Module disponible : activer/désactiver selon l'état du checkbox
-            UpdateSnapModesState();
-        }
-    }
-
-    /// <summary>
-    /// Met à jour l'état des checkboxes de modes selon l'activation de l'accrochage OAS
-    /// </summary>
-    private void UpdateSnapModesState()
-    {
-        bool isEnabled = UseOasSnapCheckBox.IsChecked == true && _isDynamicSnapAvailable;
-        SnapModesPanel.IsEnabled = isEnabled;
     }
 
     /// <summary>
@@ -202,19 +194,8 @@ public partial class Cota2LignSettingsWindow : Window
 
         // Appliquer les paramètres d'accrochage OAS
         _settings.UseOasSnap = UseOasSnapCheckBox.IsChecked ?? false;
-        _settings.SnapVertex = SnapVertexCheckBox.IsChecked ?? false;
-        _settings.SnapMidpoint = SnapMidpointCheckBox.IsChecked ?? false;
-        _settings.SnapNearest = SnapNearestCheckBox.IsChecked ?? false;
 
         return true;
-    }
-
-    /// <summary>
-    /// Gestionnaire pour l'activation/désactivation de l'accrochage OAS
-    /// </summary>
-    private void UseOasSnapCheckBox_Changed(object sender, RoutedEventArgs e)
-    {
-        UpdateSnapModesState();
     }
 
     #endregion

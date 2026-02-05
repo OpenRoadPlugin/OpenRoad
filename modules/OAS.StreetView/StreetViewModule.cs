@@ -48,11 +48,11 @@ public class StreetViewModule : ModuleBase
     /// <summary>
     /// Contributeurs du module
     /// </summary>
-    public override IEnumerable<Contributor> Contributors => new[]
-    {
+    public override IEnumerable<Contributor> Contributors =>
+    [
         new Contributor("Charles TILLY", "Lead Developer", "https://linkedin.com/in/charlestilly"),
         new Contributor("IA Copilot", "Code Assistant")
-    };
+    ];
 
     /// <summary>
     /// Version du module
@@ -76,7 +76,7 @@ public class StreetViewModule : ModuleBase
     /// - Un dessin géoréférencé (système de coordonnées défini)
     /// - Les services de conversion de coordonnées
     /// </remarks>
-    public override IReadOnlyList<string> Dependencies => new[] { "setprojection" };
+    public override IReadOnlyList<string> Dependencies => ["setprojection"];
 
     // ═══════════════════════════════════════════════════════════
     // AFFICHAGE UI
@@ -106,10 +106,7 @@ public class StreetViewModule : ModuleBase
     /// </summary>
     public override IEnumerable<Type> GetCommandTypes()
     {
-        return new[]
-        {
-            typeof(StreetViewCommand),
-        };
+        return [typeof(StreetViewCommand)];
     }
 
     // ═══════════════════════════════════════════════════════════

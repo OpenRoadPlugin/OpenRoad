@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Window x:Class="OpenAsphalte.Modules.Cota2Lign.Views.Cota2LignSettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Paramètres - Cotation entre deux lignes"
+        Title="ParamÃ¨tres - Cotation entre deux lignes"
         Height="500" Width="450"
         MinHeight="480" MinWidth="400"
         WindowStartupLocation="CenterScreen"
@@ -10,105 +10,11 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
-        <!-- Style pour les labels -->
-        <Style x:Key="FieldLabel" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#333"/>
-            <Setter Property="Margin" Value="0,0,8,0"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-
-        <!-- Style pour les TextBox -->
-        <Style x:Key="FieldTextBox" TargetType="TextBox">
-            <Setter Property="Padding" Value="8,6"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="#CCC"/>
-        </Style>
-
-        <!-- Style pour les CheckBox -->
-        <Style x:Key="FieldCheckBox" TargetType="CheckBox">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,4"/>
-        </Style>
-
-        <!-- Style bouton principal -->
-        <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#4CAF50"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="20,10"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#45A049"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background" Value="#CCC"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Style bouton secondaire -->
-        <Style x:Key="SecondaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#E0E0E0"/>
-            <Setter Property="Foreground" Value="#333"/>
-            <Setter Property="Padding" Value="20,10"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#D0D0D0"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Style bouton warning -->
-        <Style x:Key="WarningButton" TargetType="Button">
-            <Setter Property="Background" Value="#FF9800"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="16,10"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#F57C00"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/OAS.Core;component/Resources/OasStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid Margin="20">
@@ -122,12 +28,9 @@
         <TextBlock Grid.Row="0"
                    x:Name="TitleLabel"
                    Text="Paramètres de cotation"
-                   FontSize="18"
-                   FontWeight="Bold"
-                   Foreground="#2E7D32"
-                   Margin="0,0,0,20"/>
+                   Style="{StaticResource OasWindowTitle}"/>
 
-        <!-- Champs de paramètres -->
+        <!-- Champs de paramÃ¨tres -->
         <StackPanel Grid.Row="1" VerticalAlignment="Top">
 
             <!-- Interdistance -->
@@ -139,15 +42,15 @@
                 <TextBlock Grid.Column="0"
                            x:Name="InterdistanceLabel"
                            Text="Interdistance (m) :"
-                           Style="{StaticResource FieldLabel}"
-                           ToolTip="Distance entre chaque cotation (0 pour désactiver)"/>
+                           Style="{StaticResource OasFieldLabel}"
+                           ToolTip="Distance entre chaque cotation (0 pour dÃ©sactiver)"/>
                 <TextBox x:Name="InterdistanceTextBox"
                          Grid.Column="1"
-                         Style="{StaticResource FieldTextBox}"
-                         ToolTip="Distance entre chaque cotation (0 pour désactiver)"/>
+                         Style="{StaticResource OasFieldTextBox}"
+                         ToolTip="Distance entre chaque cotation (0 pour dÃ©sactiver)"/>
             </Grid>
 
-            <!-- Décalage -->
+            <!-- DÃ©calage -->
             <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="180"/>
@@ -155,13 +58,13 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                            x:Name="OffsetLabel"
-                           Text="Décalage cotation (m) :"
-                           Style="{StaticResource FieldLabel}"
-                           ToolTip="Distance de décalage du texte de cotation"/>
+                           Text="DÃ©calage cotation (m) :"
+                           Style="{StaticResource OasFieldLabel}"
+                           ToolTip="Distance de dÃ©calage du texte de cotation"/>
                 <TextBox x:Name="OffsetTextBox"
                          Grid.Column="1"
-                         Style="{StaticResource FieldTextBox}"
-                         ToolTip="Distance de décalage du texte de cotation"/>
+                         Style="{StaticResource OasFieldTextBox}"
+                         ToolTip="Distance de dÃ©calage du texte de cotation"/>
             </Grid>
 
             <!-- Calque de destination -->
@@ -173,55 +76,35 @@
                 <TextBlock Grid.Column="0"
                            x:Name="LayerLabel"
                            Text="Calque de destination :"
-                           Style="{StaticResource FieldLabel}"
-                           ToolTip="Calque sur lequel créer les cotations (vide = calque courant)"/>
+                           Style="{StaticResource OasFieldLabel}"
+                           ToolTip="Calque sur lequel crÃ©er les cotations (vide = calque courant)"/>
                 <TextBox x:Name="LayerTextBox"
                          Grid.Column="1"
-                         Style="{StaticResource FieldTextBox}"
-                         ToolTip="Calque sur lequel créer les cotations (vide = calque courant)"/>
+                         Style="{StaticResource OasFieldTextBox}"
+                         ToolTip="Calque sur lequel crÃ©er les cotations (vide = calque courant)"/>
             </Grid>
 
             <!-- Coter aux sommets -->
             <CheckBox x:Name="VerticesCheckBox"
                       Content="Coter aux sommets de la polyligne"
-                      Style="{StaticResource FieldCheckBox}"
+                      Style="{StaticResource OasFieldCheckBox}"
                       Margin="0,8,0,8"
-                      ToolTip="Ajouter une cotation à chaque sommet de la polyligne"/>
+                      ToolTip="Ajouter une cotation Ã  chaque sommet de la polyligne"/>
 
-            <!-- Inverser le côté -->
+            <!-- Inverser le cÃ´tÃ© -->
             <CheckBox x:Name="ReverseSideCheckBox"
-                      Content="Inverser le côté de décalage"
-                      Style="{StaticResource FieldCheckBox}"
+                      Content="Inverser le cÃ´tÃ© de dÃ©calage"
+                      Style="{StaticResource OasFieldCheckBox}"
                       Margin="0,0,0,16"
-                      ToolTip="Place les cotations de l'autre côté de la polyligne"/>
+                      ToolTip="Place les cotations de l'autre cÃ´tÃ© de la polyligne"/>
 
-            <!-- Groupe Accrochage OAS -->
-            <GroupBox x:Name="OasSnapGroupBox"
+            <!-- Accrochage OAS -->
+            <CheckBox x:Name="UseOasSnapCheckBox"
+                      Content="Utiliser l'accrochage OAS"
+                      Style="{StaticResource OasFieldCheckBox}"
                       Margin="0,8,0,0"
-                      Padding="8">
-                <GroupBox.Header>
-                    <CheckBox x:Name="UseOasSnapCheckBox"
-                              Content="Utiliser l'accrochage OAS"
-                              FontWeight="SemiBold"
-                              Checked="UseOasSnapCheckBox_Changed"
-                              Unchecked="UseOasSnapCheckBox_Changed"
-                              ToolTip="Active l'accrochage intelligent OAS (nécessite le module DynamicSnap)"/>
-                </GroupBox.Header>
-                <StackPanel x:Name="SnapModesPanel" Margin="16,8,0,0">
-                    <CheckBox x:Name="SnapVertexCheckBox"
-                              Content="Sommets (vertices)"
-                              Style="{StaticResource FieldCheckBox}"
-                              ToolTip="Accrochage aux sommets de la polyligne"/>
-                    <CheckBox x:Name="SnapMidpointCheckBox"
-                              Content="Milieux de segments"
-                              Style="{StaticResource FieldCheckBox}"
-                              ToolTip="Accrochage aux milieux des segments"/>
-                    <CheckBox x:Name="SnapNearestCheckBox"
-                              Content="Point le plus proche"
-                              Style="{StaticResource FieldCheckBox}"
-                              ToolTip="Accrochage au point le plus proche sur la polyligne"/>
-                </StackPanel>
-            </GroupBox>
+                      FontWeight="SemiBold"
+                      ToolTip="Active l'accrochage intelligent OAS (nÃ©cessite le module DynamicSnap). Modes configurables via OAS_SNAP_SETTINGS."/>
 
         </StackPanel>
 
@@ -236,22 +119,22 @@
 
             <Button x:Name="ResetButton"
                     Grid.Column="0"
-                    Content="Réinitialiser"
-                    Style="{StaticResource WarningButton}"
+                    Content="RÃ©initialiser"
+                    Style="{StaticResource OasWarningButton}"
                     Click="ResetButton_Click"
-                    ToolTip="Rétablir les valeurs par défaut"/>
+                    ToolTip="RÃ©tablir les valeurs par dÃ©faut"/>
 
             <Button x:Name="CancelButton"
                     Grid.Column="2"
                     Content="Annuler"
-                    Style="{StaticResource SecondaryButton}"
+                    Style="{StaticResource OasSecondaryButton}"
                     Margin="0,0,10,0"
                     Click="CancelButton_Click"/>
 
             <Button x:Name="ApplyButton"
                     Grid.Column="3"
                     Content="Appliquer"
-                    Style="{StaticResource PrimaryButton}"
+                    Style="{StaticResource OasPrimaryButton}"
                     Click="ApplyButton_Click"/>
         </Grid>
     </Grid>

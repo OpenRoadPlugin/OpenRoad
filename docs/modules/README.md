@@ -19,6 +19,10 @@ Ces modules ajoutent des fonctionnalités directement utilisables pour la produc
     *   Ouverture dynamique de Street View depuis une position dans AutoCAD.
     *   Synchronisation vue/plan.
 
+*   **[Organiseur de Présentations](prezorganizer.md) (`prezorganizer`)**
+    *   Gestion avancée des onglets (tri, renommage, déplacement).
+    *   Renommage par lot et filtrage.
+
 ## 🔧 Modules Système
 
 Ces modules fournissent des services aux autres modules ou au noyau.

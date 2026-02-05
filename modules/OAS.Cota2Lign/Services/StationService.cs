@@ -196,14 +196,4 @@ public static class StationService
         return polyline.GetDistAtPoint(point);
     }
 
-    /// <summary>
-    /// Calcule le point projeté sur la polyligne cible à partir d'un point source.
-    /// </summary>
-    /// <param name="sourcePoint">Point source</param>
-    /// <param name="targetPolyline">Polyligne cible</param>
-    /// <returns>Point projeté sur la polyligne cible</returns>
-    public static Point3d GetProjectedPoint(Point3d sourcePoint, Polyline targetPolyline)
-    {
-        return targetPolyline.GetClosestPointTo(sourcePoint, extend: false);
-    }
 }
