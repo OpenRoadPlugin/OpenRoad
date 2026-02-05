@@ -18,7 +18,7 @@ namespace OpenAsphalte.Modules.DynamicSnap.Models;
 /// Représente un point d'accrochage détecté par le système OAS Dynamic Snap.
 /// Contient les coordonnées, le type d'accrochage et les métadonnées associées.
 /// </summary>
-public sealed class SnapPoint
+public sealed class SnapPoint : IComparable<SnapPoint>
 {
     /// <summary>
     /// Coordonnées 3D du point d'accrochage

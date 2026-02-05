@@ -23,7 +23,7 @@ jobs:
       - name: Check Core modifications
         run: |
           # Liste des fichiers Core modifiés
-          CORE_CHANGES=$(git diff --name-only origin/main...HEAD | grep -E "^src/OpenRoad\.Core/" || true)
+          CORE_CHANGES=$(git diff --name-only origin/main...HEAD | grep -E "^src/OAS\.Core/" || true)
 
           if [ -n "$CORE_CHANGES" ]; then
             echo "⚠️ ATTENTION: Modifications détectées dans le Core!"

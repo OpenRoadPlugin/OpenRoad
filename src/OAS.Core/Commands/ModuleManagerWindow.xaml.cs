@@ -299,62 +299,15 @@ public partial class ModuleManagerWindow : Window
     /// </summary>
     private List<ModuleDefinition> GetMissingDependencies(ModuleDefinition moduleDef)
     {
-        var missing = new List<ModuleDefinition>();
+        if (_manifest == null)
+            return new List<ModuleDefinition>();
 
-        if (moduleDef.Dependencies == null || moduleDef.Dependencies.Count == 0)
-            return missing;
+        // IDs des modules installés dans cette session (pas encore chargés en mémoire)
+        var sessionInstalledIds = _allModules
+            .Where(m => m.IsInstalled)
+            .Select(m => m.Id);
 
-        foreach (var depId in moduleDef.Dependencies)
-        {
-            // Vérifier si la dépendance est déjà installée (chargée en mémoire)
-            var isLoadedInMemory = ModuleDiscovery.Modules
-                .Any(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
-
-            // Vérifier si la dépendance a été installée dans cette session (téléchargée mais pas encore chargée)
-            var isInstalledThisSession = _allModules
-                .Any(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase) && m.IsInstalled);
-
-            // Vérifier si le fichier DLL existe physiquement
-            var isDllPresent = false;
-            if (!string.IsNullOrEmpty(ModuleDiscovery.ModulesPath))
-            {
-                var possibleFiles = new[]
-                {
-                    $"OpenRoad.{depId}.dll",
-                    $"OpenRoad.{char.ToUpper(depId[0])}{depId.Substring(1)}.dll"
-                };
-                isDllPresent = possibleFiles.Any(f =>
-                    File.Exists(Path.Combine(ModuleDiscovery.ModulesPath, f)));
-            }
-
-            if (!isLoadedInMemory && !isInstalledThisSession && !isDllPresent)
-            {
-                // Chercher la définition dans le manifest
-                var depDef = _manifest?.Modules
-                    .FirstOrDefault(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
-
-                if (depDef != null)
-                {
-                    // Éviter les doublons
-                    if (!missing.Any(m => m.Id.Equals(depDef.Id, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        missing.Add(depDef);
-
-                        // Récursivement vérifier les dépendances de la dépendance
-                        var subDeps = GetMissingDependencies(depDef);
-                        foreach (var subDep in subDeps)
-                        {
-                            if (!missing.Any(m => m.Id.Equals(subDep.Id, StringComparison.OrdinalIgnoreCase)))
-                            {
-                                missing.Add(subDep);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return missing;
+        return ModuleDiscovery.GetMissingDependencies(moduleDef, _manifest, sessionInstalledIds);
     }
 
     /// <summary>

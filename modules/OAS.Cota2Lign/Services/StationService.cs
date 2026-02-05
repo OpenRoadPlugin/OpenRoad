@@ -206,21 +206,4 @@ public static class StationService
     {
         return targetPolyline.GetClosestPointTo(sourcePoint, extend: false);
     }
-
-    /// <summary>
-    /// Calcule l'angle tangent à une position donnée sur la polyligne.
-    /// </summary>
-    /// <param name="polyline">Polyligne</param>
-    /// <param name="distance">Distance curviligne</param>
-    /// <returns>Angle en radians</returns>
-    public static double GetTangentAngle(Polyline polyline, double distance)
-    {
-        // Éviter les problèmes aux extrémités
-        distance = Math.Max(0.001, Math.Min(distance, polyline.Length - 0.001));
-
-        var point = polyline.GetPointAtDist(distance);
-        var derivative = polyline.GetFirstDerivative(point);
-
-        return Math.Atan2(derivative.Y, derivative.X);
-    }
 }

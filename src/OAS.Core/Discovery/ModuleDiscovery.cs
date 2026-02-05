@@ -239,6 +239,99 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
+    /// Récupère les dépendances manquantes pour un module à installer.
+    /// Vérifie les modules chargés en mémoire, les fichiers DLL présents et les IDs additionnels fournis.
+    /// </summary>
+    /// <param name="moduleDef">Définition du module à vérifier</param>
+    /// <param name="manifest">Manifest du marketplace contenant toutes les définitions de modules</param>
+    /// <param name="additionalInstalledIds">IDs de modules installés dans cette session mais pas encore chargés (optionnel)</param>
+    /// <returns>Liste des modules manquants à installer, dans l'ordre (sous-dépendances en premier)</returns>
+    public static List<Services.ModuleDefinition> GetMissingDependencies(
+        Services.ModuleDefinition moduleDef,
+        Services.MarketplaceManifest manifest,
+        IEnumerable<string>? additionalInstalledIds = null)
+    {
+        var missing = new List<Services.ModuleDefinition>();
+        var installedIds = additionalInstalledIds?.ToHashSet(StringComparer.OrdinalIgnoreCase) ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        GetMissingDependenciesRecursive(moduleDef, manifest, installedIds, missing);
+
+        return missing;
+    }
+
+    /// <summary>
+    /// Vérifie si un module est disponible (chargé ou présent sur le disque)
+    /// </summary>
+    /// <param name="moduleId">ID du module à vérifier</param>
+    /// <param name="additionalInstalledIds">IDs de modules installés dans cette session</param>
+    /// <returns>True si le module est disponible</returns>
+    public static bool IsModuleAvailable(string moduleId, IEnumerable<string>? additionalInstalledIds = null)
+    {
+        // Vérifier si chargé en mémoire
+        if (Modules.Any(m => m.Id.Equals(moduleId, StringComparison.OrdinalIgnoreCase)))
+            return true;
+
+        // Vérifier si dans les IDs additionnels
+        if (additionalInstalledIds?.Contains(moduleId, StringComparer.OrdinalIgnoreCase) == true)
+            return true;
+
+        // Vérifier si le fichier DLL existe physiquement
+        if (!string.IsNullOrEmpty(ModulesPath))
+        {
+            var possibleFiles = new[]
+            {
+                $"OAS.{moduleId}.dll",
+                $"OAS.{char.ToUpper(moduleId[0])}{moduleId.Substring(1)}.dll"
+            };
+
+            if (possibleFiles.Any(f => File.Exists(Path.Combine(ModulesPath, f))))
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Récursion interne pour GetMissingDependencies
+    /// </summary>
+    private static void GetMissingDependenciesRecursive(
+        Services.ModuleDefinition moduleDef,
+        Services.MarketplaceManifest manifest,
+        HashSet<string> installedIds,
+        List<Services.ModuleDefinition> missing)
+    {
+        if (moduleDef.Dependencies == null || moduleDef.Dependencies.Count == 0)
+            return;
+
+        foreach (var depId in moduleDef.Dependencies)
+        {
+            // Vérifier si la dépendance est déjà disponible
+            if (IsModuleAvailable(depId, installedIds))
+                continue;
+
+            // Vérifier si déjà dans la liste des manquants
+            if (missing.Any(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            // Chercher la définition dans le manifest
+            var depDef = manifest.Modules
+                .FirstOrDefault(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
+
+            if (depDef != null)
+            {
+                // D'abord récursivement vérifier les sous-dépendances
+                GetMissingDependenciesRecursive(depDef, manifest, installedIds, missing);
+
+                // Puis ajouter cette dépendance (après ses propres dépendances)
+                if (!missing.Any(m => m.Id.Equals(depDef.Id, StringComparison.OrdinalIgnoreCase)))
+                {
+                    missing.Add(depDef);
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Decouvre et charge tous les modules
     /// </summary>
     /// <param name="basePath">Chemin de base (dossier contenant OAS.Core.dll)</param>
@@ -250,7 +343,7 @@ public static class ModuleDiscovery
         ModulesPath = Path.Combine(basePath, "Modules");
 
         // Ajouter chemin depuis configuration si défini
-        var configPath = Configuration.Configuration.Get("modulesPath", "");
+        var configPath = Configuration.Configuration.Get("customModuleSource", "");
         if (!string.IsNullOrWhiteSpace(configPath) && Directory.Exists(configPath))
         {
             AddModulesPath(configPath);
@@ -264,6 +357,9 @@ public static class ModuleDiscovery
             Directory.CreateDirectory(ModulesPath);
             Logger.Info(L10n.T("module.folderCreated"));
         }
+
+        // Nettoyage des modules marqués pour suppression (.del)
+        CleanupDeletedModules(ModulesPath);
 
         // Migration: Renommer les anciens modules OpenRoad.*.dll en OAS.*.dll
         MigrateOldModuleNames(ModulesPath);
@@ -320,6 +416,38 @@ public static class ModuleDiscovery
 
         _initialized = true;
         Logger.Info(L10n.TFormat("module.summary", _loadedModules.Count(m => m.DependenciesSatisfied), _allCommands.Count));
+    }
+
+    /// <summary>
+    /// Supprime les fichiers marqués pour suppression (.del) lors des sessions précédentes
+    /// </summary>
+    private static void CleanupDeletedModules(string folderPath)
+    {
+        try
+        {
+            // Chercher tous les fichiers .del
+            var deletedFiles = Directory.GetFiles(folderPath, "*.del", SearchOption.AllDirectories);
+            foreach (var file in deletedFiles)
+            {
+                try
+                {
+                    if (File.Exists(file))
+                    {
+                        File.Delete(file);
+                        Logger.Debug($"Cleaned up deleted file: {Path.GetFileName(file)}");
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    // Si on ne peut pas supprimer, c'est pas grave, on réessaiera la prochaine fois
+                    Logger.Debug($"Could not cleanup {Path.GetFileName(file)}: {ex.Message}");
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+             Logger.Debug($"Cleanup scan failed: {ex.Message}");
+        }
     }
 
     /// <summary>

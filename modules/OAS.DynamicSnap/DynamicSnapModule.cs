@@ -65,18 +65,19 @@ public class DynamicSnapModule : ModuleBase
     /// </summary>
     public override IEnumerable<Contributor> Contributors => new[]
     {
-        new Contributor("Open Asphalte Community", "Development & Testing")
+        new Contributor("Charles TILLY", "Lead Developer", "https://linkedin.com/in/charlestilly"),
+        new Contributor("IA Copilot", "Code Assistant")
     };
 
     /// <summary>
     /// Version du module
     /// </summary>
-    public override string Version => "1.0.0";
+    public override string Version => "0.0.1";
 
     /// <summary>
     /// Auteur du module
     /// </summary>
-    public override string Author => "Open Asphalte Contributors";
+    public override string Author => "Charles TILLY";
 
     // ═══════════════════════════════════════════════════════════
     // CONFIGURATION AFFICHAGE UI

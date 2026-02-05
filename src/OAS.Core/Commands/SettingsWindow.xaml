@@ -74,16 +74,29 @@
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
+                    <!-- Custom Source -->
+                    <GroupBox Header="Custom Module Source (Folder or URL)" Grid.Row="0" Margin="0,0,0,10">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="txtCustomSource" VerticalContentAlignment="Center" Margin="0,0,5,0"/>
+                            <Button x:Name="btnBrowseSource" Grid.Column="1" Content="..." Width="30" Click="OnBrowseSourceClick"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,10">
                         <Button x:Name="btnCheckUpdates" Content="Check Updates" Padding="10,5" Click="OnCheckUpdatesClick"/>
                         <TextBlock x:Name="txtUpdateStatus" Text="" VerticalAlignment="Center" Margin="10,0,0,0"/>
                     </StackPanel>
 
-                    <ListView x:Name="lstModules" Grid.Row="1" BorderThickness="1" BorderBrush="#CCC" SelectionMode="Multiple">
+                    <ListView x:Name="lstModules" Grid.Row="2" BorderThickness="1" BorderBrush="#CCC" SelectionMode="Multiple">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Width="30">
@@ -103,7 +116,13 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Name" Width="130" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="Name" Width="130">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" FontWeight="{Binding NameWeight}" Foreground="{Binding NameBrush}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Header="Version" Width="90" DisplayMemberBinding="{Binding VersionDisplay}"/>
                                 <GridViewColumn Header="Description" Width="200" DisplayMemberBinding="{Binding Description}"/>
                                 <GridViewColumn Header="Action" Width="90">
@@ -122,7 +141,7 @@
                     </ListView>
 
                     <!-- Barre d'installation multiple -->
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0">
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
                         <Button x:Name="btnInstallSelected"
                                 Content="Installer la sélection"
                                 Padding="10,5"

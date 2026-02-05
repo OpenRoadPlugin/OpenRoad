@@ -68,8 +68,7 @@ Chaque module implémente :
    ├── Configuration.Load()          → Charge config JSON
    ├── Localization.Initialize()     → Charge traductions Core
    └── ModuleDiscovery.DiscoverAndLoad()
-       └── Pour chaque OAS.*.dll dans Modules/:
-           ├── Vérification signature (optionnel)
+         └── Pour chaque OAS.*.dll dans Modules/:
            ├── Recherche classes IModule
            ├── Validation dépendances
            ├── Validation version Core min
@@ -158,4 +157,4 @@ Fichier : `%AppData%/Open Asphalte/config.json`
 | Commandes | `OAS_{MODULE}_{ACTION}` |
 | Calques | `OAS_{MODULE}_{ELEMENT}` |
 | Clés traduction | `{module.id}.{section}.{key}` |
-| Assemblies | `OpenAsphalte.{ModuleName}` |
+| Assemblies | `OAS.{ModuleName}` |

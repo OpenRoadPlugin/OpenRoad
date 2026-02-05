@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterScreen"
         Background="#F0F0F0"
         ResizeMode="CanResize">
-    
+
     <Window.Resources>
         <!-- Style pour les labels d'info -->
         <Style x:Key="InfoLabel" TargetType="TextBlock">
@@ -16,14 +16,14 @@
             <Setter Property="Foreground" Value="#333"/>
             <Setter Property="Margin" Value="0,4,8,4"/>
         </Style>
-        
+
         <!-- Style pour les valeurs d'info -->
         <Style x:Key="InfoValue" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#555"/>
             <Setter Property="Margin" Value="0,4,0,4"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
-        
+
         <!-- Style pour les groupes -->
         <Style x:Key="GroupHeader" TargetType="TextBlock">
             <Setter Property="FontWeight" Value="Bold"/>
@@ -31,7 +31,7 @@
             <Setter Property="Foreground" Value="#2E7D32"/>
             <Setter Property="Margin" Value="0,8,0,4"/>
         </Style>
-        
+
         <!-- Style bouton principal -->
         <Style x:Key="PrimaryButton" TargetType="Button">
             <Setter Property="Background" Value="#4CAF50"/>
@@ -43,8 +43,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="4" 
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
@@ -60,7 +60,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <!-- Style bouton secondaire -->
         <Style x:Key="SecondaryButton" TargetType="Button">
             <Setter Property="Background" Value="#E0E0E0"/>
@@ -71,8 +71,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="4" 
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
@@ -85,7 +85,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <!-- Style bouton danger -->
         <Style x:Key="DangerButton" TargetType="Button">
             <Setter Property="Background" Value="#F44336"/>
@@ -96,8 +96,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="4" 
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
@@ -111,7 +111,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    
+
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -120,7 +120,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <!-- En-tete avec infos actuelles -->
         <Border Grid.Row="0" Background="White" CornerRadius="4" Padding="12" Margin="0,0,0,12">
             <Grid>
@@ -128,21 +128,21 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <!-- Systeme actuel -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <TextBlock Text="Systeme actuel :" Style="{StaticResource InfoLabel}" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="CurrentSystemLabel" Text="Systeme actuel :" Style="{StaticResource InfoLabel}" VerticalAlignment="Center"/>
                     <TextBlock x:Name="CurrentSystemText" Text="(Aucun)" Style="{StaticResource InfoValue}" VerticalAlignment="Center"/>
                 </StackPanel>
-                
+
                 <!-- Systeme detecte -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <TextBlock Text="Detecte :" Style="{StaticResource InfoLabel}" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="DetectedSystemLabel" Text="Detecte :" Style="{StaticResource InfoLabel}" VerticalAlignment="Center"/>
                     <TextBlock x:Name="DetectedSystemText" Text="(Aucun)" Style="{StaticResource InfoValue}" VerticalAlignment="Center" Foreground="#2E7D32"/>
                 </StackPanel>
             </Grid>
         </Border>
-        
+
         <!-- Barre de recherche -->
         <Border Grid.Row="1" Background="White" CornerRadius="4" Padding="8" Margin="0,0,0,12">
             <Grid>
@@ -150,8 +150,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
-                <TextBox x:Name="SearchBox" 
+
+                <TextBox x:Name="SearchBox"
                          Grid.Column="0"
                          Padding="8,6"
                          FontSize="14"
@@ -177,27 +177,27 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
-                
-                <CheckBox x:Name="GroupByCountryCheckBox" 
-                          Grid.Column="1" 
-                          Content="Grouper par pays" 
-                          VerticalAlignment="Center" 
+
+                <CheckBox x:Name="GroupByCountryCheckBox"
+                          Grid.Column="1"
+                          Content="Grouper par pays"
+                          VerticalAlignment="Center"
                           Margin="12,0,0,0"
                           Checked="GroupByCountry_Changed"
                           Unchecked="GroupByCountry_Changed"/>
             </Grid>
         </Border>
-        
+
         <!-- Liste et details -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            
+
             <!-- Liste des projections -->
             <Border Grid.Column="0" Background="White" CornerRadius="4" Margin="0,0,8,0">
-                <ListView x:Name="ProjectionListView" 
+                <ListView x:Name="ProjectionListView"
                           BorderThickness="0"
                           SelectionChanged="ProjectionListView_SelectionChanged"
                           MouseDoubleClick="ProjectionListView_MouseDoubleClick">
@@ -220,13 +220,13 @@
                     </ListView.ItemContainerStyle>
                 </ListView>
             </Border>
-            
+
             <!-- Panneau de details -->
             <Border Grid.Column="1" Background="White" CornerRadius="4" Padding="12">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel x:Name="DetailsPanel" Visibility="Collapsed">
-                        <TextBlock Text="Details" Style="{StaticResource GroupHeader}"/>
-                        
+                        <TextBlock x:Name="DetailsHeader" Text="Details" Style="{StaticResource GroupHeader}"/>
+
                         <Grid Margin="0,8,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -241,38 +241,38 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            
+
                             <!-- Nom -->
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Nom :" Style="{StaticResource InfoLabel}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="NameLabel" Text="Nom :" Style="{StaticResource InfoLabel}"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" x:Name="DetailName" Style="{StaticResource InfoValue}"/>
-                            
+
                             <!-- Code AutoCAD -->
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Code :" Style="{StaticResource InfoLabel}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" x:Name="CodeLabel" Text="Code :" Style="{StaticResource InfoLabel}"/>
                             <TextBlock Grid.Row="1" Grid.Column="1" x:Name="DetailCode" Style="{StaticResource InfoValue}" FontFamily="Consolas" FontWeight="Bold" Foreground="#1976D2"/>
-                            
+
                             <!-- EPSG -->
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="EPSG :" Style="{StaticResource InfoLabel}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" x:Name="EpsgLabel" Text="EPSG :" Style="{StaticResource InfoLabel}"/>
                             <TextBlock Grid.Row="2" Grid.Column="1" x:Name="DetailEpsg" Style="{StaticResource InfoValue}"/>
-                            
+
                             <!-- Pays -->
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Pays :" Style="{StaticResource InfoLabel}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" x:Name="CountryLabel" Text="Pays :" Style="{StaticResource InfoLabel}"/>
                             <TextBlock Grid.Row="3" Grid.Column="1" x:Name="DetailCountry" Style="{StaticResource InfoValue}"/>
-                            
+
                             <!-- Region -->
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Region :" Style="{StaticResource InfoLabel}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" x:Name="RegionLabel" Text="Region :" Style="{StaticResource InfoLabel}"/>
                             <TextBlock Grid.Row="4" Grid.Column="1" x:Name="DetailRegion" Style="{StaticResource InfoValue}"/>
-                            
+
                             <!-- Unite -->
-                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Unite :" Style="{StaticResource InfoLabel}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="0" x:Name="UnitLabel" Text="Unite :" Style="{StaticResource InfoLabel}"/>
                             <TextBlock Grid.Row="5" Grid.Column="1" x:Name="DetailUnit" Style="{StaticResource InfoValue}"/>
-                            
+
                             <!-- Description -->
-                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Description :" Style="{StaticResource InfoLabel}" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Row="6" Grid.Column="0" x:Name="DescriptionLabel" Text="Description :" Style="{StaticResource InfoLabel}" VerticalAlignment="Top"/>
                             <TextBlock Grid.Row="6" Grid.Column="1" x:Name="DetailDescription" Style="{StaticResource InfoValue}"/>
                         </Grid>
-                        
+
                         <!-- Limites -->
-                        <TextBlock Text="Limites typiques" Style="{StaticResource GroupHeader}" Margin="0,16,0,0"/>
+                        <TextBlock x:Name="BoundsHeader" Text="Limites typiques" Style="{StaticResource GroupHeader}" Margin="0,16,0,0"/>
                         <Border Background="#F5F5F5" CornerRadius="4" Padding="8" Margin="0,4,0,0">
                             <StackPanel>
                                 <TextBlock x:Name="DetailBoundsX" Style="{StaticResource InfoValue}" FontFamily="Consolas"/>
@@ -283,10 +283,10 @@
                 </ScrollViewer>
             </Border>
         </Grid>
-        
+
         <!-- Compteur de resultats -->
         <TextBlock Grid.Row="3" x:Name="ResultCountText" Text="0 systemes" Margin="4,8,0,8" Foreground="#666"/>
-        
+
         <!-- Boutons d'action -->
         <Border Grid.Row="4" Background="White" CornerRadius="4" Padding="12">
             <Grid>
@@ -297,36 +297,36 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <!-- Bouton Supprimer -->
-                <Button Grid.Column="0" 
+                <Button Grid.Column="0"
                         x:Name="ClearButton"
                         Content="Supprimer le systeme"
                         Style="{StaticResource DangerButton}"
                         ToolTip="Supprimer le systeme de coordonnees actuel du dessin"
                         Click="ClearButton_Click"/>
-                
+
                 <!-- Option Activer Bing Maps -->
-                <CheckBox Grid.Column="1" 
+                <CheckBox Grid.Column="1"
                           x:Name="EnableGeoMapCheckBox"
                           Content="Activer Bing Maps (GEOMAP)"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Center"
                           ToolTip="Active l'affichage de la carte aerienne Bing Maps apres application de la projection"
                           IsChecked="False"/>
-                
+
                 <!-- Bouton Annuler -->
-                <Button Grid.Column="3" 
+                <Button Grid.Column="3"
                         x:Name="CancelButton"
-                        Content="Annuler" 
+                        Content="Annuler"
                         Style="{StaticResource SecondaryButton}"
                         Margin="0,0,8,0"
                         Click="CancelButton_Click"/>
-                
+
                 <!-- Bouton Appliquer -->
-                <Button Grid.Column="4" 
+                <Button Grid.Column="4"
                         x:Name="ApplyButton"
-                        Content="Appliquer" 
+                        Content="Appliquer"
                         Style="{StaticResource PrimaryButton}"
                         IsEnabled="False"
                         Click="ApplyButton_Click"/>

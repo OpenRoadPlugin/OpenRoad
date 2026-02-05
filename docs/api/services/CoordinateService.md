@@ -1,6 +1,6 @@
 # CoordinateService
 
-> Service de conversion de coordonnees et gestion des projections
+> Service de conversion de coordonnées et gestion des projections
 
 ## Namespace
 
@@ -10,19 +10,19 @@ using OpenAsphalte.Services;
 
 ## Description
 
-`CoordinateService` fournit des fonctions de conversion entre differents systemes de coordonnees geographiques et de gestion des projections cartographiques. Il est utilise par le module Georeferencement mais peut etre appele par n'importe quel module.
+`CoordinateService` fournit des fonctions de conversion entre différents systèmes de coordonnées géographiques et de gestion des projections cartographiques. Il est utilisé par le module Géoréférencement mais peut être appelé par n'importe quel module.
 
 ## Constantes
 
 | Constante | Type | Valeur | Description |
 |-----------|------|--------|-------------|
-| `OriginThreshold` | double | 1000.0 | Seuil en metres pour ignorer les points proches de l'origine |
-| `SemiMajorAxis` | double | 6378137.0 | Demi-grand axe de l'ellipsoide WGS84 (metres) |
-| `Flattening` | double | 1/298.257223563 | Aplatissement de l'ellipsoide WGS84 |
+| `OriginThreshold` | double | 1000.0 | Seuil en mètres pour ignorer les points proches de l'origine |
+| `SemiMajorAxis` | double | 6378137.0 | Demi-grand axe de l'ellipsoïde WGS84 (mètres) |
+| `Flattening` | double | 1/298.257223563 | Aplatissement de l'ellipsoïde WGS84 |
 
 ## Classe ProjectionInfo
 
-Represente un systeme de projection.
+Représente un système de projection.
 
 ```csharp
 public class ProjectionInfo
@@ -31,16 +31,16 @@ public class ProjectionInfo
     public string Name { get; set; }          // Nom complet
     public int Epsg { get; set; }             // Code EPSG
     public string Country { get; set; }       // Pays
-    public string Region { get; set; }        // Region/Zone
-    public string Unit { get; set; }          // Unite (metre, etc.)
+    public string Region { get; set; }        // Région/Zone
+    public string Unit { get; set; }          // Unité (mètre, etc.)
     public string Description { get; set; }   // Description
-    public ProjectionBounds Bounds { get; set; } // Limites geographiques
+    public ProjectionBounds Bounds { get; set; } // Limites géographiques
 }
 ```
 
 ## Classe ProjectionBounds
 
-Definit les limites geographiques d'une projection (en coordonnees projetees).
+Définit les limites géographiques d'une projection (en coordonnées projetées).
 
 ```csharp
 public class ProjectionBounds
@@ -52,17 +52,17 @@ public class ProjectionBounds
 }
 ```
 
-## Methodes
+## Méthodes
 
 ### GetAllProjections
 
-Retourne la liste complete des projections disponibles.
+Retourne la liste complète des projections disponibles.
 
 ```csharp
 public static IEnumerable<ProjectionInfo> GetAllProjections()
 ```
 
-**Retour** : Collection de toutes les projections de la base de donnees.
+**Retour** : Collection de toutes les projections de la base de données.
 
 **Exemple** :
 ```csharp
@@ -77,18 +77,18 @@ foreach (var proj in projections)
 
 ### SearchProjections
 
-Recherche des projections par criteres.
+Recherche des projections par critères.
 
 ```csharp
 public static IEnumerable<ProjectionInfo> SearchProjections(string searchText)
 ```
 
-**Parametres** :
-| Parametre | Type | Description |
+**Paramètres** :
+| Paramètre | Type | Description |
 |-----------|------|-------------|
-| searchText | string | Texte de recherche (nom, code, pays, region) |
+| searchText | string | Texte de recherche (nom, code, pays, région) |
 
-**Retour** : Projections correspondant aux criteres de recherche.
+**Retour** : Projections correspondant aux critères de recherche.
 
 **Exemple** :
 ```csharp
@@ -100,18 +100,18 @@ var results = CoordinateService.SearchProjections("lambert");
 
 ### GetProjectionByCode
 
-Recupere une projection par son code AutoCAD.
+Récupère une projection par son code AutoCAD.
 
 ```csharp
 public static ProjectionInfo? GetProjectionByCode(string code)
 ```
 
-**Parametres** :
-| Parametre | Type | Description |
+**Paramètres** :
+| Paramètre | Type | Description |
 |-----------|------|-------------|
 | code | string | Code AutoCAD de la projection |
 
-**Retour** : La projection correspondante ou `null` si non trouvee.
+**Retour** : La projection correspondante ou `null` si non trouvée.
 
 **Exemple** :
 ```csharp
@@ -122,23 +122,23 @@ var lambert93 = CoordinateService.GetProjectionByCode("Lambert-93");
 
 ### DetectProjection
 
-Detecte la projection probable a partir de coordonnees moyennes.
+Détecte la projection probable à partir de coordonnées moyennes.
 
 ```csharp
 public static ProjectionInfo? DetectProjection(double x, double y)
 ```
 
-**Parametres** :
-| Parametre | Type | Description |
+**Paramètres** :
+| Paramètre | Type | Description |
 |-----------|------|-------------|
-| x | double | Coordonnee X moyenne |
-| y | double | Coordonnee Y moyenne |
+| x | double | Coordonnée X moyenne |
+| y | double | Coordonnée Y moyenne |
 
-**Retour** : La projection la plus probable ou `null` si indeterminable.
+**Retour** : La projection la plus probable ou `null` si indéterminable.
 
 **Exemple** :
 ```csharp
-// Coordonnees typiques Lambert 93
+// Coordonnées typiques Lambert 93
 var detected = CoordinateService.DetectProjection(652000, 6862000);
 // detected.Code == "Lambert-93"
 ```
@@ -147,19 +147,19 @@ var detected = CoordinateService.DetectProjection(652000, 6862000);
 
 ### Lambert93ToWgs84
 
-Convertit des coordonnees Lambert 93 en WGS84 (lat/lon).
+Convertit des coordonnées Lambert 93 en WGS84 (lat/lon).
 
 ```csharp
 public static (double lat, double lon) Lambert93ToWgs84(double x, double y)
 ```
 
-**Parametres** :
-| Parametre | Type | Description |
+**Paramètres** :
+| Paramètre | Type | Description |
 |-----------|------|-------------|
-| x | double | Coordonnee Est Lambert 93 (metres) |
-| y | double | Coordonnee Nord Lambert 93 (metres) |
+| x | double | Coordonnée Est Lambert 93 (mètres) |
+| y | double | Coordonnée Nord Lambert 93 (mètres) |
 
-**Retour** : Tuple (latitude, longitude) en degres decimaux.
+**Retour** : Tuple (latitude, longitude) en degrés décimaux.
 
 **Exemple** :
 ```csharp
@@ -171,19 +171,19 @@ var (lat, lon) = CoordinateService.Lambert93ToWgs84(652000, 6862000);
 
 ### Wgs84ToLambert93
 
-Convertit des coordonnees WGS84 en Lambert 93.
+Convertit des coordonnées WGS84 en Lambert 93.
 
 ```csharp
 public static (double x, double y) Wgs84ToLambert93(double lat, double lon)
 ```
 
-**Parametres** :
-| Parametre | Type | Description |
+**Paramètres** :
+| Paramètre | Type | Description |
 |-----------|------|-------------|
-| lat | double | Latitude en degres decimaux |
-| lon | double | Longitude en degres decimaux |
+| lat | double | Latitude en degrés décimaux |
+| lon | double | Longitude en degrés décimaux |
 
-**Retour** : Tuple (X, Y) en metres Lambert 93.
+**Retour** : Tuple (X, Y) en mètres Lambert 93.
 
 **Exemple** :
 ```csharp
@@ -195,20 +195,20 @@ var (x, y) = CoordinateService.Wgs84ToLambert93(48.8566, 2.3522);
 
 ### CCToWgs84
 
-Convertit des coordonnees Conique Conforme (CC) en WGS84.
+Convertit des coordonnées Conique Conforme (CC) en WGS84.
 
 ```csharp
 public static (double lat, double lon) CCToWgs84(double x, double y, int zoneNumber)
 ```
 
-**Parametres** :
-| Parametre | Type | Description |
+**Paramètres** :
+| Paramètre | Type | Description |
 |-----------|------|-------------|
-| x | double | Coordonnee Est CC (metres) |
-| y | double | Coordonnee Nord CC (metres) |
-| zoneNumber | int | Numero de zone CC (42 a 50) |
+| x | double | Coordonnée Est CC (mètres) |
+| y | double | Coordonnée Nord CC (mètres) |
+| zoneNumber | int | Numéro de zone CC (42 à 50) |
 
-**Retour** : Tuple (latitude, longitude) en degres decimaux.
+**Retour** : Tuple (latitude, longitude) en degrés décimaux.
 
 **Exemple** :
 ```csharp
@@ -220,21 +220,21 @@ var (lat, lon) = CoordinateService.CCToWgs84(1350000, 6220000, 44);
 
 ### UtmToWgs84
 
-Convertit des coordonnees UTM en WGS84.
+Convertit des coordonnées UTM en WGS84.
 
 ```csharp
 public static (double lat, double lon) UtmToWgs84(double easting, double northing, int zone, bool northern)
 ```
 
-**Parametres** :
-| Parametre | Type | Description |
+**Paramètres** :
+| Paramètre | Type | Description |
 |-----------|------|-------------|
-| easting | double | Coordonnee Est UTM (metres) |
-| northing | double | Coordonnee Nord UTM (metres) |
-| zone | int | Numero de zone UTM (1-60) |
-| northern | bool | `true` si hemisphere nord |
+| easting | double | Coordonnée Est UTM (mètres) |
+| northing | double | Coordonnée Nord UTM (mètres) |
+| zone | int | Numéro de zone UTM (1-60) |
+| northern | bool | `true` si hémisphère nord |
 
-**Retour** : Tuple (latitude, longitude) en degres decimaux.
+**Retour** : Tuple (latitude, longitude) en degrés décimaux.
 
 **Exemple** :
 ```csharp
@@ -246,17 +246,17 @@ var (lat, lon) = CoordinateService.UtmToWgs84(452000, 5412000, 31, true);
 
 ### Wgs84ToUtm
 
-Convertit des coordonnees WGS84 en UTM.
+Convertit des coordonnées WGS84 en UTM.
 
 ```csharp
 public static (double easting, double northing, int zone) Wgs84ToUtm(double lat, double lon)
 ```
 
-**Parametres** :
-| Parametre | Type | Description |
+**Paramètres** :
+| Paramètre | Type | Description |
 |-----------|------|-------------|
-| lat | double | Latitude en degres decimaux |
-| lon | double | Longitude en degres decimaux |
+| lat | double | Latitude en degrés décimaux |
+| lon | double | Longitude en degrés décimaux |
 
 **Retour** : Tuple (Easting, Northing, Zone).
 
@@ -270,21 +270,21 @@ var (e, n, zone) = CoordinateService.Wgs84ToUtm(48.8566, 2.3522);
 
 ### VincentyDistance
 
-Calcule la distance geodesique entre deux points WGS84 (formule de Vincenty).
+Calcule la distance géodésique entre deux points WGS84 (formule de Vincenty).
 
 ```csharp
 public static double VincentyDistance(double lat1, double lon1, double lat2, double lon2)
 ```
 
-**Parametres** :
-| Parametre | Type | Description |
+**Paramètres** :
+| Paramètre | Type | Description |
 |-----------|------|-------------|
-| lat1 | double | Latitude du point 1 (degres) |
-| lon1 | double | Longitude du point 1 (degres) |
-| lat2 | double | Latitude du point 2 (degres) |
-| lon2 | double | Longitude du point 2 (degres) |
+| lat1 | double | Latitude du point 1 (degrés) |
+| lon1 | double | Longitude du point 1 (degrés) |
+| lat2 | double | Latitude du point 2 (degrés) |
+| lon2 | double | Longitude du point 2 (degrés) |
 
-**Retour** : Distance en metres.
+**Retour** : Distance en mètres.
 
 **Exemple** :
 ```csharp
@@ -293,12 +293,12 @@ double dist = CoordinateService.VincentyDistance(48.8566, 2.3522, 45.7640, 4.835
 // dist ≈ 393 km
 ```
 
-## Base de donnees des projections
+## Base de données des projections
 
-La base de donnees est stockee dans `bin/Data/projections.json` et contient plus de 40 projections :
+La base de données est stockée dans `bin/Data/projections.json` et contient plus de 40 projections :
 
-- **France metropolitaine** : Lambert 93, zones CC (42-50), NTF zones
-- **DOM-TOM** : Guyane, Antilles, Reunion, Mayotte, Saint-Pierre-et-Miquelon
+- **France métropolitaine** : Lambert 93, zones CC (42-50), NTF zones
+- **DOM-TOM** : Guyane, Antilles, Réunion, Mayotte, Saint-Pierre-et-Miquelon
 - **Belgique** : Lambert 2008, Lambert 72
 - **Suisse** : CH1903+ LV95, CH1903 LV03
 - **Luxembourg** : LUREF
@@ -310,17 +310,17 @@ La base de donnees est stockee dans `bin/Data/projections.json` et contient plus
 - **Canada** : NAD83 MTM zones
 - **UTM mondial** : Zones 20-40N, zones 20-40S
 
-## Precision des conversions
+## Précision des conversions
 
-Les conversions utilisent des formules geodesiques rigoureuses :
+Les conversions utilisent des formules géodésiques rigoureuses :
 
-- **Lambert -> WGS84** : Projection conique conforme secante
+- **Lambert -> WGS84** : Projection conique conforme sécante
 - **UTM -> WGS84** : Transverse Mercator universelle
-- **Distance** : Formule iterative de Vincenty sur ellipsoide
+- **Distance** : Formule itérative de Vincenty sur ellipsoïde
 
-Precision typique : < 1 metre pour la plupart des applications de voirie.
+Précision typique : < 1 mètre pour la plupart des applications de voirie.
 
 ## Voir aussi
 
-- [Module Georeferencement](../modules/georeferencement.md)
+- [Module Géoréférencement](../modules/georeferencement.md)
 - [GeometryService](./GeometryService.md)

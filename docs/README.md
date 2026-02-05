@@ -14,7 +14,11 @@ docs/
 │       ├── GeometryService.md         # Calculs géométriques, voirie, hydraulique
 │       ├── LayerService.md            # Gestion des calques
 │       ├── CoordinateService.md       # Conversions de coordonnées
-│       └── UpdateService.md           # Vérification des mises à jour
+│       ├── UpdateService.md           # Vérification des mises à jour
+│       ├── UrlValidationService.md    # Validation sécurisée des URLs
+│       ├── Logger.md                  # Logs AutoCAD et fichier
+│       ├── Configuration.md           # Paramètres utilisateur
+│       └── Localization.md            # Traductions FR/EN/ES
 ├── guides/                            # Guides pratiques
 │   └── developer_guide.md             # Guide complet du développeur
 ├── copilot/                           # Contextes IA et Vibe-Coding
@@ -51,26 +55,25 @@ docs/
 | **LayerService** | Création et gestion des calques AutoCAD | [📄 Voir](api/services/LayerService.md) |
 | **CoordinateService** | Conversions de coordonnées projetées/WGS84 | [📄 Voir](api/services/CoordinateService.md) |
 | **UpdateService** | Vérification des mises à jour | [📄 Voir](api/services/UpdateService.md) |
-| **Logger** | Logs dans la console AutoCAD | *à documenter* |
-| **Configuration** | Paramètres utilisateur (JSON) | *à documenter* |
-| **Localization** | Traductions FR/EN/ES | *à documenter* |
+| **UrlValidationService** | Validation sécurisée des URLs | [📄 Voir](api/services/UrlValidationService.md) |
+| **Logger** | Logs dans la console AutoCAD et fichier | [📄 Voir](api/services/Logger.md) |
+| **Configuration** | Paramètres utilisateur (JSON) | [📄 Voir](api/services/Configuration.md) |
+| **Localization** | Traductions FR/EN/ES | [📄 Voir](api/services/Localization.md) |
 
 ---
 
 ## 📖 Guides
 
-| Guide | Description | Statut |
-|-------|-------------|--------|
-| Démarrage rapide | Installation et premier module | ⏳ à venir |
-| Créer un module | Tutoriel pas à pas | ⏳ à venir |
-| Bonnes pratiques | Conventions et patterns | ⏳ à venir |
-| Tests | Comment tester son module | ⏳ à venir |
+| Guide | Description |
+|-------|-------------|
+| [Guide développeur](guides/developer_guide.md) | Création de modules, conventions et compilation |
+| [Vibe-Coding](copilot/VIBE_CODING_GUIDE.md) | Bonnes pratiques Copilot et prompting |
 
 ---
 
 ## 🔗 Liens utiles
 
-- **Repository GitHub** : [Open Asphalte](https://github.com/openasphalte/openasphalte)
+- **Repository GitHub** : [Open Asphalte](https://github.com/openasphalteplugin/openasphalte)
 - **Changelog** : [CHANGELOG.md](../CHANGELOG.md)
 - **Contributing** : [CONTRIBUTING.md](../CONTRIBUTING.md)
 - **License** : Apache 2.0

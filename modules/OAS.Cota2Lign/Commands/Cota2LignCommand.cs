@@ -29,15 +29,6 @@ namespace OpenAsphalte.Modules.Cota2Lign.Commands;
 /// </summary>
 public class Cota2LignCommand : CommandBase
 {
-    #region Constants
-
-    /// <summary>
-    /// Nom de l'application pour les XData (stockage paramètres dans le dessin)
-    /// </summary>
-    private const string XDataAppName = "OAS_COTA2LIGN";
-
-    #endregion
-
     /// <summary>
     /// Exécute la commande de cotation entre deux lignes
     /// </summary>

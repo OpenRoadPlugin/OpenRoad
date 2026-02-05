@@ -140,8 +140,10 @@ public static class RibbonBuilder
                 return;
             }
 
-            // Supprimer l'onglet existant
+            // Supprimer l'onglet existant et vider les caches
             RemoveRibbon();
+            _buttonCache.Clear();
+            _panelCache.Clear();
 
             // Creer l'onglet
             var tab = new RibbonTab

@@ -1,11 +1,11 @@
 ﻿{
   "name": "Open Asphalte",
-  "version": "0.0.2-dev",
-  "build": "2026.02.04",
-  "channel": "dev",
+  "version": "0.0.2",
+  "build": "2026.02.05",
+  "channel": "stable",
   "framework": ".NET 8.0 - Windows",
   "minAutoCADVersion": "2025",
   "repository": "https://github.com/openasphalteplugin/openasphalte",
   "updateUrl": "https://github.com/openasphalteplugin/openasphalte/releases/latest",
-  "releaseNotes": "Version 0.0.1 - Première version alpha du Core modulaire"
+  "releaseNotes": "Version 0.0.2 - Gestionnaire de modules, personnalisation UI, corrections multiples"
 }

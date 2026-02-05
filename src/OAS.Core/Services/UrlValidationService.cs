@@ -1,4 +1,4 @@
-// Copyright 2026 Open Asphalte Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,28 +12,28 @@
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// Service de validation des URLs pour la s�curit�.
-/// Centralise les contr�les de s�curit� pour �viter les duplications.
+/// Service de validation des URLs pour la sécurité.
+/// Centralise les contrôles de sécurité pour éviter les duplications.
 /// </summary>
 public static class UrlValidationService
 {
     /// <summary>
-    /// Liste blanche des domaines autoris�s pour les mises � jour
+    /// Liste blanche des domaines autorisés pour les mises à jour
     /// </summary>
-    private static readonly string[] AllowedUpdateHosts = 
-    { 
-        "github.com", 
-        "gitlab.com", 
-        "bitbucket.org" 
+    private static readonly string[] AllowedUpdateHosts =
+    {
+        "github.com",
+        "gitlab.com",
+        "bitbucket.org"
     };
-    
+
     /// <summary>
-    /// Valide qu'une URL de mise � jour est s�curis�e.
+    /// Valide qu'une URL de mise à jour est sécurisée.
     /// </summary>
-    /// <param name="url">URL � valider</param>
-    /// <returns>True si l'URL est valide et s�curis�e, false sinon</returns>
+    /// <param name="url">URL à valider</param>
+    /// <returns>True si l'URL est valide et sécurisée, false sinon</returns>
     /// <remarks>
-    /// Crit�res de validation :
+    /// Critères de validation :
     /// - URL non nulle et non vide
     /// - URL absolue valide
     /// - Protocole HTTPS uniquement
@@ -41,48 +41,48 @@ public static class UrlValidationService
     /// </remarks>
     public static bool IsValidUpdateUrl(string? url)
     {
-        if (string.IsNullOrWhiteSpace(url)) 
+        if (string.IsNullOrWhiteSpace(url))
             return false;
-        
-        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) 
+
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
             return false;
-        
-        // N'autoriser que HTTPS pour la s�curit�
-        if (uri.Scheme != Uri.UriSchemeHttps) 
+
+        // N'autoriser que HTTPS pour la sécurité
+        if (uri.Scheme != Uri.UriSchemeHttps)
             return false;
-        
-        // V�rifier que le domaine est dans la liste blanche
-        return AllowedUpdateHosts.Any(host => 
+
+        // Vérifier que le domaine est dans la liste blanche
+        return AllowedUpdateHosts.Any(host =>
             uri.Host.EndsWith(host, StringComparison.OrdinalIgnoreCase));
     }
-    
+
     /// <summary>
-    /// Valide qu'une URL est s�curis�e (HTTPS uniquement).
+    /// Valide qu'une URL est sécurisée (HTTPS uniquement).
     /// </summary>
-    /// <param name="url">URL � valider</param>
+    /// <param name="url">URL à valider</param>
     /// <returns>True si l'URL utilise HTTPS, false sinon</returns>
     public static bool IsSecureUrl(string? url)
     {
-        if (string.IsNullOrWhiteSpace(url)) 
+        if (string.IsNullOrWhiteSpace(url))
             return false;
-        
-        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) 
+
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
             return false;
-        
+
         return uri.Scheme == Uri.UriSchemeHttps;
     }
-    
+
     /// <summary>
-    /// V�rifie si un domaine est dans la liste blanche des mises � jour.
+    /// Vérifie si un domaine est dans la liste blanche des mises à jour.
     /// </summary>
-    /// <param name="host">Nom de domaine � v�rifier</param>
-    /// <returns>True si le domaine est autoris�</returns>
+    /// <param name="host">Nom de domaine à vérifier</param>
+    /// <returns>True si le domaine est autorisé</returns>
     public static bool IsAllowedHost(string? host)
     {
-        if (string.IsNullOrWhiteSpace(host)) 
+        if (string.IsNullOrWhiteSpace(host))
             return false;
-        
-        return AllowedUpdateHosts.Any(allowed => 
+
+        return AllowedUpdateHosts.Any(allowed =>
             host.EndsWith(allowed, StringComparison.OrdinalIgnoreCase));
     }
 }

@@ -109,6 +109,9 @@ public partial class SettingsWindow : Window
         // Mises à jour
         chkCheckUpdates.IsChecked = Configuration.Configuration.CheckUpdatesOnStartup;
 
+        // Source Modules personnalisée
+        txtCustomSource.Text = Configuration.Configuration.Get("customModuleSource", "");
+
         // Infos
         UpdateInfoText();
     }
@@ -120,7 +123,7 @@ public partial class SettingsWindow : Window
     {
         var modules = ModuleDiscovery.Modules;
         var commands = ModuleDiscovery.AllCommands;
-        txtInfo.Text = L10n.TFormat("settings.info", Plugin.Version, modules.Count, commands.Count, Configuration.Configuration.ConfigurationFile);
+        txtInfo.Text = L10n.TFormat("settings.info", (object)Plugin.Version, modules.Count, commands.Count, Configuration.Configuration.ConfigurationFile);
     }
 
     /// <summary>
@@ -148,6 +151,9 @@ public partial class SettingsWindow : Window
             // Mises à jour
             Configuration.Configuration.Set("checkUpdatesOnStartup", chkCheckUpdates.IsChecked == true);
 
+            // Source Modules personnalisée
+            Configuration.Configuration.Set("customModuleSource", txtCustomSource.Text);
+
             // Sauvegarder
             Configuration.Configuration.Save();
 
@@ -170,6 +176,24 @@ public partial class SettingsWindow : Window
     {
         DialogResult = false;
         Close();
+    }
+
+    private void OnBrowseSourceClick(object sender, RoutedEventArgs e)
+    {
+        using var dialog = new System.Windows.Forms.FolderBrowserDialog();
+        dialog.Description = "Sélectionnez le dossier contenant le fichier marketplace.json";
+        dialog.UseDescriptionForTitle = true;
+        dialog.ShowNewFolderButton = false;
+
+        if (Directory.Exists(txtCustomSource.Text))
+        {
+            dialog.SelectedPath = txtCustomSource.Text;
+        }
+
+        if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        {
+            txtCustomSource.Text = dialog.SelectedPath;
+        }
     }
 
     /// <summary>
@@ -217,7 +241,11 @@ public partial class SettingsWindow : Window
             // Afficher les modules
             if (result.Manifest != null)
             {
-                foreach (var moduleDef in result.Manifest.Modules)
+                var sortedModules = result.Manifest.Modules
+                    .OrderByDescending(m => m.IsCustomSource)
+                    .ThenBy(m => m.Name);
+
+                foreach (var moduleDef in sortedModules)
                 {
                     var isInstalled = ModuleDiscovery.Modules.Any(m => m.Id.Equals(moduleDef.Id, StringComparison.OrdinalIgnoreCase));
                     var updateInfo = result.Updates.FirstOrDefault(u => u.ModuleId == moduleDef.Id);
@@ -233,14 +261,23 @@ public partial class SettingsWindow : Window
                         VersionDisplay = isInstalled ? $"{installedVersion} -> {moduleDef.Version}" : moduleDef.Version,
                         StatusIcon = isInstalled ? (updateInfo != null ? "!" : "✓") : "+",
                         StatusColor = isInstalled ? (updateInfo != null ? System.Windows.Media.Brushes.Orange : System.Windows.Media.Brushes.Green) : System.Windows.Media.Brushes.Blue,
+                        NameBrush = moduleDef.IsCustomSource ? System.Windows.Media.Brushes.Purple : System.Windows.Media.Brushes.Black,
+                        IsSelected = false,
+                        StatusIcon = isInstalled ? (updateInfo != null ? "!" : "✓") : "+",
+                        StatusColor = isInstalled ? (updateInfo != null ? System.Windows.Media.Brushes.Orange : System.Windows.Media.Brushes.Green) : System.Windows.Media.Brushes.Blue,
+                        NameBrush = moduleDef.IsCustomSource ? System.Windows.Media.Brushes.Purple : System.Windows.Media.Brushes.Black,
+                        NameWeight = moduleDef.IsCustomSource ? System.Windows.FontWeights.Bold : System.Windows.FontWeights.Normal,
                         CanUpdate = !isInstalled || updateInfo != null,
-                        ActionText = isInstalled ? (updateInfo != null ? L10n.T("modules.action.update", "Mettre à jour") : L10n.T("modules.action.installed", "Installé")) : L10n.T("modules.action.install", "Installer")
+                        ActionText = isInstalled
+                            ? (updateInfo != null ? L10n.T("modules.action.update", "Mettre à jour") : L10n.T("modules.action.uninstall", "Désinstaller"))
+                            : L10n.T("modules.action.install", "Installer")
                     };
 
-                    // Forcer bouton gris si déjà installé et à jour
+                    // Activer le bouton de désinstallation si déjà installé et à jour
                     if (isInstalled && updateInfo == null)
                     {
-                        item.CanUpdate = false;
+                        item.CanUpdate = true;
+                        item.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
                     }
 
                     _moduleList.Add(item);
@@ -279,7 +316,15 @@ public partial class SettingsWindow : Window
         }
     }
 
-    private async void OnModuleActionClick(object sender, RoutedEventArgs e)
+    private async voVérifier si c'est une désinstallation
+                 var isUninstall = item.ActionText == L10n.T("modules.action.uninstall", "Désinstaller");
+                 if (isUninstall)
+                 {
+                     await UninstallModuleAsync(item, btn);
+                     return;
+                 }
+
+                 // id OnModuleActionClick(object sender, RoutedEventArgs e)
     {
         if (sender is System.Windows.Controls.Button btn && btn.CommandParameter is ModuleItemViewModel item)
         {
@@ -326,10 +371,12 @@ public partial class SettingsWindow : Window
                          var depVm = _moduleList.FirstOrDefault(m => m.Definition.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase));
                          if (depVm != null)
                          {
-                             depVm.CanUpdate = false;
-                             depVm.StatusIcon = "✓";
-                             depVm.StatusColor = System.Windows.Media.Brushes.Green;
-                             depVm.ActionText = L10n.T("modules.action.installed", "Installé");
+                 // Mise à jour de l'état "installé" permet maintenant la désinstallation
+                 btn.Content = L10n.T("modules.action.uninstall", "Désinstaller");
+                 item.CanUpdate = true;
+                 item.StatusIcon = "✓";
+                 item.StatusColor = System.Windows.Media.Brushes.Green;
+                 item.ActionText = L10n.T("modules.action.uninstall", "Désinstaller").installed", "Installé");
                          }
                      }
                  }
@@ -366,76 +413,146 @@ public partial class SettingsWindow : Window
                          MessageBoxImage.Information);
                  }
              }
-             catch(System.Exception ex)
-             {
-                 System.Windows.MessageBox.Show(ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                 btn.Content = L10n.T("modules.manager.retry", "Réessayer");
-                 btn.IsEnabled = true;
-             }
+        Désinstalle un module
+    /// </summary>
+    private async Task UninstallModuleAsync(ModuleItemViewModel item, Button btn)
+    {
+        var moduleId = item.Definition.Id;
+        var moduleName = item.Name;
+
+        // 1. Trouver le module chargé pour vérifier les dépendances
+        var loadedModuleDescriptor = ModuleDiscovery.LoadedModules
+            .FirstOrDefault(m => m.Module.Id.Equals(moduleId, StringComparison.OrdinalIgnoreCase));
+
+        if (loadedModuleDescriptor == null)
+        {
+             // Si le module n'est pas chargé, on essaie de le trouver physiquement dans le dossier Modules
+             // Cela peut arriver si le module a été installé mais nécessite un redémarrage
+             System.Windows.MessageBox.Show(L10n.T("modules.manager.notLoaded", "Module introuvable ou pas encore chargé."), "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+             return;
+        }
+
+        // 2. Vérifier les dépendances (autres modules qui dépendent de celui-ci)
+        var dependentModules = ModuleDiscovery.Modules
+            .Where(m => m.Dependencies.Contains(moduleId, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        if (dependentModules.Any())
+        {
+            var depNames = string.Join("\n• ", dependentModules.Select(m => m.Name));
+            var message = L10n.TFormat("modules.manager.uninstall.dependents",
+                "Attention : Les modules suivants dépendent de {0} :\n\n• {1}\n\nSi vous désinstallez {0}, ces modules ne fonctionneront plus correctement.\n\nVoulez-vous vraiment continuer ?",
+                moduleName, depNames);
+
+            if (System.Windows.MessageBox.Show(message, L10n.T("modules.manager.warning", "Attention"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+        else
+        {
+            var message = L10n.TFormat("modules.manager.uninstall.confirm", "Voulez-vous vraiment désinstaller le module {0} ?", moduleName);
+            if (System.Windows.MessageBox.Show(message, L10n.T("modules.manager.uninstall.title", "Désinstallation"),
+                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        try
+        {
+            btn.IsEnabled = false;
+
+            // 3. Procéder à la "désinstallation" (renommage .dll -> .dll.del)
+            var filePath = loadedModuleDescriptor.FilePath;
+
+            // On renomme le fichier DLL principal
+            if (File.Exists(filePath))
+            {
+                var delPath = filePath + ".del";
+                if (File.Exists(delPath)) File.Delete(delPath); // Nettoyer si existe déjà
+
+                File.Move(filePath, delPath);
+
+                // On essaie aussi de renommer le PDB s'il existe
+                var pdbPath = Path.ChangeExtension(filePath, ".pdb");
+                if (File.Exists(pdbPath))
+                {
+                    var pdbDelPath = pdbPath + ".del";
+                    if (File.Exists(pdbDelPath)) File.Delete(pdbDelPath);
+                    File.Move(pdbPath, pdbDelPath);
+                }
+
+                // On essaie aussi de renommer le deps.json s'il existe
+                var depsPath = Path.ChangeExtension(filePath, ".deps.json");
+                if (File.Exists(depsPath))
+                {
+                     var depsDelPath = depsPath + ".del";
+                     if (File.Exists(depsDelPath)) File.Delete(depsDelPath);
+                     File.Move(depsPath, depsDelPath);
+                }
+            }
+
+            // 4. Mettre à jour l'interface
+            item.ActionText = L10n.T("modules.action.install", "Installer");
+            item.CanUpdate = true;
+            item.StatusIcon = "+";
+            item.StatusColor = System.Windows.Media.Brushes.Blue;
+            item.VersionDisplay = item.Definition.Version;
+
+            // 5. Demander le redémarrage
+            System.Windows.MessageBox.Show(
+                L10n.TFormat("modules.manager.uninstall.restart",
+                    "Le module {0} a été marqué pour désinstallation.\n\nIl sera complètement supprimé au prochain démarrage d'AutoCAD.",
+                    moduleName),
+                L10n.T("common.success", "Succès"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (IOException ioEx)
+        {
+            // Erreur typique si fichier verrouillé
+            Logger.Error($"Uninstall error (IO): {ioEx}");
+            System.Windows.MessageBox.Show(
+                L10n.T("modules.manager.uninstall.locked", "Impossible de supprimer le fichier car il est verrouillé par AutoCAD.\nEssayez de fermer AutoCAD et de supprimer le fichier manuellement."),
+                L10n.T("cmd.error", "Erreur"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        catch (System.Exception ex)
+        {
+            Logger.Error($"Uninstall error: {ex}");
+            System.Windows.MessageBox.Show(ex.Message, L10n.T("cmd.error", "Erreur"), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            btn.IsEnabled = true;
         }
     }
 
     /// <summary>
-    /// Récupère les dépendances manquantes pour un module
-    /// </summary>
-    private List<ModuleDefinition> GetMissingDependencies(ModuleDefinition moduleDef, MarketplaceManifest manifest)
-    {
-        var missing = new List<ModuleDefinition>();
-
-        if (moduleDef.Dependencies == null || moduleDef.Dependencies.Count == 0)
-            return missing;
-
-        foreach (var depId in moduleDef.Dependencies)
-        {
-            // Vérifier si la dépendance est déjà installée (chargée en mémoire)
-            var isLoadedInMemory = ModuleDiscovery.Modules
-                .Any(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
-
-            // Vérifier si la dépendance a été installée dans cette session
-            var isInstalledThisSession = _moduleList
-                .Any(m => m.Definition.Id.Equals(depId, StringComparison.OrdinalIgnoreCase) && !m.CanUpdate && m.StatusIcon == "✓");
-
-            // Vérifier si le fichier DLL existe physiquement
-            var isDllPresent = false;
-            if (!string.IsNullOrEmpty(ModuleDiscovery.ModulesPath))
-            {
-                var possibleFiles = new[]
-                {
-                    $"OpenRoad.{depId}.dll",
-                    $"OpenRoad.{char.ToUpper(depId[0])}{depId.Substring(1)}.dll"
-                };
-                isDllPresent = possibleFiles.Any(f =>
-                    File.Exists(Path.Combine(ModuleDiscovery.ModulesPath, f)));
-            }
-
-            if (!isLoadedInMemory && !isInstalledThisSession && !isDllPresent)
-            {
-                // Chercher la définition dans le manifest
-                var depDef = manifest.Modules
-                    .FirstOrDefault(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
-
-                if (depDef != null)
-                {
-                    // Éviter les doublons
-                    if (!missing.Any(m => m.Id.Equals(depDef.Id, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        missing.Add(depDef);
-
-                        // Récursivement vérifier les dépendances de la dépendance
-                        var subDeps = GetMissingDependencies(depDef, manifest);
-                        foreach (var subDep in subDeps)
-                        {
-                            if (!missing.Any(m => m.Id.Equals(subDep.Id, StringComparison.OrdinalIgnoreCase)))
-                            {
-                                missing.Insert(0, subDep); // Les sous-dépendances d'abord
-                            }
-                        }
-                    }
+    ///      catch(System.Exception ex)
+             {
+                 System.Windows.MessageBox.Show(ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                 btn.Content = L10n.T("modules.manager.retry", "Réessayer");
+                 btn.IsEnabled = true;uninstall", "Désinstaller");
+                    depVm.CanUpdate = true;
                 }
             }
-        }
 
-        return missing;
+            // Ensuite installer les modules sélectionnés
+            foreach (var module in selectedModules)
+            {
+                txtUpdateStatus.Text = L10n.TFormat("modules.manager.installing", "Installation de {0}...", module.Name);
+                await UpdateService.InstallModuleAsync(module.Definition);
+                installedModules.Add(module.Name);
+
+                module.CanUpdate = true;
+                module.IsSelected = false;
+                module.StatusIcon = "✓";
+                module.StatusColor = System.Windows.Media.Brushes.Green;
+                module.ActionText = L10n.T("modules.action.uninstall", "DésinstalleronInstalledIds);
     }
 
     /// <summary>
@@ -610,6 +727,9 @@ public class ModuleItemViewModel : System.ComponentModel.INotifyPropertyChanged
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
     public string VersionDisplay { get; set; } = "";
+
+    public System.Windows.Media.Brush NameBrush { get; set; } = System.Windows.Media.Brushes.Black;
+    public System.Windows.FontWeight NameWeight { get; set; } = System.Windows.FontWeights.Normal;
 
     private string _statusIcon = "";
     public string StatusIcon

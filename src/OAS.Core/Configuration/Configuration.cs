@@ -9,6 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Concurrent;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -32,7 +33,7 @@ public static class Configuration
     private static readonly string ConfigFile = Path.Combine(ConfigFolder, "config.json");
     private const long MaxConfigSizeBytes = 512 * 1024; // 512 KB
 
-    private static Dictionary<string, object> _settings = new();
+    private static ConcurrentDictionary<string, object> _settings = new();
     private static bool _loaded = false;
     private static bool _isLoading = false;
     private static readonly object _loadLock = new();
@@ -80,11 +81,10 @@ public static class Configuration
         {
             if (_isLoading) return;
             _isLoading = true;
-        }
 
-        try
-        {
-            StartupLog.Write($"Configuration.Load: begin (file={ConfigFile})");
+            try
+            {
+                StartupLog.Write($"Configuration.Load: begin (file={ConfigFile})");
             if (File.Exists(ConfigFile))
             {
                 StartupLog.Write("Configuration.Load: file exists");
@@ -113,7 +113,8 @@ public static class Configuration
                         AllowTrailingCommas = true,
                         ReadCommentHandling = JsonCommentHandling.Skip
                     };
-                    _settings = JsonSerializer.Deserialize<Dictionary<string, object>>(json, options) ?? new();
+                    var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(json, options) ?? new();
+                    _settings = new ConcurrentDictionary<string, object>(dict);
                     _loaded = true;
                     Logger.Debug(string.Format(L10n.T("config.loaded", "Configuration chargee depuis {0}"), ConfigFile));
                     StartupLog.Write("Configuration.Load: deserialized");
@@ -155,11 +156,9 @@ public static class Configuration
         }
         finally
         {
-            lock (_loadLock)
-            {
-                _isLoading = false;
-            }
+            _isLoading = false;
         }
+        } // End of lock
     }
 
     private static void ResetCorruptConfig()
@@ -318,7 +317,7 @@ public static class Configuration
     public static bool Remove(string key)
     {
         EnsureLoaded();
-        return _settings.Remove(key);
+        return _settings.TryRemove(key, out _);
     }
 
     /// <summary>
@@ -369,8 +368,8 @@ public static class Configuration
     /// </summary>
     /// <remarks>
     /// Cette propriété accède directement à la configuration.
-    /// Si vous voulez que le changement de langue soit propag? ? l'UI,
-    /// utilisez plut?t <c>Localization.Localization.SetLanguage(language)</c>.
+    /// Si vous voulez que le changement de langue soit propagé à l'UI,
+    /// utilisez plutôt <c>Localization.Localization.SetLanguage(language)</c>.
     /// </remarks>
     public static string Language
     {
@@ -396,7 +395,7 @@ public static class Configuration
     /// </summary>
     public static string UpdateUrl
     {
-        get => Get("updateUrl", "https://github.com/openroadplugin/openroad/releases/latest");
+        get => Get("updateUrl", "https://github.com/OpenAsphaltePlugin/OpenAsphalte/releases/latest");
         set => Set("updateUrl", value);
     }
 

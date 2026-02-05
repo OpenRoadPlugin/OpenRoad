@@ -1,4 +1,4 @@
-// Copyright 2026 Open Asphalte Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -16,24 +16,24 @@ using System.Text.Json;
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// Service de gestion des syst�mes de coordonn�es et de conversion.
-/// Fournit des m�thodes pour identifier, convertir et g�rer les projections cartographiques.
+/// Service de gestion des systèmes de coordonnées et de conversion.
+/// Fournit des méthodes pour identifier, convertir et gérer les projections cartographiques.
 /// </summary>
 /// <remarks>
-/// Ce service g�re les syst�mes de coordonn�es compatibles avec AutoCAD (variable CGEOCS).
-/// Il peut charger des d�finitions de projections depuis un fichier JSON externe.
+/// Ce service gère les systèmes de coordonnées compatibles avec AutoCAD (variable CGEOCS).
+/// Il peut charger des définitions de projections depuis un fichier JSON externe.
 /// </remarks>
 public static class CoordinateService
 {
     #region Constants
 
     /// <summary>
-    /// Rayon �quatorial de la Terre (WGS84) en m�tres
+    /// Rayon équatorial de la Terre (WGS84) en mètres
     /// </summary>
     public const double EarthRadiusEquatorial = 6378137.0;
 
     /// <summary>
-    /// Rayon polaire de la Terre (WGS84) en m�tres
+    /// Rayon polaire de la Terre (WGS84) en mètres
     /// </summary>
     public const double EarthRadiusPolar = 6356752.314245;
 
@@ -43,13 +43,13 @@ public static class CoordinateService
     public const double EarthFlattening = 1.0 / 298.257223563;
 
     /// <summary>
-    /// Excentricit� au carr� (WGS84)
+    /// Excentricité au carré (WGS84)
     /// </summary>
     public const double EarthEccentricitySquared = 0.00669437999014;
 
     /// <summary>
-    /// Seuil de distance au centre (origine) en dessous duquel un point est ignor�
-    /// pour la d�tection automatique de projection (en unit�s du dessin)
+    /// Seuil de distance au centre (origine) en dessous duquel un point est ignoré
+    /// pour la détection automatique de projection (en unités du dessin)
     /// </summary>
     public const double OriginThreshold = 1000.0;
 
@@ -73,7 +73,7 @@ public static class CoordinateService
     }
 
     /// <summary>
-    /// Charge les projections depuis le fichier JSON ou utilise les projections int�gr�es
+    /// Charge les projections depuis le fichier JSON ou utilise les projections intégrées
     /// </summary>
     private static void EnsureProjectionsLoaded()
     {
@@ -105,31 +105,31 @@ public static class CoordinateService
                 }
                 catch
                 {
-                    // Fallback aux projections int�gr�es
+                    // Fallback aux projections intégrées
                 }
             }
 
-            // Projections int�gr�es (France, Belgique, Suisse, etc.)
+            // Projections intégrées (France, Belgique, Suisse, etc.)
             LoadBuiltInProjections();
         }
     }
 
     /// <summary>
-    /// Charge les projections int�gr�es au programme
+    /// Charge les projections intégrées au programme
     /// </summary>
     private static void LoadBuiltInProjections()
     {
         _projections = new List<ProjectionInfo>
         {
             // ???????????????????????????????????????????????????????????????????????????
-            // FRANCE - RGF93 / Lambert 93 (syst�me national)
+            // FRANCE - RGF93 / Lambert 93 (système national)
             // ???????????????????????????????????????????????????????????????????????????
             new ProjectionInfo
             {
                 Code = "RGF93.LAMB93",
                 Name = "RGF93 / Lambert 93",
                 Country = "France",
-                Region = "France m�tropolitaine",
+                Region = "France métropolitaine",
                 Epsg = 2154,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -138,18 +138,18 @@ public static class CoordinateService
                 FalseNorthing = 6600000,
                 MinX = 100000, MaxX = 1200000,
                 MinY = 6000000, MaxY = 7200000,
-                Description = "Projection conique conforme de Lambert - Syst�me national fran�ais"
+                Description = "Projection conique conforme de Lambert - Système national français"
             },
 
             // ???????????????????????????????????????????????????????????????????????????
-            // FRANCE - RGF93 / CC42 � CC50 (zones c�niques conformes)
+            // FRANCE - RGF93 / CC42 à CC50 (zones coniques conformes)
             // ???????????????????????????????????????????????????????????????????????????
             new ProjectionInfo
             {
                 Code = "RGF93.CC42",
                 Name = "RGF93 / CC42",
                 Country = "France",
-                Region = "Corse, C�te d'Azur (sud)",
+                Region = "Corse, Côte d'Azur (sud)",
                 Epsg = 3942,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -158,7 +158,7 @@ public static class CoordinateService
                 FalseNorthing = 1200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 1000000, MaxY = 1400000,
-                Description = "Zone CC42 - Latitude origine 42�N"
+                Description = "Zone CC42 - Latitude origine 42°N"
             },
             new ProjectionInfo
             {
@@ -174,14 +174,14 @@ public static class CoordinateService
                 FalseNorthing = 2200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 2000000, MaxY = 2400000,
-                Description = "Zone CC43 - Latitude origine 43�N"
+                Description = "Zone CC43 - Latitude origine 43°N"
             },
             new ProjectionInfo
             {
                 Code = "RGF93.CC44",
                 Name = "RGF93 / CC44",
                 Country = "France",
-                Region = "Aquitaine, Midi-Pyr�n�es (sud)",
+                Region = "Aquitaine, Midi-Pyrénées (sud)",
                 Epsg = 3944,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -190,7 +190,7 @@ public static class CoordinateService
                 FalseNorthing = 3200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 3000000, MaxY = 3400000,
-                Description = "Zone CC44 - Latitude origine 44�N"
+                Description = "Zone CC44 - Latitude origine 44°N"
             },
             new ProjectionInfo
             {
@@ -206,7 +206,7 @@ public static class CoordinateService
                 FalseNorthing = 4200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 4000000, MaxY = 4400000,
-                Description = "Zone CC45 - Latitude origine 45�N"
+                Description = "Zone CC45 - Latitude origine 45°N"
             },
             new ProjectionInfo
             {
@@ -222,7 +222,7 @@ public static class CoordinateService
                 FalseNorthing = 5200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 5000000, MaxY = 5400000,
-                Description = "Zone CC46 - Latitude origine 46�N"
+                Description = "Zone CC46 - Latitude origine 46°N"
             },
             new ProjectionInfo
             {
@@ -238,14 +238,14 @@ public static class CoordinateService
                 FalseNorthing = 6200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 6000000, MaxY = 6400000,
-                Description = "Zone CC47 - Latitude origine 47�N"
+                Description = "Zone CC47 - Latitude origine 47°N"
             },
             new ProjectionInfo
             {
                 Code = "RGF93.CC48",
                 Name = "RGF93 / CC48",
                 Country = "France",
-                Region = "�le-de-France, Normandie, Bretagne",
+                Region = "Île-de-France, Normandie, Bretagne",
                 Epsg = 3948,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -254,7 +254,7 @@ public static class CoordinateService
                 FalseNorthing = 7200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 7000000, MaxY = 7400000,
-                Description = "Zone CC48 - Latitude origine 48�N"
+                Description = "Zone CC48 - Latitude origine 48°N"
             },
             new ProjectionInfo
             {
@@ -270,7 +270,7 @@ public static class CoordinateService
                 FalseNorthing = 8200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 8000000, MaxY = 8400000,
-                Description = "Zone CC49 - Latitude origine 49�N"
+                Description = "Zone CC49 - Latitude origine 49°N"
             },
             new ProjectionInfo
             {
@@ -286,11 +286,11 @@ public static class CoordinateService
                 FalseNorthing = 9200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 9000000, MaxY = 9400000,
-                Description = "Zone CC50 - Latitude origine 50�N"
+                Description = "Zone CC50 - Latitude origine 50°N"
             },
 
             // ???????????????????????????????????????????????????????????????????????????
-            // FRANCE - NTF / Lambert zones (ancien syst�me)
+            // FRANCE - NTF / Lambert zones (ancien système)
             // ???????????????????????????????????????????????????????????????????????????
             new ProjectionInfo
             {
@@ -300,13 +300,13 @@ public static class CoordinateService
                 Region = "Nord de la France",
                 Epsg = 27561,
                 Unit = "m",
-                CentralMeridian = 2.337229167, // M�ridien de Paris
+                CentralMeridian = 2.337229167, // Méridien de Paris
                 LatitudeOrigin = 49.5,
                 FalseEasting = 600000,
                 FalseNorthing = 200000,
                 MinX = 0, MaxX = 1200000,
                 MinY = 0, MaxY = 400000,
-                Description = "Ancien syst�me NTF - Zone I (Nord)"
+                Description = "Ancien système NTF - Zone I (Nord)"
             },
             new ProjectionInfo
             {
@@ -322,14 +322,14 @@ public static class CoordinateService
                 FalseNorthing = 200000,
                 MinX = 0, MaxX = 1200000,
                 MinY = 0, MaxY = 400000,
-                Description = "Ancien syst�me NTF - Zone II (Centre)"
+                Description = "Ancien système NTF - Zone II (Centre)"
             },
             new ProjectionInfo
             {
                 Code = "NTF.Lambert-2e-ClrkIGN",
-                Name = "NTF (Paris) / Lambert zone II �tendu",
+                Name = "NTF (Paris) / Lambert zone II étendu",
                 Country = "France",
-                Region = "France m�tropolitaine",
+                Region = "France métropolitaine",
                 Epsg = 27572,
                 Unit = "m",
                 CentralMeridian = 2.337229167,
@@ -338,7 +338,7 @@ public static class CoordinateService
                 FalseNorthing = 2200000,
                 MinX = 0, MaxX = 1200000,
                 MinY = 1600000, MaxY = 2800000,
-                Description = "Ancien syst�me NTF - Zone II �tendu (France enti�re)"
+                Description = "Ancien système NTF - Zone II étendu (France entière)"
             },
             new ProjectionInfo
             {
@@ -354,7 +354,7 @@ public static class CoordinateService
                 FalseNorthing = 200000,
                 MinX = 0, MaxX = 1200000,
                 MinY = 0, MaxY = 400000,
-                Description = "Ancien syst�me NTF - Zone III (Sud)"
+                Description = "Ancien système NTF - Zone III (Sud)"
             },
             new ProjectionInfo
             {
@@ -370,7 +370,7 @@ public static class CoordinateService
                 FalseNorthing = 185861,
                 MinX = 0, MaxX = 500000,
                 MinY = 0, MaxY = 400000,
-                Description = "Ancien syst�me NTF - Zone IV (Corse)"
+                Description = "Ancien système NTF - Zone IV (Corse)"
             },
 
             // ???????????????????????????????????????????????????????????????????????????
@@ -390,7 +390,7 @@ public static class CoordinateService
                 FalseNorthing = 5400088.438,
                 MinX = 0, MaxX = 300000,
                 MinY = 0, MaxY = 300000,
-                Description = "Syst�me belge Lambert 72"
+                Description = "Système belge Lambert 72"
             },
             new ProjectionInfo
             {
@@ -406,7 +406,7 @@ public static class CoordinateService
                 FalseNorthing = 665262.0,
                 MinX = 500000, MaxX = 800000,
                 MinY = 500000, MaxY = 800000,
-                Description = "Syst�me belge Lambert 2008 (ETRS89)"
+                Description = "Système belge Lambert 2008 (ETRS89)"
             },
 
             // ???????????????????????????????????????????????????????????????????????????
@@ -426,7 +426,7 @@ public static class CoordinateService
                 FalseNorthing = 200000,
                 MinX = 480000, MaxX = 840000,
                 MinY = 70000, MaxY = 300000,
-                Description = "Ancien syst�me suisse LV03"
+                Description = "Ancien système suisse LV03"
             },
             new ProjectionInfo
             {
@@ -442,7 +442,7 @@ public static class CoordinateService
                 FalseNorthing = 1200000,
                 MinX = 2480000, MaxX = 2840000,
                 MinY = 1070000, MaxY = 1300000,
-                Description = "Syst�me suisse actuel LV95"
+                Description = "Système suisse actuel LV95"
             },
 
             // ???????????????????????????????????????????????????????????????????????????
@@ -462,7 +462,7 @@ public static class CoordinateService
                 FalseNorthing = 100000,
                 MinX = 45000, MaxX = 115000,
                 MinY = 55000, MaxY = 145000,
-                Description = "Syst�me luxembourgeois Transverse Mercator"
+                Description = "Système luxembourgeois Transverse Mercator"
             },
 
             // ???????????????????????????????????????????????????????????????????????????
@@ -554,7 +554,7 @@ public static class CoordinateService
                 FalseNorthing = 0,
                 MinX = 2400000, MaxX = 3600000,
                 MinY = 3600000, MaxY = 5300000,
-                Description = "Syst�me italien RDN2008"
+                Description = "Système italien RDN2008"
             },
 
             // ???????????????????????????????????????????????????????????????????????????
@@ -594,18 +594,18 @@ public static class CoordinateService
                 FalseNorthing = 463000,
                 MinX = 0, MaxX = 300000,
                 MinY = 300000, MaxY = 630000,
-                Description = "Syst�me n�erlandais RD New (Rijksdriehoek)"
+                Description = "Système néerlandais RD New (Rijksdriehoek)"
             },
 
             // ???????????????????????????????????????????????????????????????????????????
-            // CANADA - Qu�bec
+            // CANADA - Québec
             // ???????????????????????????????????????????????????????????????????????????
             new ProjectionInfo
             {
                 Code = "NAD83.MTM-zone-7",
                 Name = "NAD83 / MTM zone 7",
                 Country = "Canada",
-                Region = "Qu�bec (Montr�al)",
+                Region = "Québec (Montréal)",
                 Epsg = 32187,
                 Unit = "m",
                 CentralMeridian = -70.5,
@@ -614,14 +614,14 @@ public static class CoordinateService
                 FalseNorthing = 0,
                 MinX = 0, MaxX = 610000,
                 MinY = 4800000, MaxY = 5400000,
-                Description = "Modified Transverse Mercator zone 7 (Qu�bec)"
+                Description = "Modified Transverse Mercator zone 7 (Québec)"
             },
             new ProjectionInfo
             {
                 Code = "NAD83.MTM-zone-8",
                 Name = "NAD83 / MTM zone 8",
                 Country = "Canada",
-                Region = "Qu�bec (Qu�bec City)",
+                Region = "Québec (Québec City)",
                 Epsg = 32188,
                 Unit = "m",
                 CentralMeridian = -73.5,
@@ -630,7 +630,7 @@ public static class CoordinateService
                 FalseNorthing = 0,
                 MinX = 0, MaxX = 610000,
                 MinY = 4800000, MaxY = 5400000,
-                Description = "Modified Transverse Mercator zone 8 (Qu�bec)"
+                Description = "Modified Transverse Mercator zone 8 (Québec)"
             },
 
             // ???????????????????????????????????????????????????????????????????????????
@@ -641,7 +641,7 @@ public static class CoordinateService
                 Code = "WGS84.UTM-29N",
                 Name = "WGS 84 / UTM zone 29N",
                 Country = "Global",
-                Region = "Longitude -12� � -6� (Portugal, A�ores)",
+                Region = "Longitude -12° à -6° (Portugal, Açores)",
                 Epsg = 32629,
                 Unit = "m",
                 CentralMeridian = -9.0,
@@ -657,7 +657,7 @@ public static class CoordinateService
                 Code = "WGS84.UTM-30N",
                 Name = "WGS 84 / UTM zone 30N",
                 Country = "Global",
-                Region = "Longitude -6� � 0� (Espagne, UK ouest)",
+                Region = "Longitude -6° à 0° (Espagne, UK ouest)",
                 Epsg = 32630,
                 Unit = "m",
                 CentralMeridian = -3.0,
@@ -673,7 +673,7 @@ public static class CoordinateService
                 Code = "WGS84.UTM-31N",
                 Name = "WGS 84 / UTM zone 31N",
                 Country = "Global",
-                Region = "Longitude 0� � 6� (France ouest, Benelux)",
+                Region = "Longitude 0° à 6° (France ouest, Benelux)",
                 Epsg = 32631,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -689,7 +689,7 @@ public static class CoordinateService
                 Code = "WGS84.UTM-32N",
                 Name = "WGS 84 / UTM zone 32N",
                 Country = "Global",
-                Region = "Longitude 6� � 12� (France est, Allemagne)",
+                Region = "Longitude 6° à 12° (France est, Allemagne)",
                 Epsg = 32632,
                 Unit = "m",
                 CentralMeridian = 9.0,
@@ -705,7 +705,7 @@ public static class CoordinateService
                 Code = "WGS84.UTM-33N",
                 Name = "WGS 84 / UTM zone 33N",
                 Country = "Global",
-                Region = "Longitude 12� � 18� (Europe centrale)",
+                Region = "Longitude 12° à 18° (Europe centrale)",
                 Epsg = 32633,
                 Unit = "m",
                 CentralMeridian = 15.0,
@@ -725,7 +725,7 @@ public static class CoordinateService
                 Code = "RGAF09.UTM-zone-20N",
                 Name = "RGAF09 / UTM zone 20N",
                 Country = "France",
-                Region = "Antilles fran�aises (Guadeloupe, Martinique)",
+                Region = "Antilles françaises (Guadeloupe, Martinique)",
                 Epsg = 5490,
                 Unit = "m",
                 CentralMeridian = -63.0,
@@ -734,14 +734,14 @@ public static class CoordinateService
                 FalseNorthing = 0,
                 MinX = 166000, MaxX = 834000,
                 MinY = 0, MaxY = 9400000,
-                Description = "UTM zone 20N pour les Antilles fran�aises"
+                Description = "UTM zone 20N pour les Antilles françaises"
             },
             new ProjectionInfo
             {
                 Code = "RGFG95.UTM-zone-22N",
                 Name = "RGFG95 / UTM zone 22N",
                 Country = "France",
-                Region = "Guyane fran�aise",
+                Region = "Guyane française",
                 Epsg = 2972,
                 Unit = "m",
                 CentralMeridian = -51.0,
@@ -750,14 +750,14 @@ public static class CoordinateService
                 FalseNorthing = 0,
                 MinX = 166000, MaxX = 834000,
                 MinY = 0, MaxY = 9400000,
-                Description = "UTM zone 22N pour la Guyane fran�aise"
+                Description = "UTM zone 22N pour la Guyane française"
             },
             new ProjectionInfo
             {
                 Code = "RGR92.UTM-zone-40S",
                 Name = "RGR92 / UTM zone 40S",
                 Country = "France",
-                Region = "La R�union",
+                Region = "La Réunion",
                 Epsg = 2975,
                 Unit = "m",
                 CentralMeridian = 57.0,
@@ -766,7 +766,7 @@ public static class CoordinateService
                 FalseNorthing = 10000000,
                 MinX = 166000, MaxX = 834000,
                 MinY = 0, MaxY = 10000000,
-                Description = "UTM zone 40S pour La R�union"
+                Description = "UTM zone 40S pour La Réunion"
             },
             new ProjectionInfo
             {
@@ -786,12 +786,12 @@ public static class CoordinateService
             },
 
             // ???????????????????????????????????????????????????????????????????????????
-            // COORDONN�ES G�OGRAPHIQUES
+            // COORDONNÉES GÉOGRAPHIQUES
             // ???????????????????????????????????????????????????????????????????????????
             new ProjectionInfo
             {
                 Code = "LL84",
-                Name = "WGS 84 (g�ographique)",
+                Name = "WGS 84 (géographique)",
                 Country = "Global",
                 Region = "Monde entier",
                 Epsg = 4326,
@@ -802,14 +802,14 @@ public static class CoordinateService
                 FalseNorthing = 0,
                 MinX = -180, MaxX = 180,
                 MinY = -90, MaxY = 90,
-                Description = "Coordonn�es g�ographiques WGS84 (longitude/latitude)"
+                Description = "Coordonnées géographiques WGS84 (longitude/latitude)"
             },
             new ProjectionInfo
             {
                 Code = "LL-RGF93",
-                Name = "RGF93 (g�ographique)",
+                Name = "RGF93 (géographique)",
                 Country = "France",
-                Region = "France m�tropolitaine",
+                Region = "France métropolitaine",
                 Epsg = 4171,
                 Unit = "deg",
                 CentralMeridian = 0.0,
@@ -818,13 +818,13 @@ public static class CoordinateService
                 FalseNorthing = 0,
                 MinX = -10, MaxX = 15,
                 MinY = 40, MaxY = 55,
-                Description = "Coordonn�es g�ographiques RGF93 (longitude/latitude)"
+                Description = "Coordonnées géographiques RGF93 (longitude/latitude)"
             }
         };
     }
 
     /// <summary>
-    /// Recharge les projections depuis le fichier externe (si modifi�)
+    /// Recharge les projections depuis le fichier externe (si modifié) ou depuis la liste intégrée (si le fichier est absent)
     /// </summary>
     public static void ReloadProjections()
     {
@@ -839,7 +839,7 @@ public static class CoordinateService
     /// Recherche une projection par son code AutoCAD
     /// </summary>
     /// <param name="code">Code AutoCAD (ex: "RGF93.CC49")</param>
-    /// <returns>Projection trouv�e ou null</returns>
+    /// <returns>Projection trouvée ou null</returns>
     public static ProjectionInfo? GetProjectionByCode(string code)
     {
         if (string.IsNullOrWhiteSpace(code)) return null;
@@ -851,14 +851,14 @@ public static class CoordinateService
     /// Recherche une projection par son code EPSG
     /// </summary>
     /// <param name="epsg">Code EPSG (ex: 3949)</param>
-    /// <returns>Projection trouv�e ou null</returns>
+    /// <returns>Projection trouvée ou null</returns>
     public static ProjectionInfo? GetProjectionByEpsg(int epsg)
     {
         return Projections.FirstOrDefault(p => p.Epsg == epsg);
     }
 
     /// <summary>
-    /// Recherche des projections par texte (nom, code, pays, r�gion)
+    /// Recherche des projections par texte (nom, code, pays, région)
     /// </summary>
     /// <param name="searchText">Texte de recherche</param>
     /// <returns>Liste des projections correspondantes</returns>
@@ -878,7 +878,7 @@ public static class CoordinateService
     }
 
     /// <summary>
-    /// Retourne les projections group�es par pays
+    /// Retourne les projections groupées par pays
     /// </summary>
     public static IEnumerable<IGrouping<string, ProjectionInfo>> GetProjectionsByCountry()
     {
@@ -890,10 +890,10 @@ public static class CoordinateService
     #region Projection Detection
 
     /// <summary>
-    /// D�tecte automatiquement la projection la plus probable � partir d'un ensemble de points
+    /// Détecte automatiquement la projection la plus probable à partir d'un ensemble de points
     /// </summary>
-    /// <param name="points">Points � analyser</param>
-    /// <returns>Projection d�tect�e ou null si aucune correspondance</returns>
+    /// <param name="points">Points à analyser</param>
+    /// <returns>Projection détectée ou null si aucune correspondance</returns>
     public static ProjectionInfo? DetectProjection(IEnumerable<Point3d> points)
     {
         var validPoints = points
@@ -903,7 +903,7 @@ public static class CoordinateService
         if (validPoints.Count == 0)
             return null;
 
-        // Calculer les coordonn�es moyennes
+        // Calculer les coordonnées moyennes
         double avgX = validPoints.Average(p => p.X);
         double avgY = validPoints.Average(p => p.Y);
 
@@ -911,11 +911,11 @@ public static class CoordinateService
     }
 
     /// <summary>
-    /// D�tecte automatiquement la projection la plus probable � partir de coordonn�es moyennes
+    /// Détecte automatiquement la projection la plus probable à partir de coordonnées moyennes
     /// </summary>
-    /// <param name="x">Coordonn�e X moyenne</param>
-    /// <param name="y">Coordonn�e Y moyenne</param>
-    /// <returns>Projection d�tect�e ou null si aucune correspondance</returns>
+    /// <param name="x">Coordonnée X moyenne</param>
+    /// <param name="y">Coordonnée Y moyenne</param>
+    /// <returns>Projection détectée ou null si aucune correspondance</returns>
     public static ProjectionInfo? DetectProjection(double x, double y)
     {
         // Ignorer si trop proche de l'origine
@@ -924,14 +924,14 @@ public static class CoordinateService
 
         // Chercher la projection dont les bornes contiennent le point
         var candidates = Projections
-            .Where(p => p.Unit == "m") // Ignorer les projections g�ographiques
+            .Where(p => p.Unit == "m") // Ignorer les projections géographiques
             .Where(p => x >= p.MinX && x <= p.MaxX && y >= p.MinY && y <= p.MaxY)
             .ToList();
 
         if (candidates.Count == 0)
             return null;
 
-        // Si plusieurs candidats, pr�f�rer les zones CC (plus pr�cises) puis Lambert 93
+        // Si plusieurs candidats, préférer les zones CC (plus précises) puis Lambert 93
         var preferred = candidates
             .OrderByDescending(p => p.Code.Contains("CC"))
             .ThenByDescending(p => p.Code.Contains("LAMB93"))
@@ -946,22 +946,22 @@ public static class CoordinateService
     #region Coordinate Transformations
 
     /// <summary>
-    /// Convertit des coordonn�es Lambert 93 en WGS84 (longitude/latitude)
+    /// Convertit des coordonnées Lambert 93 en WGS84 (longitude/latitude)
     /// </summary>
-    /// <param name="x">Coordonn�e X (Est) en m�tres</param>
-    /// <param name="y">Coordonn�e Y (Nord) en m�tres</param>
-    /// <returns>Tuple (longitude, latitude) en degr�s d�cimaux</returns>
+    /// <param name="x">Coordonnée X (Est) en mètres</param>
+    /// <param name="y">Coordonnée Y (Nord) en mètres</param>
+    /// <returns>Tuple (longitude, latitude) en degrés décimaux</returns>
     public static (double Longitude, double Latitude) Lambert93ToWgs84(double x, double y)
     {
-        // Param�tres Lambert 93
+        // Paramètres Lambert 93
         const double n = 0.7256077650532670;
         const double c = 11754255.426096;
         const double xs = 700000.0;
         const double ys = 12655612.049876;
         const double e = 0.0818191910428158;
-        const double lon0 = 3.0 * GeometryService.DegToRad; // M�ridien central
+        const double lon0 = 3.0 * GeometryService.DegToRad; // Méridien central
 
-        // Calculs interm�diaires
+        // Calculs intermédiaires
         double dx = x - xs;
         double dy = ys - y;
         double R = Math.Sqrt(dx * dx + dy * dy);
@@ -970,7 +970,7 @@ public static class CoordinateService
         double latIso = Math.Log(c / R) / n;
         double lon = lon0 + gamma / n;
 
-        // Calcul it�ratif de la latitude
+        // Calcul itératif de la latitude
         double lat = 2 * Math.Atan(Math.Exp(latIso)) - Math.PI / 2;
         for (int i = 0; i < 10; i++)
         {
@@ -984,14 +984,14 @@ public static class CoordinateService
     }
 
     /// <summary>
-    /// Convertit des coordonn�es WGS84 (longitude/latitude) en Lambert 93
+    /// Convertit des coordonnées WGS84 (longitude/latitude) en Lambert 93
     /// </summary>
-    /// <param name="longitude">Longitude en degr�s d�cimaux</param>
-    /// <param name="latitude">Latitude en degr�s d�cimaux</param>
-    /// <returns>Tuple (X, Y) en m�tres</returns>
+    /// <param name="longitude">Longitude en degrés décimaux</param>
+    /// <param name="latitude">Latitude en degrés décimaux</param>
+    /// <returns>Tuple (X, Y) en mètres</returns>
     public static (double X, double Y) Wgs84ToLambert93(double longitude, double latitude)
     {
-        // Param�tres Lambert 93
+        // Paramètres Lambert 93
         const double n = 0.7256077650532670;
         const double c = 11754255.426096;
         const double xs = 700000.0;
@@ -1026,65 +1026,65 @@ public static class CoordinateService
     {
         if (zone < 42 || zone > 50)
             throw new ArgumentOutOfRangeException(nameof(zone), "Zone CC doit être entre 42 et 50");
-        
+
         // ═══════════════════════════════════════════════════════════════════════════
         // Paramètres officiels EPSG pour RGF93 / CC42-CC50
         // Projection: Lambert Conic Conformal (2SP) - Conique Conforme Sécante
         // Ellipsoïde: GRS 1980
         // ═══════════════════════════════════════════════════════════════════════════
-        
+
         // Paramètres de l'ellipsoïde GRS80
         const double a = 6378137.0;                    // Demi-grand axe
         const double e2 = 0.00669438002290;            // Excentricité au carré (GRS80)
         const double e = 0.0818191910428158;           // Excentricité
-        
+
         // Méridien central = 3° Est
         const double lon0 = 3.0;
-        
+
         // Latitude origine = zone (en degrés)
         double latOrigin = zone;
-        
+
         // Parallèles standard: lat0 - 0.75° et lat0 + 0.75°
         double lat1 = (zone - 0.75) * GeometryService.DegToRad;  // Parallèle sud
         double lat2 = (zone + 0.75) * GeometryService.DegToRad;  // Parallèle nord
         double lat0 = zone * GeometryService.DegToRad;           // Latitude origine
-        
+
         // False Easting = 1 700 000 m
         const double fe = 1700000.0;
-        
+
         // False Northing = (zone - 41) * 1 000 000 + 200 000 m
         double fn = (zone - 41) * 1000000.0 + 200000.0;
-        
+
         // ═══════════════════════════════════════════════════════════════════════════
         // Calcul des constantes de projection (Lambert Conique Conforme 2SP)
         // ═══════════════════════════════════════════════════════════════════════════
-        
+
         double m1 = Math.Cos(lat1) / Math.Sqrt(1 - e2 * Math.Sin(lat1) * Math.Sin(lat1));
         double m2 = Math.Cos(lat2) / Math.Sqrt(1 - e2 * Math.Sin(lat2) * Math.Sin(lat2));
-        
+
         double t0 = CalculateTValue(lat0, e);
         double t1 = CalculateTValue(lat1, e);
         double t2 = CalculateTValue(lat2, e);
-        
+
         double n = (Math.Log(m1) - Math.Log(m2)) / (Math.Log(t1) - Math.Log(t2));
         double F = m1 / (n * Math.Pow(t1, n));
         double rho0 = a * F * Math.Pow(t0, n);
-        
+
         // ═══════════════════════════════════════════════════════════════════════════
         // Conversion inverse: (X, Y) -> (Lon, Lat)
         // ═══════════════════════════════════════════════════════════════════════════
-        
+
         double xp = x - fe;
         double yp = rho0 - (y - fn);
-        
+
         double rho = Math.Sign(n) * Math.Sqrt(xp * xp + yp * yp);
         double theta = Math.Atan2(xp, yp);
-        
+
         double t = Math.Pow(rho / (a * F), 1.0 / n);
-        
+
         // Longitude
         double lon = theta / n + lon0 * GeometryService.DegToRad;
-        
+
         // Latitude par itération
         double lat = Math.PI / 2 - 2 * Math.Atan(t);
         for (int i = 0; i < 15; i++)
@@ -1095,10 +1095,10 @@ public static class CoordinateService
                 break;
             lat = latNew;
         }
-        
+
         return (lon * GeometryService.RadToDeg, lat * GeometryService.RadToDeg);
     }
-    
+
     /// <summary>
     /// Calcule la valeur t pour la projection Lambert Conique Conforme
     /// </summary>

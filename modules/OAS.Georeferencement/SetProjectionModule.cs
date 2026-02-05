@@ -1,4 +1,4 @@
-// Copyright 2026 Open Asphalte Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -23,17 +23,17 @@ public class SetProjectionModule : ModuleBase
     // ═══════════════════════════════════════════════════════════
     // IDENTIFICATION DU MODULE
     // ═══════════════════════════════════════════════════════════
-    
+
     /// <summary>
     /// Identifiant unique du module
     /// </summary>
     public override string Id => "setprojection";
-    
+
     /// <summary>
     /// Nom affiché dans les menus et rubans
     /// </summary>
     public override string Name => "Définir une projection";
-    
+
     /// <summary>
     /// Description du module
     /// </summary>
@@ -45,42 +45,42 @@ public class SetProjectionModule : ModuleBase
     public override IEnumerable<Contributor> Contributors => new[]
     {
         new Contributor("Charles TILLY", "Lead Developer", "https://linkedin.com/in/charlestilly"),
-        new Contributor("Open Asphalte Community", "Testing & Support")
+        new Contributor("IA Copilot", "Code Assistant")
     };
-    
+
     /// <summary>
     /// Version du module
     /// </summary>
     public override string Version => "0.0.1";
-    
+
     /// <summary>
     /// Auteur du module
     /// </summary>
     public override string Author => "Charles TILLY";
-    
+
     // ═══════════════════════════════════════════════════════════
     // AFFICHAGE UI
     // ═══════════════════════════════════════════════════════════
-    
+
     /// <summary>
     /// Ordre d'affichage (modules officiels entre 10-50)
     /// </summary>
     public override int Order => 10;
-    
+
     /// <summary>
     /// Clé de traduction pour le nom
     /// </summary>
     public override string? NameKey => "setproj.name";
-    
+
     /// <summary>
     /// Version minimale du Core requise
     /// </summary>
     public override string MinCoreVersion => "0.0.1";
-    
+
     // ═══════════════════════════════════════════════════════════
     // COMMANDES
     // ═══════════════════════════════════════════════════════════
-    
+
     /// <summary>
     /// Retourne tous les types contenant des commandes [CommandMethod]
     /// </summary>
@@ -91,11 +91,11 @@ public class SetProjectionModule : ModuleBase
             typeof(SetProjectionCommand),
         };
     }
-    
+
     // ═══════════════════════════════════════════════════════════
     // TRADUCTIONS (FR, EN, ES)
     // ═══════════════════════════════════════════════════════════
-    
+
     /// <summary>
     /// Retourne les traductions spécifiques au module
     /// </summary>
@@ -111,11 +111,11 @@ public class SetProjectionModule : ModuleBase
                 // Menus / Catégories
                 ["menu.carto"] = "Cartographie",
                 ["menu.georef"] = "Géoréférencement",
-                
+
                 // Module
                 ["setproj.name"] = "Définir une projection",
                 ["georef.name"] = "Géoréférencement",
-                
+
                 // Commande: Définir projection
                 ["georef.setproj.title"] = "Définir une projection",
                 ["georef.setproj.desc"] = "Définir le système de coordonnées du dessin",
@@ -129,7 +129,7 @@ public class SetProjectionModule : ModuleBase
                 ["georef.setproj.detected"] = "Système détecté automatiquement : {0}",
                 ["georef.setproj.nodetection"] = "Impossible de détecter automatiquement le système",
                 ["georef.setproj.applied_info"] = "✓ Géolocalisation appliquée - Les Bing Maps et cartes sont maintenant géoréférencés",
-                
+
                 // Fenêtre de sélection
                 ["georef.window.title"] = "Définir le système de coordonnées",
                 ["georef.window.search"] = "Rechercher...",
@@ -139,6 +139,7 @@ public class SetProjectionModule : ModuleBase
                 ["georef.window.list.header.country"] = "Pays",
                 ["georef.window.list.header.region"] = "Région",
                 ["georef.window.details"] = "Détails",
+                ["georef.window.details.name"] = "Nom :",
                 ["georef.window.details.code"] = "Code AutoCAD :",
                 ["georef.window.details.epsg"] = "EPSG :",
                 ["georef.window.details.unit"] = "Unité :",
@@ -161,7 +162,7 @@ public class SetProjectionModule : ModuleBase
                 ["georef.window.unit.degrees"] = "Degrés",
                 ["georef.setproj.geomap.activating"] = "Activation de Bing Maps (GEOMAP)...",
             },
-            
+
             // ═══════════════════════════════════════════════════════
             // ENGLISH
             // ═══════════════════════════════════════════════════════
@@ -174,7 +175,7 @@ public class SetProjectionModule : ModuleBase
                 // Module
                 ["setproj.name"] = "Set Projection",
                 ["georef.name"] = "Georeferencing",
-                
+
                 // Command: Set projection
                 ["georef.setproj.title"] = "Set Projection",
                 ["georef.setproj.desc"] = "Define the coordinate system for the drawing",
@@ -189,7 +190,7 @@ public class SetProjectionModule : ModuleBase
                 ["georef.setproj.nodetection"] = "Unable to automatically detect system",
                 ["georef.setproj.applied_info"] = "✓ Geolocation applied - Bing Maps and maps are now georeferenced",
                 ["georef.setproj.geomap.activating"] = "Activating Bing Maps (GEOMAP)...",
-                
+
                 // Selection window
                 ["georef.window.title"] = "Set Coordinate System",
                 ["georef.window.search"] = "Search...",
@@ -199,6 +200,7 @@ public class SetProjectionModule : ModuleBase
                 ["georef.window.list.header.country"] = "Country",
                 ["georef.window.list.header.region"] = "Region",
                 ["georef.window.details"] = "Details",
+                ["georef.window.details.name"] = "Name:",
                 ["georef.window.details.code"] = "AutoCAD Code:",
                 ["georef.window.details.epsg"] = "EPSG:",
                 ["georef.window.details.unit"] = "Unit:",
@@ -220,7 +222,7 @@ public class SetProjectionModule : ModuleBase
                 ["georef.window.unit.meters"] = "Meters",
                 ["georef.window.unit.degrees"] = "Degrees",
             },
-            
+
             // ═══════════════════════════════════════════════════════
             // ESPAÑOL
             // ═══════════════════════════════════════════════════════
@@ -233,7 +235,7 @@ public class SetProjectionModule : ModuleBase
                 // Módulo
                 ["setproj.name"] = "Definir proyección",
                 ["georef.name"] = "Georreferenciación",
-                
+
                 // Comando: Definir proyección
                 ["georef.setproj.title"] = "Definir proyección",
                 ["georef.setproj.desc"] = "Definir el sistema de coordenadas del dibujo",
@@ -248,7 +250,7 @@ public class SetProjectionModule : ModuleBase
                 ["georef.setproj.nodetection"] = "No se puede detectar el sistema automáticamente",
                 ["georef.setproj.applied_info"] = "✓ Geolocalización aplicada - Bing Maps y mapas están ahora georreferenciados",
                 ["georef.setproj.geomap.activating"] = "Activando Bing Maps (GEOMAP)...",
-                
+
                 // Ventana de selección
                 ["georef.window.title"] = "Definir sistema de coordenadas",
                 ["georef.window.search"] = "Buscar...",
@@ -258,6 +260,7 @@ public class SetProjectionModule : ModuleBase
                 ["georef.window.list.header.country"] = "País",
                 ["georef.window.list.header.region"] = "Región",
                 ["georef.window.details"] = "Detalles",
+                ["georef.window.details.name"] = "Nombre:",
                 ["georef.window.details.code"] = "Código AutoCAD:",
                 ["georef.window.details.epsg"] = "EPSG:",
                 ["georef.window.details.unit"] = "Unidad:",

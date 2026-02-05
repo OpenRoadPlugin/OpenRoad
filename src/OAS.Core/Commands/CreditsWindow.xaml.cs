@@ -41,7 +41,7 @@ public partial class CreditsWindow : Window
 
 public class CreditsViewModel : INotifyPropertyChanged
 {
-    private IModule? _selectedModule;
+    private ModuleDisplay? _selectedModule;
 
     public CreditsViewModel()
     {
@@ -49,8 +49,12 @@ public class CreditsViewModel : INotifyPropertyChanged
         CoreContributors = new ObservableCollection<ContributorDisplay>(
             CoreCredits.Team.Select(c => new ContributorDisplay(c)));
 
-        // Load Modules
-        Modules = new ObservableCollection<IModule>(ModuleDiscovery.LoadedModules.Select(m => m.Module).Where(m => m != null)!);
+        // Load Modules (wrapped for translation)
+        Modules = new ObservableCollection<ModuleDisplay>(
+            ModuleDiscovery.LoadedModules
+                .Select(m => m.Module)
+                .Where(m => m != null)
+                .Select(m => new ModuleDisplay(m!)));
 
         if (Modules.Count > 0)
         {
@@ -68,9 +72,9 @@ public class CreditsViewModel : INotifyPropertyChanged
     public string CloseButtonText => Localization.Localization.T("core.close", "Close");
 
     public ObservableCollection<ContributorDisplay> CoreContributors { get; }
-    public ObservableCollection<IModule> Modules { get; }
+    public ObservableCollection<ModuleDisplay> Modules { get; }
 
-    public IModule? SelectedModule
+    public ModuleDisplay? SelectedModule
     {
         get => _selectedModule;
         set
@@ -110,4 +114,30 @@ public class ContributorDisplay
     public string Role => _contributor.Role;
     public string? Url => _contributor.Url;
     public bool HasUrl => !string.IsNullOrEmpty(Url);
+}
+
+/// <summary>
+/// Wrapper helper for module display with translation support
+/// </summary>
+public class ModuleDisplay
+{
+    private readonly IModule _module;
+
+    public ModuleDisplay(IModule module)
+    {
+        _module = module;
+    }
+
+    /// <summary>
+    /// Translated name using NameKey if available, otherwise falls back to Name
+    /// </summary>
+    public string TranslatedName => !string.IsNullOrEmpty(_module.NameKey)
+        ? Localization.Localization.T(_module.NameKey, _module.Name)
+        : _module.Name;
+
+    public string Name => _module.Name;
+    public string? Description => _module.Description;
+    public string Version => _module.Version;
+    public string Author => _module.Author;
+    public IEnumerable<ContributorDisplay> Contributors => _module.Contributors.Select(c => new ContributorDisplay(c));
 }

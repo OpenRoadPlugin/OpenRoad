@@ -45,13 +45,13 @@ public class TransactionException : System.Exception
     /// </summary>
     /// <param name="message">Message à afficher à l'utilisateur</param>
     public TransactionException(string message) : base(message) { }
-    
+
     /// <summary>
     /// Crée une nouvelle exception de transaction avec un message et une exception interne.
     /// </summary>
     /// <param name="message">Message à afficher à l'utilisateur</param>
     /// <param name="innerException">Exception d'origine</param>
-    public TransactionException(string message, System.Exception innerException) 
+    public TransactionException(string message, System.Exception innerException)
         : base(message, innerException) { }
 }
 
@@ -85,31 +85,31 @@ public class TransactionException : System.Exception
 public abstract class CommandBase
 {
     #region Propriétés AutoCAD
-    
+
     /// <summary>
     /// Document AutoCAD actif
     /// </summary>
     protected Document? Document => AcadApp.DocumentManager.MdiActiveDocument;
-    
+
     /// <summary>
     /// Database du document actif
     /// </summary>
     protected Database? Database => Document?.Database;
-    
+
     /// <summary>
     /// Éditeur du document actif
     /// </summary>
     protected Editor? Editor => Document?.Editor;
-    
+
     /// <summary>
     /// Vérifie que le document est valide et accessible
     /// </summary>
     protected bool IsDocumentValid => Document != null && Database != null && Editor != null;
-    
+
     #endregion
 
     #region Méthodes de Transaction
-    
+
     /// <summary>
     /// Exécute une action dans une transaction AutoCAD.
     /// La transaction est automatiquement commitée ou annulée en cas d'exception.
@@ -131,7 +131,7 @@ public abstract class CommandBase
             Logger.Warning(Translate("error.noDatabase", "Database non disponible"));
             return;
         }
-        
+
         using var tr = Database.TransactionManager.StartTransaction();
         try
         {
@@ -142,17 +142,17 @@ public abstract class CommandBase
         {
             // Erreur métier explicite - ne pas rollback silencieusement
             Logger.Warning(tex.Message);
-            tr.Abort();
+            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             throw;
         }
         catch
         {
             // Autres exceptions - rollback implicite
-            tr.Abort();
+            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             throw;
         }
     }
-    
+
     /// <summary>
     /// Exécute une action dans une transaction avec retour de valeur.
     /// </summary>
@@ -166,7 +166,7 @@ public abstract class CommandBase
             Logger.Warning(Translate("error.noDatabase", "Database non disponible"));
             return default;
         }
-        
+
         using var tr = Database.TransactionManager.StartTransaction();
         try
         {
@@ -177,16 +177,16 @@ public abstract class CommandBase
         catch (TransactionException tex)
         {
             Logger.Warning(tex.Message);
-            tr.Abort();
+            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             throw;
         }
         catch
         {
-            tr.Abort();
+            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             throw;
         }
     }
-    
+
     /// <summary>
     /// Tente d'exécuter une action dans une transaction sans propager les exceptions.
     /// Utile pour les opérations optionnelles ou récupérables.
@@ -202,7 +202,7 @@ public abstract class CommandBase
             errorMessage = Translate("error.noDatabase", "Database non disponible");
             return false;
         }
-        
+
         using var tr = Database.TransactionManager.StartTransaction();
         try
         {
@@ -213,23 +213,23 @@ public abstract class CommandBase
         catch (TransactionException tex)
         {
             errorMessage = tex.Message;
-            tr.Abort();
+            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             Logger.Debug($"Transaction error: {tex.Message}");
             return false;
         }
         catch (System.Exception ex)
         {
             errorMessage = ex.Message;
-            tr.Abort();
+            try { tr.Abort(); } catch { /* Ignore abort errors */ }
             Logger.Debug($"Transaction failed: {ex.Message}");
             return false;
         }
     }
-    
+
     #endregion
 
     #region Exécution Sécurisée
-    
+
     /// <summary>
     /// Exécute une commande de manière sécurisée avec gestion automatique des erreurs.
     /// Gère les annulations utilisateur et les exceptions.
@@ -244,11 +244,11 @@ public abstract class CommandBase
             Logger.Warning(Translate("error.noDocument", "Aucun document actif"));
             return;
         }
-        
+
         try
         {
             action();
-            
+
             if (successKey != null)
             {
                 Logger.Success(Translate(successKey));
@@ -264,8 +264,8 @@ public abstract class CommandBase
         }
         catch (System.Exception ex)
         {
-            var errorMessage = errorKey != null 
-                ? Translate(errorKey) 
+            var errorMessage = errorKey != null
+                ? Translate(errorKey)
                 : Translate("cmd.error", "Erreur");
             Logger.Error($"{errorMessage}: {ex.Message}");
 #if DEBUG
@@ -273,11 +273,11 @@ public abstract class CommandBase
 #endif
         }
     }
-    
+
     #endregion
 
     #region Utilitaires
-    
+
     /// <summary>
     /// Affiche un message dans la ligne de commande AutoCAD
     /// </summary>
@@ -286,7 +286,7 @@ public abstract class CommandBase
     {
         Editor?.WriteMessage($"\n{message}");
     }
-    
+
     /// <summary>
     /// Traduction interne avec fallback si la clé est introuvable.
     /// </summary>
@@ -314,7 +314,7 @@ public abstract class CommandBase
     {
         return Translate(key, defaultValue);
     }
-    
+
     /// <summary>
     /// Raccourci pour la traduction avec paramètres formatés
     /// </summary>
@@ -325,6 +325,6 @@ public abstract class CommandBase
     {
         return global::OpenAsphalte.Localization.Localization.TFormat(key, args);
     }
-    
+
     #endregion
 }

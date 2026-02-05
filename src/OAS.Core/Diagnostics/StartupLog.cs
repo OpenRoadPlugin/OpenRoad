@@ -1,4 +1,4 @@
-// Copyright 2026 Open Asphalte Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -10,15 +10,36 @@
 // limitations under the License.
 
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace OpenAsphalte.Diagnostics;
 
+/// <summary>
+/// Logging de démarrage et diagnostics. Utilisé pour tracer le chargement du plugin.
+/// </summary>
 internal static class StartupLog
 {
     private static readonly object FileLock = new();
     private static readonly string LogPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "Open Asphalte", "logs", "openasphalte_startup.log");
+
+#pragma warning disable CA2255 // ModuleInitializer utilisé intentionnellement pour diagnostics au chargement
+    [ModuleInitializer]
+    internal static void Init()
+#pragma warning restore CA2255
+    {
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(LogPath)!);
+            File.AppendAllText(LogPath,
+                $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] Assembly loaded: OpenAsphalte.Core\n");
+        }
+        catch
+        {
+            // Ignorer toutes erreurs de diagnostics
+        }
+    }
 
     public static void Write(string message)
     {

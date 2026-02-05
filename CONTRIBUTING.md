@@ -24,7 +24,7 @@ Merci de votre intérêt pour contribuer à Open Asphalte !
 
 2. Ouvrez le projet dans votre IDE
 
-3. Vérifiez les chemins AutoCAD dans src/OpenAsphalte.Core/OpenAsphalte.Core.csproj :
+3. Vérifiez les chemins AutoCAD dans src/OAS.Core/OAS.Core.csproj :
    `xml
    <HintPath>C:\Program Files\Autodesk\AutoCAD 2025\accoremgd.dll</HintPath>
    `
@@ -32,7 +32,7 @@ Merci de votre intérêt pour contribuer à Open Asphalte !
 ### Compilation
 
 ```bash
-cd src/OpenAsphalte.Core
+cd src/OAS.Core
 dotnet build -c Release
 ```
 
@@ -45,7 +45,7 @@ Le fichier OAS.Core.dll sera généré dans bin/.
 ```
 OpenAsphalte/
  src/
-    OpenAsphalte.Core/           # Cœur du plugin
+    OAS.Core/                    # Cœur du plugin
         Plugin.cs            # Point d'entrée
         Abstractions/        # Interfaces pour modules
         Discovery/           # Découverte automatique
@@ -104,7 +104,7 @@ Consultez le [Guide développeur](docs/guides/developer_guide.md) pour créer un
 | Namespace Core | OpenAsphalte.* | OpenAsphalte.Services |
 | Namespace Module | OpenAsphalte.Modules.{Module} | OpenAsphalte.Modules.Voirie |
 | Commande | OAS_{MODULE}_{ACTION} | OAS_VOIRIE_PARKING |
-| Clé traduction | {module}.{section}.{key} | oirie.parking.title |
+| Clé traduction | {module}.{section}.{key} | voirie.parking.title |
 
 ### Style de code
 
@@ -220,9 +220,9 @@ Ces informations apparaissent dans :
 | Niveau | Critères | Reconnaissance |
 |--------|----------|----------------|
 | **Contributeur** | 1-3 contributions acceptées (PR, corrections, traductions) | Nom dans le fichier NOTICE |
-| **Contributeur actif** | 4-10 contributions significatives | Nom + lien vers profil GitHub dans `OAS_ABOUT` |
-| **Développeur Core** | Contributions majeures au Core | Nom + lien site personnel dans `OAS_ABOUT` et documentation |
-| **Testeur reconnu** | Tests réguliers + rapports de bugs détaillés (5+) | Mention dans `OAS_ABOUT` section testeurs |
+| **Contributeur actif** | 4-10 contributions significatives | Nom + lien vers profil GitHub dans `OAS_VERSION` |
+| **Développeur Core** | Contributions majeures au Core | Nom + lien site personnel dans `OAS_VERSION` et documentation |
+| **Testeur reconnu** | Tests réguliers + rapports de bugs détaillés (5+) | Mention dans `OAS_VERSION` section testeurs |
 
 ### Comment demander vos crédits ?
 
@@ -249,7 +249,7 @@ Toutes ces informations sont **optionnelles**. Vous pouvez contribuer anonymemen
 ### Où apparaissent les crédits ?
 
 - **Fichier [NOTICE](NOTICE)** — Liste complète des contributeurs
-- **Commande `OAS_ABOUT`** — Fenêtre "À propos" dans AutoCAD
+- **Commande `OAS_VERSION`** — Fenêtre "À propos" dans AutoCAD
 - **Documentation** — Page des contributeurs (pour contributions majeures)
 
 ---

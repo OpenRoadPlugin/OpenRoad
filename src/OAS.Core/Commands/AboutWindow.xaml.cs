@@ -50,7 +50,7 @@ public partial class AboutWindow : Window
         }
         catch (System.Exception ex)
         {
-            // Logo non trouv�, laisser vide
+            // Logo non trouvé, laisser vide
             Logger.Debug($"Logo loading failed: {ex.Message}");
         }
     }
@@ -179,7 +179,7 @@ public partial class AboutWindow : Window
     /// </summary>
     private void OnReportBugClick(object sender, RoutedEventArgs e)
     {
-        const string issuesUrl = "https://github.com/OpenRoadPlugin/OpenAsphalte/issues";
+        const string issuesUrl = "https://github.com/OpenAsphaltePlugin/OpenAsphalte/issues";
         try
         {
             Process.Start(new ProcessStartInfo(issuesUrl) { UseShellExecute = true });

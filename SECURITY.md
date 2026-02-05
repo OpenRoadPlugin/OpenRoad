@@ -1,6 +1,6 @@
 ﻿# Politique de Sécurité
 
-## ?? Avertissement et Limitation de Responsabilité
+## Avertissement et Limitation de Responsabilité
 
 ### Clause de non-responsabilité (Disclaimer)
 
@@ -12,13 +12,13 @@ Open Asphalte est distribué sous **licence Apache 2.0**. Conformément à cette
 
 **En aucun cas, les auteurs, contributeurs ou détenteurs des droits d'auteur d'Open Asphalte ne pourront être tenus responsables de :**
 
-- ? Tout dommage direct, indirect, accessoire, spécial, exemplaire ou consécutif
-- ? Toute perte de données, de profits, de revenus ou d'opportunités commerciales
-- ? Toute interruption d'activité professionnelle
-- ? Tout préjudice résultant de l'utilisation ou de l'impossibilité d'utiliser le logiciel
-- ? Toute erreur de calcul, de dessin ou de conception générée par le logiciel
-- ? Tout dysfonctionnement ou incompatibilité avec AutoCAD ou d'autres logiciels
-- ? Toute conséquence liée à l'utilisation de modules tiers
+- Tout dommage direct, indirect, accessoire, spécial, exemplaire ou consécutif
+- Toute perte de données, de profits, de revenus ou d'opportunités commerciales
+- Toute interruption d'activité professionnelle
+- Tout préjudice résultant de l'utilisation ou de l'impossibilité d'utiliser le logiciel
+- Toute erreur de calcul, de dessin ou de conception générée par le logiciel
+- Tout dysfonctionnement ou incompatibilité avec AutoCAD ou d'autres logiciels
+- Toute conséquence liée à l'utilisation de modules tiers
 
 **Même si Open Asphalte ou ses contributeurs ont été informés de la possibilité de tels dommages.**
 

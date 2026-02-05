@@ -120,6 +120,7 @@
 
         <!-- Titre -->
         <TextBlock Grid.Row="0"
+                   x:Name="TitleLabel"
                    Text="Paramètres de cotation"
                    FontSize="18"
                    FontWeight="Bold"
@@ -136,6 +137,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
+                           x:Name="InterdistanceLabel"
                            Text="Interdistance (m) :"
                            Style="{StaticResource FieldLabel}"
                            ToolTip="Distance entre chaque cotation (0 pour désactiver)"/>
@@ -152,6 +154,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
+                           x:Name="OffsetLabel"
                            Text="Décalage cotation (m) :"
                            Style="{StaticResource FieldLabel}"
                            ToolTip="Distance de décalage du texte de cotation"/>
@@ -168,6 +171,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
+                           x:Name="LayerLabel"
                            Text="Calque de destination :"
                            Style="{StaticResource FieldLabel}"
                            ToolTip="Calque sur lequel créer les cotations (vide = calque courant)"/>

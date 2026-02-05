@@ -19,27 +19,27 @@ Le module **Géoréférencement** permet de définir et gérer les systèmes de 
 
 ### Fonctionnalités principales
 
-- **Selection de projection** : Interface graphique avec recherche et filtrage
-- **Detection automatique** : Analyse les coordonnees du dessin pour suggerer une projection probable
-- **Base de donnees etendue** : Plus de 40 systemes de projection (France, Belgique, Suisse, etc.)
-- **Suppression du systeme** : Permet de retirer le systeme de coordonnees du dessin
+- **Sélection de projection** : Interface graphique avec recherche et filtrage
+- **Détection automatique** : Analyse les coordonnées du dessin pour suggérer une projection probable
+- **Base de données étendue** : Plus de 40 systèmes de projection (France, Belgique, Suisse, etc.)
+- **Suppression du système** : Permet de retirer le système de coordonnées du dessin
 
 ## Commandes
 
 ### OAS_GEOREF_SETPROJECTION
 
-Ouvre la fenetre de selection du systeme de coordonnees.
+Ouvre la fenêtre de sélection du système de coordonnées.
 
 **Utilisation** : Tapez `OAS_GEOREF_SETPROJECTION` dans la ligne de commande AutoCAD ou utilisez le menu/ruban Open Asphalte.
 
 **Interface** :
-- **Barre de recherche** : Filtrez par nom, code, pays ou region
+- **Barre de recherche** : Filtrez par nom, code, pays ou région
 - **Liste des projections** : Double-cliquez pour appliquer directement
-- **Panneau de details** : Affiche les informations de la projection selectionnee
-- **Systeme actuel** : Indique le systeme de coordonnees actuellement defini
-- **Systeme detecte** : Suggestion basee sur l'analyse des coordonnees du dessin
+- **Panneau de détails** : Affiche les informations de la projection sélectionnée
+- **Système actuel** : Indique le système de coordonnées actuellement défini
+- **Système détecté** : Suggestion basée sur l'analyse des coordonnées du dessin
 
-## Projections supportees
+## Projections supportées
 
 ### France
 
@@ -56,7 +56,7 @@ Ouvre la fenetre de selection du systeme de coordonnees.
 | CC49 | RGF93 CC Zone 49 | 3949 |
 | CC50 | RGF93 CC Zone 50 | 3950 |
 | NTF-Lambert-I | NTF Lambert Zone I | 27561 |
-| NTF-Lambert-II | NTF Lambert Zone II Etendu | 27572 |
+| NTF-Lambert-II | NTF Lambert Zone II Étendu | 27572 |
 | NTF-Lambert-III | NTF Lambert Zone III | 27573 |
 | NTF-Lambert-IV | NTF Lambert Zone IV | 27574 |
 
@@ -66,7 +66,7 @@ Ouvre la fenetre de selection du systeme de coordonnees.
 |------|-----|------|
 | RGFG95-UTM22N | RGFG95 UTM Zone 22N (Guyane) | 2972 |
 | UTM20N-WGS84 | UTM Zone 20N WGS84 (Antilles) | 32620 |
-| RGR92-UTM40S | RGR92 UTM Zone 40S (Reunion) | 2975 |
+| RGR92-UTM40S | RGR92 UTM Zone 40S (Réunion) | 2975 |
 | RGSPM06-UTM21N | RGSPM06 UTM Zone 21N (St-Pierre-et-Miquelon) | 4467 |
 | RGM04-UTM38S | RGM04 UTM Zone 38S (Mayotte) | 4471 |
 
@@ -99,50 +99,50 @@ Ouvre la fenetre de selection du systeme de coordonnees.
 | UTM32N-WGS84 | UTM Zone 32N WGS84 | 32632 |
 | UTM33N-WGS84 | UTM Zone 33N WGS84 | 32633 |
 
-## Detection automatique
+## Détection automatique
 
-Le module analyse les coordonnees moyennes des objets du dessin pour suggerer une projection probable. 
+Le module analyse les coordonnées moyennes des objets du dessin pour suggérer une projection probable.
 
 **Algorithme** :
-1. Collecte les coordonnees de tous les points, lignes, polylignes et autres entites
-2. Ignore les points dont la distance a l'origine est inferieure a 1000 m (seuil configurable)
-3. Calcule les coordonnees moyennes (X, Y)
-4. Compare avec les limites geographiques de chaque projection
+1. Collecte les coordonnées de tous les points, lignes, polylignes et autres entités
+2. Ignore les points dont la distance à l'origine est inférieure à 1000 m (seuil configurable)
+3. Calcule les coordonnées moyennes (X, Y)
+4. Compare avec les limites géographiques de chaque projection
 5. Retourne la projection la plus probable
 
-**Note** : Si le dessin contient peu d'objets ou des coordonnees proches de l'origine, la detection peut ne pas fonctionner.
+**Note** : Si le dessin contient peu d'objets ou des coordonnées proches de l'origine, la détection peut ne pas fonctionner.
 
-## Integration avec le Core
+## Intégration avec le Core
 
 Le module utilise le service `CoordinateService` du Core Open Asphalte qui fournit :
 
 - Conversions Lambert 93 <-> WGS84
-- Conversions CC (Coniques Conformes) -> WGS84  
+- Conversions CC (Coniques Conformes) -> WGS84
 - Conversions UTM <-> WGS84
-- Base de donnees des projections (`projections.json`)
-- Algorithme de detection automatique
+- Base de données des projections (`projections.json`)
+- Algorithme de détection automatique
 
 ## Installation
 
 1. Placez `OAS.Georeferencement.dll` dans le dossier `bin/Modules/`
-2. Redemarrez AutoCAD ou rechargez le plugin avec `OAS_RELOAD`
-3. Le module apparaitra automatiquement dans le menu et le ruban Open Asphalte
+2. Redémarrez AutoCAD ou rechargez le plugin avec `OAS_RELOAD`
+3. Le module apparaîtra automatiquement dans le menu et le ruban Open Asphalte
 
 ## Historique des versions
 
-### v1.0.0 (2025)
+### v0.0.1 (2026)
 - Version initiale
-- Interface de selection avec recherche
-- Detection automatique de projection
+- Interface de sélection avec recherche
+- Détection automatique de projection
 - Support de 40+ projections
 - Traductions FR/EN/ES
 
-## Captures d'ecran
+## Captures d'écran
 
 *A venir*
 
 ## Voir aussi
 
-- [Guide du developpeur](../guides/developer_guide.md)
+- [Guide du développeur](../guides/developer_guide.md)
 - [CoordinateService](../api/services/CoordinateService.md)
-- [Architecture des modules](../architecture/modules.md)
+- [Architecture des modules](../architecture/overview.md)

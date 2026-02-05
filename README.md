@@ -1,4 +1,4 @@
-﻿# Open Asphalte
+# Open Asphalte
 
 <p align="center">
   <img src="OAS_Logo.png" alt="Open Asphalte" width="200"/>
@@ -48,28 +48,21 @@ Le programme s'adapte automatiquement aux modules présents.
 ### Installation rapide
 
 1. **Téléchargez** la dernière version depuis [Releases](https://github.com/openasphalteplugin/openasphalte/releases)
-2. **Extrayez** le contenu dans un dossier (ex: C:\OpenAsphalte\)
-3. Dans AutoCAD, tapez **NETLOAD**
-4. Sélectionnez **OAS.Core.dll**
-5. Tapez **OAS_HELP** pour voir les commandes disponibles
+2. **Installer le Core** Directement avec le .exe 
+3. Lancez AutoCAD et télécharger les modules que vous souhaitez.
 
 ### Structure des fichiers
 
-`
+```
 OpenAsphalte/
- OAS.Core.dll              # Cœur du plugin (obligatoire)
- Modules/               # Dossier des modules (créé automatiquement)
-     OAS.Voirie.dll
-     OAS.Dessin.dll
-     ...
-`
-
-### Chargement automatique (optionnel)
-
-Ajoutez à votre fichier cad.lsp ou caddoc.lsp :
-`lisp
-(command "NETLOAD" "C:\\chemin\\vers\\OAS.Core.dll")
-`
+  OAS.Core.dll          # Cœur du plugin (obligatoire)
+  Modules/              # Dossier des modules (créé automatiquement)
+    OAS.Georeferencement.dll
+    OAS.StreetView.dll
+    OAS.Cota2Lign.dll
+    OAS.DynamicSnap.dll
+    ...
+```
 
 ---
 
@@ -84,6 +77,7 @@ Ces commandes sont **toujours disponibles**, même sans aucun module installé :
 | OAS_HELP | Affiche la liste des commandes disponibles |
 | OAS_VERSION | Informations de version et modules chargés |
 | OAS_SETTINGS | Ouvre la fenêtre des paramètres |
+| OAS_MODULES | Ouvre le gestionnaire de modules |
 | OAS_RELOAD | Recharge la configuration |
 | OAS_UPDATE | Vérifie les mises à jour |
 
@@ -94,8 +88,8 @@ Open Asphalte génère automatiquement :
 - Un **onglet ruban** avec le **nom localisé** de l'application
 
 L'interface s'adapte dynamiquement :
-- Module installé ? Visible dans menu et ruban
-- Module absent ? Aucune trace dans l'interface
+- Module installé : Visible dans menu et ruban
+- Module absent : Aucune trace dans l'interface
 
 ---
 
@@ -103,9 +97,36 @@ L'interface s'adapte dynamiquement :
 
 Les modules étendent les fonctionnalités d'Open Asphalte. Ils sont **découverts automatiquement** au démarrage.
 
+### Gestion des Modules
+
+- **Installation** : Cochez les modules souhaités dans l'onglet *Modules* des paramètres (`OAS_SETTINGS`) et cliquez sur *Installer*.
+- **Mise à jour** : Le bouton *Mettre à jour* apparaît lorsqu'une nouvelle version est disponible.
+- **Désinstallation** : Cliquez sur *Désinstaller* pour supprimer un module.
+  > **Note** : La désinstallation effective se fait au redémarrage suivant d'AutoCAD (suppression des fichiers déverrouillés).
+
+### Modules Officiels
+
+| Module | Description | Documentation |
+|--------|-------------|---------------|
+| **Géoréférencement** | Systèmes de coordonnées et transformations | [Voir doc](docs/modules/georeferencement.md) |
+| **Street View** | Lien dynamique AutoCAD ↔ Google Maps | [Voir doc](docs/modules/streetview.md) |
+| **Cotation** | Outils de cotation voirie (Entre 2 lignes) | [Voir doc](docs/modules/cota2lign.md) |
+| **Dynamic Snap** | Moteur d'accrochage intelligent (Système) | [Voir doc](docs/modules/dynamicsnap.md) |
+
 ### Installation d'un module
 
-1. Téléchargez le fichier .dll du module
+**Option A : Utiliser le gestionnaire de modules intégré**
+
+1. Ouvrez AutoCAD
+2. Tapez **OAS_MODULES**
+3. Sélectionnez le module à installer
+4. Redémarrez AutoCAD
+
+Le module apparaîtra automatiquement dans l'interface !
+
+**Option B : Installation manuelle**
+
+1. Téléchargez le fichier .dll du module (ex: `OAS.Georeferencement.dll`)
 2. Placez-le dans le dossier **Modules/** (à côté de OAS.Core.dll)
 3. Redémarrez AutoCAD
 
@@ -166,55 +187,55 @@ Vous pouvez également modifier ce paramètre manuellement dans le fichier `conf
 
 ---
 
-##  Architecture
+## Architecture
 
-`
+```
 OpenAsphalte/
- src/
-    OAS.Core/                    # Cœur du plugin (NE JAMAIS MODIFIER)
-        Plugin.cs            # Point d'entrée IExtensionApplication
-        Abstractions/        # Interfaces pour créer des modules
-           IModule.cs       # Interface module
-           ModuleBase.cs    # Classe de base module
-           CommandBase.cs   # Classe de base commandes
-           CommandInfoAttribute.cs
-        Discovery/           # Découverte automatique des modules
-        Configuration/       # Gestion de la configuration
-        Localization/        # Système de traduction
-        Logging/             # Logs unifiés
-        Services/            # Services partagés
-           GeometryService.cs
-           LayerService.cs
-        UI/                  # Construction dynamique du menu et ruban
-        Commands/            # Commandes système (OAS_HELP, OAS_SETTINGS...)
+  src/
+    OAS.Core/                 # Core du plugin (NE JAMAIS MODIFIER)
+      Plugin.cs               # Point d'entrée IExtensionApplication
+      Abstractions/           # Interfaces pour créer des modules
+        IModule.cs            # Interface module
+        ModuleBase.cs         # Classe de base module
+        CommandBase.cs        # Classe de base commandes
+        CommandInfoAttribute.cs
+      Discovery/              # Découverte automatique des modules
+      Configuration/          # Gestion de la configuration
+      Localization/           # Système de traduction
+      Logging/                # Logs unifiés
+      Services/               # Services partagés
+        GeometryService.cs
+        LayerService.cs
+      UI/                     # Construction dynamique du menu et ruban
+      Commands/               # Commandes système (OAS_HELP, OAS_SETTINGS...)
 
- templates/                   # Templates pour créer de nouveaux modules
+  templates/                  # Templates pour créer de nouveaux modules
     OAS.Module.Template.csproj
     ModuleTemplate.cs
     CommandTemplate.cs
 
- bin/
-     OAS.Core.dll                # DLL principale compilée
-     Modules/                 # Dossier des modules (DLL externes)
-`
+  bin/
+    OAS.Core.dll              # DLL principale compilée
+    Modules/                  # Dossier des modules (DLL externes)
+```
 
 ### Flux de chargement
 
-`
+```
 AutoCAD démarre
-     NETLOAD OAS.Core.dll
-         1. Chargement configuration
-         2. Initialisation localisation
-         3. Scan du dossier Modules/
-            Pour chaque OAS.*.dll trouvée :
-                Recherche des classes IModule
-                Validation des dépendances
-                Chargement des traductions
-                Appel Initialize()
-         4. Génération du menu dynamique
-         5. Génération du ruban dynamique
-         6. Prêt !
-`
+  NETLOAD OAS.Core.dll
+    1. Chargement configuration
+    2. Initialisation localisation
+    3. Scan du dossier Modules/
+       Pour chaque OAS.*.dll trouvée :
+         - Recherche des classes IModule
+         - Validation des dépendances
+         - Chargement des traductions
+         - Appel Initialize()
+    4. Génération du menu dynamique
+    5. Génération du ruban dynamique
+    6. Prêt !
+```
 
 ---
 
@@ -273,3 +294,33 @@ L'utilisation de ce plugin dans AutoCAD se fait **à vos propres risques**. Vér
 
 -  Issues: [GitHub Issues](https://github.com/openasphalteplugin/openasphalte/issues)
 -  Discussions: [GitHub Discussions](https://github.com/openasphalteplugin/openasphalte/discussions)
+
+---
+
+## ✨ Partenaires
+
+Une immense reconnaissance à nos partenaires qui soutiennent le projet Open Asphalte :
+
+<table width="100%">
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://cadgeneration.com" title="CAD Generation - Forum d'entraide CAO DAO spécialisé AutoCAD">
+        <img src="https://cadgeneration.com/uploads/default/original/1X/7a094534a3b665c067075eadfe4208ca43309ac4.png" alt="CAD Generation - Communauté AutoCAD et CAO/DAO" height="100" />
+      </a>
+      <br />
+      <b><a href="https://cadgeneration.com" title="CAD Generation - Forum CAO/DAO boosté à l'IA">CAD Generation</a></b>
+      <br />
+      Forum d'entraide CAO / DAO boosté à l'IA - Communauté AutoCAD
+    </td>
+    <td align="center" width="50%">
+      <a href="https://www.jcx-projets.fr" title="JCX Projets - Bureau d'étude VRD et infrastructure">
+        <img src="https://www.jcx-projets.fr/wp-content/uploads/2019/04/Logo_200_SF.png" alt="JCX Projets - Expert VRD et infrastructure routière" height="100" />
+      </a>
+      <br />
+      <b><a href="https://www.jcx-projets.fr" title="JCX Projets - Bureau d'étude VRD">JCX Projets</a></b>
+      <br />
+      Bureau d'étude EXE VRD - Expertise infrastructure et voirie
+    </td>
+  </tr>
+</table>
+

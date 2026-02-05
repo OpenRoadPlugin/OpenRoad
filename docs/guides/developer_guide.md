@@ -4,7 +4,7 @@ Ce guide complet vous accompagne dans la création de modules pour étendre Open
 
 ---
 
-## ?? Table des matières
+## Table des matières
 
 1. [Philosophie](#-philosophie)
 2. [Prérequis](#-prérequis)
@@ -20,7 +20,7 @@ Ce guide complet vous accompagne dans la création de modules pour étendre Open
 
 ---
 
-## ?? Philosophie
+## Philosophie
 
 ### Principe fondamental
 
@@ -72,7 +72,7 @@ Les modules sont des DLL séparées, découvertes automatiquement au démarrage.
 
 ---
 
-## ??? Prérequis
+## Prérequis
 
 ### Environnement de développement
 
@@ -88,66 +88,58 @@ Les modules sont des DLL séparées, découvertes automatiquement au démarrage.
 
 ```
 C:\Program Files\Autodesk\AutoCAD 2025\
-??? accoremgd.dll
-??? acdbmgd.dll
-??? acmgd.dll
-??? AcWindows.dll
-??? AdWindows.dll
+- accoremgd.dll
+- acdbmgd.dll
+- acmgd.dll
+- AcWindows.dll
+- AdWindows.dll
 ```
 
 ---
 
-## ??? Architecture du Core
+## Architecture du Core
 
 ### Structure des dossiers
 
 ```
 OpenAsphalte/
-??? src/
-?   ??? OpenAsphalte.Core/                    # ??? CŒUR DU PLUGIN ???
-?       ??? OpenAsphalte.Core.csproj          # Projet principal
-?       ??? Plugin.cs                     # Point d'entrée IExtensionApplication
-?       ?
-?       ??? Abstractions/                 # Interfaces publiques pour modules
-?       ?   ??? IModule.cs                # Interface que tout module implémente
-?       ?   ??? ModuleBase.cs             # Classe de base abstraite
-?       ?   ??? CommandBase.cs            # Classe de base pour commandes
-?       ?   ??? CommandInfoAttribute.cs   # Métadonnées UI des commandes
-?       ?
-?       ??? Discovery/                    # Découverte automatique
-?       ?   ??? ModuleDiscovery.cs        # Scan DLL, réflexion, chargement
-?       ?
-?       ??? Configuration/                # Paramètres utilisateur
-?       ?   ??? Configuration.cs          # Lecture/écriture JSON
-?       ?
-?       ??? Localization/                 # Traductions FR/EN/ES
-?       ?   ??? Localization.cs           # Système de traduction
-?       ?
-?       ??? Logging/                      # Logs console AutoCAD
-?       ?   ??? Logger.cs                 
-?       ?
-?       ??? Services/                     # Services partagés pour modules
-?       ?   ??? GeometryService.cs        # Calculs géométriques
-?       ?   ??? LayerService.cs           # Gestion des calques
-?       ?
-?       ??? UI/                           # Construction UI dynamique
-?       ?   ??? MenuBuilder.cs            # Menu contextuel auto-généré
-?       ?   ??? RibbonBuilder.cs          # Ruban auto-généré
-?       ?
-?       ??? Commands/                     # Commandes système
-?           ??? SystemCommands.cs         # OAS_HELP, OAS_VERSION, etc.
-?           ??? SettingsWindow.xaml
-?           ??? SettingsWindow.xaml.cs
-?
-??? templates/                            # Templates pour créer des modules
-?   ??? OAS.Module.Template.csproj
-?   ??? ModuleTemplate.cs
-?   ??? CommandTemplate.cs
-?
-??? bin/
-    ??? OAS.Core.dll                          # DLL principale
-    ??? Modules/                          # Dossier des modules externes
-        ??? (vos DLL de modules ici)
+- src/
+    - OAS.Core/                         # CŒUR DU PLUGIN
+        - OAS.Core.csproj                 # Projet principal
+        - Plugin.cs                       # Point d'entrée IExtensionApplication
+        - Abstractions/                   # Interfaces publiques pour modules
+            - IModule.cs                    # Interface que tout module implémente
+            - ModuleBase.cs                 # Classe de base abstraite
+            - CommandBase.cs                # Classe de base pour commandes
+            - CommandInfoAttribute.cs       # Métadonnées UI des commandes
+        - Discovery/                      # Découverte automatique
+            - ModuleDiscovery.cs            # Scan DLL, réflexion, chargement
+        - Configuration/                  # Paramètres utilisateur
+            - Configuration.cs              # Lecture/écriture JSON
+        - Localization/                   # Traductions FR/EN/ES
+            - Localization.cs               # Système de traduction
+        - Logging/                        # Logs console AutoCAD
+            - Logger.cs
+        - Services/                       # Services partagés pour modules
+            - GeometryService.cs            # Calculs géométriques
+            - LayerService.cs               # Gestion des calques
+        - UI/                             # Construction UI dynamique
+            - MenuBuilder.cs                # Menu contextuel auto-généré
+            - RibbonBuilder.cs              # Ruban auto-généré
+        - Commands/                       # Commandes système
+            - SystemCommands.cs             # OAS_HELP, OAS_VERSION, etc.
+            - SettingsWindow.xaml
+            - SettingsWindow.xaml.cs
+
+- templates/                          # Templates pour créer des modules
+    - OAS.Module.Template.csproj
+    - ModuleTemplate.cs
+    - CommandTemplate.cs
+
+- bin/
+    - OAS.Core.dll                       # DLL principale
+    - Modules/                           # Dossier des modules externes
+        - (vos DLL de modules ici)
 ```
 
 ### Commandes système (toujours disponibles)
@@ -157,6 +149,7 @@ OpenAsphalte/
 | `OAS_HELP` | Liste des commandes disponibles |
 | `OAS_VERSION` | Version et modules chargés |
 | `OAS_SETTINGS` | Paramètres utilisateur |
+| `OAS_MODULES` | Gestionnaire de modules |
 | `OAS_RELOAD` | Recharge la configuration |
 | `OAS_UPDATE` | Vérifie les mises à jour |
 
@@ -908,6 +901,52 @@ Pour distribuer votre module :
 1. **Fichier à fournir** : Uniquement la DLL du module
 2. **Instructions utilisateur** : "Placer dans le dossier `Modules/` d'Open Asphalte"
 3. **Dépendances** : Documenter les modules requis
+
+### Gestion des versions et Marketplace (Deep Manifest)
+
+Open Asphalte utilise un système de gestion de versions avancé ("Deep Manifest") pour garantir la compatibilité entre le Core et les modules, même lors de ruptures de compatibilité (Breaking Changes).
+
+#### Comment ça marche ?
+
+Le fichier `marketplace.json` ne se contente pas de lister la dernière version. Il peut contenir un historique des versions (`versions`) pour chaque module.
+
+Lorsqu'un utilisateur cherche des mises à jour, le **Core** effectue la résolution suivante :
+1. Il regarde toutes les versions disponibles (la `latest` + l'historique `versions`).
+2. Il filtre celles qui requièrent une version du Core supérieure à celle installée (`minCoreVersion`).
+3. Il choisit la version la plus haute parmi les candidates restantes.
+
+#### Scénario : Rupture de compatibilité
+
+Imaginons que nous sommes en Core v1.0. Le module "Topo" est en v1.5.
+Nous sortons le Core v2.0, qui change l'API. Le module "Topo" doit être mis à jour en v2.0 pour fonctionner sur le Core v2.0, mais la v1.5 doit rester disponible pour les utilisateurs qui restent en Core v1.0.
+
+**Procédure pour le responsable du module :**
+
+1. **Publier la v2.0** : Créer une Release GitHub pour la v2.0 avec la DLL.
+2. **Archiver la v1.5** : S'assurer que la DLL v1.5 est bien accessible (ex: dans une Release GitHub v1.5 précédente).
+3. **Mettre à jour `marketplace.json`** :
+
+```json
+{
+  "id": "topo",
+  "version": "2.0.0",               // La nouvelle version (pour Core v2+)
+  "minCoreVersion": "2.0.0",
+  "downloadUrl": "https://.../v2.0.0/OAS.Topo.dll",
+  "versions": [                     // L'historique pour les anciens Cores
+    {
+      "version": "1.5.0",           // L'ancienne version (pour Core v1+)
+      "minCoreVersion": "1.0.0",
+      "downloadUrl": "https://.../v1.5.0/OAS.Topo.dll"
+    }
+  ]
+}
+```
+
+Ainsi :
+- Les utilisateurs en **Core v2.0** recevront "Topo v2.0".
+- Les utilisateurs en **Core v1.0** recevront "Topo v1.5" (la v2.0 sera ignorée car `minCoreVersion` non satisfait).
+
+Cette stratégie permet de ne jamais laisser un utilisateur sur le carreau, quelle que soit sa version d'AutoCAD ou du plugin.
 
 ---
 

@@ -70,14 +70,14 @@
                     <!-- Liste gauche : Modules -->
                     <DockPanel Grid.Column="0" LastChildFill="True" Margin="0,0,10,0">
                         <TextBlock DockPanel.Dock="Top" Text="{Binding ModulesListTitle}" FontWeight="Bold" Margin="0,0,0,5"/>
-                        <ListBox ItemsSource="{Binding Modules}" SelectedItem="{Binding SelectedModule, Mode=TwoWay}" DisplayMemberPath="Name"/>
+                        <ListBox ItemsSource="{Binding Modules}" SelectedItem="{Binding SelectedModule, Mode=TwoWay}" DisplayMemberPath="TranslatedName"/>
                     </DockPanel>
 
                     <!-- Panneau droite : Détails -->
                     <Border Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" CornerRadius="3" Padding="10">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Visibility="{Binding HasSelectedModule, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <TextBlock Text="{Binding SelectedModule.Name}" Style="{StaticResource HeaderStyle}"/>
+                                <TextBlock Text="{Binding SelectedModule.TranslatedName}" Style="{StaticResource HeaderStyle}"/>
                                 <TextBlock Text="{Binding SelectedModule.Description}" TextWrapping="Wrap" Margin="0,0,0,15"/>
 
                                 <TextBlock Text="Version" FontWeight="Bold"/>

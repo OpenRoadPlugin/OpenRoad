@@ -1,9 +1,10 @@
 {
   "core": {
-    "latest": "0.0.1",
-    "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/releases/latest/download/OpenAsphalte_Setup_v0.0.1.exe",
-    "releaseNotes": "Version 0.0.1 - Alpha initiale",
-    "releaseDate": "2026-02-04"
+    "latest": "0.0.2",
+    "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/releases/latest/download/OpenAsphalte_Setup_v0.0.2.exe",
+    "releaseNotes": "Version 0.0.2 - Gestionnaire de modules, personnalisation UI, corrections multiples",
+    "releaseDate": "2026-02-05",
+    "minAutoCADVersion": "2025"
   },
   "modules": [
     {
@@ -15,7 +16,14 @@
       "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/OAS.Georeferencement.dll",
       "author": "Charles TILLY",
       "category": "Cartographie",
-      "tags": ["projection", "coordonnées", "Lambert", "UTM", "géoréférencement"]
+      "tags": ["projection", "coordonnées", "Lambert", "UTM", "géoréférencement"],
+      "versions": [
+        {
+          "version": "0.0.1",
+          "minCoreVersion": "0.0.1",
+          "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/OAS.Georeferencement.dll"
+        }
+      ]
     },
     {
       "id": "streetview",
@@ -28,6 +36,28 @@
       "category": "Cartographie",
       "tags": ["streetview", "google", "vue rue", "cartographie"],
       "dependencies": ["setprojection"]
+    },
+    {
+      "id": "cota2lign",
+      "name": "Cotation entre deux lignes",
+      "description": "Crée des cotations alignées entre deux polylignes avec espacement régulier et cotation aux sommets.",
+      "version": "0.0.1",
+      "minCoreVersion": "0.0.1",
+      "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/OAS.Cota2Lign.dll",
+      "author": "Charles TILLY",
+      "category": "Cotations",
+      "tags": ["cotation", "dimension", "polyligne", "alignement"]
+    },
+    {
+      "id": "dynamicsnap",
+      "name": "Accrochage Dynamique OAS",
+      "description": "Système d'accrochage visuel enrichi avec indicateurs graphiques pour sommets, milieux et points les plus proches.",
+      "version": "0.0.1",
+      "minCoreVersion": "0.0.1",
+      "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/OAS.DynamicSnap.dll",
+      "author": "Charles TILLY",
+      "category": "Outils",
+      "tags": ["accrochage", "snap", "osnap", "visuel"]
     }
   ]
 }

@@ -50,9 +50,9 @@
     </Reference>
   </ItemGroup>
 
-  <!-- Référence optionnelle au module DynamicSnap (pour l'accrochage intelligent) -->
+  <!-- Référence au module DynamicSnap (pour l'accrochage intelligent) -->
   <ItemGroup>
-    <Reference Include="OAS.DynamicSnap" Condition="Exists('..\..\bin\Modules\OAS.DynamicSnap.dll')">
+    <Reference Include="OAS.DynamicSnap">
       <HintPath>..\..\bin\Modules\OAS.DynamicSnap.dll</HintPath>
       <Private>false</Private>
     </Reference>

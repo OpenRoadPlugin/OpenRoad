@@ -22,11 +22,6 @@ namespace OpenAsphalte.Modules.DynamicSnap.Services;
 public static class SnapDetector
 {
     /// <summary>
-    /// Tolérance pour les comparaisons géométriques
-    /// </summary>
-    private const double GeometryTolerance = 1e-10;
-
-    /// <summary>
     /// Détecte tous les points d'accrochage sur une entité
     /// </summary>
     /// <param name="entity">Entité à analyser</param>
@@ -238,7 +233,10 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromNearest(nearestPt, dist, line.ObjectId, param, distAlongCurve));
                 }
             }
-            catch { }
+            catch
+            {
+                // GetClosestPointTo peut échouer si le curseur est trop loin
+            }
         }
     }
 
@@ -351,7 +349,10 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromMidpoint(midpoint, dist, arc.ObjectId, 0, arc.Length / 2.0));
                 }
             }
-            catch { }
+            catch
+            {
+                // GetPointAtParameter peut échouer pour certaines géométries d'arc
+            }
         }
 
         // Point le plus proche
@@ -369,7 +370,10 @@ public static class SnapDetector
                     results.Add(SnapPoint.FromNearest(nearestPt, dist, arc.ObjectId, param, distAlongCurve));
                 }
             }
-            catch { }
+            catch
+            {
+                // GetClosestPointTo peut échouer si le curseur est trop loin
+            }
         }
     }
 

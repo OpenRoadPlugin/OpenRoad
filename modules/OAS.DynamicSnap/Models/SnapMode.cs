@@ -9,6 +9,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using L10n = OpenAsphalte.Localization.Localization;
+
 namespace OpenAsphalte.Modules.DynamicSnap.Models;
 
 /// <summary>
@@ -159,18 +161,18 @@ public static class SnapModeExtensions
     {
         return mode switch
         {
-            SnapMode.Vertex => "Sommet",
-            SnapMode.Endpoint => "Extrémité",
-            SnapMode.Midpoint => "Milieu",
-            SnapMode.Nearest => "Proche",
-            SnapMode.Center => "Centre",
-            SnapMode.Intersection => "Intersection",
-            SnapMode.Perpendicular => "Perpendiculaire",
-            SnapMode.Tangent => "Tangent",
-            SnapMode.Quadrant => "Quadrant",
-            SnapMode.Insertion => "Insertion",
-            SnapMode.Node => "Nœud",
-            SnapMode.Parallel => "Parallèle",
+            SnapMode.Vertex => L10n.T("dynamicsnap.mode.vertex", "Sommet"),
+            SnapMode.Endpoint => L10n.T("dynamicsnap.mode.endpoint", "Extrémité"),
+            SnapMode.Midpoint => L10n.T("dynamicsnap.mode.midpoint", "Milieu"),
+            SnapMode.Nearest => L10n.T("dynamicsnap.mode.nearest", "Proche"),
+            SnapMode.Center => L10n.T("dynamicsnap.mode.center", "Centre"),
+            SnapMode.Intersection => L10n.T("dynamicsnap.mode.intersection", "Intersection"),
+            SnapMode.Perpendicular => L10n.T("dynamicsnap.mode.perpendicular", "Perpendiculaire"),
+            SnapMode.Tangent => L10n.T("dynamicsnap.mode.tangent", "Tangent"),
+            SnapMode.Quadrant => L10n.T("dynamicsnap.mode.quadrant", "Quadrant"),
+            SnapMode.Insertion => L10n.T("dynamicsnap.mode.insertion", "Insertion"),
+            SnapMode.Node => L10n.T("dynamicsnap.mode.node", "Nœud"),
+            SnapMode.Parallel => L10n.T("dynamicsnap.mode.parallel", "Parallèle"),
             _ => mode.ToString()
         };
     }

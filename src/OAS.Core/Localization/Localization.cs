@@ -159,6 +159,13 @@ public static class Localization
             ["system.update.url"] = "URL: {0}",
             ["system.update.openError"] = "Impossible d'ouvrir le navigateur: {0}",
 
+            // Vérification des mises à jour au démarrage
+            ["update.available"] = "Mise à jour v{0} disponible !",
+            ["update.incompatibleAutoCAD"] = "La version {0} nécessite AutoCAD {1}+ (vous avez {2})",
+            ["update.notification.title"] = "Mise à jour disponible",
+            ["update.notification.message"] = "Une nouvelle version d'Open Asphalte est disponible !\n\nVersion actuelle: {1}\nNouvelle version: {0}\n\nVoulez-vous ouvrir la page de téléchargement ?",
+            ["update.checking.startup"] = "Vérification des mises à jour...",
+
             // Module Manager
             ["modules.manager.title"] = "Gestionnaire de Modules",
             ["modules.manager.subtitle"] = "Installez et gérez les modules Open Asphalte depuis le catalogue officiel.",
@@ -201,6 +208,7 @@ public static class Localization
             ["modules.action.install"] = "Installer",
             ["modules.action.update"] = "Mettre à jour",
             ["modules.action.installed"] = "Installé",
+            ["modules.local.description"] = "Module local depuis {0}",
 
             // Update errors
             ["update.error.notFound"] = "Catalogue de modules introuvable (404). Vérifiez votre connexion ou réessayez plus tard.",
@@ -341,6 +349,24 @@ public static class Localization
 
             // Errors (transactions)
             ["error.noDatabase"] = "Database non disponible",
+
+            // Credits window
+            ["core.credits.title"] = "Crédits",
+            ["core.credits.tab.core"] = "Équipe Core",
+            ["core.credits.tab.modules"] = "Modules",
+            ["core.credits.modules.list"] = "Modules installés",
+            ["core.credits.author"] = "Auteur",
+            ["core.credits.contributors"] = "Contributeurs",
+            ["about.credits"] = "Crédits",
+            ["core.close"] = "Fermer",
+
+            // Settings tabs
+            ["settings.tab.general"] = "Général",
+            ["settings.tab.modules"] = "Modules",
+            ["settings.modules.check"] = "Vérifier les mises à jour",
+            ["settings.modules.checking"] = "Vérification en cours...",
+            ["settings.modules.coreAvailable"] = "Une nouvelle version du Core est disponible",
+            ["settings.modules.coreUpdateMsg"] = "Version {0} disponible (actuelle: {1})",
         }, isSystemRegistration: true);
 
         // === ENGLISH ===
@@ -398,6 +424,13 @@ public static class Localization
             ["system.update.url"] = "URL: {0}",
             ["system.update.openError"] = "Unable to open browser: {0}",
 
+            // Startup update check
+            ["update.available"] = "Update v{0} available!",
+            ["update.incompatibleAutoCAD"] = "Version {0} requires AutoCAD {1}+ (you have {2})",
+            ["update.notification.title"] = "Update Available",
+            ["update.notification.message"] = "A new version of Open Asphalte is available!\n\nCurrent version: {1}\nNew version: {0}\n\nWould you like to open the download page?",
+            ["update.checking.startup"] = "Checking for updates...",
+
             // Module Manager
             ["modules.manager.title"] = "Module Manager",
             ["modules.manager.subtitle"] = "Install and manage Open Asphalte modules from the official catalog.",
@@ -440,6 +473,7 @@ public static class Localization
             ["modules.action.install"] = "Install",
             ["modules.action.update"] = "Update",
             ["modules.action.installed"] = "Installed",
+            ["modules.local.description"] = "Local module from {0}",
 
             // Update errors
             ["update.error.notFound"] = "Module catalog not found (404). Check your connection or try again later.",
@@ -580,6 +614,24 @@ public static class Localization
 
             // Errors (transactions)
             ["error.noDatabase"] = "Database not available",
+
+            // Credits window
+            ["core.credits.title"] = "Credits",
+            ["core.credits.tab.core"] = "Core Team",
+            ["core.credits.tab.modules"] = "Modules",
+            ["core.credits.modules.list"] = "Installed Modules",
+            ["core.credits.author"] = "Author",
+            ["core.credits.contributors"] = "Contributors",
+            ["about.credits"] = "Credits",
+            ["core.close"] = "Close",
+
+            // Settings tabs
+            ["settings.tab.general"] = "General",
+            ["settings.tab.modules"] = "Modules",
+            ["settings.modules.check"] = "Check for updates",
+            ["settings.modules.checking"] = "Checking...",
+            ["settings.modules.coreAvailable"] = "A new Core version is available",
+            ["settings.modules.coreUpdateMsg"] = "Version {0} available (current: {1})",
         }, isSystemRegistration: true);
 
         // === Español ===
@@ -637,6 +689,13 @@ public static class Localization
             ["system.update.url"] = "URL: {0}",
             ["system.update.openError"] = "No se puede abrir el navegador: {0}",
 
+            // Verificación de actualizaciones al inicio
+            ["update.available"] = "¡Actualización v{0} disponible!",
+            ["update.incompatibleAutoCAD"] = "La versión {0} requiere AutoCAD {1}+ (tienes {2})",
+            ["update.notification.title"] = "Actualización disponible",
+            ["update.notification.message"] = "¡Una nueva versión de Open Asphalte está disponible!\n\nVersión actual: {1}\nNueva versión: {0}\n\n¿Desea abrir la página de descarga?",
+            ["update.checking.startup"] = "Buscando actualizaciones...",
+
             // Gestor de Módulos
             ["modules.manager.title"] = "Gestor de Módulos",
             ["modules.manager.subtitle"] = "Instale y gestione los módulos de Open Asphalte desde el catálogo oficial.",
@@ -679,6 +738,7 @@ public static class Localization
             ["modules.action.install"] = "Instalar",
             ["modules.action.update"] = "Actualizar",
             ["modules.action.installed"] = "Instalado",
+            ["modules.local.description"] = "Módulo local desde {0}",
 
             // Update errors
             ["update.error.notFound"] = "Catálogo de módulos no encontrado (404). Verifique su conexión o inténtelo más tarde.",
@@ -823,6 +883,24 @@ public static class Localization
 
             // Errores (transacciones)
             ["error.noDatabase"] = "Base de datos no disponible",
+
+            // Ventana de créditos
+            ["core.credits.title"] = "Créditos",
+            ["core.credits.tab.core"] = "Equipo Core",
+            ["core.credits.tab.modules"] = "Módulos",
+            ["core.credits.modules.list"] = "Módulos instalados",
+            ["core.credits.author"] = "Autor",
+            ["core.credits.contributors"] = "Colaboradores",
+            ["about.credits"] = "Créditos",
+            ["core.close"] = "Cerrar",
+
+            // Pestañas de configuración
+            ["settings.tab.general"] = "General",
+            ["settings.tab.modules"] = "Módulos",
+            ["settings.modules.check"] = "Buscar actualizaciones",
+            ["settings.modules.checking"] = "Verificando...",
+            ["settings.modules.coreAvailable"] = "Una nueva versión del Core está disponible",
+            ["settings.modules.coreUpdateMsg"] = "Versión {0} disponible (actual: {1})",
         }, isSystemRegistration: true);
     }
 

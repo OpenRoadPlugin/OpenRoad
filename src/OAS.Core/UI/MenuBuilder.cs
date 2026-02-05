@@ -112,7 +112,7 @@ public static class MenuBuilder
                 menuName = L10n.T("app.name", DefaultMenuName);
             }
 
-            AcadPopupMenu? openRoadMenu = null;
+            AcadPopupMenu? oasMenu = null;
             bool menuExisted = false;
 
             // Chercher si le menu existe déjà (toutes langues possibles)
@@ -122,9 +122,9 @@ public static class MenuBuilder
                 try
                 {
                     existingMenu = menusWrapper.Object.Item(i);
-                    if (existingMenu != null && IsOpenRoadMenu(existingMenu.Name))
+                    if (existingMenu != null && IsOasMenu(existingMenu.Name))
                     {
-                        openRoadMenu = existingMenu;
+                        oasMenu = existingMenu;
                         menuExisted = true;
                         break;
                     }
@@ -132,29 +132,29 @@ public static class MenuBuilder
                 finally
                 {
                     // Ne pas libérer si c'est notre menu trouvé
-                    if (existingMenu != null && existingMenu != openRoadMenu)
+                    if (existingMenu != null && existingMenu != oasMenu)
                         try { Marshal.ReleaseComObject(existingMenu); } catch { }
                 }
             }
 
             // Si le menu existe, vider son contenu pour le reconstruire
-            if (openRoadMenu != null && menuExisted)
+            if (oasMenu != null && menuExisted)
             {
-                ClearMenuItems(openRoadMenu);
+                ClearMenuItems(oasMenu);
 
                 // Renommer si nécessaire (changement de langue)
-                if (!openRoadMenu.Name.Equals(menuName, StringComparison.Ordinal))
+                if (!oasMenu.Name.Equals(menuName, StringComparison.Ordinal))
                 {
-                    try { openRoadMenu.Name = menuName; } catch { }
+                    try { oasMenu.Name = menuName; } catch { }
                 }
             }
             else
             {
                 // Créer un nouveau menu
-                openRoadMenu = menusWrapper.Object.Add(menuName);
+                oasMenu = menusWrapper.Object.Add(menuName);
             }
 
-            if (openRoadMenu == null) return;
+            if (oasMenu == null) return;
 
             try
             {
@@ -187,7 +187,7 @@ public static class MenuBuilder
 
                     if (!isFirst)
                     {
-                        openRoadMenu.AddSeparator(idx++);
+                        oasMenu.AddSeparator(idx++);
                     }
                     isFirst = false;
 
@@ -210,7 +210,7 @@ public static class MenuBuilder
                     else
                         lvl1Name = representativeCmd.Module.Name;
 
-                    using var lvl1MenuWrapper = new ComWrapper<AcadPopupMenu>(openRoadMenu.AddSubMenu(idx++, lvl1Name));
+                    using var lvl1MenuWrapper = new ComWrapper<AcadPopupMenu>(oasMenu.AddSubMenu(idx++, lvl1Name));
                     if (lvl1MenuWrapper.Object == null) continue;
 
                     int subIdx = 0;
@@ -271,18 +271,18 @@ public static class MenuBuilder
                 }
 
                 // === Commandes système (toujours présentes) ===
-                openRoadMenu.AddSeparator(idx++);
-                openRoadMenu.AddMenuItem(idx++, L10n.T("system.settings"), "OAS_SETTINGS ");
-                openRoadMenu.AddMenuItem(idx++, L10n.T("system.help"), "OAS_HELP ");
-                openRoadMenu.AddSeparator(idx++);
-                openRoadMenu.AddMenuItem(idx++, L10n.T("about.title"), "OAS_VERSION ");
+                oasMenu.AddSeparator(idx++);
+                oasMenu.AddMenuItem(idx++, L10n.T("system.settings"), "OAS_SETTINGS ");
+                oasMenu.AddMenuItem(idx++, L10n.T("system.help"), "OAS_HELP ");
+                oasMenu.AddSeparator(idx++);
+                oasMenu.AddMenuItem(idx++, L10n.T("about.title"), "OAS_VERSION ");
 
                 // Insérer dans la barre de menus si pas déjà présent
-                if (!menuExisted || !IsMenuInMenuBar(menuBarWrapper.Object, openRoadMenu.Name))
+                if (!menuExisted || !IsMenuInMenuBar(menuBarWrapper.Object, oasMenu.Name))
                 {
                     int insertIndex = menuBarWrapper.Object.Count - 1;
                     if (insertIndex < 0) insertIndex = 0;
-                    openRoadMenu.InsertInMenuBar(insertIndex);
+                    oasMenu.InsertInMenuBar(insertIndex);
                 }
 
                 _menuCreated = true;
@@ -290,8 +290,8 @@ public static class MenuBuilder
             }
             finally
             {
-                if (openRoadMenu != null)
-                    try { Marshal.ReleaseComObject(openRoadMenu); } catch { }
+                if (oasMenu != null)
+                    try { Marshal.ReleaseComObject(oasMenu); } catch { }
             }
         }
         catch (System.Exception ex)
@@ -303,7 +303,7 @@ public static class MenuBuilder
     /// <summary>
     /// Vérifie si un nom correspond au menu Open Asphalte (toutes langues et noms personnalisés)
     /// </summary>
-    private static bool IsOpenRoadMenu(string? name)
+    private static bool IsOasMenu(string? name)
     {
         if (string.IsNullOrWhiteSpace(name)) return false;
 
@@ -406,7 +406,7 @@ public static class MenuBuilder
                 try
                 {
                     barMenu = menuBarWrapper.Object.Item(i);
-                    if (barMenu != null && IsOpenRoadMenu(barMenu.Name))
+                    if (barMenu != null && IsOasMenu(barMenu.Name))
                     {
                         barMenu.RemoveFromMenuBar();
                     }

@@ -20,6 +20,7 @@ using OpenAsphalte.Configuration;
 using OpenAsphalte.Discovery;
 using OpenAsphalte.Diagnostics;
 using OpenAsphalte.Logging;
+using OpenAsphalte.Services;
 using OpenAsphalte.UI;
 using L10n = OpenAsphalte.Localization.Localization;
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
@@ -55,6 +56,7 @@ public class Plugin : IExtensionApplication
     private static bool _diagnosticsEnabled;
     private static int _firstChanceCount;
     private const int MaxFirstChanceLogs = 5;
+    private static EventHandler<FirstChanceExceptionEventArgs>? _firstChanceHandler;
 
     /// <summary>
     /// Version du coeur Open Asphalte (chargée depuis version.json)
@@ -149,8 +151,8 @@ public class Plugin : IExtensionApplication
             // 9. Verification des mises a jour au demarrage (si active)
             if (Configuration.Configuration.CheckUpdatesOnStartup)
             {
-                Logger.Debug(L10n.T("plugin.updateCheckDisabled"));
-                // TODO: Implementer la verification automatique quand le serveur sera disponible
+                // Vérification asynchrone non-bloquante
+                _ = CheckForUpdatesOnStartupAsync();
             }
             StartupLog.Write("Initialize: end");
         }
@@ -199,7 +201,7 @@ public class Plugin : IExtensionApplication
             }
         };
 
-        AppDomain.CurrentDomain.FirstChanceException += (_, args) =>
+        _firstChanceHandler = (_, args) =>
         {
             try
             {
@@ -212,6 +214,7 @@ public class Plugin : IExtensionApplication
                 // Silencieux: éviter boucle infinie si StartupLog échoue
             }
         };
+        AppDomain.CurrentDomain.FirstChanceException += _firstChanceHandler;
 
         Logger.Info($"Diagnostics activés. Log: {Logger.LogFilePath}");
     }
@@ -338,6 +341,52 @@ public class Plugin : IExtensionApplication
     }
 
     /// <summary>
+    /// Vérifie les mises à jour au démarrage de manière asynchrone.
+    /// Cette méthode est non-bloquante et s'exécute en arrière-plan.
+    /// </summary>
+    private static async Task CheckForUpdatesOnStartupAsync()
+    {
+        try
+        {
+            StartupLog.Write("CheckForUpdatesOnStartupAsync: begin");
+            Logger.Debug(L10n.T("update.checking.startup"));
+
+            // Attendre un peu pour ne pas ralentir le démarrage
+            await Task.Delay(2000);
+
+            // Vérifier les mises à jour via GitHub API
+            var result = await UpdateService.CheckStartupUpdateAsync();
+
+            if (result.UpdateAvailable)
+            {
+                // Afficher la notification sur le thread UI
+                AcadApp.Idle += (_, _) =>
+                {
+                    UpdateService.ShowUpdateNotification(result);
+                };
+            }
+            else if (result.IncompatibleAutoCAD)
+            {
+                Logger.Info(L10n.TFormat("update.incompatibleAutoCAD",
+                    result.LatestVersion?.ToString() ?? "?",
+                    result.RequiredAutoCADVersion,
+                    UpdateService.GetAutoCADVersion()));
+            }
+            else if (result.IsUpToDate)
+            {
+                Logger.Debug($"Open Asphalte is up to date (v{result.CurrentVersion})");
+            }
+
+            StartupLog.Write("CheckForUpdatesOnStartupAsync: end");
+        }
+        catch (System.Exception ex)
+        {
+            // Ne jamais bloquer le démarrage pour une erreur de mise à jour
+            StartupLog.Write($"CheckForUpdatesOnStartupAsync error (ignored): {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// Appele lorsque la langue change.
     /// Reconstruit l'interface utilisateur avec les nouvelles traductions.
     /// </summary>
@@ -380,6 +429,13 @@ public class Plugin : IExtensionApplication
 
             // 2. Se desabonner de l'evenement de langue
             L10n.OnLanguageChanged -= OnLanguageChanged;
+
+            // 2b. Se desabonner du handler FirstChanceException
+            if (_firstChanceHandler != null)
+            {
+                AppDomain.CurrentDomain.FirstChanceException -= _firstChanceHandler;
+                _firstChanceHandler = null;
+            }
 
             // 3. Supprimer l'interface
             MenuBuilder.RemoveMenu();

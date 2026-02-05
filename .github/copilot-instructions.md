@@ -1,6 +1,6 @@
 # Open Asphalte – Context IA Complet
 
-> **Document optimisé pour agents IA** | Version 2026.02.04 | .NET 8.0 / AutoCAD 2025+
+> **Document optimisé pour agents IA** | Version 2026.02.05 | .NET 8.0 / AutoCAD 2025+
 
 ---
 

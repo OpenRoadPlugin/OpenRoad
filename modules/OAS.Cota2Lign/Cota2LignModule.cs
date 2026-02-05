@@ -45,18 +45,19 @@ public class Cota2LignModule : ModuleBase
     /// </summary>
     public override IEnumerable<Contributor> Contributors => new[]
     {
-        new Contributor("Open Asphalte Community", "Development & Testing")
+        new Contributor("Charles TILLY", "Lead Developer", "https://linkedin.com/in/charlestilly"),
+        new Contributor("IA Copilot", "Code Assistant")
     };
 
     /// <summary>
     /// Version du module
     /// </summary>
-    public override string Version => "1.0.0";
+    public override string Version => "0.0.1";
 
     /// <summary>
     /// Auteur du module
     /// </summary>
-    public override string Author => "Open Asphalte Contributors";
+    public override string Author => "Charles TILLY";
 
     // ═══════════════════════════════════════════════════════════
     // AFFICHAGE UI
@@ -144,6 +145,7 @@ public class Cota2LignModule : ModuleBase
 
                 // Fenêtre paramètres
                 ["cota2lign.settings.title"] = "Paramètres - Cotation entre deux lignes",
+                ["cota2lign.settings.header"] = "Paramètres de cotation",
                 ["cota2lign.settings.interdist"] = "Interdistance (m) :",
                 ["cota2lign.settings.interdist.tooltip"] = "Distance entre chaque cotation (0 pour désactiver)",
                 ["cota2lign.settings.vertices"] = "Coter aux sommets",
@@ -170,6 +172,11 @@ public class Cota2LignModule : ModuleBase
                 ["cota2lign.settings.snapmidpoint"] = "Milieux de segments",
                 ["cota2lign.settings.snapnearest"] = "Point le plus proche",
                 ["cota2lign.settings.oassnap.unavailable"] = "Module DynamicSnap non installé - fonctionnalité désactivée",
+
+                // Validation
+                ["cota2lign.validation.error"] = "Erreur de validation",
+                ["cota2lign.validation.invalidInterdist"] = "Veuillez saisir une valeur numérique valide pour l'interdistance.",
+                ["cota2lign.validation.invalidOffset"] = "Veuillez saisir une valeur numérique valide pour le décalage.",
             },
 
             // ═══════════════════════════════════════════════════════
@@ -213,6 +220,7 @@ public class Cota2LignModule : ModuleBase
 
                 // Settings window
                 ["cota2lign.settings.title"] = "Settings - Dimension between two lines",
+                ["cota2lign.settings.header"] = "Dimension settings",
                 ["cota2lign.settings.interdist"] = "Spacing (m):",
                 ["cota2lign.settings.interdist.tooltip"] = "Distance between each dimension (0 to disable)",
                 ["cota2lign.settings.vertices"] = "Dimension at vertices",
@@ -239,6 +247,11 @@ public class Cota2LignModule : ModuleBase
                 ["cota2lign.settings.snapmidpoint"] = "Segment midpoints",
                 ["cota2lign.settings.snapnearest"] = "Nearest point",
                 ["cota2lign.settings.oassnap.unavailable"] = "DynamicSnap module not installed - feature disabled",
+
+                // Validation
+                ["cota2lign.validation.error"] = "Validation error",
+                ["cota2lign.validation.invalidInterdist"] = "Please enter a valid numeric value for spacing.",
+                ["cota2lign.validation.invalidOffset"] = "Please enter a valid numeric value for offset.",
             },
 
             // ═══════════════════════════════════════════════════════
@@ -282,6 +295,7 @@ public class Cota2LignModule : ModuleBase
 
                 // Ventana parámetros
                 ["cota2lign.settings.title"] = "Parámetros - Cota entre dos líneas",
+                ["cota2lign.settings.header"] = "Parámetros de cota",
                 ["cota2lign.settings.interdist"] = "Espaciado (m):",
                 ["cota2lign.settings.interdist.tooltip"] = "Distancia entre cada cota (0 para desactivar)",
                 ["cota2lign.settings.vertices"] = "Cotar en vértices",
@@ -308,6 +322,11 @@ public class Cota2LignModule : ModuleBase
                 ["cota2lign.settings.snapmidpoint"] = "Puntos medios de segmentos",
                 ["cota2lign.settings.snapnearest"] = "Punto más cercano",
                 ["cota2lign.settings.oassnap.unavailable"] = "Módulo DynamicSnap no instalado - función desactivada",
+
+                // Validación
+                ["cota2lign.validation.error"] = "Error de validación",
+                ["cota2lign.validation.invalidInterdist"] = "Por favor ingrese un valor numérico válido para el espaciado.",
+                ["cota2lign.validation.invalidOffset"] = "Por favor ingrese un valor numérico válido para el desplazamiento.",
             }
         };
     }

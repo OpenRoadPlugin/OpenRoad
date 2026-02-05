@@ -1,25 +1,24 @@
-# ?? GeometryService - Documentation compl�te
+# GeometryService - Référence API
 
-> **Référence API pour les développeurs de modules Open Asphalte**
+> Référence pour les développeurs de modules Open Asphalte.
 
-Le `GeometryService` est une bibliothèque statique de calculs géométriques, hydrauliques et de cubature. Toutes les méthodes sont accessibles via `OpenAsphalte.Services.GeometryService`.
+Le `GeometryService` est une bibliothèque statique de calculs géométriques, hydrauliques et de cubature.
+Toutes les méthodes sont accessibles via `OpenAsphalte.Services.GeometryService`.
 
----
-
-## ?? Table des mati�res
+## Table des matières
 
 1. [Constantes](#constantes)
-2. [Distance et Angles](#distance-et-angles)
-3. [Points et Projections](#points-et-projections)
+2. [Distances et angles](#distances-et-angles)
+3. [Points et projections](#points-et-projections)
 4. [Polylignes](#polylignes)
-5. [Tests g�om�triques](#tests-g�om�triques)
-6. [Aires et P�rim�tres](#aires-et-p�rim�tres)
+5. [Tests géométriques](#tests-géométriques)
+6. [Aires et périmètres](#aires-et-périmètres)
 7. [Intersections](#intersections)
-8. [Cercles et Arcs](#cercles-et-arcs)
-9. [Voirie - Trac� en plan](#voirie---trac�-en-plan)
-10. [Voirie - Profil en long](#voirie---profil-en-long)
-11. [Assainissement - Hydraulique](#assainissement---hydraulique)
-12. [Cubature et Terrassement](#cubature-et-terrassement)
+8. [Cercles et arcs](#cercles-et-arcs)
+9. [Voirie - tracé en plan](#voirie---tracé-en-plan)
+10. [Voirie - profil en long](#voirie---profil-en-long)
+11. [Assainissement - hydraulique](#assainissement---hydraulique)
+12. [Cubature et terrassement](#cubature-et-terrassement)
 13. [Surfaces et MNT](#surfaces-et-mnt)
 
 ---
@@ -29,657 +28,232 @@ Le `GeometryService` est une bibliothèque statique de calculs géométriques, h
 ```csharp
 using OpenAsphalte.Services;
 
-// Constantes de conversion
-GeometryService.Tolerance   // 1e-10 - Tol�rance pour comparaisons
-GeometryService.Gravity     // 9.81 m/s�
-GeometryService.DegToRad    // ?/180 - Degr�s vers radians
-GeometryService.RadToDeg    // 180/? - Radians vers degr�s
+GeometryService.Tolerance   // 1e-10 - Tolérance pour comparaisons
+GeometryService.Gravity     // 9.81 m/s^2
+GeometryService.DegToRad    // pi/180 - Degrés vers radians
+GeometryService.RadToDeg    // 180/pi - Radians vers degrés
 ```
 
 ---
 
-## Distance et Angles
+## Distances et angles
 
 ### Distances
 
-| M�thode | Description | Retour |
+| Méthode | Description | Retour |
 |---------|-------------|--------|
 | `Distance(p1, p2)` | Distance 3D entre deux points | `double` |
 | `Distance2D(p1, p2)` | Distance 2D (ignore Z) | `double` |
-| `HorizontalDistance(p1, p2)` | Alias de Distance2D (topographie) | `double` |
-| `DeltaZ(p1, p2)` | Diff�rence d'altitude (p2.Z - p1.Z) | `double` |
-
-```csharp
-// Exemple
-var dist = GeometryService.Distance(new Point3d(0, 0, 0), new Point3d(3, 4, 5));
-// R�sultat: 7.07 (?50)
-
-var dist2D = GeometryService.Distance2D(new Point3d(0, 0, 0), new Point3d(3, 4, 5));
-// R�sultat: 5.0 (Z ignor�)
-```
+| `HorizontalDistance(p1, p2)` | Alias de `Distance2D` | `double` |
+| `DeltaZ(p1, p2)` | Différence d'altitude (p2.Z - p1.Z) | `double` |
 
 ### Angles
 
-| M�thode | Description | Retour |
+| Méthode | Description | Retour |
 |---------|-------------|--------|
-| `AngleBetween(from, to)` | Angle en radians [-?, ?] | `double` |
-| `AngleBetweenDegrees(from, to)` | Angle en degr�s | `double` |
-| `NormalizeAngle(angle)` | Normalise en [0, 2?] | `double` |
+| `AngleBetween(from, to)` | Angle en radians [-pi, pi] | `double` |
+| `AngleBetweenDegrees(from, to)` | Angle en degrés | `double` |
+| `NormalizeAngle(angle)` | Normalise en [0, 2*pi] | `double` |
 | `NormalizeAngleDegrees(angle)` | Normalise en [0, 360] | `double` |
-| `AngleBetweenVectors(v1, v2)` | Angle entre vecteurs [0, ?] | `double` |
+| `AngleBetweenVectors(v1, v2)` | Angle entre vecteurs [0, pi] | `double` |
 | `Bearing(from, to)` | Gisement en grades [0, 400] | `double` |
-| `BearingToAngle(bearing)` | Convertit gisement ? angle trigo | `double` |
-
-```csharp
-// Angle depuis l'axe X+ (sens trigo)
-var angle = GeometryService.AngleBetween(Point3d.Origin, new Point3d(1, 1, 0));
-// R�sultat: ?/4 (45�)
-
-// Gisement depuis le Nord (sens horaire)
-var gisement = GeometryService.Bearing(Point3d.Origin, new Point3d(100, 100, 0));
-// R�sultat: 50 grades (NE)
-```
+| `BearingToAngle(bearing)` | Convertit gisement -> angle trigo | `double` |
 
 ---
 
-## Points et Projections
+## Points et projections
 
 ### Manipulation de points
 
-| M�thode | Description |
+| Méthode | Description |
 |---------|-------------|
-| `OffsetPoint(point, angle, distance)` | Point d�cal� selon angle et distance |
-| `PerpendicularOffset(point, angle, dist, leftSide)` | D�calage perpendiculaire |
+| `OffsetPoint(point, angle, distance)` | Point décalé selon angle et distance |
+| `PerpendicularOffset(point, angle, distance, leftSide)` | Décalage perpendiculaire |
 | `MidPoint(p1, p2)` | Point milieu |
-| `Lerp(p1, p2, t)` | Interpolation lin�aire (t ? [0,1]) |
+| `Lerp(p1, p2, t)` | Interpolation linéaire (t dans [0,1]) |
 | `RotatePoint(point, center, angle)` | Rotation autour d'un centre |
 | `TranslatePoint(point, vector)` | Translation par vecteur |
 | `TranslatePoint(point, dx, dy, dz)` | Translation par composantes |
 
-```csharp
-// Cr�er un point � 10m dans la direction de 45�
-var pt = GeometryService.OffsetPoint(Point3d.Origin, Math.PI / 4, 10);
-
-// Point � mi-chemin
-var mid = GeometryService.Lerp(p1, p2, 0.5);
-
-// Rotation de 90� autour de l'origine
-var rotated = GeometryService.RotatePoint(point, Point3d.Origin, Math.PI / 2);
-```
-
 ### Projections
 
-| M�thode | Description |
+| Méthode | Description |
 |---------|-------------|
 | `ProjectPointOnLine(point, lineStart, lineEnd)` | Projection sur droite infinie |
-| `ProjectPointOnSegment(point, segStart, segEnd)` | Projection sur segment (contrainte) |
+| `ProjectPointOnSegment(point, segStart, segEnd)` | Projection sur segment |
 | `DistancePointToLine(point, lineStart, lineEnd)` | Distance point-droite |
 | `DistancePointToSegment(point, segStart, segEnd)` | Distance point-segment |
 
-```csharp
-// Projection orthogonale sur un axe
-var proj = GeometryService.ProjectPointOnLine(point, axeStart, axeEnd);
+**Exemple**
 
-// Distance d'un point � un segment
-var dist = GeometryService.DistancePointToSegment(point, segStart, segEnd);
+```csharp
+using Autodesk.AutoCAD.Geometry;
+using OpenAsphalte.Services;
+
+var p1 = new Point3d(0, 0, 0);
+var p2 = new Point3d(10, 0, 0);
+
+var pt = GeometryService.OffsetPoint(Point3d.Origin, Math.PI / 4, 10);
+var proj = GeometryService.ProjectPointOnSegment(pt, p1, p2);
 ```
 
 ---
 
 ## Polylignes
 
-| M�thode | Description |
+| Méthode | Description |
 |---------|-------------|
 | `GetPolylinePoints(polyline)` | Liste des sommets |
 | `GetPolylineLength(polyline)` | Longueur totale |
-| `GetPointAtDistance(polyline, distance)` | Point � une abscisse curviligne |
-| `GetTangentAngle(polyline, distance)` | Angle tangent � une position |
-
-```csharp
-ExecuteInTransaction(tr =>
-{
-    var poly = /* s�lection polyligne */;
-    
-    // Points tous les 10m
-    double length = GeometryService.GetPolylineLength(poly);
-    for (double d = 0; d <= length; d += 10)
-    {
-        var pt = GeometryService.GetPointAtDistance(poly, d);
-        var tangent = GeometryService.GetTangentAngle(poly, d);
-        // ...
-    }
-});
-```
+| `GetPointAtDistance(polyline, distance)` | Point à une abscisse curviligne |
+| `GetTangentAngle(polyline, distance)` | Angle tangent à une position |
 
 ---
 
-## Tests g�om�triques
+## Tests géométriques
 
-| M�thode | Description | Retour |
+| Méthode | Description | Retour |
 |---------|-------------|--------|
-| `IsPointOnLeftSide(lineStart, lineEnd, point)` | Point � gauche de la ligne? | `bool` |
-| `IsPointInPolygon(point, polygon)` | Point dans le polygone? | `bool` |
-
-```csharp
-// D�terminer le c�t� d'un point par rapport � un axe
-bool isLeft = GeometryService.IsPointOnLeftSide(axeStart, axeEnd, point);
-
-// Test d'inclusion dans une parcelle
-var boundary = new List<Point3d> { /* sommets */ };
-bool inside = GeometryService.IsPointInPolygon(testPoint, boundary);
-```
+| `IsPointOnLeftSide(lineStart, lineEnd, point)` | Point à gauche de la ligne | `bool` |
+| `IsPointInPolygon(point, polygonPoints)` | Point dans le polygone | `bool` |
 
 ---
 
-## Aires et P�rim�tres
+## Aires et périmètres
 
-| M�thode | Description |
+| Méthode | Description |
 |---------|-------------|
 | `CalculatePolygonArea(points)` | Aire 2D (formule du lacet) |
-| `CalculatePolygonPerimeter(points)` | P�rim�tre d'un polygone |
-| `CalculateCentroid(points)` | Centre de gravit� |
+| `CalculatePolygonPerimeter(points)` | Périmètre d'un polygone |
+| `CalculateCentroid(points)` | Centre de gravité |
 | `CalculateTriangleArea(p1, p2, p3)` | Aire d'un triangle 2D |
-| `CalculateTriangleArea3D(p1, p2, p3)` | Aire r�elle 3D d'un triangle |
-
-```csharp
-var parcelle = new List<Point3d> { /* sommets */ };
-double surface = GeometryService.CalculatePolygonArea(parcelle);
-var centroide = GeometryService.CalculateCentroid(parcelle);
-```
+| `CalculateTriangleArea3D(p1, p2, p3)` | Aire réelle 3D d'un triangle |
 
 ---
 
 ## Intersections
 
-### Lignes et segments
+| Méthode | Description |
+|---------|-------------|
+| `IntersectLines(l1Start, l1End, l2Start, l2End)` | Intersections de droites (résultat détaillé) |
+| `IntersectSegments(s1Start, s1End, s2Start, s2End)` | Intersection de segments (point ou null) |
+| `IntersectLineCircle(lineStart, lineEnd, center, radius)` | Intersection droite / cercle |
+| `IntersectCircles(center1, r1, center2, r2)` | Intersection entre cercles |
+| `TangentPointsFromExternalPoint(extPoint, center, radius)` | Points de tangence depuis un point externe |
+
+**Exemple**
 
 ```csharp
-// Intersection de deux droites
-var result = GeometryService.IntersectLines(line1Start, line1End, line2Start, line2End);
-if (result.HasIntersection)
+using Autodesk.AutoCAD.Geometry;
+using OpenAsphalte.Services;
+
+var a1 = new Point3d(0, 0, 0);
+var a2 = new Point3d(10, 0, 0);
+var b1 = new Point3d(5, -5, 0);
+var b2 = new Point3d(5, 5, 0);
+
+var result = GeometryService.IntersectLines(a1, a2, b1, b2);
+if (result.HasIntersection && result.IsOnBothSegments)
 {
-    Point3d pt = result.Point;
-    bool onSeg1 = result.IsOnSegment1; // T1 ? [0,1]
-    bool onSeg2 = result.IsOnSegment2; // T2 ? [0,1]
-    bool onBoth = result.IsOnBothSegments;
-}
-
-// Intersection de deux segments (plus simple)
-Point3d? intersection = GeometryService.IntersectSegments(seg1Start, seg1End, seg2Start, seg2End);
-if (intersection.HasValue) { /* ... */ }
-```
-
-### Ligne et cercle
-
-```csharp
-var result = GeometryService.IntersectLineCircle(lineStart, lineEnd, center, radius);
-// result.Count: 0 (aucune), 1 (tangent), 2 (s�cante)
-if (result.Count >= 1) { var p1 = result.Point1.Value; }
-if (result.Count == 2) { var p2 = result.Point2.Value; }
-```
-
-### Deux cercles
-
-```csharp
-var result = GeometryService.IntersectCircles(center1, radius1, center2, radius2);
-// result.Count: -1 (identiques), 0 (disjoints), 1 (tangents), 2 (s�cants)
-```
-
-### Tangentes
-
-```csharp
-// Points de tangence depuis un point externe
-var tangents = GeometryService.TangentPointsFromExternalPoint(externalPoint, center, radius);
-if (tangents.HasValue)
-{
-    var (t1, t2) = tangents.Value;
-    // t1 et t2 sont les deux points de tangence
+    var pt = result.Point;
 }
 ```
 
 ---
 
-## Cercles et Arcs
+## Cercles et arcs
 
-| M�thode | Description |
+| Méthode | Description |
 |---------|-------------|
 | `CircleFrom3Points(p1, p2, p3)` | Cercle passant par 3 points |
-| `ArcLength(radius, angle)` | Longueur d'arc |
-| `SectorArea(radius, angle)` | Aire d'un secteur |
-| `CircularSegmentArea(radius, angle)` | Aire segment (entre corde et arc) |
-| `ChordLength(radius, angle)` | Longueur de corde |
-| `Sagita(radius, angle)` | Fl�che de l'arc |
-
-```csharp
-// Trouver le cercle passant par 3 points
-var circle = GeometryService.CircleFrom3Points(p1, p2, p3);
-if (circle.HasValue)
-{
-    Point3d center = circle.Value.Center;
-    double radius = circle.Value.Radius;
-}
-```
+| `ArcLength(radius, angleRadians)` | Longueur d'arc |
+| `ChordLength(radius, angleRadians)` | Longueur de corde |
+| `Sagita(radius, angleRadians)` | Flèche d'arc |
 
 ---
 
-## Voirie - Trac� en plan
+## Voirie - tracé en plan
 
-### Clotho�des (transitions de courbure)
-
-La **clotho�de** est la courbe id�ale pour les transitions en voirie car sa courbure varie lin�airement.
-
-```csharp
-// Param�tre A de la clotho�de
-double A = GeometryService.ClothoidParameter(radius: 200, length: 50);
-// A� = R � L ? A = ?(200 � 50) = 100
-
-// Coordonn�es sur la clotho�de
-var (x, y, tau) = GeometryService.ClothoidCoordinates(A, L: 25);
-// tau = angle de rotation en radians
-
-// Longueur minimale selon la r�gle du confort
-double Lmin = GeometryService.MinClothoidLength(radius: 200, speedKmh: 90);
-```
-
-### Rayons et d�vers
-
-```csharp
-// Rayon minimum pour une vitesse et un d�vers donn�s
-double Rmin = GeometryService.MinCurveRadius(
-    speedKmh: 90, 
-    superelevationPercent: 7, 
-    frictionCoef: 0.13
-);
-
-// D�vers recommand� pour un rayon donn�
-double devers = GeometryService.RecommendedSuperelevation(
-    radius: 300, 
-    speedKmh: 90
-);
-```
-
-### Surlargeur et visibilit�
-
-```csharp
-// Surlargeur en courbe pour PL 12m
-double surlargeur = GeometryService.CurveWidening(radius: 100, vehicleLength: 12);
-
-// Distance de visibilit� d'arr�t
-double Dv = GeometryService.StoppingDistance(
-    speedKmh: 90, 
-    reactionTime: 2.0, 
-    frictionCoef: 0.35, 
-    slopePercent: -3  // descente
-);
-
-// Distance de d�passement
-double Dd = GeometryService.OvertakingDistance(speedKmh: 90);
-```
+| Méthode | Description |
+|---------|-------------|
+| `ClothoidParameter(radius, length)` | Paramètre de clothoïde |
+| `ClothoidCoordinates(A, L)` | Coordonnées clothoïde (x, y, tau) |
+| `MinClothoidLength(radius, speedKmh)` | Longueur min de clothoïde |
+| `MinCurveRadius(speedKmh, deversPercent, frictionCoef)` | Rayon minimal de courbe |
+| `RecommendedSuperelevation(radius, speedKmh)` | Dévers recommandé |
+| `CurveWidening(radius, vehicleLength)` | Surlargeur en courbe |
+| `StoppingDistance(speedKmh, reactionTime, frictionCoef, slopePercent)` | Distance d'arrêt |
+| `OvertakingDistance(speedKmh)` | Distance de dépassement |
 
 ---
 
-## Voirie - Profil en long
+## Voirie - profil en long
 
-### Pentes
-
-```csharp
-// Pente entre deux points
-double pente = GeometryService.SlopePercent(p1, p2);      // en %
-double penteMillieme = GeometryService.SlopePerMille(p1, p2);  // en �
-```
-
-### Raccordements verticaux
-
-```csharp
-// Param�tres d'une parabole verticale
-var (R, fleche, isConvexe) = GeometryService.VerticalCurveParameters(
-    slope1: 3,    // 3% mont�e
-    slope2: -2,   // 2% descente
-    length: 100   // 100m de raccordement
-);
-
-// Longueur minimale point haut (convexe)
-double Lmin = GeometryService.MinCrestCurveLength(
-    slope1: 3, slope2: -2,
-    stoppingDistance: 120,
-    eyeHeight: 1.10, objectHeight: 0.15
-);
-
-// Longueur minimale point bas (concave)
-double Lmin = GeometryService.MinSagCurveLength(
-    slope1: -3, slope2: 2,
-    stoppingDistance: 120
-);
-
-// Altitude sur la parabole
-double z = GeometryService.VerticalCurveElevation(
-    startZ: 100,
-    startSlope: 3,
-    curveLength: 100,
-    position: 50,  // au milieu
-    endSlope: -2
-);
-```
+| Méthode | Description |
+|---------|-------------|
+| `SlopePercent(p1, p2)` | Pente en % |
+| `SlopePerMille(p1, p2)` | Pente en pour mille |
+| `VerticalCurveParameters(slope1, slope2, length)` | Paramètres de raccordement vertical |
+| `MinCrestCurveLength(slope1, slope2, stoppingDist)` | Longueur min de raccord convexe |
+| `MinSagCurveLength(slope1, slope2, stoppingDist)` | Longueur min de raccord concave |
+| `VerticalCurveElevation(startZ, startSlope, curveLength, position, endSlope)` | Z sur une courbe verticale |
 
 ---
 
-## Assainissement - Hydraulique
+## Assainissement - hydraulique
 
-### Formule de Manning-Strickler
-
-```csharp
-// Q = K � S � Rh^(2/3) � ?I
-
-// D�bit
-double Q = GeometryService.ManningStricklerFlow(
-    stricklerK: 70,        // b�ton ordinaire
-    section: 0.5,          // m�
-    hydraulicRadius: 0.15, // m
-    slopeDecimal: 0.01     // 1%
-);
-
-// Vitesse
-double V = GeometryService.ManningStricklerVelocity(stricklerK: 70, hydraulicRadius: 0.15, slopeDecimal: 0.01);
-
-// Rayon hydraulique
-double Rh = GeometryService.HydraulicRadius(wettedArea: 0.5, wettedPerimeter: 2.0);
-```
-
-### Coefficients de Strickler
-
-```csharp
-using static OpenAsphalte.Services.GeometryService.StricklerCoefficients;
-
-// Valeurs disponibles:
-BetonLisse       // 80
-BetonCentrifuge  // 90
-BetonOrdinary    // 70
-BetonRuqueux     // 60
-Gres             // 75
-FonteDuctile     // 80
-PVCNeuf          // 100
-PVCUsage         // 90
-PEHD             // 100
-Acier            // 85
-FosseEnTerre     // 35
-FosseEnherbe     // 25
-Enrochement      // 30
-```
-
-### Sections hydrauliques
-
-#### Canalisation circulaire
-
-```csharp
-// Param�tres � remplissage partiel
-var (S, Pm, Rh) = GeometryService.CircularPipeHydraulics(
-    diameter: 0.400,    // �400
-    fillRatio: 0.80     // 80% rempli
-);
-
-// D�bit � pleine section
-double Qps = GeometryService.FullPipeFlow(
-    diameter: 0.400,
-    slopePercent: 1.0,
-    stricklerK: 70
-);
-
-// Diam�tre n�cessaire pour un d�bit
-double D = GeometryService.RequiredPipeDiameter(
-    flowRate: 0.150,    // m�/s
-    slopePercent: 1.0,
-    stricklerK: 70
-);
-
-// Pente d'auto-curage
-double Imin = GeometryService.SelfCleaningSlope(
-    diameter: 0.300,
-    minVelocity: 0.60   // m/s
-);
-```
-
-#### Ovo�de T150
-
-```csharp
-var (S, Pm, Rh) = GeometryService.OvoidPipeHydraulics(
-    height: 1.50,       // Ovo�de T150
-    fillRatio: 0.70
-);
-```
-
-#### Section rectangulaire (dalot/cadre)
-
-```csharp
-var (S, Pm, Rh) = GeometryService.RectangularChannelHydraulics(
-    width: 1.50,
-    height: 1.00,
-    waterDepth: 0.60
-);
-```
-
-#### Section trap�zo�dale (foss�)
-
-```csharp
-var (S, Pm, Rh) = GeometryService.TrapezoidalChannelHydraulics(
-    bottomWidth: 0.50,
-    waterDepth: 0.30,
-    sideSlope: 1.5      // talus 3/2
-);
-```
-
-### Regards
-
-```csharp
-// Hauteur de chute
-double chute = GeometryService.ManholeDrop(
-    upstreamInvert: 95.50,
-    downstreamInvert: 94.70
-);
-
-// Dissipation d'�nergie n�cessaire?
-bool dissipation = GeometryService.RequiresEnergyDissipation(chute, threshold: 0.80);
-```
+| Méthode | Description |
+|---------|-------------|
+| `ManningStricklerFlow(K, section, Rh, slope)` | Débit (Manning-Strickler) |
+| `ManningStricklerVelocity(K, Rh, slope)` | Vitesse (Manning-Strickler) |
+| `HydraulicRadius(wettedArea, wettedPerimeter)` | Rayon hydraulique |
+| `CircularPipeHydraulics(diameter, fillRatio)` | Hydraulique conduite circulaire |
+| `FullPipeFlow(diameter, slopePercent, K)` | Débit en charge |
+| `RequiredPipeDiameter(flowRate, slopePercent, K)` | Diamètre requis |
+| `SelfCleaningSlope(diameter, minVelocity)` | Pente d'auto-curage |
+| `OvoidPipeHydraulics(height, fillRatio)` | Hydraulique conduite ovoïde |
+| `RectangularChannelHydraulics(width, height, waterDepth)` | Canal rectangulaire |
+| `TrapezoidalChannelHydraulics(bottomWidth, waterDepth, sideSlope)` | Canal trapézoïdal |
 
 ---
 
-## Cubature et Terrassement
+## Cubature et terrassement
 
-### Aires de profils en travers
-
-```csharp
-// Points du profil (X = distance � l'axe, Z = altitude TN)
-var profilTN = new List<Point3d>
-{
-    new Point3d(-6, 0, 102.50),
-    new Point3d(-3, 0, 101.80),
-    new Point3d(0, 0, 101.20),
-    new Point3d(3, 0, 101.50),
-    new Point3d(6, 0, 102.30),
-};
-
-// Niveau projet
-double niveauProjet = 101.00;
-
-// Calcul des aires
-var (aireDeblai, aireRemblai) = GeometryService.CrossSectionAreas(profilTN, niveauProjet);
-```
-
-### Volumes entre profils
-
-```csharp
-// M�thode de la moyenne des aires (approch�e)
-double volume = GeometryService.VolumeByAverageEndArea(
-    area1: 12.5,
-    area2: 15.8,
-    distance: 20
-);
-
-// M�thode prismo�dale (plus pr�cise)
-double volume = GeometryService.VolumeByPrismoidal(
-    area1: 12.5,
-    areaMiddle: 14.0,
-    area2: 15.8,
-    distance: 20
-);
-```
-
-### Volumes totaux de terrassement
-
-```csharp
-// Liste des profils (PK, aire d�blai, aire remblai)
-var profils = new List<(double Pk, double CutArea, double FillArea)>
-{
-    (0, 12.5, 0),
-    (20, 15.8, 1.2),
-    (40, 8.3, 5.6),
-    (60, 2.1, 12.4),
-};
-
-var (volumeDeblai, volumeRemblai) = GeometryService.TotalEarthworkVolumes(profils);
-```
-
-### Foisonnement et compactage
-
-```csharp
-using static OpenAsphalte.Services.GeometryService.BulkingFactors;
-
-// Coefficients disponibles:
-TerreVegetale      // 1.25
-Argile             // 1.30
-Sable              // 1.10
-Gravier            // 1.15
-RocheFragmentee    // 1.50
-RocheMassive       // 1.65
-Enrobes            // 1.30
-
-// Application
-double volumeFoisonne = GeometryService.ApplyBulking(volumeEnPlace: 1000, Argile);
-// 1000 � 1.30 = 1300 m�
-
-double volumeCompacte = GeometryService.CompactedVolume(volumeFoisonne: 1300, compactionRatio: 0.90);
-// 1300 � 0.90 = 1170 m�
-```
-
-### Tranch�es
-
-```csharp
-// Tranch�e � parois verticales
-double vol = GeometryService.TrenchVolume(width: 0.80, depth: 1.20, length: 100);
-
-// Tranch�e avec talutage
-double vol = GeometryService.TrenchVolumeWithSlope(
-    bottomWidth: 0.80,
-    depth: 1.50,
-    length: 100,
-    sideSlope: 0.5    // talus 1/2
-);
-
-// Volume de lit de pose
-double litPose = GeometryService.BeddingVolume(
-    pipeOuterDiameter: 0.450,
-    beddingThickness: 0.10,
-    trenchWidth: 0.90,
-    length: 100
-);
-
-// Volume d'enrobage
-double enrobage = GeometryService.SurroundVolume(
-    pipeOuterDiameter: 0.450,
-    trenchWidth: 0.90,
-    length: 100,
-    coverAbovePipe: 0.10
-);
-```
-
-### Excavations
-
-```csharp
-// Volume d'un tronc de pyramide (fouille � talus)
-double vol = GeometryService.FrustumVolume(
-    topArea: 50,      // aire au sol
-    bottomArea: 30,   // aire au fond
-    height: 2.5
-);
-```
+| Méthode | Description |
+|---------|-------------|
+| `CrossSectionAreas(profilePoints, referenceLevel)` | Aires de coupe/remblai |
+| `VolumeByAverageEndArea(area1, area2, distance)` | Volume par aire moyenne |
+| `VolumeByPrismoidal(area1, areaMiddle, area2, distance)` | Volume par prismoïde |
+| `TotalEarthworkVolumes(sectionsList)` | Volumes totaux coupe/remblai |
+| `ApplyBulking(volumeEnPlace, bulkingFactor)` | Foisonnement |
+| `CompactedVolume(volumeFoisonne, compactionRatio)` | Volume compacté |
+| `TrenchVolume(width, depth, length)` | Volume de tranchée |
+| `TrenchVolumeWithSlope(bottomWidth, depth, length, sideSlope)` | Volume de tranchée avec talus |
+| `BeddingVolume(pipeOuterDiameter, thickness, trenchWidth, length)` | Lit de pose |
+| `SurroundVolume(pipeOuterDiameter, trenchWidth, length, coverAbovePipe)` | Enrobage |
 
 ---
 
 ## Surfaces et MNT
 
-### Interpolation d'altitude
-
-```csharp
-// Z interpol� dans un triangle (TIN)
-double z = GeometryService.InterpolateZFromPlane(
-    point: new Point3d(10, 15, 0),
-    p1: triangleVertex1,
-    p2: triangleVertex2,
-    p3: triangleVertex3
-);
-```
-
-### Pente et orientation
-
-```csharp
-// Pente d'un plan (gradient max)
-double pente = GeometryService.PlaneSlope(p1, p2, p3);  // en %
-
-// Exposition (orientation de la pente)
-double azimut = GeometryService.PlaneAspect(p1, p2, p3);  // en grades
-```
-
-### Volumes TIN
-
-```csharp
-// Volume d'un prisme triangulaire
-double vol = GeometryService.TriangularPrismVolume(p1, p2, p3, referenceZ: 100);
-```
+| Méthode | Description |
+|---------|-------------|
+| `InterpolateZFromPlane(point, p1, p2, p3)` | Interpolation Z sur plan |
+| `PlaneSlope(p1, p2, p3)` | Pente du plan en % |
+| `PlaneAspect(p1, p2, p3)` | Azimut en grades |
+| `TriangularPrismVolume(p1, p2, p3, referenceZ)` | Volume d'un prisme triangulaire |
 
 ---
 
-## ?? Bonnes pratiques
-
-### Toujours utiliser les constantes de conversion
+## Exemple rapide
 
 ```csharp
-// ? Bon
-double angleRad = angleDeg * GeometryService.DegToRad;
-double angleDeg = angleRad * GeometryService.RadToDeg;
+using OpenAsphalte.Services;
+using Autodesk.AutoCAD.Geometry;
 
-// ? �viter
-double angleRad = angleDeg * Math.PI / 180;
+var p1 = new Point3d(0, 0, 0);
+var p2 = new Point3d(10, 0, 0);
+
+var dist = GeometryService.Distance(p1, p2);
+var mid = GeometryService.MidPoint(p1, p2);
 ```
-
-### V�rifier la tol�rance pour les comparaisons
-
-```csharp
-// ? Bon
-if (Math.Abs(value) < GeometryService.Tolerance) { /* z�ro */ }
-
-// ? �viter
-if (value == 0) { /* risque d'erreur flottante */ }
-```
-
-### Utiliser les structures de r�sultat
-
-```csharp
-// ? Les r�sultats d'intersection ont des propri�t�s utiles
-var result = GeometryService.IntersectLines(/* ... */);
-if (result.HasIntersection && result.IsOnBothSegments)
-{
-    // Intersection valide sur les deux segments
-}
-```
-
----
-
-## ?? R�f�rences
-
-- **Voirie** : Guide technique SETRA/CERTU
-- **Hydraulique** : Formule de Manning-Strickler (1890)
-- **Clotho�des** : Spirale de Cornu / int�grales de Fresnel
-- **Cubature** : M�thode des profils en travers
-
----
-
-*Document généré pour Open Asphalte v0.0.1 | .NET 8.0*

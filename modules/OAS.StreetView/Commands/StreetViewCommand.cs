@@ -1,4 +1,4 @@
-// Copyright 2026 Open Asphalte Contributors
+﻿// Copyright 2026 Open Asphalte Contributors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -79,19 +79,19 @@ public class StreetViewCommand : CommandBase
             // ═══════════════════════════════════════════════════════════
             // ÉTAPE 1: Vérifier la projection
             // ═══════════════════════════════════════════════════════════
-            
+
             var projection = GetCurrentProjection();
-            
+
             if (projection == null)
             {
                 Logger.Warning(T("streetview.error.noprojection"));
                 Logger.Info(T("streetview.error.noprojection.detail"));
-                
+
                 // Proposer d'ouvrir la fenêtre de définition de projection
                 if (PromptYesNo(T("streetview.askprojection")))
                 {
                     OpenSetProjectionWindow();
-                    
+
                     // Vérifier à nouveau après
                     projection = GetCurrentProjection();
                     if (projection == null)
@@ -105,58 +105,58 @@ public class StreetViewCommand : CommandBase
                     return;
                 }
             }
-            
+
             Logger.Debug($"Projection active: {projection.Name} (EPSG:{projection.Epsg})");
 
             // ═══════════════════════════════════════════════════════════
             // ÉTAPE 2: Sélectionner le point de vue
             // ═══════════════════════════════════════════════════════════
-            
+
             var pointOptions = new PromptPointOptions($"\n{T("streetview.select.point")}: ")
             {
                 AllowNone = false
             };
-            
+
             var pointResult = Editor!.GetPoint(pointOptions);
             if (pointResult.Status != PromptStatus.OK)
             {
                 return;  // Annulation utilisateur
             }
-            
+
             // Convertir en coordonnées monde (WCS)
             var viewPoint = pointResult.Value.TransformBy(Editor.CurrentUserCoordinateSystem);
-            
+
             Logger.Debug(TFormat("streetview.coords.local", viewPoint.X, viewPoint.Y));
 
             // ═══════════════════════════════════════════════════════════
             // ÉTAPE 3: Sélectionner la direction
             // ═══════════════════════════════════════════════════════════
-            
+
             var directionOptions = new PromptPointOptions($"\n{T("streetview.select.direction")}: ")
             {
                 AllowNone = false,
                 BasePoint = pointResult.Value,
                 UseBasePoint = true
             };
-            
+
             var directionResult = Editor.GetPoint(directionOptions);
             if (directionResult.Status != PromptStatus.OK)
             {
                 return;  // Annulation utilisateur
             }
-            
+
             var directionPoint = directionResult.Value.TransformBy(Editor.CurrentUserCoordinateSystem);
 
             // ═══════════════════════════════════════════════════════════
             // ÉTAPE 4: Conversion vers WGS84
             // ═══════════════════════════════════════════════════════════
-            
+
             Logger.Info(T("streetview.converting"));
             Logger.Debug($"Projection: Code={projection.Code}, EPSG={projection.Epsg}");
             Logger.Debug($"Coordonnées source: X={viewPoint.X:F2}, Y={viewPoint.Y:F2}");
-            
+
             (double longitude, double latitude) wgs84;
-            
+
             try
             {
                 wgs84 = GeoLocationService.ProjectedToGeographic(viewPoint.X, viewPoint.Y, projection);
@@ -168,7 +168,7 @@ public class StreetViewCommand : CommandBase
                 Logger.Debug(ex.Message);
                 return;
             }
-            
+
             // Validation des coordonnées
             if (!IsValidWgs84Coordinates(wgs84.latitude, wgs84.longitude))
             {
@@ -176,24 +176,24 @@ public class StreetViewCommand : CommandBase
                 Logger.Debug($"Coordonnées invalides: Lat={wgs84.latitude}, Lon={wgs84.longitude}");
                 return;
             }
-            
+
             Logger.Info(TFormat("streetview.coords.wgs84", wgs84.latitude, wgs84.longitude));
 
             // ═══════════════════════════════════════════════════════════
             // ÉTAPE 5: Calcul du cap (heading)
             // ═══════════════════════════════════════════════════════════
-            
+
             double heading = CalculateHeading(viewPoint, directionPoint);
             Logger.Info(TFormat("streetview.heading", heading));
 
             // ═══════════════════════════════════════════════════════════
             // ÉTAPE 6: Ouverture de Street View
             // ═══════════════════════════════════════════════════════════
-            
+
             Logger.Info(T("streetview.opening"));
-            
+
             var url = BuildStreetViewUrl(wgs84.latitude, wgs84.longitude, heading);
-            
+
             if (OpenUrl(url))
             {
                 Logger.Success(T("streetview.success"));
@@ -215,7 +215,7 @@ public class StreetViewCommand : CommandBase
     {
         // Récupérer le code du système de coordonnées via CGEOCS
         string? csCode = null;
-        
+
         try
         {
             object? value = AcadApp.GetSystemVariable("CGEOCS");
@@ -228,32 +228,32 @@ public class StreetViewCommand : CommandBase
         {
             // Variable non disponible
         }
-        
+
         if (string.IsNullOrWhiteSpace(csCode))
         {
             return null;
         }
-        
+
         // Rechercher dans la base de projections connues
         var projection = CoordinateService.Projections
             .FirstOrDefault(p => p.Code.Equals(csCode, StringComparison.OrdinalIgnoreCase));
-        
+
         // Si pas trouvé par code exact, chercher par variantes
         if (projection == null)
         {
             projection = CoordinateService.Projections
-                .FirstOrDefault(p => 
+                .FirstOrDefault(p =>
                     csCode.Contains(p.Code, StringComparison.OrdinalIgnoreCase) ||
                     p.Code.Contains(csCode, StringComparison.OrdinalIgnoreCase));
         }
-        
+
         // Si toujours pas trouvé, créer une projection générique
         if (projection == null)
         {
             // Essayer d'extraire des infos du code
             projection = CreateGenericProjection(csCode);
         }
-        
+
         return projection;
     }
 
@@ -263,7 +263,7 @@ public class StreetViewCommand : CommandBase
     private static ProjectionInfo? CreateGenericProjection(string code)
     {
         var upperCode = code.ToUpperInvariant();
-        
+
         // Détecter le type de projection
         if (upperCode.Contains("LAMB93") || upperCode.Contains("LAMBERT-93"))
         {
@@ -275,7 +275,7 @@ public class StreetViewCommand : CommandBase
                 Unit = "m"
             };
         }
-        
+
         // RGF93 / CCxx - Accepter toutes les variantes (RGF93.CC49, RGF93-CC49, CC49, etc.)
         var ccMatch = System.Text.RegularExpressions.Regex.Match(upperCode, @"CC(\d{2})");
         if (ccMatch.Success && int.TryParse(ccMatch.Groups[1].Value, out int zone) && zone >= 42 && zone <= 50)
@@ -288,7 +288,7 @@ public class StreetViewCommand : CommandBase
                 Unit = "m"
             };
         }
-        
+
         // UTM
         if (upperCode.Contains("UTM"))
         {
@@ -312,7 +312,7 @@ public class StreetViewCommand : CommandBase
                 Unit = "m"
             };
         }
-        
+
         return null;
     }
 
@@ -326,7 +326,7 @@ public class StreetViewCommand : CommandBase
             var currentCs = GetCurrentProjectionCode();
             var window = new SetProjectionWindow(currentCs, null);
             var result = AcadApp.ShowModalWindow(window);
-            
+
             // Si l'utilisateur a validé et sélectionné une projection
             if (result == true && window.SelectedProjection != null && !window.ClearProjection)
             {
@@ -334,11 +334,11 @@ public class StreetViewCommand : CommandBase
                 ExecuteInTransaction(tr =>
                 {
                     bool success = GeoLocationService.ApplyCoordinateSystem(
-                        Database!, 
-                        tr, 
-                        window.SelectedProjection, 
+                        Database!,
+                        tr,
+                        window.SelectedProjection,
                         null);
-                    
+
                     if (success)
                     {
                         Logger.Success(TFormat("streetview.projection.applied", window.SelectedProjection.DisplayName));
@@ -386,20 +386,20 @@ public class StreetViewCommand : CommandBase
     {
         // Angle en radians depuis l'axe X positif
         double angleRad = Math.Atan2(to.Y - from.Y, to.X - from.X);
-        
+
         // Convertir en degrés
         double angleDeg = angleRad * 180.0 / Math.PI;
-        
-        // Convertir de l'angle mathématique (0=Est, anti-horaire) 
+
+        // Convertir de l'angle mathématique (0=Est, anti-horaire)
         // vers le cap géographique (0=Nord, horaire)
         // Angle mathématique: 0° = Est, 90° = Nord
         // Cap géographique: 0° = Nord, 90° = Est
         double heading = 90.0 - angleDeg;
-        
+
         // Normaliser entre 0 et 360
         while (heading < 0) heading += 360.0;
         while (heading >= 360.0) heading -= 360.0;
-        
+
         return heading;
     }
 
@@ -411,18 +411,18 @@ public class StreetViewCommand : CommandBase
         // Latitude: -90 à +90
         if (latitude < -90 || latitude > 90)
             return false;
-        
+
         // Longitude: -180 à +180
         if (longitude < -180 || longitude > 180)
             return false;
-        
+
         // Vérifier que ce n'est pas NaN ou Infinity
         if (double.IsNaN(latitude) || double.IsNaN(longitude))
             return false;
-        
+
         if (double.IsInfinity(latitude) || double.IsInfinity(longitude))
             return false;
-        
+
         return true;
     }
 
@@ -439,7 +439,7 @@ public class StreetViewCommand : CommandBase
         var lat = latitude.ToString("F6", System.Globalization.CultureInfo.InvariantCulture);
         var lon = longitude.ToString("F6", System.Globalization.CultureInfo.InvariantCulture);
         var head = heading.ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
-        
+
         return $"{StreetViewBaseUrl}&viewpoint={lat},{lon}&heading={head}&pitch={DefaultPitch}&fov={DefaultFov}";
     }
 
@@ -482,16 +482,18 @@ public class StreetViewCommand : CommandBase
     /// </summary>
     private bool PromptYesNo(string message)
     {
-        var options = new PromptKeywordOptions($"\n{message} [Oui/Non] <Non>: ");
-        options.Keywords.Add("Oui");
-        options.Keywords.Add("Non");
-        options.Keywords.Default = "Non";
+        var yes = T("common.yes", "Oui");
+        var no = T("common.no", "Non");
+        var options = new PromptKeywordOptions($"\n{message} [{yes}/{no}] <{no}>: ");
+        options.Keywords.Add(yes);
+        options.Keywords.Add(no);
+        options.Keywords.Default = no;
         options.AllowNone = true;
-        
+
         var result = Editor!.GetKeywords(options);
-        
-        return result.Status == PromptStatus.OK && 
-               result.StringResult.Equals("Oui", StringComparison.OrdinalIgnoreCase);
+
+        return result.Status == PromptStatus.OK &&
+               result.StringResult.Equals(yes, StringComparison.OrdinalIgnoreCase);
     }
 
     #endregion

@@ -64,6 +64,12 @@ public partial class Cota2LignSettingsWindow : Window
     {
         Title = L10n.T("cota2lign.settings.title", "Paramètres - Cotation entre deux lignes");
 
+        // Labels
+        TitleLabel.Text = L10n.T("cota2lign.settings.header", "Paramètres de cotation");
+        InterdistanceLabel.Text = L10n.T("cota2lign.settings.interdist", "Interdistance (m) :");
+        OffsetLabel.Text = L10n.T("cota2lign.settings.offset", "Décalage cotation (m) :");
+        LayerLabel.Text = L10n.T("cota2lign.settings.layer", "Calque de destination :");
+
         ApplyButton.Content = L10n.T("cota2lign.settings.apply", "Appliquer");
         CancelButton.Content = L10n.T("cota2lign.settings.cancel", "Annuler");
         ResetButton.Content = L10n.T("cota2lign.settings.reset", "Réinitialiser");
@@ -161,8 +167,8 @@ public partial class Cota2LignSettingsWindow : Window
         else
         {
             MessageBox.Show(
-                "Veuillez saisir une valeur numérique valide pour l'interdistance.",
-                "Erreur de validation",
+                L10n.T("cota2lign.validation.invalidInterdist", "Veuillez saisir une valeur numérique valide pour l'interdistance."),
+                L10n.T("cota2lign.validation.error", "Erreur de validation"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
             InterdistanceTextBox.Focus();
@@ -177,8 +183,8 @@ public partial class Cota2LignSettingsWindow : Window
         else
         {
             MessageBox.Show(
-                "Veuillez saisir une valeur numérique valide pour le décalage.",
-                "Erreur de validation",
+                L10n.T("cota2lign.validation.invalidOffset", "Veuillez saisir une valeur numérique valide pour le décalage."),
+                L10n.T("cota2lign.validation.error", "Erreur de validation"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
             OffsetTextBox.Focus();

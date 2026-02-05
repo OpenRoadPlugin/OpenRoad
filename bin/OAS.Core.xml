@@ -545,6 +545,16 @@
             Wrapper helper for XAML binding convenience
             </summary>
         </member>
+        <member name="T:OpenAsphalte.Commands.ModuleDisplay">
+            <summary>
+            Wrapper helper for module display with translation support
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Commands.ModuleDisplay.TranslatedName">
+            <summary>
+            Translated name using NameKey if available, otherwise falls back to Name
+            </summary>
+        </member>
         <member name="T:OpenAsphalte.Commands.ModuleManagerWindow">
             <summary>
             Fenêtre de gestion des modules Open Asphalte.
@@ -831,8 +841,8 @@
             </summary>
             <remarks>
             Cette propriété accède directement à la configuration.
-            Si vous voulez que le changement de langue soit propag? ? l'UI,
-            utilisez plut?t <c>Localization.Localization.SetLanguage(language)</c>.
+            Si vous voulez que le changement de langue soit propagé à l'UI,
+            utilisez plutôt <c>Localization.Localization.SetLanguage(language)</c>.
             </remarks>
         </member>
         <member name="P:OpenAsphalte.Configuration.Configuration.DevMode">
@@ -853,6 +863,11 @@
         <member name="P:OpenAsphalte.Configuration.Configuration.MainMenuName">
             <summary>
             Nom du menu principal (defaut: "Open Asphalte")
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Diagnostics.StartupLog">
+            <summary>
+            Logging de démarrage et diagnostics. Utilisé pour tracer le chargement du plugin.
             </summary>
         </member>
         <member name="T:OpenAsphalte.Discovery.CommandDescriptor">
@@ -1032,6 +1047,29 @@
             Doit être appelé avant DiscoverAndLoad().
             </summary>
             <param name="path">Chemin vers un dossier contenant des modules OAS.*.dll</param>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.GetMissingDependencies(OpenAsphalte.Services.ModuleDefinition,OpenAsphalte.Services.MarketplaceManifest,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Récupère les dépendances manquantes pour un module à installer.
+            Vérifie les modules chargés en mémoire, les fichiers DLL présents et les IDs additionnels fournis.
+            </summary>
+            <param name="moduleDef">Définition du module à vérifier</param>
+            <param name="manifest">Manifest du marketplace contenant toutes les définitions de modules</param>
+            <param name="additionalInstalledIds">IDs de modules installés dans cette session mais pas encore chargés (optionnel)</param>
+            <returns>Liste des modules manquants à installer, dans l'ordre (sous-dépendances en premier)</returns>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.IsModuleAvailable(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Vérifie si un module est disponible (chargé ou présent sur le disque)
+            </summary>
+            <param name="moduleId">ID du module à vérifier</param>
+            <param name="additionalInstalledIds">IDs de modules installés dans cette session</param>
+            <returns>True si le module est disponible</returns>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.GetMissingDependenciesRecursive(OpenAsphalte.Services.ModuleDefinition,OpenAsphalte.Services.MarketplaceManifest,System.Collections.Generic.HashSet{System.String},System.Collections.Generic.List{OpenAsphalte.Services.ModuleDefinition})">
+            <summary>
+            Récursion interne pour GetMissingDependencies
+            </summary>
         </member>
         <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.DiscoverAndLoad(System.String)">
             <summary>
@@ -1391,6 +1429,12 @@
             Vérifie si c'est le premier démarrage sans modules et propose d'ouvrir le gestionnaire
             </summary>
         </member>
+        <member name="M:OpenAsphalte.Plugin.CheckForUpdatesOnStartupAsync">
+            <summary>
+            Vérifie les mises à jour au démarrage de manière asynchrone.
+            Cette méthode est non-bloquante et s'exécute en arrière-plan.
+            </summary>
+        </member>
         <member name="M:OpenAsphalte.Plugin.OnLanguageChanged(System.String,System.String)">
             <summary>
             Appele lorsque la langue change.
@@ -1411,22 +1455,22 @@
         </member>
         <member name="T:OpenAsphalte.Services.CoordinateService">
             <summary>
-            Service de gestion des syst�mes de coordonn�es et de conversion.
-            Fournit des m�thodes pour identifier, convertir et g�rer les projections cartographiques.
+            Service de gestion des systèmes de coordonnées et de conversion.
+            Fournit des méthodes pour identifier, convertir et gérer les projections cartographiques.
             </summary>
             <remarks>
-            Ce service g�re les syst�mes de coordonn�es compatibles avec AutoCAD (variable CGEOCS).
-            Il peut charger des d�finitions de projections depuis un fichier JSON externe.
+            Ce service gère les systèmes de coordonnées compatibles avec AutoCAD (variable CGEOCS).
+            Il peut charger des définitions de projections depuis un fichier JSON externe.
             </remarks>
         </member>
         <member name="F:OpenAsphalte.Services.CoordinateService.EarthRadiusEquatorial">
             <summary>
-            Rayon �quatorial de la Terre (WGS84) en m�tres
+            Rayon équatorial de la Terre (WGS84) en mètres
             </summary>
         </member>
         <member name="F:OpenAsphalte.Services.CoordinateService.EarthRadiusPolar">
             <summary>
-            Rayon polaire de la Terre (WGS84) en m�tres
+            Rayon polaire de la Terre (WGS84) en mètres
             </summary>
         </member>
         <member name="F:OpenAsphalte.Services.CoordinateService.EarthFlattening">
@@ -1436,13 +1480,13 @@
         </member>
         <member name="F:OpenAsphalte.Services.CoordinateService.EarthEccentricitySquared">
             <summary>
-            Excentricit� au carr� (WGS84)
+            Excentricité au carré (WGS84)
             </summary>
         </member>
         <member name="F:OpenAsphalte.Services.CoordinateService.OriginThreshold">
             <summary>
-            Seuil de distance au centre (origine) en dessous duquel un point est ignor�
-            pour la d�tection automatique de projection (en unit�s du dessin)
+            Seuil de distance au centre (origine) en dessous duquel un point est ignoré
+            pour la détection automatique de projection (en unités du dessin)
             </summary>
         </member>
         <member name="P:OpenAsphalte.Services.CoordinateService.Projections">
@@ -1452,17 +1496,17 @@
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.EnsureProjectionsLoaded">
             <summary>
-            Charge les projections depuis le fichier JSON ou utilise les projections int�gr�es
+            Charge les projections depuis le fichier JSON ou utilise les projections intégrées
             </summary>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.LoadBuiltInProjections">
             <summary>
-            Charge les projections int�gr�es au programme
+            Charge les projections intégrées au programme
             </summary>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.ReloadProjections">
             <summary>
-            Recharge les projections depuis le fichier externe (si modifi�)
+            Recharge les projections depuis le fichier externe (si modifié) ou depuis la liste intégrée (si le fichier est absent)
             </summary>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionByCode(System.String)">
@@ -1470,57 +1514,57 @@
             Recherche une projection par son code AutoCAD
             </summary>
             <param name="code">Code AutoCAD (ex: "RGF93.CC49")</param>
-            <returns>Projection trouv�e ou null</returns>
+            <returns>Projection trouvée ou null</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionByEpsg(System.Int32)">
             <summary>
             Recherche une projection par son code EPSG
             </summary>
             <param name="epsg">Code EPSG (ex: 3949)</param>
-            <returns>Projection trouv�e ou null</returns>
+            <returns>Projection trouvée ou null</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.SearchProjections(System.String)">
             <summary>
-            Recherche des projections par texte (nom, code, pays, r�gion)
+            Recherche des projections par texte (nom, code, pays, région)
             </summary>
             <param name="searchText">Texte de recherche</param>
             <returns>Liste des projections correspondantes</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.GetProjectionsByCountry">
             <summary>
-            Retourne les projections group�es par pays
+            Retourne les projections groupées par pays
             </summary>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.DetectProjection(System.Collections.Generic.IEnumerable{Autodesk.AutoCAD.Geometry.Point3d})">
             <summary>
-            D�tecte automatiquement la projection la plus probable � partir d'un ensemble de points
+            Détecte automatiquement la projection la plus probable à partir d'un ensemble de points
             </summary>
-            <param name="points">Points � analyser</param>
-            <returns>Projection d�tect�e ou null si aucune correspondance</returns>
+            <param name="points">Points à analyser</param>
+            <returns>Projection détectée ou null si aucune correspondance</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.DetectProjection(System.Double,System.Double)">
             <summary>
-            D�tecte automatiquement la projection la plus probable � partir de coordonn�es moyennes
+            Détecte automatiquement la projection la plus probable à partir de coordonnées moyennes
             </summary>
-            <param name="x">Coordonn�e X moyenne</param>
-            <param name="y">Coordonn�e Y moyenne</param>
-            <returns>Projection d�tect�e ou null si aucune correspondance</returns>
+            <param name="x">Coordonnée X moyenne</param>
+            <param name="y">Coordonnée Y moyenne</param>
+            <returns>Projection détectée ou null si aucune correspondance</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.Lambert93ToWgs84(System.Double,System.Double)">
             <summary>
-            Convertit des coordonn�es Lambert 93 en WGS84 (longitude/latitude)
+            Convertit des coordonnées Lambert 93 en WGS84 (longitude/latitude)
             </summary>
-            <param name="x">Coordonn�e X (Est) en m�tres</param>
-            <param name="y">Coordonn�e Y (Nord) en m�tres</param>
-            <returns>Tuple (longitude, latitude) en degr�s d�cimaux</returns>
+            <param name="x">Coordonnée X (Est) en mètres</param>
+            <param name="y">Coordonnée Y (Nord) en mètres</param>
+            <returns>Tuple (longitude, latitude) en degrés décimaux</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.Wgs84ToLambert93(System.Double,System.Double)">
             <summary>
-            Convertit des coordonn�es WGS84 (longitude/latitude) en Lambert 93
+            Convertit des coordonnées WGS84 (longitude/latitude) en Lambert 93
             </summary>
-            <param name="longitude">Longitude en degr�s d�cimaux</param>
-            <param name="latitude">Latitude en degr�s d�cimaux</param>
-            <returns>Tuple (X, Y) en m�tres</returns>
+            <param name="longitude">Longitude en degrés décimaux</param>
+            <param name="latitude">Latitude en degrés décimaux</param>
+            <returns>Tuple (X, Y) en mètres</returns>
         </member>
         <member name="M:OpenAsphalte.Services.CoordinateService.CCToWgs84(System.Double,System.Double,System.Int32)">
             <summary>
@@ -2411,12 +2455,46 @@
         </member>
         <member name="T:OpenAsphalte.Services.UpdateService">
             <summary>
-            Service de gestion des mises a jour et du telechargement de modules.
+            Service de gestion des mises à jour et du téléchargement de modules.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.UpdateService.GetAutoCADVersion">
+            <summary>
+            Récupère la version majeure d'AutoCAD (ex: 2025, 2026).
+            </summary>
+            <returns>Version AutoCAD sous forme de string (ex: "2025")</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.UpdateService.CheckStartupUpdateAsync">
+            <summary>
+            Vérifie si une mise à jour est disponible au démarrage.
+            Cette méthode est appelée de manière asynchrone et non-bloquante.
+            </summary>
+            <returns>Résultat de la vérification avec informations de mise à jour</returns>
+        </member>
+        <member name="M:OpenAsphalte.Services.UpdateService.ExtractMinAutoCADVersion(OpenAsphalte.Services.GitHubRelease)">
+            <summary>
+            Extrait la version minimale d'AutoCAD depuis le corps de la release.
+            Cherche un pattern comme "minAutoCAD: 2025" ou "AutoCAD 2026+" dans les notes.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.UpdateService.FindInstallerAsset(OpenAsphalte.Services.GitHubRelease)">
+            <summary>
+            Trouve l'URL de l'installateur dans les assets de la release.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.UpdateService.ShowUpdateNotification(OpenAsphalte.Services.StartupUpdateResult)">
+            <summary>
+            Affiche une notification non-bloquante de mise à jour disponible.
             </summary>
         </member>
         <member name="M:OpenAsphalte.Services.UpdateService.CheckForUpdatesAsync">
             <summary>
             Verifie les mises a jour disponibles.
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Services.UpdateService.ScanLocalModulesAsync(System.String)">
+            <summary>
+            Scans a local folder for OAS.*.dll files and creates a dynamic manifest.
             </summary>
         </member>
         <member name="M:OpenAsphalte.Services.UpdateService.InstallCoreUpdateAsync(System.String)">
@@ -2429,25 +2507,67 @@
             Installe ou met a jour un module.
             </summary>
         </member>
+        <member name="T:OpenAsphalte.Services.StartupUpdateResult">
+            <summary>
+            Résultat de la vérification des mises à jour au démarrage.
+            </summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.StartupUpdateResult.CurrentVersion">
+            <summary>Version actuelle installée</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.StartupUpdateResult.LatestVersion">
+            <summary>Dernière version disponible</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.StartupUpdateResult.UpdateAvailable">
+            <summary>True si une mise à jour est disponible et compatible</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.StartupUpdateResult.IsUpToDate">
+            <summary>True si la version actuelle est à jour</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.StartupUpdateResult.IncompatibleAutoCAD">
+            <summary>True si la mise à jour nécessite une version AutoCAD plus récente</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.StartupUpdateResult.RequiredAutoCADVersion">
+            <summary>Version AutoCAD minimale requise pour la mise à jour</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.StartupUpdateResult.ReleaseUrl">
+            <summary>URL de la page de release GitHub</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.StartupUpdateResult.DownloadUrl">
+            <summary>URL de téléchargement de l'installateur</summary>
+        </member>
+        <member name="P:OpenAsphalte.Services.StartupUpdateResult.ReleaseNotes">
+            <summary>Notes de version</summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.GitHubRelease">
+            <summary>
+            Modèle pour la réponse de l'API GitHub releases.
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Services.GitHubAsset">
+            <summary>
+            Modèle pour un asset de release GitHub.
+            </summary>
+        </member>
         <member name="T:OpenAsphalte.Services.UrlValidationService">
             <summary>
-            Service de validation des URLs pour la s�curit�.
-            Centralise les contr�les de s�curit� pour �viter les duplications.
+            Service de validation des URLs pour la sécurité.
+            Centralise les contrôles de sécurité pour éviter les duplications.
             </summary>
         </member>
         <member name="F:OpenAsphalte.Services.UrlValidationService.AllowedUpdateHosts">
             <summary>
-            Liste blanche des domaines autoris�s pour les mises � jour
+            Liste blanche des domaines autorisés pour les mises à jour
             </summary>
         </member>
         <member name="M:OpenAsphalte.Services.UrlValidationService.IsValidUpdateUrl(System.String)">
             <summary>
-            Valide qu'une URL de mise � jour est s�curis�e.
+            Valide qu'une URL de mise à jour est sécurisée.
             </summary>
-            <param name="url">URL � valider</param>
-            <returns>True si l'URL est valide et s�curis�e, false sinon</returns>
+            <param name="url">URL à valider</param>
+            <returns>True si l'URL est valide et sécurisée, false sinon</returns>
             <remarks>
-            Crit�res de validation :
+            Critères de validation :
             - URL non nulle et non vide
             - URL absolue valide
             - Protocole HTTPS uniquement
@@ -2456,17 +2576,17 @@
         </member>
         <member name="M:OpenAsphalte.Services.UrlValidationService.IsSecureUrl(System.String)">
             <summary>
-            Valide qu'une URL est s�curis�e (HTTPS uniquement).
+            Valide qu'une URL est sécurisée (HTTPS uniquement).
             </summary>
-            <param name="url">URL � valider</param>
+            <param name="url">URL à valider</param>
             <returns>True si l'URL utilise HTTPS, false sinon</returns>
         </member>
         <member name="M:OpenAsphalte.Services.UrlValidationService.IsAllowedHost(System.String)">
             <summary>
-            V�rifie si un domaine est dans la liste blanche des mises � jour.
+            Vérifie si un domaine est dans la liste blanche des mises à jour.
             </summary>
-            <param name="host">Nom de domaine � v�rifier</param>
-            <returns>True si le domaine est autoris�</returns>
+            <param name="host">Nom de domaine à vérifier</param>
+            <returns>True si le domaine est autorisé</returns>
         </member>
         <member name="T:OpenAsphalte.UI.ComWrapper`1">
             <summary>
@@ -2496,7 +2616,7 @@
             Crée le menu Open Asphalte basé sur les modules découverts.
             </summary>
         </member>
-        <member name="M:OpenAsphalte.UI.MenuBuilder.IsOpenRoadMenu(System.String)">
+        <member name="M:OpenAsphalte.UI.MenuBuilder.IsOasMenu(System.String)">
             <summary>
             Vérifie si un nom correspond au menu Open Asphalte (toutes langues et noms personnalisés)
             </summary>

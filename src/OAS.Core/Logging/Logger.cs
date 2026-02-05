@@ -25,22 +25,22 @@ public static class Logger
     private static readonly object _fileLock = new();
     private static string? _logFilePath;
     private static readonly int MaxLogFileSizeBytes = 5 * 1024 * 1024; // 5 MB
-    
+
     /// <summary>
     /// Mode debug activé (affiche les messages Debug)
     /// </summary>
     public static bool DebugMode { get; set; } = false;
-    
+
     /// <summary>
     /// Active l'écriture dans un fichier log (activé par défaut pour le diagnostic)
     /// </summary>
     public static bool FileLoggingEnabled { get; set; } = true;
-    
+
     /// <summary>
     /// Préfixe des messages
     /// </summary>
     public static string Prefix { get; set; } = "Open Asphalte";
-    
+
     /// <summary>
     /// Chemin du fichier de log (dans AppData/Open Asphalte/logs/)
     /// </summary>
@@ -60,9 +60,9 @@ public static class Logger
             return _logFilePath;
         }
     }
-    
+
     private static Editor? Editor => AcadApp.DocumentManager.MdiActiveDocument?.Editor;
-    
+
     /// <summary>
     /// Message de debug (seulement si DevMode activé)
     /// </summary>
@@ -74,7 +74,7 @@ public static class Logger
             Write($"{L10n.T("log.level.debug", "[DEBUG]")} {message}", LogLevel.Debug);
         }
     }
-    
+
     /// <summary>
     /// Message d'information
     /// </summary>
@@ -83,7 +83,7 @@ public static class Logger
     {
         Write($"{L10n.T("log.level.info", "[INFO]")} {message}", LogLevel.Info);
     }
-    
+
     /// <summary>
     /// Message de succès
     /// </summary>
@@ -92,7 +92,7 @@ public static class Logger
     {
         Write($"{L10n.T("log.level.success", "[OK]")} {message}", LogLevel.Success);
     }
-    
+
     /// <summary>
     /// Message d'avertissement
     /// </summary>
@@ -101,7 +101,7 @@ public static class Logger
     {
         Write($"{L10n.T("log.level.warn", "[WARN]")} {message}", LogLevel.Warning);
     }
-    
+
     /// <summary>
     /// Message d'erreur
     /// </summary>
@@ -110,7 +110,7 @@ public static class Logger
     {
         Write($"{L10n.T("log.level.error", "[ERROR]")} {message}", LogLevel.Error);
     }
-    
+
     /// <summary>
     /// Message brut sans préfixe
     /// </summary>
@@ -120,7 +120,7 @@ public static class Logger
         Editor?.WriteMessage($"\n{message}");
         WriteToFile(message, LogLevel.Info);
     }
-    
+
     /// <summary>
     /// Écrit un message formaté avec préfixe
     /// </summary>
@@ -131,21 +131,21 @@ public static class Logger
         Editor?.WriteMessage($"\n{fullMessage}");
         WriteToFile(fullMessage, level);
     }
-    
+
     /// <summary>
     /// Écrit dans le fichier de log si activé
     /// </summary>
     private static void WriteToFile(string message, LogLevel level)
     {
         if (!FileLoggingEnabled) return;
-        
+
         try
         {
             lock (_fileLock)
             {
                 // Rotation du log si trop gros
                 RotateLogIfNeeded();
-                
+
                 var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
                 var logLine = $"[{timestamp}] [{level}] {message}{Environment.NewLine}";
                 File.AppendAllText(LogFilePath, logLine);
@@ -156,7 +156,7 @@ public static class Logger
             // Ne pas propager les erreurs de logging fichier
         }
     }
-    
+
     /// <summary>
     /// Effectue une rotation du fichier de log si nécessaire
     /// </summary>
@@ -165,17 +165,17 @@ public static class Logger
         try
         {
             if (!File.Exists(LogFilePath)) return;
-            
+
             var fileInfo = new FileInfo(LogFilePath);
             if (fileInfo.Length < MaxLogFileSizeBytes) return;
-            
+
             // Renommer l'ancien fichier avec timestamp
             var archivePath = Path.Combine(
                 Path.GetDirectoryName(LogFilePath)!,
-                $"openroad_{DateTime.Now:yyyy-MM-dd_HHmmss}.log.old"
+                $"openasphalte_{DateTime.Now:yyyy-MM-dd_HHmmss}.log.old"
             );
             File.Move(LogFilePath, archivePath);
-            
+
             // Nettoyer les vieux fichiers (garder les 5 derniers)
             CleanupOldLogs();
         }
@@ -184,7 +184,7 @@ public static class Logger
             // Ignorer les erreurs de rotation
         }
     }
-    
+
     /// <summary>
     /// Supprime les anciens fichiers de log
     /// </summary>
@@ -194,11 +194,11 @@ public static class Logger
         {
             var logFolder = Path.GetDirectoryName(LogFilePath);
             if (logFolder == null) return;
-            
+
             var oldLogs = Directory.GetFiles(logFolder, "*.log.old")
                 .OrderByDescending(f => File.GetCreationTime(f))
                 .Skip(5);
-            
+
             foreach (var oldLog in oldLogs)
             {
                 File.Delete(oldLog);
@@ -209,7 +209,7 @@ public static class Logger
             // Ignorer les erreurs de nettoyage
         }
     }
-    
+
     /// <summary>
     /// Niveaux de log
     /// </summary>

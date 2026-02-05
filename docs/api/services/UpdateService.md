@@ -18,6 +18,12 @@ Vérifie les mises à jour disponibles pour le Core et les modules.
 public static async Task<UpdateCheckResult> CheckForUpdatesAsync()
 ```
 
+Le service implémente une logique de résolution de version ("Deep Manifest") :
+1. Il récupère le manifeste (officiel + sources personnalisées).
+2. Pour chaque module, il analyse toutes les versions disponibles (propriétés racine + liste `versions`).
+3. Il exclut les versions incompatibles (où `MinCoreVersion` > `CoreVersion` actuel).
+4. Il sélectionne la version la plus récente compatible.
+
 **Retourne :** Un `UpdateCheckResult` contenant les informations sur les mises à jour disponibles.
 
 **Exemple :**
