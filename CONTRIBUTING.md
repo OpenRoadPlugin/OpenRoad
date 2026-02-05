@@ -1,6 +1,6 @@
-﻿# Contribuer à Open Road
+﻿# Contribuer à Open Asphalte
 
-Merci de votre intérêt pour contribuer à Open Road ! 
+Merci de votre intérêt pour contribuer à Open Asphalte ! 
 
 ---
 
@@ -9,7 +9,7 @@ Merci de votre intérêt pour contribuer à Open Road !
 ### Prérequis
 
 - **.NET 8 SDK**  [Télécharger](https://dotnet.microsoft.com/download/dotnet/8.0)
-- **AutoCAD 2024**  Pour les DLL de référence
+- **AutoCAD 2025**  Pour les DLL de référence
 - **Visual Studio 2022** ou **VS Code** avec extensions :
   - C# (ms-dotnettools.csharp)
   - C# Dev Kit (ms-dotnettools.csdevkit)
@@ -18,34 +18,34 @@ Merci de votre intérêt pour contribuer à Open Road !
 
 1. Clonez le repository :
    ```bash
-   git clone https://github.com/openroadplugin/openroad.git
-   cd openroad
+   git clone https://github.com/openasphalteplugin/openasphalte.git
+   cd openasphalte
    ```
 
 2. Ouvrez le projet dans votre IDE
 
-3. Vérifiez les chemins AutoCAD dans src/OpenRoad.Core/OpenRoad.Core.csproj :
+3. Vérifiez les chemins AutoCAD dans src/OAS.Core/OAS.Core.csproj :
    `xml
-   <HintPath>C:\Program Files\Autodesk\AutoCAD 2024\accoremgd.dll</HintPath>
+   <HintPath>C:\Program Files\Autodesk\AutoCAD 2025\accoremgd.dll</HintPath>
    `
 
 ### Compilation
 
 ```bash
-cd src/OpenRoad.Core
+cd src/OAS.Core
 dotnet build -c Release
 ```
 
-Le fichier OpenRoad.Core.dll sera généré dans in/.
+Le fichier OAS.Core.dll sera généré dans bin/.
 
 ---
 
 ##  Structure du projet
 
 ```
-OpenRoad/
+OpenAsphalte/
  src/
-    OpenRoad.Core/           # Cœur du plugin
+    OAS.Core/                    # Cœur du plugin
         Plugin.cs            # Point d'entrée
         Abstractions/        # Interfaces pour modules
         Discovery/           # Découverte automatique
@@ -58,7 +58,7 @@ OpenRoad/
 
  templates/                   # Templates pour modules
  bin/
-     OpenRoad.Core.dll
+     OAS.Core.dll
      Modules/                 # DLL des modules
 ```
 
@@ -101,10 +101,10 @@ Consultez le [Guide développeur](docs/guides/developer_guide.md) pour créer un
 
 | Élément | Convention | Exemple |
 |---------|------------|---------|
-| Namespace Core | OpenRoad.* | OpenRoad.Services |
-| Namespace Module | OpenRoad.Modules.{Module} | OpenRoad.Modules.Voirie |
-| Commande | OR_{MODULE}_{ACTION} | OR_VOIRIE_PARKING |
-| Clé traduction | {module}.{section}.{key} | oirie.parking.title |
+| Namespace Core | OpenAsphalte.* | OpenAsphalte.Services |
+| Namespace Module | OpenAsphalte.Modules.{Module} | OpenAsphalte.Modules.Voirie |
+| Commande | OAS_{MODULE}_{ACTION} | OAS_VOIRIE_PARKING |
+| Clé traduction | {module}.{section}.{key} | voirie.parking.title |
 
 ### Style de code
 
@@ -112,7 +112,7 @@ Consultez le [Guide développeur](docs/guides/developer_guide.md) pour créer un
   `csharp
   using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
   using AcColor = Autodesk.AutoCAD.Colors.Color;
-  using L10n = OpenRoad.Localization.Localization;
+  using L10n = OpenAsphalte.Localization.Localization;
   `
 
 - Utilisez ExecuteSafe() pour la gestion d'erreurs
@@ -126,8 +126,8 @@ Consultez le [Guide développeur](docs/guides/developer_guide.md) pour créer un
 ### 1. Fork et clone
 
 `ash
-git clone https://github.com/VOTRE_USERNAME/openroad.git
-cd openroad
+git clone https://github.com/VOTRE_USERNAME/openasphalte.git
+cd openasphalte
 `
 
 ### 2. Créer une branche
@@ -183,8 +183,8 @@ Puis ouvrez une Pull Request sur GitHub.
 
 ##  Questions ?
 
-- Ouvrez une [Issue](https://github.com/openroadplugin/openroad/issues)
-- Rejoignez les [Discussions](https://github.com/openroadplugin/openroad/discussions)
+- Ouvrez une [Issue](https://github.com/openasphalteplugin/openasphalte/issues)
+- Rejoignez les [Discussions](https://github.com/openasphalteplugin/openasphalte/discussions)
 
 Merci pour votre contribution ! 
 
@@ -192,7 +192,7 @@ Merci pour votre contribution !
 
 ## 🏆 Reconnaissance des contributeurs
 
-Open Road valorise ses contributeurs ! Selon votre niveau de participation, vous pouvez être crédité directement dans le programme.
+Open Asphalte valorise ses contributeurs ! Selon votre niveau de participation, vous pouvez être crédité directement dans le programme.
 
 ### Crédits automatiques pour les développeurs de modules
 
@@ -201,7 +201,7 @@ Open Road valorise ses contributeurs ! Selon votre niveau de participation, vous
 ```csharp
 public class MonModule : ModuleBase
 {
-    public override string Author => "Votre Nom";           // Affiché dans OR_VERSION et OR_MODULES
+    public override string Author => "Votre Nom";           // Affiché dans OAS_VERSION et OAS_MODULES
     public override string Version => "1.0.0";              // Version de votre module
     public override string Description => "Mon super module";
     
@@ -211,8 +211,8 @@ public class MonModule : ModuleBase
 ```
 
 Ces informations apparaissent dans :
-- La commande `OR_VERSION` — Liste des modules chargés avec auteurs
-- Le gestionnaire de modules `OR_MODULES` — Détails de chaque module
+- La commande `OAS_VERSION` — Liste des modules chargés avec auteurs
+- Le gestionnaire de modules `OAS_MODULES` — Détails de chaque module
 - Le marketplace (si votre module est publié)
 
 ### Niveaux de reconnaissance additionnels
@@ -220,9 +220,9 @@ Ces informations apparaissent dans :
 | Niveau | Critères | Reconnaissance |
 |--------|----------|----------------|
 | **Contributeur** | 1-3 contributions acceptées (PR, corrections, traductions) | Nom dans le fichier NOTICE |
-| **Contributeur actif** | 4-10 contributions significatives | Nom + lien vers profil GitHub dans `OR_ABOUT` |
-| **Développeur Core** | Contributions majeures au Core | Nom + lien site personnel dans `OR_ABOUT` et documentation |
-| **Testeur reconnu** | Tests réguliers + rapports de bugs détaillés (5+) | Mention dans `OR_ABOUT` section testeurs |
+| **Contributeur actif** | 4-10 contributions significatives | Nom + lien vers profil GitHub dans `OAS_VERSION` |
+| **Développeur Core** | Contributions majeures au Core | Nom + lien site personnel dans `OAS_VERSION` et documentation |
+| **Testeur reconnu** | Tests réguliers + rapports de bugs détaillés (5+) | Mention dans `OAS_VERSION` section testeurs |
 
 ### Comment demander vos crédits ?
 
@@ -249,22 +249,22 @@ Toutes ces informations sont **optionnelles**. Vous pouvez contribuer anonymemen
 ### Où apparaissent les crédits ?
 
 - **Fichier [NOTICE](NOTICE)** — Liste complète des contributeurs
-- **Commande `OR_ABOUT`** — Fenêtre "À propos" dans AutoCAD
+- **Commande `OAS_VERSION`** — Fenêtre "À propos" dans AutoCAD
 - **Documentation** — Page des contributeurs (pour contributions majeures)
 
 ---
 
 ##  Licence et responsabilité
 
-En contribuant à Open Road, vous acceptez que :
+En contribuant à Open Asphalte, vous acceptez que :
 
 1. **Vos contributions sont sous licence Apache 2.0**  Elles peuvent être utilisées, modifiées et distribuées librement
 2. **Vous accordez une licence de brevet**  Pour toute contribution que vous soumettez
 3. **Vous renoncez à toute réclamation** concernant l'utilisation de votre code
-4. **Open Road est fourni "tel quel"**  Sans garantie d'aucune sorte
+4. **Open Asphalte est fourni "tel quel"**  Sans garantie d'aucune sorte
 
 ### Marques
 
-"Open Road" est une marque réservée. Les contributions n'accordent aucun droit sur le nom ou le logo.
+"Open Asphalte" est une marque réservée. Les contributions n'accordent aucun droit sur le nom ou le logo.
 
 Pour plus de détails, consultez notre [Politique de Sécurité](SECURITY.md), le fichier [LICENSE](LICENSE) et le fichier [NOTICE](NOTICE).

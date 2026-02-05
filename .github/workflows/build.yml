@@ -21,7 +21,7 @@ jobs:
 
     - name: Verifier la structure du projet
       run: |
-        echo "=== Validation de la structure Open Road ==="
+        echo "=== Validation de la structure Open Asphalte ==="
 
         # Verifier les fichiers essentiels
         files=("README.md" "LICENSE" "CHANGELOG.md" "version.json")
@@ -34,14 +34,14 @@ jobs:
         done
 
         # Verifier le Core compile
-        if [ -f "bin/OpenRoad.Core.dll" ]; then
-          echo "✓ bin/OpenRoad.Core.dll present"
+        if [ -f "bin/OAS.Core.dll" ]; then
+          echo "✓ bin/OAS.Core.dll present"
         else
-          echo "✗ bin/OpenRoad.Core.dll MANQUANT - Compilez localement avant de push" && exit 1
+          echo "✗ bin/OAS.Core.dll MANQUANT - Compilez localement avant de push" && exit 1
         fi
 
         # Verifier la structure des sources
-        if [ -d "src/OpenRoad.Core" ]; then
+        if [ -d "src/OAS.Core" ]; then
           echo "✓ Sources Core presentes"
         else
           echo "✗ Sources Core manquantes" && exit 1

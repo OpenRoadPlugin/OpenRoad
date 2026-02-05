@@ -9,18 +9,16 @@
                 "build",
                 "-c",
                 "Release",
-                "${workspaceFolder}/src/OpenRoad.sln"
+                "${workspaceFolder}/src/OAS.sln"
             ],
             "group": "build",
             "problemMatcher": "$msCompile"
         },
         {
             "label": "build:installer",
-            "command": "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe",
+            "command": "& 'C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe' '${workspaceFolder}\\installer\\OAS.iss'",
             "type": "shell",
-            "args": [
-                "\"${workspaceFolder}/installer/OpenRoad.iss\""
-            ],
+            "args": [],
             "group": "build",
             "presentation": {
                 "reveal": "always"
@@ -45,6 +43,19 @@
             "group": "build",
             "problemMatcher": "$msCompile",
             "detail": "Compile tous les modules un par un"
+        },
+        {
+            "label": "build:all",
+            "type": "shell",
+            "command": "& 'C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe' '${workspaceFolder}\\installer\\OAS.iss'",
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": [],
+            "dependsOn": ["build:release", "build:modules"],
+            "dependsOrder": "sequence",
+            "detail": "Compile Core + Modules puis crée l'installer"
         }
     ]
 }

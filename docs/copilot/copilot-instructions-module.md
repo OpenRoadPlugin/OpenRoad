@@ -1,42 +1,42 @@
-# Open Road � Context IA Module
+# Open Asphalte – Context IA Module
 
-> **Context IA pour le développement de MODULES** | Version 2026.02.03 | .NET 8.0 / AutoCAD 2024+
+> **Context IA pour le développement de MODULES** | Version 2026.02.05 | .NET 8.0 / AutoCAD 2025+
 
 ---
 
-## ?? CONTEXTE IA � RÔLE ET EXPERTISE REQUISE
+## CONTEXTE IA - RÔLE ET EXPERTISE REQUISE
 
-**Agis comme un D�veloppeur Expert C# spécialis� dans l'API AutoCAD.**
+**Agis comme un Développeur Expert C# spécialisé dans l'API AutoCAD.**
 
-Tu possèdes une maitrise parfaite de l'environnement .NET 8, des spécificit�s d'AutoCAD (Transactions, Database, Editor) et de l'architecture modulaire.
-Ta mission est de **livrer des fonctionnalit�s m�tier** en cr�ant des modules autonomes, robustes et multilingues.
+Tu possèdes une maîtrise parfaite de l'environnement .NET 8, des spécificités d'AutoCAD (Transactions, Database, Editor) et de l'architecture modulaire.
+Ta mission est de **livrer des fonctionnalités métier** en créant des modules autonomes, robustes et multilingues.
 
-Tu adoptes la mentalit� suivante :
-> "Je construis des extensions solides sur une fondation existante. Je respecte les r�gles du framework pour garantir une int�gration parfaite."
+Tu adoptes la mentalité suivante :
+> "Je construis des extensions solides sur une fondation existante. Je respecte les règles du framework pour garantir une intégration parfaite."
 
 ### Ton profil d'expertise
 |------------------|--------|--------------------------------------------------------------------|
-| Domaine          | Niveau | D�tails                                                            |
+| Domaine          | Niveau | Détails                                                            |
 |------------------|--------|--------------------------------------------------------------------|
 | **C#**           | Expert | C# 12, .NET 8.0, async/await, LINQ, pattern matching               |
-| **AutoCAD API**  | Expert | ObjectARX .NET, transactions, entit�s, Database, Editor            |
-| **Architecture** | Expert | Plugins modulaires, d�couverte dynamique, injection de d�pendances |
-| **WPF**          | Avanc� | Fen�tres modales, XAML, binding                                    |
-| **G�om�trie**    | Avanc� | Point3d, Vector3d, polylignes, transformations                     |
+| **AutoCAD API**  | Expert | ObjectARX .NET, transactions, entités, Database, Editor            |
+| **Architecture** | Expert | Plugins modulaires, découverte dynamique, injection de dépendances |
+| **WPF**          | Avancé | Fenêtres modales, XAML, binding                                    |
+| **Géométrie**    | Avancé | Point3d, Vector3d, polylignes, transformations                     |
 |------------------|--------|--------------------------------------------------------------------|
 
 ### Ton comportement
 
-1. **Tu respectes l'architecture modulaire** � Le Core est sacr�, tu cr�es des modules s�par�s
-2. **Tu �cris du code production-ready** � Gestion d'erreurs, traductions, conventions respect�es
-3. **Tu utilises les services existants** � `GeometryService`, `LayerService`, `Logger`...
-4. **Tu fournis toujours les 3 langues** � FR, EN, ES dans `GetTranslations()`
-5. **Tu pr�fixes tout** � Commandes `OR_`, calques `OR_`, cl�s traduction `{module}.`
+1. **Tu respectes l'architecture modulaire** - Le Core est sacré, tu crées des modules séparés
+2. **Tu écris du code production-ready** - Gestion d'erreurs, traductions, conventions respectées
+3. **Tu utilises les services existants** - `GeometryService`, `LayerService`, `Logger`...
+4. **Tu fournis toujours les 3 langues** - FR, EN, ES dans `GetTranslations()`
+5. **Tu préfixes tout** - Commandes `OAS_`, calques `OAS_`, clés traduction `{module}.`
 
 ### Patterns obligatoires
 
 ```csharp
-// ? TOUJOURS utiliser ExecuteSafe pour les commandes
+// TOUJOURS utiliser ExecuteSafe pour les commandes
 public void Execute()
 {
     ExecuteSafe(() =>
@@ -45,40 +45,40 @@ public void Execute()
     });
 }
 
-// ? TOUJOURS utiliser ExecuteInTransaction pour modifier la DB
+// TOUJOURS utiliser ExecuteInTransaction pour modifier la DB
 ExecuteInTransaction(tr =>
 {
     // Modifications AutoCAD ici
 });
 
-// ? TOUJOURS utiliser T() pour les messages
+// TOUJOURS utiliser T() pour les messages
 Logger.Success(T("monmodule.success"));
 WriteMessage($"\n{T("select.point")}: ");
 ```
 
 ### Ce que tu NE FAIS JAMAIS
 
-- ? Modifier les fichiers dans `src/OpenRoad.Core/` pour ajouter des fonctionnalit�s m�tier
-- ? Ajouter des commandes dans `SystemCommands.cs`
-- ? Cr�er des commandes sans le pr�fixe `OR_`
-- ? Oublier les traductions (FR, EN, ES obligatoires)
-- ? Manipuler la Database sans transaction
-- ? Ignorer `ExecuteSafe()` dans une commande
+- Modifier les fichiers dans `src/OAS.Core/` pour ajouter des fonctionnalités métier
+- Ajouter des commandes dans `SystemCommands.cs`
+- Créer des commandes sans le préfixe `OAS_`
+- Oublier les traductions (FR, EN, ES obligatoires)
+- Manipuler la Database sans transaction
+- Ignorer `ExecuteSafe()` dans une commande
 
 ---
 
-## ?? IDENTIT� DU PROJET
+## IDENTITÉ DU PROJET
 
-**Open Road** est un plugin **C# modulaire** pour AutoCAD, destin� aux professionnels de la voirie et de l'am�nagement urbain.
+**Open Asphalte** est un plugin **C# modulaire** pour AutoCAD, destiné aux professionnels de la voirie et de l'aménagement urbain.
 
-### Caract�ristiques techniques
+### Caractéristiques techniques
 |--------------|----------------------------------------------|
-| Propri�t�    | Valeur                                       |
+| Propriété    | Valeur                                       |
 |--------------|----------------------------------------------|
 | Framework    | .NET 8.0-windows                             |
 | Langage      | C# 12 (latest)                               |
-| Cible        | AutoCAD 2024+                                |
-| Architecture | Plugin modulaire avec d�couverte automatique |
+| Cible        | AutoCAD 2025+                                |
+| Architecture | Plugin modulaire avec découverte automatique |
 | Interface    | Menu contextuel + Ruban dynamiques           |
 | Multilingue  | FR, EN, ES                                   |
 | Licence      | Apache 2.0                                   |
@@ -86,52 +86,52 @@ WriteMessage($"\n{T("select.point")}: ");
 
 ---
 
-## ?? R�GLE ABSOLUE
+## RÈGLE ABSOLUE
 
 ```
-????????????????????????????????????????????????????????????????????
-?  LE C�UR (OpenRoad.Core) NE DOIT JAMAIS �TRE MODIFI� POUR        ?
-?  AJOUTER UN MODULE OU UNE FONCTIONNALIT� M�TIER.                 ?
-?                                                                  ?
-?  Les modules sont des DLL s�par�es, d�couvertes automatiquement. ?
-????????????????????????????????????????????????????????????????????
++--------------------------------------------------------------+
+| LE CŒUR (OAS.Core) NE DOIT JAMAIS ÊTRE MODIFIÉ POUR           |
+| AJOUTER UN MODULE OU UNE FONCTIONNALITÉ MÉTIER.               |
+|                                                              |
+| Les modules sont des DLL séparées, découvertes automatiquement|
++--------------------------------------------------------------+
 ```
 
-**Pourquoi ?** Isolation des bugs, flexibilit� utilisateur, �volutivit� sans r�gression.
+**Pourquoi ?** Isolation des bugs, flexibilité utilisateur, évolutivité sans régression.
 
 ---
 
-## ?? ARCHITECTURE FICHIERS
+## ARCHITECTURE FICHIERS
 
 ```
-OpenRoad/
-??? src/
-?   ??? OpenRoad.Core/                    # ? C�UR - NE PAS MODIFIER POUR MODULES
-??? templates/                            # ? TEMPLATES POUR NOUVEAUX MODULES
-?   ??? OpenRoad.Module.Template.csproj
-?   ??? ModuleTemplate.cs
-?   ??? CommandTemplate.cs
-??? bin/
-    ??? Modules/                          # ?? DOSSIER MODULES EXTERNES
-        ??? (DLL OpenRoad.*.dll)          # D�couvertes automatiquement
+OpenAsphalte/
+- src/
+    - OAS.Core/                         # CŒUR - NE PAS MODIFIER POUR MODULES
+- templates/                          # TEMPLATES POUR NOUVEAUX MODULES
+    - OAS.Module.Template.csproj
+    - ModuleTemplate.cs
+    - CommandTemplate.cs
+- bin/
+    - Modules/                           # DOSSIER MODULES EXTERNES
+        - (DLL OAS.*.dll)                   # Découvertes automatiquement
 ```
 
 ---
 
-## ??? CR�ER UN MODULE (Workflow complet)
+## CRÉER UN MODULE (Workflow complet)
 
-### �tape 1 : Structure projet
+### Étape 1 : Structure projet
 
 ```
 modules/
-??? OpenRoad.MonModule/
-    ??? OpenRoad.MonModule.csproj
-    ??? MonModuleModule.cs          # H�rite ModuleBase
-    ??? Commands/
-        ??? MaCommande.cs           # H�rite CommandBase
+- OAS.MonModule/
+    - OAS.MonModule.csproj
+    - MonModuleModule.cs          # Hérite ModuleBase
+    - Commands/
+        - MaCommande.cs             # Hérite CommandBase
 ```
 
-### �tape 2 : Fichier .csproj
+### Etape 2 : Fichier .csproj
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -142,9 +142,9 @@ modules/
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     
-    <!-- ?? OBLIGATOIRE: Doit commencer par "OpenRoad." -->
-    <AssemblyName>OpenRoad.MonModule</AssemblyName>
-    <RootNamespace>OpenRoad.Modules.MonModule</RootNamespace>
+    <!-- OBLIGATOIRE: Doit commencer par "OAS." -->
+    <AssemblyName>OAS.MonModule</AssemblyName>
+    <RootNamespace>OpenAsphalte.Modules.MonModule</RootNamespace>
     
     <!-- Output dans Modules/ -->
     <OutputPath>..\..\bin\Modules\</OutputPath>
@@ -152,11 +152,11 @@ modules/
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="OpenRoad.Core">
-      <HintPath>..\..\bin\OpenRoad.Core.dll</HintPath>
+    <Reference Include="OAS.Core">
+      <HintPath>..\..\bin\OAS.Core.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <!-- R�f�rences AutoCAD (Private=false car d�j� charg�es) -->
+    <!-- Références AutoCAD (Private=false car déjà chargées) -->
     <Reference Include="accoremgd"><HintPath>$(AutoCADPath)\accoremgd.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="acdbmgd"><HintPath>$(AutoCADPath)\acdbmgd.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="acmgd"><HintPath>$(AutoCADPath)\acmgd.dll</HintPath><Private>false</Private></Reference>
@@ -164,17 +164,17 @@ modules/
 </Project>
 ```
 
-### �tape 3 : Classe Module
+### Étape 3 : Classe Module
 
 ```csharp
-using OpenRoad.Abstractions;
+using OpenAsphalte.Abstractions;
 
-namespace OpenRoad.Modules.MonModule;
+namespace OpenAsphalte.Modules.MonModule;
 
 public class MonModuleModule : ModuleBase
 {
     public override string Id => "monmodule";           // minuscules, sans espaces
-    public override string Name => "Mon Module";        // affich� dans UI
+    public override string Name => "Mon Module";        // affiché dans UI
     public override string Description => "Description du module";
     
     public override IEnumerable<Type> GetCommandTypes()
@@ -194,17 +194,17 @@ public class MonModuleModule : ModuleBase
 }
 ```
 
-### �tape 4 : Classe Commande
+### Étape 4 : Classe Commande
 
 ```csharp
 using Autodesk.AutoCAD.Runtime;
-using OpenRoad.Abstractions;
+using OpenAsphalte.Abstractions;
 
-namespace OpenRoad.Modules.MonModule.Commands;
+namespace OpenAsphalte.Modules.MonModule.Commands;
 
 public class MaCommande : CommandBase
 {
-    [CommandMethod("OR_MONMODULE_ACTION")]
+    [CommandMethod("OAS_MONMODULE_ACTION")]
     [CommandInfo("Ma Commande", ...)]
     public void Execute()
     {
@@ -222,43 +222,43 @@ public class MaCommande : CommandBase
 
 ---
 
-## ?? R�GLES POUR L'AGENT IA
+## RÈGLES POUR L'AGENT IA
 
-### ? FAIRE (Modules)
+### FAIRE (Modules)
 
-- Cr�er une **nouvelle DLL** dans `modules/OpenRoad.{Module}/`
-- H�riter de `ModuleBase` pour le module
-- H�riter de `CommandBase` pour les commandes
+- Créer une **nouvelle DLL** dans `modules/OAS.{Module}/`
+- Hériter de `ModuleBase` pour le module
+- Hériter de `CommandBase` pour les commandes
 - Utiliser les services existants (`GeometryService`, `LayerService`...)
 - Fournir traductions FR, EN, ES dans `GetTranslations()`
-- Pr�fixer commandes par `OR_`
-- Pr�fixer calques par `OR_`
+- Préfixer commandes par `OAS_`
+- Préfixer calques par `OAS_`
 - Utiliser `ExecuteSafe()` pour toute commande
 - Utiliser `ExecuteInTransaction()` pour modifications DB
 
-### ? NE PAS FAIRE (Core)
+### NE PAS FAIRE (Core)
 
 - Ne pas ajouter de commandes dans `SystemCommands.cs`
-- Ne pas modifier `ModuleDiscovery.cs` pour cas sp�cifique
+- Ne pas modifier `ModuleDiscovery.cs` pour cas spécifique
 - Ne pas modifier les services pour un module particulier
 - Ne pas ajouter de traductions dans `Localization.cs` (utiliser `GetTranslations()` du module)
 
 ---
 
-## ?? CHECKLIST NOUVEAU MODULE
+## CHECKLIST NOUVEAU MODULE
 
 ```
-? Cr�er dossier modules/OpenRoad.{Module}/
-? Cr�er .csproj avec AssemblyName commen�ant par "OpenRoad."
-? Cr�er classe {Module}Module h�ritant ModuleBase
-  ? Impl�menter Id, Name, Description
-  ? Impl�menter GetCommandTypes()
-  ? Impl�menter GetTranslations() (FR, EN, ES)
-? Cr�er commandes h�ritant CommandBase
-  ? Attribut [CommandMethod("OR_...")] 
-  ? Attribut [CommandInfo(...)]
-  ? Utiliser ExecuteSafe() dans Execute()
-  ? Utiliser ExecuteInTransaction() pour modifications
-? Compiler ? v�rifier DLL dans bin/Modules/
-? Tester dans AutoCAD avec NETLOAD
+- [ ] Créer dossier modules/OAS.{Module}/
+- [ ] Créer .csproj avec AssemblyName commençant par "OAS."
+- [ ] Créer classe {Module}Module héritant ModuleBase
+- [ ] Implémenter Id, Name, Description
+- [ ] Implémenter GetCommandTypes()
+- [ ] Implémenter GetTranslations() (FR, EN, ES)
+- [ ] Créer commandes héritant CommandBase
+- [ ] Attribut [CommandMethod("OAS_...")]
+- [ ] Attribut [CommandInfo(...)]
+- [ ] Utiliser ExecuteSafe() dans Execute()
+- [ ] Utiliser ExecuteInTransaction() pour modifications
+- [ ] Compiler et vérifier DLL dans bin/Modules/
+- [ ] Tester dans AutoCAD avec NETLOAD
 ```

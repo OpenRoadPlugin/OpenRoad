@@ -1,16 +1,16 @@
-# Architecture Open Road
+# Architecture Open Asphalte
 
-> Documentation de l'architecture modulaire d'Open Road
+> Documentation de l'architecture modulaire d'Open Asphalte
 
 ## Vue d'ensemble
 
-Open Road est un plugin **C# modulaire** pour AutoCAD, basé sur une architecture à découverte automatique de modules.
+Open Asphalte est un plugin **C# modulaire** pour AutoCAD, basé sur une architecture à découverte automatique de modules.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                          AutoCAD                                │
 │  ┌───────────────────────────────────────────────────────────┐  │
-│  │                    OpenRoad.Core.dll                      │  │
+│  │                    OAS.Core.dll                             │  │
 │  │  ┌─────────────┐  ┌──────────────┐  ┌─────────────────┐   │  │
 │  │  │   Plugin    │  │  Discovery   │  │    Services     │   │  │
 │  │  │ (entrypoint)│  │ (auto-scan)  │  │ (Geometry,etc)  │   │  │
@@ -35,7 +35,7 @@ Open Road est un plugin **C# modulaire** pour AutoCAD, basé sur une architectur
 
 ## Composants principaux
 
-### 1. Core (`OpenRoad.Core.dll`)
+### 1. Core (`OAS.Core.dll`)
 
 Le cœur du système, chargé une seule fois par AutoCAD via `NETLOAD`.
 
@@ -46,14 +46,17 @@ Le cœur du système, chargé une seule fois par AutoCAD via `NETLOAD`.
 | `Configuration` | Gestion des paramètres utilisateur (JSON) |
 | `Localization` | Système de traduction FR/EN/ES |
 | `Logger` | Logging dans la console AutoCAD |
-| `Services/` | Services partagés (Geometry, Layer, etc.) |
+| `Services/` | Services partagés (Geometry, Layer, Coordinate, etc.) — classes partielles |
 | `UI/` | Constructeurs de menu et ruban dynamiques |
+| `Commands/` | Commandes système et fenêtres (Settings, About, ModuleManager, Credits) |
+| `Diagnostics/` | Logging de démarrage (`StartupLog.cs`) |
+| `Resources/` | Ressources partagées : `OasStyles.xaml` (styles WPF), logo, crédits |
 
 ### 2. Modules (`bin/Modules/*.dll`)
 
 Extensions découvertes automatiquement au démarrage.
 
-**Convention de nommage :** `OpenRoad.{ModuleName}.dll`
+**Convention de nommage :** `OAS.{ModuleName}.dll`
 
 Chaque module implémente :
 - `IModule` ou hérite de `ModuleBase`
@@ -63,13 +66,12 @@ Chaque module implémente :
 ## Flux de démarrage
 
 ```
-1. AutoCAD → NETLOAD OpenRoad.Core.dll
+1. AutoCAD → NETLOAD OAS.Core.dll
 2. Plugin.Initialize()
    ├── Configuration.Load()          → Charge config JSON
    ├── Localization.Initialize()     → Charge traductions Core
    └── ModuleDiscovery.DiscoverAndLoad()
-       └── Pour chaque OpenRoad.*.dll dans Modules/:
-           ├── Vérification signature (optionnel)
+         └── Pour chaque OAS.*.dll dans Modules/:
            ├── Recherche classes IModule
            ├── Validation dépendances
            ├── Validation version Core min
@@ -83,12 +85,12 @@ Chaque module implémente :
 
 Le système scanne automatiquement :
 ```
-bin/Modules/OpenRoad.*.dll
+bin/Modules/OAS.*.dll
 ```
 
 ### Critères de chargement
 
-1. **Nom de fichier** : Doit commencer par `OpenRoad.`
+1. **Nom de fichier** : Doit commencer par `OAS.`
 2. **Interface** : Doit contenir une classe implémentant `IModule`
 3. **Dépendances** : Tous les modules listés dans `Dependencies` doivent être chargés
 4. **Version Core** : `MinCoreVersion` doit être satisfaite
@@ -112,11 +114,24 @@ CommandBase (abstract)
 
 | Service | Description |
 |---------|-------------|
-| `GeometryService` | Calculs géométriques, clothoïdes, hydraulique |
+| `GeometryService` | Calculs géométriques, clothoïdes, hydraulique (5 fichiers partiels) |
 | `LayerService` | Gestion des calques AutoCAD |
-| `CoordinateService` | Projections cartographiques |
+| `CoordinateService` | Projections cartographiques (3 fichiers partiels) |
 | `UpdateService` | Vérification et installation des mises à jour |
 | `UrlValidationService` | Validation sécurisée des URLs |
+
+> **Organisation en classes partielles** : `GeometryService` et `CoordinateService` sont organisés en plusieurs fichiers partiels (`partial class`) pour une meilleure maintenabilité. L'API publique reste identique.
+
+### Ressources partagées
+
+Le fichier `OasStyles.xaml` (`src/OAS.Core/Resources/`) est un `ResourceDictionary` WPF partagé contenant :
+- **Palette de couleurs** : Brushes nommés `Oas*` (frozen pour les performances)
+- **Styles** : Champs, boutons, labels réutilisables par tous les modules
+
+Les modules y accèdent via :
+```xml
+<ResourceDictionary Source="pack://application:,,,/OAS.Core;component/Resources/OasStyles.xaml"/>
+```
 
 ## Traductions
 
@@ -134,7 +149,7 @@ L10n.TFormat("key", arg1, arg2);  // Avec formatage
 
 ## Configuration
 
-Fichier : `%AppData%/Open Road/config.json`
+Fichier : `%AppData%/Open Asphalte/config.json`
 
 ```json
 {
@@ -155,7 +170,7 @@ Fichier : `%AppData%/Open Road/config.json`
 
 | Élément | Convention |
 |---------|------------|
-| Commandes | `OR_{MODULE}_{ACTION}` |
-| Calques | `OR_{MODULE}_{ELEMENT}` |
+| Commandes | `OAS_{MODULE}_{ACTION}` |
+| Calques | `OAS_{MODULE}_{ELEMENT}` |
 | Clés traduction | `{module.id}.{section}.{key}` |
-| Assemblies | `OpenRoad.{ModuleName}` |
+| Assemblies | `OAS.{ModuleName}` |

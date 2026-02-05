@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="OpenAsphalte.Modules.DynamicSnap.Views.DynamicSnapSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Paramètres d'accrochage OAS"
+        Height="560" Width="420"
+        MinHeight="540" MinWidth="380"
+        WindowStartupLocation="CenterScreen"
+        Background="#F0F0F0"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/OAS.Core;component/Resources/OasStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Module-specific: CheckBox with larger font -->
+            <Style x:Key="FieldCheckBox" TargetType="CheckBox" BasedOn="{StaticResource OasFieldCheckBox}">
+                <Setter Property="FontSize" Value="13"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titre -->
+        <TextBlock Grid.Row="0"
+                   x:Name="TitleLabel"
+                   Text="Paramètres d'accrochage OAS"
+                   Style="{StaticResource OasWindowTitle}"/>
+
+        <!-- Contenu -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <StackPanel VerticalAlignment="Top">
+
+            <!-- Groupe : Modes d'accrochage -->
+            <GroupBox Margin="0,0,0,16" Padding="8">
+                <GroupBox.Header>
+                    <TextBlock x:Name="SnapModesHeader"
+                               Text="Modes d'accrochage actifs"
+                               FontWeight="SemiBold"
+                               Foreground="#333"/>
+                </GroupBox.Header>
+                <StackPanel Margin="8,8,0,0">
+                    <CheckBox x:Name="VertexCheckBox"
+                              Content="Sommets (Vertex)"
+                              Style="{StaticResource FieldCheckBox}"
+                              ToolTip="Accrochage aux sommets des polylignes et extrémités"/>
+                    <CheckBox x:Name="EndpointCheckBox"
+                              Content="Extrémités (Endpoint)"
+                              Style="{StaticResource FieldCheckBox}"
+                              ToolTip="Accrochage aux extrémités des entités"/>
+                    <CheckBox x:Name="MidpointCheckBox"
+                              Content="Milieux de segments (Midpoint)"
+                              Style="{StaticResource FieldCheckBox}"
+                              ToolTip="Accrochage aux milieux des segments"/>
+                    <CheckBox x:Name="NearestCheckBox"
+                              Content="Point le plus proche (Nearest)"
+                              Style="{StaticResource FieldCheckBox}"
+                              ToolTip="Accrochage au point le plus proche sur l'entité"/>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Groupe : Apparence -->
+            <GroupBox Margin="0,0,0,16" Padding="8">
+                <GroupBox.Header>
+                    <TextBlock x:Name="AppearanceHeader"
+                               Text="Apparence des marqueurs"
+                               FontWeight="SemiBold"
+                               Foreground="#333"/>
+                </GroupBox.Header>
+                <StackPanel Margin="8,8,0,0">
+
+                    <!-- Couleur du marqueur -->
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="MarkerColorLabel"
+                                   Grid.Column="0"
+                                   Text="Couleur marqueur :"
+                                   Style="{StaticResource OasFieldLabel}"/>
+                        <ComboBox x:Name="MarkerColorCombo"
+                                  Grid.Column="1" Padding="6,4"/>
+                    </Grid>
+
+                    <!-- Couleur marqueur actif -->
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="ActiveColorLabel"
+                                   Grid.Column="0"
+                                   Text="Couleur actif :"
+                                   Style="{StaticResource OasFieldLabel}"/>
+                        <ComboBox x:Name="ActiveColorCombo"
+                                  Grid.Column="1" Padding="6,4"/>
+                    </Grid>
+
+                    <!-- Marqueurs pleins -->
+                    <CheckBox x:Name="FilledCheckBox"
+                              Content="Marqueurs pleins"
+                              Style="{StaticResource FieldCheckBox}"
+                              Margin="0,0,0,10"
+                              ToolTip="Remplir les marqueurs au lieu d'afficher uniquement le contour"/>
+
+                    <!-- Épaisseur de ligne -->
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="LineWeightLabel"
+                                   Grid.Column="0"
+                                   Text="Épaisseur trait :"
+                                   Style="{StaticResource OasFieldLabel}"/>
+                        <Slider x:Name="LineWeightSlider"
+                                Grid.Column="1"
+                                Minimum="0" Maximum="6"
+                                TickFrequency="1" IsSnapToTickEnabled="True"
+                                Value="2" VerticalAlignment="Center"
+                                ValueChanged="LineWeightSlider_ValueChanged"/>
+                        <TextBlock x:Name="LineWeightValue"
+                                   Grid.Column="2"
+                                   Text="0.30 mm"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Foreground="#666"/>
+                    </Grid>
+
+                    <!-- Tolérance -->
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="ToleranceLabel"
+                                   Grid.Column="0"
+                                   Text="Tolérance :"
+                                   Style="{StaticResource OasFieldLabel}"/>
+                        <Slider x:Name="ToleranceSlider"
+                                Grid.Column="1"
+                                Minimum="0.005" Maximum="0.05"
+                                TickFrequency="0.005" IsSnapToTickEnabled="True"
+                                Value="0.02" VerticalAlignment="Center"
+                                ValueChanged="ToleranceSlider_ValueChanged"/>
+                        <TextBlock x:Name="ToleranceValue"
+                                   Grid.Column="2"
+                                   Text="2%"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Foreground="#666"/>
+                    </Grid>
+
+                    <!-- Taille marqueur -->
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="MarkerSizeLabel"
+                                   Grid.Column="0"
+                                   Text="Taille marqueur :"
+                                   Style="{StaticResource OasFieldLabel}"/>
+                        <Slider x:Name="MarkerSizeSlider"
+                                Grid.Column="1"
+                                Minimum="0.005" Maximum="0.04"
+                                TickFrequency="0.005" IsSnapToTickEnabled="True"
+                                Value="0.015" VerticalAlignment="Center"
+                                ValueChanged="MarkerSizeSlider_ValueChanged"/>
+                        <TextBlock x:Name="MarkerSizeValue"
+                                   Grid.Column="2"
+                                   Text="1.5%"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Foreground="#666"/>
+                    </Grid>
+
+                </StackPanel>
+            </GroupBox>
+
+        </StackPanel>
+        </ScrollViewer>
+
+        <!-- Boutons -->
+        <Grid Grid.Row="2" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="ResetButton"
+                    Grid.Column="0"
+                    Content="Réinitialiser"
+                    Style="{StaticResource OasWarningButton}"
+                    Click="ResetButton_Click"/>
+
+            <Button x:Name="CancelButton"
+                    Grid.Column="2"
+                    Content="Annuler"
+                    Style="{StaticResource OasSecondaryButton}"
+                    Margin="0,0,10,0"
+                    Click="CancelButton_Click"/>
+
+            <Button x:Name="ApplyButton"
+                    Grid.Column="3"
+                    Content="Appliquer"
+                    Style="{StaticResource OasPrimaryButton}"
+                    Click="ApplyButton_Click"/>
+        </Grid>
+    </Grid>
+</Window>

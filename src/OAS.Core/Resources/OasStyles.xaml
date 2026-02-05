@@ -1,0 +1,237 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- Open Asphalte â€“ Shared Style Dictionary                        -->
+    <!-- All colors and control styles are centralized here.            -->
+    <!-- Usage (in any Window or UserControl):                          -->
+    <!--   <Window.Resources>                                           -->
+    <!--     <ResourceDictionary>                                       -->
+    <!--       <ResourceDictionary.MergedDictionaries>                  -->
+    <!--         <ResourceDictionary Source="pack://application:,,,/    -->
+    <!--           OAS.Core;component/Resources/OasStyles.xaml"/>       -->
+    <!--       </ResourceDictionary.MergedDictionaries>                 -->
+    <!--     </ResourceDictionary>                                      -->
+    <!--   </Window.Resources>                                          -->
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- COLOR PALETTE                                                   -->
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+
+    <!-- Brand / Accent -->
+    <Color x:Key="OasPrimaryColor">#4CAF50</Color>
+    <Color x:Key="OasPrimaryHoverColor">#45A049</Color>
+    <Color x:Key="OasPrimaryDarkColor">#2E7D32</Color>
+
+    <!-- Semantic colors -->
+    <Color x:Key="OasWarningColor">#FF9800</Color>
+    <Color x:Key="OasWarningHoverColor">#F57C00</Color>
+    <Color x:Key="OasDangerColor">#F44336</Color>
+    <Color x:Key="OasDangerHoverColor">#E53935</Color>
+    <Color x:Key="OasInfoColor">#2196F3</Color>
+    <Color x:Key="OasInfoDarkColor">#1976D2</Color>
+
+    <!-- Neutrals -->
+    <Color x:Key="OasWindowBackgroundColor">#F0F0F0</Color>
+    <Color x:Key="OasSurfaceColor">#FFFFFF</Color>
+    <Color x:Key="OasSecondaryColor">#E0E0E0</Color>
+    <Color x:Key="OasSecondaryHoverColor">#D0D0D0</Color>
+    <Color x:Key="OasBorderColor">#CCCCCC</Color>
+    <Color x:Key="OasDisabledColor">#CCCCCC</Color>
+
+    <!-- Text -->
+    <Color x:Key="OasTextPrimaryColor">#333333</Color>
+    <Color x:Key="OasTextSecondaryColor">#555555</Color>
+    <Color x:Key="OasTextMutedColor">#666666</Color>
+    <Color x:Key="OasTextVeryMutedColor">#999999</Color>
+
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- BRUSHES (frozen for performance)                               -->
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+
+    <SolidColorBrush x:Key="OasPrimaryBrush"         Color="{StaticResource OasPrimaryColor}"         po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasPrimaryHoverBrush"    Color="{StaticResource OasPrimaryHoverColor}"    po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasPrimaryDarkBrush"     Color="{StaticResource OasPrimaryDarkColor}"     po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasWarningBrush"         Color="{StaticResource OasWarningColor}"         po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasWarningHoverBrush"    Color="{StaticResource OasWarningHoverColor}"    po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasDangerBrush"          Color="{StaticResource OasDangerColor}"          po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasDangerHoverBrush"     Color="{StaticResource OasDangerHoverColor}"     po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasInfoBrush"            Color="{StaticResource OasInfoColor}"            po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasInfoDarkBrush"        Color="{StaticResource OasInfoDarkColor}"        po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasWindowBackgroundBrush" Color="{StaticResource OasWindowBackgroundColor}" po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasSurfaceBrush"         Color="{StaticResource OasSurfaceColor}"         po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasSecondaryBrush"       Color="{StaticResource OasSecondaryColor}"       po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasSecondaryHoverBrush"  Color="{StaticResource OasSecondaryHoverColor}"  po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasBorderBrush"          Color="{StaticResource OasBorderColor}"          po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasDisabledBrush"        Color="{StaticResource OasDisabledColor}"        po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasTextPrimaryBrush"     Color="{StaticResource OasTextPrimaryColor}"     po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasTextSecondaryBrush"   Color="{StaticResource OasTextSecondaryColor}"   po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasTextMutedBrush"       Color="{StaticResource OasTextMutedColor}"       po:Freeze="True"/>
+    <SolidColorBrush x:Key="OasTextVeryMutedBrush"   Color="{StaticResource OasTextVeryMutedColor}"   po:Freeze="True"/>
+
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- FIELD STYLES                                                    -->
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+
+    <!-- Label beside a field -->
+    <Style x:Key="OasFieldLabel" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource OasTextPrimaryBrush}"/>
+        <Setter Property="Margin" Value="0,0,8,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Standard text box -->
+    <Style x:Key="OasFieldTextBox" TargetType="TextBox">
+        <Setter Property="Padding" Value="8,6"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{StaticResource OasBorderBrush}"/>
+    </Style>
+
+    <!-- Standard checkbox -->
+    <Style x:Key="OasFieldCheckBox" TargetType="CheckBox">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,4"/>
+    </Style>
+
+    <!-- Info label (read-only fields) -->
+    <Style x:Key="OasInfoLabel" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource OasTextPrimaryBrush}"/>
+        <Setter Property="Margin" Value="0,4,8,4"/>
+    </Style>
+
+    <!-- Info value (read-only display) -->
+    <Style x:Key="OasInfoValue" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource OasTextSecondaryBrush}"/>
+        <Setter Property="Margin" Value="0,4,0,4"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <!-- Section / group header -->
+    <Style x:Key="OasGroupHeader" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource OasPrimaryDarkBrush}"/>
+        <Setter Property="Margin" Value="0,8,0,4"/>
+    </Style>
+
+    <!-- Window title text -->
+    <Style x:Key="OasWindowTitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource OasPrimaryDarkBrush}"/>
+        <Setter Property="Margin" Value="0,0,0,20"/>
+    </Style>
+
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- BUTTON STYLES                                                   -->
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+
+    <!-- Primary (green) button â€“ Apply / Confirm actions -->
+    <Style x:Key="OasPrimaryButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource OasPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="20,10"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource OasPrimaryHoverBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{StaticResource OasDisabledBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Secondary (gray) button â€“ Cancel actions -->
+    <Style x:Key="OasSecondaryButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource OasSecondaryBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource OasTextPrimaryBrush}"/>
+        <Setter Property="Padding" Value="20,10"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource OasSecondaryHoverBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Warning (orange) button â€“ Reset / Destructive-but-recoverable actions -->
+    <Style x:Key="OasWarningButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource OasWarningBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource OasWarningHoverBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Danger (red) button â€“ Delete / Irreversible actions -->
+    <Style x:Key="OasDangerButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource OasDangerBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource OasDangerHoverBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

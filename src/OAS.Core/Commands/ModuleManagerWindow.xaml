@@ -1,0 +1,202 @@
+<!--
+    Copyright 2026 Open Asphalte Contributors
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+        http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<Window x:Class="OpenAsphalte.Commands.ModuleManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Gestionnaire de Modules"
+        Height="600" Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        MinWidth="650" MinHeight="450"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <!-- Style pour les boutons d'action module -->
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <!-- Style pour les boutons de catégorie -->
+        <Style x:Key="CategoryButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#E3F2FD"/>
+            <Setter Property="Foreground" Value="#1976D2"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+
+        <!-- Template pour les items de module -->
+        <DataTemplate x:Key="ModuleItemTemplate">
+            <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Margin="0,0,0,8" Padding="12" Background="White">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Icône statut -->
+                    <Border Grid.Column="0" Width="44" Height="44" CornerRadius="22"
+                            Background="{Binding StatusBackground}" Margin="0,0,14,0"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{Binding StatusIcon}" FontSize="18" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <!-- Infos module -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14"/>
+                            <Border Background="#F0F0F0" CornerRadius="3" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding VersionDisplay}" Foreground="#666" FontSize="11"/>
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Text="{Binding Description}" Foreground="#555" TextWrapping="Wrap"
+                                   Margin="0,6,0,0" MaxWidth="420" LineHeight="18"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                            <TextBlock Text="👤 " Foreground="#999" FontSize="11"/>
+                            <TextBlock Text="{Binding Author}" Foreground="#888" FontSize="11"/>
+                            <TextBlock Text="{Binding DependenciesText}" Foreground="#E65100" FontSize="11"
+                                       Margin="12,0,0,0" Visibility="{Binding HasDependenciesVisibility}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Bouton action -->
+                    <Button Grid.Column="2" Content="{Binding ActionText}"
+                            Style="{StaticResource ActionButtonStyle}"
+                            IsEnabled="{Binding CanPerformAction}"
+                            Background="{Binding ActionBackground}"
+                            Foreground="{Binding ActionForeground}"
+                            Click="OnModuleActionClick"
+                            Tag="{Binding}"
+                            VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- En-tête -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock x:Name="txtTitle" Text="Gestionnaire de Modules" FontSize="22" FontWeight="Bold"/>
+            <TextBlock x:Name="txtSubtitle" Text="Installez et gérez les modules Open Road depuis le catalogue officiel."
+                       Foreground="Gray" Margin="0,6,0,0"/>
+        </StackPanel>
+
+        <!-- Barre d'actions -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <TextBlock x:Name="txtStatus" Text="" VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock x:Name="txtFilter" Text="Filtrer:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <ComboBox x:Name="cmbFilter" Width="150" SelectionChanged="OnFilterChanged">
+                    <ComboBoxItem Content="Tous" Tag="all" IsSelected="True"/>
+                    <ComboBoxItem Content="Installés" Tag="installed"/>
+                    <ComboBoxItem Content="Disponibles" Tag="available"/>
+                    <ComboBoxItem Content="Mises à jour" Tag="updates"/>
+                </ComboBox>
+                <Button x:Name="btnRefresh" Content="🔄" ToolTip="Actualiser" Padding="10,6" Margin="8,0,0,0"
+                        Click="OnRefreshClick" FontSize="14"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Liste des modules groupés par catégorie -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="lstCategories">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,0,16">
+                            <StackPanel>
+                                <!-- En-tête de catégorie -->
+                                <Border Background="#F5F5F5" CornerRadius="6" Padding="12,10" Margin="0,0,0,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Icon}" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center"/>
+                                            <Border Background="#E0E0E0" CornerRadius="10" Padding="8,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding ModuleCountText}" FontSize="11" Foreground="#666"/>
+                                            </Border>
+                                        </StackPanel>
+
+                                        <Button Grid.Column="1" Content="{Binding InstallAllText}"
+                                                Style="{StaticResource CategoryButtonStyle}"
+                                                Click="OnInstallCategoryClick"
+                                                Tag="{Binding}"
+                                                Visibility="{Binding InstallAllVisibility}"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Liste des modules de cette catégorie -->
+                                <ItemsControl ItemsSource="{Binding Modules}" ItemTemplate="{StaticResource ModuleItemTemplate}" Margin="12,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Message vide / chargement initial -->
+        <Border x:Name="pnlEmpty" Grid.Row="2" Visibility="Visible" Background="#FAFAFA" CornerRadius="8">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock x:Name="txtEmptyIcon" Text="⏳" FontSize="56" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="txtEmptyMessage" Text="Chargement du catalogue..."
+                           FontSize="14" Foreground="Gray" Margin="0,12,0,0" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Barre de progression -->
+        <StackPanel x:Name="pnlProgress" Grid.Row="3" Visibility="Collapsed" Margin="0,12,0,0">
+            <ProgressBar x:Name="progressBar" Height="4" IsIndeterminate="True"/>
+            <TextBlock x:Name="txtProgress" Text="Chargement..." Foreground="Gray" FontSize="11" Margin="0,6,0,0"/>
+        </StackPanel>
+
+        <!-- Pied de page -->
+        <Grid Grid.Row="4" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="txtFooter" Grid.Column="0" VerticalAlignment="Center" Foreground="Gray" FontSize="11">
+                <Run x:Name="txtModulesPath" Text="Dossier modules: "/>
+                <Hyperlink x:Name="lnkOpenFolder" Click="OnOpenFolderClick">Ouvrir</Hyperlink>
+            </TextBlock>
+
+            <Button x:Name="btnClose" Grid.Column="1" Content="Fermer" Padding="24,10" Click="OnCloseClick"/>
+        </Grid>
+    </Grid>
+</Window>

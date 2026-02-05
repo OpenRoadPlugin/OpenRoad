@@ -1,33 +1,33 @@
 ﻿# Politique de Sécurité
 
-## ?? Avertissement et Limitation de Responsabilité
+## Avertissement et Limitation de Responsabilité
 
 ### Clause de non-responsabilité (Disclaimer)
 
-Open Road est distribué sous **licence Apache 2.0**. Conformément à cette licence :
+Open Asphalte est distribué sous **licence Apache 2.0**. Conformément à cette licence :
 
 > **LE LOGICIEL EST FOURNI "TEL QUEL", SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS MAIS SANS S'Y LIMITER AUX GARANTIES DE QUALITÉ MARCHANDE, D'ADÉQUATION À UN USAGE PARTICULIER ET D'ABSENCE DE CONTREFAÇON.**
 
 ### Limitation de responsabilité
 
-**En aucun cas, les auteurs, contributeurs ou détenteurs des droits d'auteur d'Open Road ne pourront être tenus responsables de :**
+**En aucun cas, les auteurs, contributeurs ou détenteurs des droits d'auteur d'Open Asphalte ne pourront être tenus responsables de :**
 
-- ? Tout dommage direct, indirect, accessoire, spécial, exemplaire ou consécutif
-- ? Toute perte de données, de profits, de revenus ou d'opportunités commerciales
-- ? Toute interruption d'activité professionnelle
-- ? Tout préjudice résultant de l'utilisation ou de l'impossibilité d'utiliser le logiciel
-- ? Toute erreur de calcul, de dessin ou de conception générée par le logiciel
-- ? Tout dysfonctionnement ou incompatibilité avec AutoCAD ou d'autres logiciels
-- ? Toute conséquence liée à l'utilisation de modules tiers
+- Tout dommage direct, indirect, accessoire, spécial, exemplaire ou consécutif
+- Toute perte de données, de profits, de revenus ou d'opportunités commerciales
+- Toute interruption d'activité professionnelle
+- Tout préjudice résultant de l'utilisation ou de l'impossibilité d'utiliser le logiciel
+- Toute erreur de calcul, de dessin ou de conception générée par le logiciel
+- Tout dysfonctionnement ou incompatibilité avec AutoCAD ou d'autres logiciels
+- Toute conséquence liée à l'utilisation de modules tiers
 
-**Même si Open Road ou ses contributeurs ont été informés de la possibilité de tels dommages.**
+**Même si Open Asphalte ou ses contributeurs ont été informés de la possibilité de tels dommages.**
 
 ### Utilisation à vos propres risques
 
 - L'utilisateur est **seul responsable** de vérifier l'exactitude des résultats produits
 - L'utilisateur doit **toujours sauvegarder** ses données avant d'utiliser le plugin
 - L'utilisateur est responsable de la **conformité** de ses projets aux normes en vigueur
-- Open Road ne se substitue pas à l'expertise professionnelle d'un ingénieur ou d'un technicien qualifié
+- Open Asphalte ne se substitue pas à l'expertise professionnelle d'un ingénieur ou d'un technicien qualifié
 
 ---
 
@@ -39,12 +39,12 @@ Open Road est distribué sous **licence Apache 2.0**. Conformément à cette lic
 
 ## Signaler une vulnérabilité
 
-Si vous découvrez une vulnérabilité de sécurité dans Open Road, merci de la signaler de manière responsable.
+Si vous découvrez une vulnérabilité de sécurité dans Open Asphalte, merci de la signaler de manière responsable.
 
 ### Comment signaler
 
 1. **Ne créez PAS d'issue publique** pour les vulnérabilités de sécurité
-2. Envoyez un rapport détaillé via [GitHub Security Advisories](https://github.com/openroadplugin/openroad/security/advisories/new)
+2. Envoyez un rapport détaillé via [GitHub Security Advisories](https://github.com/openasphalteplugin/openasphalte/security/advisories/new)
 3. Ou contactez les mainteneurs directement via GitHub
 
 ### Informations à inclure
@@ -71,7 +71,7 @@ Si vous découvrez une vulnérabilité de sécurité dans Open Road, merci de la
 
 ### Pour les utilisateurs
 
-- Téléchargez Open Road uniquement depuis les [releases officielles](https://github.com/openroadplugin/openroad/releases)
+- Téléchargez Open Asphalte uniquement depuis les [releases officielles](https://github.com/openasphalteplugin/openasphalte/releases)
 - Vérifiez l'intégrité des fichiers téléchargés
 - N'installez que des modules provenant de sources fiables
 
@@ -85,7 +85,7 @@ Si vous découvrez une vulnérabilité de sécurité dans Open Road, merci de la
 ## Scope
 
 Cette politique couvre :
-- Le code source du Core (`OpenRoad.Core`)
+- Le code source du Core (`OpenAsphalte.Core`)
 - Les templates officiels
 - La documentation officielle
 

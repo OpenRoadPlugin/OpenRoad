@@ -26,11 +26,11 @@ jobs:
 
     - name: Verifier que le Core est compile
       run: |
-        if (!(Test-Path "bin/OpenRoad.Core.dll")) {
-          Write-Error "ERREUR: bin/OpenRoad.Core.dll non trouve. Compilez localement avant de creer un tag."
+        if (!(Test-Path "bin/OAS.Core.dll")) {
+          Write-Error "ERREUR: bin/OAS.Core.dll non trouve. Compilez localement avant de creer un tag."
           exit 1
         }
-        Write-Host "✓ OpenRoad.Core.dll trouve"
+        Write-Host "✓ OAS.Core.dll trouve"
       shell: pwsh
 
     - name: Creer le package de release
@@ -38,18 +38,18 @@ jobs:
         mkdir release
         mkdir release\Modules
         mkdir release\Data
-        
+
         REM Copier le Core pre-compile
-        copy bin\OpenRoad.Core.dll release\
-        if exist bin\OpenRoad.Core.xml copy bin\OpenRoad.Core.xml release\
-        
+        copy bin\OAS.Core.dll release\
+        if exist bin\OAS.Core.xml copy bin\OAS.Core.xml release\
+
         REM Copier les modules pre-compiles
         copy bin\Modules\README.md release\Modules\
         if exist bin\Modules\*.dll copy bin\Modules\*.dll release\Modules\
-        
+
         REM Copier les donnees
         if exist bin\Data\*.json copy bin\Data\*.json release\Data\
-        
+
         REM Copier la documentation
         copy README.md release\
         copy LICENSE release\
@@ -58,7 +58,7 @@ jobs:
       shell: cmd
 
     - name: Creer l'archive ZIP
-      run: Compress-Archive -Path release\* -DestinationPath OpenRoad-${{ steps.get_version.outputs.VERSION }}.zip
+      run: Compress-Archive -Path release\* -DestinationPath OpenAsphalte-${{ steps.get_version.outputs.VERSION }}.zip
       shell: pwsh
 
     - name: Installer Inno Setup
@@ -67,14 +67,14 @@ jobs:
 
     - name: Mettre a jour la version dans l'installateur
       run: |
-        $content = Get-Content -Path installer/OpenRoad.iss -Raw
+        $content = Get-Content -Path installer/OAS.iss -Raw
         $content = $content -replace '#define MyAppVersion ".*"', '#define MyAppVersion "${{ steps.get_version.outputs.VERSION }}"'
-        Set-Content -Path installer/OpenRoad.iss -Value $content
+        Set-Content -Path installer/OAS.iss -Value $content
       shell: pwsh
 
     - name: Creer l'installateur Windows
       run: |
-        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\OpenRoad.iss
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\OAS.iss
       shell: pwsh
 
     - name: Preparer les fichiers de release
@@ -82,7 +82,7 @@ jobs:
       run: |
         $installerPath = Get-ChildItem "installer\Output\*.exe" | Select-Object -First 1
         if ($installerPath) {
-          $newName = "OpenRoad_Setup_v${{ steps.get_version.outputs.VERSION }}.exe"
+          $newName = "OpenAsphalte_Setup_v${{ steps.get_version.outputs.VERSION }}.exe"
           $newPath = "installer\Output\$newName"
           Move-Item $installerPath.FullName $newPath -Force
           Write-Host "Installateur: $newPath"
@@ -92,27 +92,27 @@ jobs:
     - name: Creer la release GitHub
       uses: softprops/action-gh-release@v1
       with:
-        name: Open Road v${{ steps.get_version.outputs.VERSION }}
+        name: Open Asphalte v${{ steps.get_version.outputs.VERSION }}
         body: |
-          ## Open Road v${{ steps.get_version.outputs.VERSION }}
-          
+          ## Open Asphalte v${{ steps.get_version.outputs.VERSION }}
+
           ### Installation
-          
+
           **Option 1 - Installateur Windows (recommande)**
-          1. Telechargez `OpenRoad_Setup_v${{ steps.get_version.outputs.VERSION }}.exe`
+          1. Telechargez `OpenAsphalte_Setup_v${{ steps.get_version.outputs.VERSION }}.exe`
           2. Executez l'installateur
           3. Suivez les instructions
-          
+
           **Option 2 - Installation manuelle**
-          1. Telechargez `OpenRoad-${{ steps.get_version.outputs.VERSION }}.zip`
-          2. Extrayez dans un dossier (ex: C:\OpenRoad)
-          3. Dans AutoCAD, tapez `NETLOAD` et selectionnez `OpenRoad.Core.dll`
-          
+          1. Telechargez `OpenAsphalte-${{ steps.get_version.outputs.VERSION }}.zip`
+          2. Extrayez dans un dossier (ex: C:\OpenAsphalte)
+          3. Dans AutoCAD, tapez `NETLOAD` et selectionnez `OAS.Core.dll`
+
           ### Changelog
-          Voir [CHANGELOG.md](https://github.com/OpenRoadPlugin/OpenRoad/blob/main/CHANGELOG.md)
+          Voir [CHANGELOG.md](https://github.com/OpenAsphaltePlugin/OpenAsphalte/blob/main/CHANGELOG.md)
         files: |
-          OpenRoad-${{ steps.get_version.outputs.VERSION }}.zip
-          installer/Output/OpenRoad_Setup_v${{ steps.get_version.outputs.VERSION }}.exe
+          OpenAsphalte-${{ steps.get_version.outputs.VERSION }}.zip
+          installer/Output/OpenAsphalte_Setup_v${{ steps.get_version.outputs.VERSION }}.exe
         draft: false
         prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
       env:

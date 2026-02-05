@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="OpenAsphalte.Modules.Georeferencement.Views.SetProjectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Definir le systeme de coordonnees"
+        Height="600" Width="900"
+        MinHeight="450" MinWidth="700"
+        WindowStartupLocation="CenterScreen"
+        Background="#F0F0F0"
+        ResizeMode="CanResize">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/OAS.Core;component/Resources/OasStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- En-tete avec infos actuelles -->
+        <Border Grid.Row="0" Background="White" CornerRadius="4" Padding="12" Margin="0,0,0,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Systeme actuel -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock x:Name="CurrentSystemLabel" Text="Systeme actuel :" Style="{StaticResource OasInfoLabel}" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="CurrentSystemText" Text="(Aucun)" Style="{StaticResource OasInfoValue}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Systeme detecte -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock x:Name="DetectedSystemLabel" Text="Detecte :" Style="{StaticResource OasInfoLabel}" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="DetectedSystemText" Text="(Aucun)" Style="{StaticResource OasInfoValue}" VerticalAlignment="Center" Foreground="#2E7D32"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Barre de recherche -->
+        <Border Grid.Row="1" Background="White" CornerRadius="4" Padding="8" Margin="0,0,0,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="SearchBox"
+                         Grid.Column="0"
+                         Padding="8,6"
+                         FontSize="14"
+                         BorderThickness="1"
+                         BorderBrush="#CCC"
+                         ToolTip="Rechercher par nom, code, pays ou rÃ©gion"
+                         TextChanged="SearchBox_TextChanged">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <VisualBrush Stretch="None" AlignmentX="Left">
+                                                <VisualBrush.Visual>
+                                                    <TextBlock Text="  Rechercher..." Foreground="#999" FontSize="14" Margin="4,0,0,0"/>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <CheckBox x:Name="GroupByCountryCheckBox"
+                          Grid.Column="1"
+                          Content="Grouper par pays"
+                          VerticalAlignment="Center"
+                          Margin="12,0,0,0"
+                          Checked="GroupByCountry_Changed"
+                          Unchecked="GroupByCountry_Changed"/>
+            </Grid>
+        </Border>
+
+        <!-- Liste et details -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Liste des projections -->
+            <Border Grid.Column="0" Background="White" CornerRadius="4" Margin="0,0,8,0">
+                <ListView x:Name="ProjectionListView"
+                          BorderThickness="0"
+                          SelectionChanged="ProjectionListView_SelectionChanged"
+                          MouseDoubleClick="ProjectionListView_MouseDoubleClick">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn x:Name="ColumnName" Header="Systeme" Width="250" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn x:Name="ColumnCode" Header="Code" Width="150" DisplayMemberBinding="{Binding Code}"/>
+                            <GridViewColumn x:Name="ColumnCountry" Header="Pays" Width="100" DisplayMemberBinding="{Binding Country}"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#E8F5E9"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Border>
+
+            <!-- Panneau de details -->
+            <Border Grid.Column="1" Background="White" CornerRadius="4" Padding="12">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="DetailsPanel" Visibility="Collapsed">
+                        <TextBlock x:Name="DetailsHeader" Text="Details" Style="{StaticResource OasGroupHeader}"/>
+
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Nom -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="NameLabel" Text="Nom :" Style="{StaticResource OasInfoLabel}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="DetailName" Style="{StaticResource OasInfoValue}"/>
+
+                            <!-- Code AutoCAD -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" x:Name="CodeLabel" Text="Code :" Style="{StaticResource OasInfoLabel}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="DetailCode" Style="{StaticResource OasInfoValue}" FontFamily="Consolas" FontWeight="Bold" Foreground="#1976D2"/>
+
+                            <!-- EPSG -->
+                            <TextBlock Grid.Row="2" Grid.Column="0" x:Name="EpsgLabel" Text="EPSG :" Style="{StaticResource OasInfoLabel}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="DetailEpsg" Style="{StaticResource OasInfoValue}"/>
+
+                            <!-- Pays -->
+                            <TextBlock Grid.Row="3" Grid.Column="0" x:Name="CountryLabel" Text="Pays :" Style="{StaticResource OasInfoLabel}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="DetailCountry" Style="{StaticResource OasInfoValue}"/>
+
+                            <!-- Region -->
+                            <TextBlock Grid.Row="4" Grid.Column="0" x:Name="RegionLabel" Text="Region :" Style="{StaticResource OasInfoLabel}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" x:Name="DetailRegion" Style="{StaticResource OasInfoValue}"/>
+
+                            <!-- Unite -->
+                            <TextBlock Grid.Row="5" Grid.Column="0" x:Name="UnitLabel" Text="Unite :" Style="{StaticResource OasInfoLabel}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" x:Name="DetailUnit" Style="{StaticResource OasInfoValue}"/>
+
+                            <!-- Description -->
+                            <TextBlock Grid.Row="6" Grid.Column="0" x:Name="DescriptionLabel" Text="Description :" Style="{StaticResource OasInfoLabel}" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Row="6" Grid.Column="1" x:Name="DetailDescription" Style="{StaticResource OasInfoValue}"/>
+                        </Grid>
+
+                        <!-- Limites -->
+                        <TextBlock x:Name="BoundsHeader" Text="Limites typiques" Style="{StaticResource OasGroupHeader}" Margin="0,16,0,0"/>
+                        <Border Background="#F5F5F5" CornerRadius="4" Padding="8" Margin="0,4,0,0">
+                            <StackPanel>
+                                <TextBlock x:Name="DetailBoundsX" Style="{StaticResource OasInfoValue}" FontFamily="Consolas"/>
+                                <TextBlock x:Name="DetailBoundsY" Style="{StaticResource OasInfoValue}" FontFamily="Consolas"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- Compteur de resultats -->
+        <TextBlock Grid.Row="3" x:Name="ResultCountText" Text="0 systemes" Margin="4,8,0,8" Foreground="#666"/>
+
+        <!-- Boutons d'action -->
+        <Border Grid.Row="4" Background="White" CornerRadius="4" Padding="12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Bouton Supprimer -->
+                <Button Grid.Column="0"
+                        x:Name="ClearButton"
+                        Content="Supprimer le systeme"
+                        Style="{StaticResource OasDangerButton}"
+                        ToolTip="Supprimer le systeme de coordonnees actuel du dessin"
+                        Click="ClearButton_Click"/>
+
+                <!-- Option Activer Bing Maps -->
+                <CheckBox Grid.Column="1"
+                          x:Name="EnableGeoMapCheckBox"
+                          Content="Activer Bing Maps (GEOMAP)"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
+                          ToolTip="Active l'affichage de la carte aerienne Bing Maps apres application de la projection"
+                          IsChecked="False"/>
+
+                <!-- Bouton Annuler -->
+                <Button Grid.Column="3"
+                        x:Name="CancelButton"
+                        Content="Annuler"
+                        Style="{StaticResource OasSecondaryButton}"
+                        Margin="0,0,8,0"
+                        Click="CancelButton_Click"/>
+
+                <!-- Bouton Appliquer -->
+                <Button Grid.Column="4"
+                        x:Name="ApplyButton"
+                        Content="Appliquer"
+                        Style="{StaticResource OasPrimaryButton}"
+                        IsEnabled="False"
+                        Click="ApplyButton_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

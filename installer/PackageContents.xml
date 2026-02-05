@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ApplicationPackage
     SchemaVersion="1.0"
-    AppVersion="0.0.1"
-    Author="Open Road Contributors"
+    AppVersion="0.0.2"
+    Author="Open Asphalte Contributors"
     ProductCode="{68A45212-D231-4FE3-8876-029438927451}"
-    Name="Open Road"
+    Name="Open Asphalte"
     Description="Plugin C# modulaire pour la voirie et l'aménagement urbain."
-    Icon="./Contents/Resources/OpenRoad_Logo.png"
+    Icon="./Contents/Resources/OAS_Logo.png"
 >
-    <CompanyDetails Name="Open Road Team" Url="https://github.com/openroadplugin/openroad" Email="contact@openroad.dev" />
+    <CompanyDetails Name="Open Asphalte Team" Url="https://github.com/openasphalteplugin/openasphalte" Email="contact@openasphalte.dev" />
 
-    <!-- Support for AutoCAD 2024 (R24.0) and newer (.NET 8 era) -->
-    <Components Description="Open Road Core System">
-        <!-- R24.0 = AutoCAD 2024+ (.NET 8). Platform="AutoCAD*" supports Map3D, Civil3D, etc. -->
-        <RuntimeRequirements SeriesMin="R24.0" Platform="AutoCAD*" OS="Win64" />
+    <!-- Support for AutoCAD 2025 (R25.0) and newer (.NET 8 era) -->
+    <Components Description="Open Asphalte Core System">
+        <!-- R25.0 = AutoCAD 2025+ (.NET 8). Platform="AutoCAD*" supports Map3D, Civil3D, etc. -->
+        <RuntimeRequirements SeriesMin="R25.0" Platform="AutoCAD*" OS="Win64" />
         <ComponentEntry
-            AppName="OpenRoad.Core"
+            AppName="OAS.Core"
             AppType=".Net"
-            Version="0.0.1"
-            ModuleName="./Contents/OpenRoad.Core.dll"
+            Version="0.0.2"
+            ModuleName="./Contents/OAS.Core.dll"
             LoadOnCommandInvocation="False"
             LoadOnAutoCADStartup="True">
-            <Commands GroupName="OpenRoad">
-               <Command Local="OR_HELP" Global="OR_HELP" />
+            <Commands GroupName="OpenAsphalte">
+               <Command Local="OAS_HELP" Global="OAS_HELP" />
             </Commands>
         </ComponentEntry>
     </Components>

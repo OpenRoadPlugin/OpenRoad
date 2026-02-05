@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ==============================================================================
+  TEMPLATE DE PROJET POUR MODULE OPEN ASPHALTE
+  ==============================================================================
+
+  Ce fichier sert de modele pour creer un nouveau projet de module.
+
+  INSTRUCTIONS:
+  1. Copiez ce fichier dans votre dossier de module (ex: modules/OAS.Voirie/)
+  2. Renommez-le selon votre module (ex: OAS.Voirie.csproj)
+  3. Modifiez AssemblyName, RootNamespace, Version, Authors et Description
+  4. Le nom de l'assembly DOIT commencer par "OAS." pour etre detecte
+
+  Documentation complete: DEVELOPER.md
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Configuration .NET -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+
+    <!-- MODIFIEZ CES VALEURS -->
+    <AssemblyName>OAS.MonModule</AssemblyName>
+    <RootNamespace>OpenAsphalte.Modules.MonModule</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>Votre Nom</Authors>
+    <Description>Description de votre module</Description>
+
+    <!-- Output dans le dossier Modules -->
+    <OutputPath>..\..\bin\Modules\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!-- Reference au Core Open Asphalte -->
+  <ItemGroup>
+    <Reference Include="OAS.Core">
+      <HintPath>..\..\bin\OAS.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- References AutoCAD (chemin detecte via Directory.Build.props du Core) -->
+  <ItemGroup>
+    <Reference Include="accoremgd">
+      <HintPath>$(AutoCADPath)\accoremgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="acdbmgd">
+      <HintPath>$(AutoCADPath)\acdbmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="acmgd">
+      <HintPath>$(AutoCADPath)\acmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AcWindows">
+      <HintPath>$(AutoCADPath)\AcWindows.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>$(AutoCADPath)\AdWindows.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

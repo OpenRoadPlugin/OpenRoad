@@ -1,11 +1,11 @@
 # UpdateService
 
-Service de gestion des mises à jour et du téléchargement de modules pour Open Road.
+Service de gestion des mises à jour et du téléchargement de modules pour Open Asphalte.
 
 ## Namespace
 
 ```csharp
-using OpenRoad.Services;
+using OpenAsphalte.Services;
 ```
 
 ## Méthodes
@@ -17,6 +17,12 @@ Vérifie les mises à jour disponibles pour le Core et les modules.
 ```csharp
 public static async Task<UpdateCheckResult> CheckForUpdatesAsync()
 ```
+
+Le service implémente une logique de résolution de version ("Deep Manifest") :
+1. Il récupère le manifeste (officiel + sources personnalisées).
+2. Pour chaque module, il analyse toutes les versions disponibles (propriétés racine + liste `versions`).
+3. Il exclut les versions incompatibles (où `MinCoreVersion` > `CoreVersion` actuel).
+4. Il sélectionne la version la plus récente compatible.
 
 **Retourne :** Un `UpdateCheckResult` contenant les informations sur les mises à jour disponibles.
 
@@ -116,7 +122,7 @@ L'URL du marketplace peut être configurée :
 
 ```json
 {
-  "updateUrl": "https://raw.githubusercontent.com/openroadplugin/openroad/main/docs/marketplace.json"
+  "updateUrl": "https://raw.githubusercontent.com/openasphalteplugin/openasphalte/main/docs/marketplace.json"
 }
 ```
 

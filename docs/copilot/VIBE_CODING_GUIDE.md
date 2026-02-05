@@ -1,6 +1,6 @@
 # 🎯 Guide Vibe-Coding avec GitHub Copilot
 
-> **Guide à destination des développeurs Open Road pour maximiser l'efficacité avec les assistants IA**
+> **Guide à destination des développeurs Open Asphalte pour maximiser l'efficacité avec les assistants IA**
 
 ---
 
@@ -24,11 +24,11 @@ Le **Vibe-Coding** (ou "Coding par l'intention") est une approche de développem
 
 ---
 
-## 🛠️ Configuration Copilot pour Open Road
+## 🛠️ Configuration Copilot pour Open Asphalte
 
 ### Instructions personnalisées
 
-Le projet Open Road utilise des **instructions Copilot personnalisées** situées dans :
+Le projet Open Asphalte utilise des **instructions Copilot personnalisées** situées dans :
 
 ```
 .github/copilot-instructions.md    # Instructions principales (contexte complet)
@@ -48,7 +48,7 @@ Lorsque vous utilisez GitHub Copilot Chat dans VS Code :
 
 ### Activer les instructions
 
-1. Ouvrez VS Code avec le workspace Open Road
+1. Ouvrez VS Code avec le workspace Open Asphalte
 2. Les instructions sont automatiquement chargées par Copilot
 3. Commencez à discuter avec Copilot Chat
 
@@ -69,11 +69,11 @@ Lorsque vous utilisez GitHub Copilot Chat dans VS Code :
 #### ✅ BON : Créer un nouveau module
 
 ```
-Je veux créer un module "Signalisation" pour Open Road.
+Je veux créer un module "Signalisation" pour Open Asphalte.
 Ce module doit :
 - Permettre de dessiner des panneaux routiers (stop, cédez le passage, etc.)
-- Stocker les panneaux sur un calque OR_SIGNALISATION
-- Avoir une commande OR_SIGNALISATION_PANNEAU
+- Stocker les panneaux sur un calque OAS_SIGNALISATION
+- Avoir une commande OAS_SIGNALISATION_PANNEAU
 
 Génère la structure complète du module avec les traductions FR/EN/ES.
 ```
@@ -81,7 +81,7 @@ Génère la structure complète du module avec les traductions FR/EN/ES.
 #### ✅ BON : Ajouter une commande à un module existant
 
 ```
-Dans le module Georeferencement, ajoute une commande OR_GEOREF_INFO 
+Dans le module Georeferencement, ajoute une commande OAS_GEOREF_INFO 
 qui affiche les informations du système de coordonnées actuel dans 
 la console AutoCAD.
 
@@ -91,7 +91,7 @@ Utilise le pattern CommandBase avec ExecuteSafe().
 #### ✅ BON : Corriger un bug
 
 ```
-La commande OR_STREETVIEW ne fonctionne pas quand le dessin 
+La commande OAS_STREETVIEW ne fonctionne pas quand le dessin 
 n'a pas de système de coordonnées défini.
 
 Elle devrait :
@@ -141,7 +141,7 @@ Demandez à Copilot de générer :
 
 ```
 ✅ Vérifiez que le code respecte :
-- [ ] Préfixe OR_ sur les commandes
+- [ ] Préfixe OAS_ sur les commandes
 - [ ] ExecuteSafe() dans chaque commande
 - [ ] ExecuteInTransaction() pour les modifications
 - [ ] Traductions complètes (3 langues)
@@ -153,7 +153,7 @@ Demandez à Copilot de générer :
 ```bash
 dotnet build -c Release
 # Puis NETLOAD dans AutoCAD
-OR_HELP  # Vérifier que la commande apparaît
+OAS_HELP  # Vérifier que la commande apparaît
 ```
 
 ### 5. Itération
@@ -170,7 +170,7 @@ Affinez avec Copilot jusqu'à satisfaction.
 
 ### Avant de demander à Copilot
 
-- [ ] J'ai ouvert le workspace Open Road dans VS Code
+- [ ] J'ai ouvert le workspace Open Asphalte dans VS Code
 - [ ] J'ai lu les instructions Copilot (`.github/copilot-instructions.md`)
 - [ ] Je sais si je travaille sur le Core ou un Module
 
@@ -183,11 +183,11 @@ Affinez avec Copilot jusqu'à satisfaction.
 ### Après la génération
 
 - [ ] Le code respecte les conventions de nommage
-- [ ] Les commandes ont le préfixe `OR_`
+- [ ] Les commandes ont le préfixe `OAS_`
 - [ ] `ExecuteSafe()` est utilisé
 - [ ] Les transactions sont correctement gérées
 - [ ] Le code compile sans erreur
-- [ ] Le module apparaît dans `OR_HELP`
+- [ ] Le module apparaît dans `OAS_HELP`
 
 ---
 
@@ -268,7 +268,7 @@ Divisez les tâches complexes en sous-tâches :
 
 ## 📚 Ressources
 
-### Documentation Open Road
+### Documentation Open Asphalte
 
 - [Guide développeur](../guides/developer_guide.md) — Créer des modules
 - [GeometryService](../api/services/GeometryService.md) — API de calculs géométriques
@@ -291,10 +291,10 @@ Divisez les tâches complexes en sous-tâches :
 
 | Étape | Action |
 |-------|--------|
-| **1** | Ouvrez le workspace Open Road |
+| **1** | Ouvrez le workspace Open Asphalte |
 | **2** | Décrivez votre intention clairement |
 | **3** | Laissez Copilot générer le code |
-| **4** | Vérifiez les conventions (OR_, ExecuteSafe, traductions) |
+| **4** | Vérifiez les conventions (OAS_, ExecuteSafe, traductions) |
 | **5** | Compilez et testez dans AutoCAD |
 | **6** | Itérez jusqu'à satisfaction |
 
@@ -302,4 +302,4 @@ Divisez les tâches complexes en sous-tâches :
 
 ---
 
-*Document créé le 2026-02-04 | Open Road v0.0.1*
+*Document créé le 2026-02-04 | Open Asphalte v0.0.1*

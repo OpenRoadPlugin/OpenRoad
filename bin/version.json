@@ -1,11 +1,11 @@
 ﻿{
-  "name": "Open Road",
-  "version": "0.0.1",
-  "build": "2026.02.04",
+  "name": "Open Asphalte",
+  "version": "0.0.2",
+  "build": "2026.02.06",
   "channel": "alpha",
   "framework": ".NET 8.0 - Windows",
-  "minAutoCADVersion": "2024",
-  "repository": "https://github.com/openroadplugin/openroad",
-  "updateUrl": "https://github.com/openroadplugin/openroad/releases/latest",
-  "releaseNotes": "Version 0.0.1 - Première version alpha du Core modulaire"
+  "minAutoCADVersion": "2025",
+  "repository": "https://github.com/openasphalteplugin/openasphalte",
+  "updateUrl": "https://github.com/openasphalteplugin/openasphalte/releases/latest",
+  "releaseNotes": "Version 0.0.2 - Gestionnaire de modules, personnalisation UI, corrections multiples"
 }
