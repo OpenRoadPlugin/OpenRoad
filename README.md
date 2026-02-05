@@ -260,3 +260,21 @@ L'utilisation de ce plugin dans AutoCAD se fait **à vos propres risques**. Vér
 
 -  Issues: [GitHub Issues](https://github.com/openroadplugin/openroad/issues)
 -  Discussions: [GitHub Discussions](https://github.com/openroadplugin/openroad/discussions)
+
+## ✨ Partenaires
+
+Une immense reconnaissance à nos partenaires qui soutiennent le projet Open Asphalte :
+
+<table width="100%">
+  <tr>
+    <td align="center" width="100%">
+      <a href="https://cadgeneration.com">
+        <img src="https://cadgeneration.com/uploads/default/original/1X/7a094534a3b665c067075eadfe4208ca43309ac4.png" alt="CAD Generation" height="200" />
+      </a>
+      <br />
+      <b>CAD Generation</b>
+      <br />
+      Forum d'entraide CAO / DAO boosté à l'IA
+    </td>
+  </tr>
+</table>
