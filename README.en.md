@@ -302,3 +302,28 @@ Using this plugin in AutoCAD is done **at your own risk**. Always verify your dr
 ---
 
 ## ✨ Partners
+
+Heartfelt recognition to our partners who support the Open Asphalte project:
+
+<table width="100%">
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://cadgeneration.com" title="CAD Generation - CAD/CAM Assistance Forum Specialized in AutoCAD">
+        <img src="https://cadgeneration.com/uploads/default/original/1X/7a094534a3b665c067075eadfe4208ca43309ac4.png" alt="CAD Generation - AutoCAD and CAD/CAM Community" height="100" />
+      </a>
+      <br />
+      <b><a href="https://cadgeneration.com" title="CAD Generation - AI-Powered CAD/CAM Forum">CAD Generation</a></b>
+      <br />
+      AI-Powered CAD / CAM Assistance Community - AutoCAD Community
+    </td>
+    <td align="center" width="50%">
+      <a href="https://www.jcx-projets.fr" title="JCX Projets - VRD and Infrastructure Engineering Office">
+        <img src="https://www.jcx-projets.fr/wp-content/uploads/2019/04/Logo_200_SF.png" alt="JCX Projets - VRD and Road Infrastructure Expert" height="100" />
+      </a>
+      <br />
+      <b><a href="https://www.jcx-projets.fr" title="JCX Projets - VRD Engineering Office">JCX Projets</a></b>
+      <br />
+      EXE VRD Engineering Office - Infrastructure and Road Network Expertise
+    </td>
+  </tr>
+</table>
