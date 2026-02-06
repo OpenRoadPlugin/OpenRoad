@@ -1,30 +1,43 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// GeometryService â€” Assainissement et hydraulique (Manning-Strickler, sections, dÃ©bits).
+/// GeometryService — Assainissement et hydraulique (Manning-Strickler, sections, débits).
 /// </summary>
 public static partial class GeometryService
 {
     #region Assainissement - Hydraulique
 
     /// <summary>
-    /// DÃ©bit par Manning-Strickler : Q = K Ã— S Ã— Rh^(2/3) Ã— I^(1/2).
+    /// Débit par Manning-Strickler : Q = K × S × Rh^(2/3) × I^(1/2).
     /// </summary>
     public static double ManningStricklerFlow(double stricklerK, double section,
         double hydraulicRadius, double slopeDecimal)
         => stricklerK * section * Math.Pow(hydraulicRadius, 2.0 / 3.0) * Math.Sqrt(slopeDecimal);
 
     /// <summary>
-    /// Vitesse d'Ã©coulement par Manning-Strickler : V = K Ã— Rh^(2/3) Ã— I^(1/2).
+    /// Vitesse d'écoulement par Manning-Strickler : V = K × Rh^(2/3) × I^(1/2).
     /// </summary>
     public static double ManningStricklerVelocity(double stricklerK, double hydraulicRadius, double slopeDecimal)
         => stricklerK * Math.Pow(hydraulicRadius, 2.0 / 3.0) * Math.Sqrt(slopeDecimal);
 
     /// <summary>
-    /// Rayon hydraulique : Rh = Section mouillÃ©e / PÃ©rimÃ¨tre mouillÃ©.
+    /// Rayon hydraulique : Rh = Section mouillée / Périmètre mouillé.
     /// </summary>
     public static double HydraulicRadius(double wettedArea, double wettedPerimeter)
     {
@@ -33,7 +46,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// ParamÃ¨tres hydrauliques d'une section circulaire partiellement remplie.
+    /// Paramètres hydrauliques d'une section circulaire partiellement remplie.
     /// </summary>
     public static (double WettedArea, double WettedPerimeter, double HydraulicRadius)
         CircularPipeHydraulics(double diameter, double fillRatio)
@@ -56,7 +69,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// DÃ©bit Ã  pleine section pour une canalisation circulaire.
+    /// Débit à pleine section pour une canalisation circulaire.
     /// </summary>
     public static double FullPipeFlow(double diameter, double slopePercent, double stricklerK = 70)
     {
@@ -65,8 +78,8 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// DiamÃ¨tre nÃ©cessaire pour un dÃ©bit donnÃ© (pleine section).
-    /// D = (Q Ã— 4^(5/3) / (K Ã— Ï€ Ã— âˆšI))^(3/8).
+    /// Diamètre nécessaire pour un débit donné (pleine section).
+    /// D = (Q × 4^(5/3) / (K × p × vI))^(3/8).
     /// </summary>
     public static double RequiredPipeDiameter(double flowRate, double slopePercent, double stricklerK = 70)
     {
@@ -113,13 +126,13 @@ public static partial class GeometryService
         => Math.Max(0, upstreamInvert - downstreamInvert);
 
     /// <summary>
-    /// VÃ©rifie si une chute nÃ©cessite un dispositif de dissipation d'Ã©nergie.
+    /// Vérifie si une chute nécessite un dispositif de dissipation d'énergie.
     /// </summary>
     public static bool RequiresEnergyDissipation(double dropHeight, double threshold = 0.80)
         => dropHeight > threshold;
 
     /// <summary>
-    /// ParamÃ¨tres hydrauliques d'une section ovoÃ¯de (T150).
+    /// Paramètres hydrauliques d'une section ovoïde (T150).
     /// </summary>
     public static (double WettedArea, double WettedPerimeter, double HydraulicRadius)
         OvoidPipeHydraulics(double height, double fillRatio)
@@ -137,7 +150,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// ParamÃ¨tres hydrauliques d'une section rectangulaire (cadre ou dalot).
+    /// Paramètres hydrauliques d'une section rectangulaire (cadre ou dalot).
     /// </summary>
     public static (double WettedArea, double WettedPerimeter, double HydraulicRadius)
         RectangularChannelHydraulics(double width, double height, double waterDepth)
@@ -151,7 +164,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// ParamÃ¨tres hydrauliques d'une section trapÃ©zoÃ¯dale (fossÃ©).
+    /// Paramètres hydrauliques d'une section trapézoïdale (fossé).
     /// </summary>
     public static (double WettedArea, double WettedPerimeter, double HydraulicRadius)
         TrapezoidalChannelHydraulics(double bottomWidth, double waterDepth, double sideSlope)

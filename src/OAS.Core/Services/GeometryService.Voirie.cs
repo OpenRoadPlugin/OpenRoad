@@ -1,23 +1,36 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Geometry;
 
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// GeometryService â€” Calculs de voirie : tracÃ© en plan et profil en long.
+/// GeometryService — Calculs de voirie : tracé en plan et profil en long.
 /// </summary>
 public static partial class GeometryService
 {
-    #region Voirie - TracÃ© en plan
+    #region Voirie - Tracé en plan
 
     /// <summary>
-    /// Calcule les coordonnÃ©es sur une clothoÃ¯de (spirale de Cornu).
+    /// Calcule les coordonnées sur une clothoïde (spirale de Cornu).
     /// </summary>
-    /// <param name="A">ParamÃ¨tre de la clothoÃ¯de (AÂ² = R Ã— L)</param>
-    /// <param name="L">Longueur dÃ©veloppÃ©e sur la clothoÃ¯de</param>
-    /// <returns>CoordonnÃ©es (X, Y) et angle de rotation Ï„</returns>
+    /// <param name="A">Paramètre de la clothoïde (A² = R × L)</param>
+    /// <param name="L">Longueur développée sur la clothoïde</param>
+    /// <returns>Coordonnées (X, Y) et angle de rotation t</returns>
     public static (double X, double Y, double Tau) ClothoidCoordinates(double A, double L)
     {
         if (A < Tolerance) return (0, 0, 0);
@@ -33,14 +46,14 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Calcule le paramÃ¨tre A de la clothoÃ¯de (AÂ² = R Ã— L).
+    /// Calcule le paramètre A de la clothoïde (A² = R × L).
     /// </summary>
     public static double ClothoidParameter(double radius, double length)
         => Math.Sqrt(radius * length);
 
     /// <summary>
-    /// Longueur minimale de transition clothoÃ¯de selon la rÃ¨gle du confort.
-    /// L = VÂ³ / (46.656 Ã— R) oÃ¹ V en km/h.
+    /// Longueur minimale de transition clothoïde selon la règle du confort.
+    /// L = V³ / (46.656 × R) où V en km/h.
     /// </summary>
     public static double MinClothoidLength(double radius, double speedKmh)
     {
@@ -49,7 +62,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Rayon minimum en fonction de la vitesse et du dÃ©vers.
+    /// Rayon minimum en fonction de la vitesse et du dévers.
     /// </summary>
     public static double MinCurveRadius(double speedKmh, double superelevationPercent, double frictionCoef = 0.13)
     {
@@ -59,7 +72,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// DÃ©vers recommandÃ© pour un rayon donnÃ©.
+    /// Dévers recommandé pour un rayon donné.
     /// </summary>
     public static double RecommendedSuperelevation(double radius, double speedKmh, double maxSuperelevation = 7.0)
     {
@@ -69,7 +82,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Surlargeur nÃ©cessaire en courbe. Formule : S = LÂ² / (2R).
+    /// Surlargeur nécessaire en courbe. Formule : S = L² / (2R).
     /// </summary>
     public static double CurveWidening(double radius, double vehicleLength = 12.0)
     {
@@ -78,7 +91,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Distance de visibilitÃ© d'arrÃªt.
+    /// Distance de visibilité d'arrêt.
     /// </summary>
     public static double StoppingDistance(double speedKmh, double reactionTime = 2.0,
         double frictionCoef = 0.35, double slopePercent = 0)
@@ -91,7 +104,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Distance de visibilitÃ© de dÃ©passement (formule empirique : 6 Ã— V).
+    /// Distance de visibilité de dépassement (formule empirique : 6 × V).
     /// </summary>
     public static double OvertakingDistance(double speedKmh)
         => 6 * speedKmh;
@@ -111,13 +124,13 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Pente entre deux points en â€°.
+    /// Pente entre deux points en ‰.
     /// </summary>
     public static double SlopePerMille(Point3d p1, Point3d p2)
         => SlopePercent(p1, p2) * 10;
 
     /// <summary>
-    /// ParamÃ¨tres d'un raccordement parabolique vertical.
+    /// Paramètres d'un raccordement parabolique vertical.
     /// </summary>
     public static (double Radius, double Deflection, bool IsCrest) VerticalCurveParameters(
         double slope1, double slope2, double length)

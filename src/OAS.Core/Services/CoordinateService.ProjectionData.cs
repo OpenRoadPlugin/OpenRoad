@@ -1,29 +1,42 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// CoordinateService — Données de projections intégrées (built-in).
+/// CoordinateService � Donn�es de projections int�gr�es (built-in).
 /// </summary>
 public static partial class CoordinateService
 {
     /// <summary>
-    /// Charge les projections intégrées au programme
+    /// Charge les projections int�gr�es au programme
     /// </summary>
     private static void LoadBuiltInProjections()
     {
         _projections =
         [
-            // ═══════════════════════════════════════════════════════════════
-            // FRANCE - RGF93 / Lambert 93 (système national)
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
+            // FRANCE - RGF93 / Lambert 93 (syst�me national)
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "RGF93.LAMB93",
                 Name = "RGF93 / Lambert 93",
                 Country = "France",
-                Region = "France métropolitaine",
+                Region = "France m�tropolitaine",
                 Epsg = 2154,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -32,18 +45,18 @@ public static partial class CoordinateService
                 FalseNorthing = 6600000,
                 MinX = 100000, MaxX = 1200000,
                 MinY = 6000000, MaxY = 7200000,
-                Description = "Projection conique conforme de Lambert - Système national français"
+                Description = "Projection conique conforme de Lambert - Syst�me national fran�ais"
             },
 
-            // ═══════════════════════════════════════════════════════════════
-            // FRANCE - RGF93 / CC42 à CC50 (zones coniques conformes)
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
+            // FRANCE - RGF93 / CC42 � CC50 (zones coniques conformes)
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "RGF93.CC42",
                 Name = "RGF93 / CC42",
                 Country = "France",
-                Region = "Corse, Côte d'Azur (sud)",
+                Region = "Corse, C�te d'Azur (sud)",
                 Epsg = 3942,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -52,7 +65,7 @@ public static partial class CoordinateService
                 FalseNorthing = 1200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 1000000, MaxY = 1400000,
-                Description = "Zone CC42 - Latitude origine 42°N"
+                Description = "Zone CC42 - Latitude origine 42�N"
             },
             new ProjectionInfo
             {
@@ -68,14 +81,14 @@ public static partial class CoordinateService
                 FalseNorthing = 2200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 2000000, MaxY = 2400000,
-                Description = "Zone CC43 - Latitude origine 43°N"
+                Description = "Zone CC43 - Latitude origine 43�N"
             },
             new ProjectionInfo
             {
                 Code = "RGF93.CC44",
                 Name = "RGF93 / CC44",
                 Country = "France",
-                Region = "Aquitaine, Midi-Pyrénées (sud)",
+                Region = "Aquitaine, Midi-Pyr�n�es (sud)",
                 Epsg = 3944,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -84,7 +97,7 @@ public static partial class CoordinateService
                 FalseNorthing = 3200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 3000000, MaxY = 3400000,
-                Description = "Zone CC44 - Latitude origine 44°N"
+                Description = "Zone CC44 - Latitude origine 44�N"
             },
             new ProjectionInfo
             {
@@ -100,7 +113,7 @@ public static partial class CoordinateService
                 FalseNorthing = 4200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 4000000, MaxY = 4400000,
-                Description = "Zone CC45 - Latitude origine 45°N"
+                Description = "Zone CC45 - Latitude origine 45�N"
             },
             new ProjectionInfo
             {
@@ -116,7 +129,7 @@ public static partial class CoordinateService
                 FalseNorthing = 5200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 5000000, MaxY = 5400000,
-                Description = "Zone CC46 - Latitude origine 46°N"
+                Description = "Zone CC46 - Latitude origine 46�N"
             },
             new ProjectionInfo
             {
@@ -132,14 +145,14 @@ public static partial class CoordinateService
                 FalseNorthing = 6200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 6000000, MaxY = 6400000,
-                Description = "Zone CC47 - Latitude origine 47°N"
+                Description = "Zone CC47 - Latitude origine 47�N"
             },
             new ProjectionInfo
             {
                 Code = "RGF93.CC48",
                 Name = "RGF93 / CC48",
                 Country = "France",
-                Region = "Île-de-France, Normandie, Bretagne",
+                Region = "�le-de-France, Normandie, Bretagne",
                 Epsg = 3948,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -148,7 +161,7 @@ public static partial class CoordinateService
                 FalseNorthing = 7200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 7000000, MaxY = 7400000,
-                Description = "Zone CC48 - Latitude origine 48°N"
+                Description = "Zone CC48 - Latitude origine 48�N"
             },
             new ProjectionInfo
             {
@@ -164,7 +177,7 @@ public static partial class CoordinateService
                 FalseNorthing = 8200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 8000000, MaxY = 8400000,
-                Description = "Zone CC49 - Latitude origine 49°N"
+                Description = "Zone CC49 - Latitude origine 49�N"
             },
             new ProjectionInfo
             {
@@ -180,12 +193,12 @@ public static partial class CoordinateService
                 FalseNorthing = 9200000,
                 MinX = 1200000, MaxX = 2200000,
                 MinY = 9000000, MaxY = 9400000,
-                Description = "Zone CC50 - Latitude origine 50°N"
+                Description = "Zone CC50 - Latitude origine 50�N"
             },
 
-            // ═══════════════════════════════════════════════════════════════
-            // FRANCE - NTF / Lambert zones (ancien système)
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
+            // FRANCE - NTF / Lambert zones (ancien syst�me)
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "NTF.Lambert-1-ClrkIGN",
@@ -200,7 +213,7 @@ public static partial class CoordinateService
                 FalseNorthing = 200000,
                 MinX = 0, MaxX = 1200000,
                 MinY = 0, MaxY = 400000,
-                Description = "Ancien système NTF - Zone I (Nord)"
+                Description = "Ancien syst�me NTF - Zone I (Nord)"
             },
             new ProjectionInfo
             {
@@ -216,14 +229,14 @@ public static partial class CoordinateService
                 FalseNorthing = 200000,
                 MinX = 0, MaxX = 1200000,
                 MinY = 0, MaxY = 400000,
-                Description = "Ancien système NTF - Zone II (Centre)"
+                Description = "Ancien syst�me NTF - Zone II (Centre)"
             },
             new ProjectionInfo
             {
                 Code = "NTF.Lambert-2e-ClrkIGN",
-                Name = "NTF (Paris) / Lambert zone II étendu",
+                Name = "NTF (Paris) / Lambert zone II �tendu",
                 Country = "France",
-                Region = "France métropolitaine",
+                Region = "France m�tropolitaine",
                 Epsg = 27572,
                 Unit = "m",
                 CentralMeridian = 2.337229167,
@@ -232,7 +245,7 @@ public static partial class CoordinateService
                 FalseNorthing = 2200000,
                 MinX = 0, MaxX = 1200000,
                 MinY = 1600000, MaxY = 2800000,
-                Description = "Ancien système NTF - Zone II étendu (France entière)"
+                Description = "Ancien syst�me NTF - Zone II �tendu (France enti�re)"
             },
             new ProjectionInfo
             {
@@ -248,7 +261,7 @@ public static partial class CoordinateService
                 FalseNorthing = 200000,
                 MinX = 0, MaxX = 1200000,
                 MinY = 0, MaxY = 400000,
-                Description = "Ancien système NTF - Zone III (Sud)"
+                Description = "Ancien syst�me NTF - Zone III (Sud)"
             },
             new ProjectionInfo
             {
@@ -264,12 +277,12 @@ public static partial class CoordinateService
                 FalseNorthing = 185861,
                 MinX = 0, MaxX = 500000,
                 MinY = 0, MaxY = 400000,
-                Description = "Ancien système NTF - Zone IV (Corse)"
+                Description = "Ancien syst�me NTF - Zone IV (Corse)"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // BELGIQUE
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "BD72.Belgian-Lambert-72",
@@ -284,7 +297,7 @@ public static partial class CoordinateService
                 FalseNorthing = 5400088.438,
                 MinX = 0, MaxX = 300000,
                 MinY = 0, MaxY = 300000,
-                Description = "Système belge Lambert 72"
+                Description = "Syst�me belge Lambert 72"
             },
             new ProjectionInfo
             {
@@ -300,12 +313,12 @@ public static partial class CoordinateService
                 FalseNorthing = 665262.0,
                 MinX = 500000, MaxX = 800000,
                 MinY = 500000, MaxY = 800000,
-                Description = "Système belge Lambert 2008 (ETRS89)"
+                Description = "Syst�me belge Lambert 2008 (ETRS89)"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // SUISSE
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "CH1903.LV03",
@@ -320,7 +333,7 @@ public static partial class CoordinateService
                 FalseNorthing = 200000,
                 MinX = 480000, MaxX = 840000,
                 MinY = 70000, MaxY = 300000,
-                Description = "Ancien système suisse LV03"
+                Description = "Ancien syst�me suisse LV03"
             },
             new ProjectionInfo
             {
@@ -336,12 +349,12 @@ public static partial class CoordinateService
                 FalseNorthing = 1200000,
                 MinX = 2480000, MaxX = 2840000,
                 MinY = 1070000, MaxY = 1300000,
-                Description = "Système suisse actuel LV95"
+                Description = "Syst�me suisse actuel LV95"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // LUXEMBOURG
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "LUREF.Luxembourg-TM",
@@ -356,12 +369,12 @@ public static partial class CoordinateService
                 FalseNorthing = 100000,
                 MinX = 45000, MaxX = 115000,
                 MinY = 55000, MaxY = 145000,
-                Description = "Système luxembourgeois Transverse Mercator"
+                Description = "Syst�me luxembourgeois Transverse Mercator"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // ALLEMAGNE
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "ETRS89.UTM-zone-32N",
@@ -395,9 +408,9 @@ public static partial class CoordinateService
                 Description = "UTM zone 33N sur datum ETRS89"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // ESPAGNE
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "ETRS89.UTM-zone-30N",
@@ -431,9 +444,9 @@ public static partial class CoordinateService
                 Description = "UTM zone 31N sur datum ETRS89"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // ITALIE
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "RDN2008.Italy-zone",
@@ -448,12 +461,12 @@ public static partial class CoordinateService
                 FalseNorthing = 0,
                 MinX = 2400000, MaxX = 3600000,
                 MinY = 3600000, MaxY = 5300000,
-                Description = "Système italien RDN2008"
+                Description = "Syst�me italien RDN2008"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // ROYAUME-UNI
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "OSGB36.British-National-Grid",
@@ -471,9 +484,9 @@ public static partial class CoordinateService
                 Description = "British National Grid"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // PAYS-BAS
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "Amersfoort.RD-New",
@@ -488,18 +501,18 @@ public static partial class CoordinateService
                 FalseNorthing = 463000,
                 MinX = 0, MaxX = 300000,
                 MinY = 300000, MaxY = 630000,
-                Description = "Système néerlandais RD New (Rijksdriehoek)"
+                Description = "Syst�me n�erlandais RD New (Rijksdriehoek)"
             },
 
-            // ═══════════════════════════════════════════════════════════════
-            // CANADA - Québec
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
+            // CANADA - Qu�bec
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "NAD83.MTM-zone-7",
                 Name = "NAD83 / MTM zone 7",
                 Country = "Canada",
-                Region = "Québec (Montréal)",
+                Region = "Qu�bec (Montr�al)",
                 Epsg = 32187,
                 Unit = "m",
                 CentralMeridian = -70.5,
@@ -508,14 +521,14 @@ public static partial class CoordinateService
                 FalseNorthing = 0,
                 MinX = 0, MaxX = 610000,
                 MinY = 4800000, MaxY = 5400000,
-                Description = "Modified Transverse Mercator zone 7 (Québec)"
+                Description = "Modified Transverse Mercator zone 7 (Qu�bec)"
             },
             new ProjectionInfo
             {
                 Code = "NAD83.MTM-zone-8",
                 Name = "NAD83 / MTM zone 8",
                 Country = "Canada",
-                Region = "Québec (Québec City)",
+                Region = "Qu�bec (Qu�bec City)",
                 Epsg = 32188,
                 Unit = "m",
                 CentralMeridian = -73.5,
@@ -524,18 +537,18 @@ public static partial class CoordinateService
                 FalseNorthing = 0,
                 MinX = 0, MaxX = 610000,
                 MinY = 4800000, MaxY = 5400000,
-                Description = "Modified Transverse Mercator zone 8 (Québec)"
+                Description = "Modified Transverse Mercator zone 8 (Qu�bec)"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // UTM ZONES GLOBALES (WGS84)
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "WGS84.UTM-29N",
                 Name = "WGS 84 / UTM zone 29N",
                 Country = "Global",
-                Region = "Longitude -12° à -6° (Portugal, Açores)",
+                Region = "Longitude -12� � -6� (Portugal, A�ores)",
                 Epsg = 32629,
                 Unit = "m",
                 CentralMeridian = -9.0,
@@ -551,7 +564,7 @@ public static partial class CoordinateService
                 Code = "WGS84.UTM-30N",
                 Name = "WGS 84 / UTM zone 30N",
                 Country = "Global",
-                Region = "Longitude -6° à 0° (Espagne, UK ouest)",
+                Region = "Longitude -6� � 0� (Espagne, UK ouest)",
                 Epsg = 32630,
                 Unit = "m",
                 CentralMeridian = -3.0,
@@ -567,7 +580,7 @@ public static partial class CoordinateService
                 Code = "WGS84.UTM-31N",
                 Name = "WGS 84 / UTM zone 31N",
                 Country = "Global",
-                Region = "Longitude 0° à 6° (France ouest, Benelux)",
+                Region = "Longitude 0� � 6� (France ouest, Benelux)",
                 Epsg = 32631,
                 Unit = "m",
                 CentralMeridian = 3.0,
@@ -583,7 +596,7 @@ public static partial class CoordinateService
                 Code = "WGS84.UTM-32N",
                 Name = "WGS 84 / UTM zone 32N",
                 Country = "Global",
-                Region = "Longitude 6° à 12° (France est, Allemagne)",
+                Region = "Longitude 6� � 12� (France est, Allemagne)",
                 Epsg = 32632,
                 Unit = "m",
                 CentralMeridian = 9.0,
@@ -599,7 +612,7 @@ public static partial class CoordinateService
                 Code = "WGS84.UTM-33N",
                 Name = "WGS 84 / UTM zone 33N",
                 Country = "Global",
-                Region = "Longitude 12° à 18° (Europe centrale)",
+                Region = "Longitude 12� � 18� (Europe centrale)",
                 Epsg = 32633,
                 Unit = "m",
                 CentralMeridian = 15.0,
@@ -611,15 +624,15 @@ public static partial class CoordinateService
                 Description = "UTM zone 33N sur WGS84"
             },
 
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             // FRANCE - DOM-TOM
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "RGAF09.UTM-zone-20N",
                 Name = "RGAF09 / UTM zone 20N",
                 Country = "France",
-                Region = "Antilles françaises (Guadeloupe, Martinique)",
+                Region = "Antilles fran�aises (Guadeloupe, Martinique)",
                 Epsg = 5490,
                 Unit = "m",
                 CentralMeridian = -63.0,
@@ -628,14 +641,14 @@ public static partial class CoordinateService
                 FalseNorthing = 0,
                 MinX = 166000, MaxX = 834000,
                 MinY = 0, MaxY = 9400000,
-                Description = "UTM zone 20N pour les Antilles françaises"
+                Description = "UTM zone 20N pour les Antilles fran�aises"
             },
             new ProjectionInfo
             {
                 Code = "RGFG95.UTM-zone-22N",
                 Name = "RGFG95 / UTM zone 22N",
                 Country = "France",
-                Region = "Guyane française",
+                Region = "Guyane fran�aise",
                 Epsg = 2972,
                 Unit = "m",
                 CentralMeridian = -51.0,
@@ -644,14 +657,14 @@ public static partial class CoordinateService
                 FalseNorthing = 0,
                 MinX = 166000, MaxX = 834000,
                 MinY = 0, MaxY = 9400000,
-                Description = "UTM zone 22N pour la Guyane française"
+                Description = "UTM zone 22N pour la Guyane fran�aise"
             },
             new ProjectionInfo
             {
                 Code = "RGR92.UTM-zone-40S",
                 Name = "RGR92 / UTM zone 40S",
                 Country = "France",
-                Region = "La Réunion",
+                Region = "La R�union",
                 Epsg = 2975,
                 Unit = "m",
                 CentralMeridian = 57.0,
@@ -660,7 +673,7 @@ public static partial class CoordinateService
                 FalseNorthing = 10000000,
                 MinX = 166000, MaxX = 834000,
                 MinY = 0, MaxY = 10000000,
-                Description = "UTM zone 40S pour La Réunion"
+                Description = "UTM zone 40S pour La R�union"
             },
             new ProjectionInfo
             {
@@ -679,13 +692,13 @@ public static partial class CoordinateService
                 Description = "UTM zone 38S pour Mayotte"
             },
 
-            // ═══════════════════════════════════════════════════════════════
-            // COORDONNÉES GÉOGRAPHIQUES
-            // ═══════════════════════════════════════════════════════════════
+            // ---------------------------------------------------------------
+            // COORDONN�ES G�OGRAPHIQUES
+            // ---------------------------------------------------------------
             new ProjectionInfo
             {
                 Code = "LL84",
-                Name = "WGS 84 (géographique)",
+                Name = "WGS 84 (g�ographique)",
                 Country = "Global",
                 Region = "Monde entier",
                 Epsg = 4326,
@@ -696,14 +709,14 @@ public static partial class CoordinateService
                 FalseNorthing = 0,
                 MinX = -180, MaxX = 180,
                 MinY = -90, MaxY = 90,
-                Description = "Coordonnées géographiques WGS84 (longitude/latitude)"
+                Description = "Coordonn�es g�ographiques WGS84 (longitude/latitude)"
             },
             new ProjectionInfo
             {
                 Code = "LL-RGF93",
-                Name = "RGF93 (géographique)",
+                Name = "RGF93 (g�ographique)",
                 Country = "France",
-                Region = "France métropolitaine",
+                Region = "France m�tropolitaine",
                 Epsg = 4171,
                 Unit = "deg",
                 CentralMeridian = 0.0,
@@ -712,7 +725,7 @@ public static partial class CoordinateService
                 FalseNorthing = 0,
                 MinX = -10, MaxX = 15,
                 MinY = 40, MaxY = 55,
-                Description = "Coordonnées géographiques RGF93 (longitude/latitude)"
+                Description = "Coordonn�es g�ographiques RGF93 (longitude/latitude)"
             }
         ];
     }

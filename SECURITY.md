@@ -4,7 +4,7 @@
 
 ### Clause de non-responsabilité (Disclaimer)
 
-Open Asphalte est distribué sous **licence Apache 2.0**. Conformément à cette licence :
+Open Asphalte est distribué sous **licence GNU GPL v3**. Conformément à cette licence :
 
 > **LE LOGICIEL EST FOURNI "TEL QUEL", SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS MAIS SANS S'Y LIMITER AUX GARANTIES DE QUALITÉ MARCHANDE, D'ADÉQUATION À UN USAGE PARTICULIER ET D'ABSENCE DE CONTREFAÇON.**
 

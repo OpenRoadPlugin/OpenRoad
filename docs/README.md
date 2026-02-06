@@ -1,4 +1,4 @@
-# 📚 Documentation Open Asphalte
+﻿# 📚 Documentation Open Asphalte
 
 > Documentation technique pour les développeurs de modules Open Asphalte
 
@@ -76,7 +76,7 @@ docs/
 - **Repository GitHub** : [Open Asphalte](https://github.com/openasphalteplugin/openasphalte)
 - **Changelog** : [CHANGELOG.md](../CHANGELOG.md)
 - **Contributing** : [CONTRIBUTING.md](../CONTRIBUTING.md)
-- **License** : Apache 2.0
+- **License** : GNU GPL v3
 
 ---
 

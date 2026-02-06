@@ -1,19 +1,32 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using OpenAsphalte.Services;
 
 namespace OpenAsphalte.Modules.Georeferencement.Services;
 
 /// <summary>
-/// GeoLocationService â€” ImplÃ©mentations des conversions de coordonnÃ©es par systÃ¨me de projection.
+/// GeoLocationService — Implémentations des conversions de coordonnées par système de projection.
 /// </summary>
 public static partial class GeoLocationService
 {
     #region Private Methods - Coordinate Conversions
 
     /// <summary>
-    /// Extrait le numÃ©ro de zone CC du code (ex: "RGF93.CC49" -> 49).
+    /// Extrait le numéro de zone CC du code (ex: "RGF93.CC49" -> 49).
     /// </summary>
     private static int ExtractCCZone(string code)
     {
@@ -96,7 +109,7 @@ public static partial class GeoLocationService
         }
         else
         {
-            // DÃ©faut: Lambert II Ã©tendu
+            // Défaut: Lambert II étendu
             n = 0.7289686274; c = 11745793.39; xs = 600000; ys = 8199695.768;
         }
 
@@ -126,7 +139,7 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Conversion coordonnÃ©es suisses (LV03/LV95) vers WGS84.
+    /// Conversion coordonnées suisses (LV03/LV95) vers WGS84.
     /// </summary>
     private static (double Longitude, double Latitude) SwissToWgs84(double x, double y, ProjectionInfo projection)
     {
@@ -218,7 +231,7 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Conversion RD nÃ©erlandais vers WGS84 (polynÃ´mes Kadaster).
+    /// Conversion RD néerlandais vers WGS84 (polynômes Kadaster).
     /// </summary>
     private static (double Longitude, double Latitude) DutchRdToWgs84(double x, double y)
     {
@@ -290,7 +303,7 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Conversion Transverse Mercator gÃ©nÃ©rique vers WGS84.
+    /// Conversion Transverse Mercator générique vers WGS84.
     /// </summary>
     private static (double Longitude, double Latitude) TransverseMercatorToWgs84(
         double x, double y, double lon0Deg, double lat0Deg, double k0,
@@ -335,7 +348,7 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Approximation de la projection inverse basÃ©e sur les paramÃ¨tres.
+    /// Approximation de la projection inverse basée sur les paramètres.
     /// </summary>
     private static (double Longitude, double Latitude) ApproximateInverseProjection(double x, double y, ProjectionInfo projection)
     {
@@ -346,7 +359,7 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Approximation de la projection directe basÃ©e sur les paramÃ¨tres.
+    /// Approximation de la projection directe basée sur les paramètres.
     /// </summary>
     private static (double X, double Y) ApproximateForwardProjection(double longitude, double latitude, ProjectionInfo projection)
     {
@@ -356,7 +369,7 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Calcule la latitude isomÃ©trique.
+    /// Calcule la latitude isométrique.
     /// </summary>
     private static double LatitudeIsometric(double lat, double e)
     {
@@ -366,7 +379,7 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Calcule la latitude depuis la latitude isomÃ©trique (itÃ©ratif).
+    /// Calcule la latitude depuis la latitude isométrique (itératif).
     /// </summary>
     private static double LatitudeFromIsometric(double latIso, double e)
     {
