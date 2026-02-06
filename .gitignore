@@ -11,11 +11,11 @@ bin/*.exe
 # Exceptions - fichiers necessaires pour les releases GitHub
 !bin/OAS.Core.dll
 !bin/OAS.Core.xml
-!bin/OAS.Core.deps.json
 !bin/OAS.Core.runtimeconfig.json
 !bin/version.json
 !bin/Modules/
-!bin/Modules/**
+!bin/Modules/*.dll
+!bin/Modules/*.md
 !bin/Data/
 !bin/Data/**
 
