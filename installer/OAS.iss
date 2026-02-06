@@ -41,7 +41,7 @@ WizardStyle=modern
 SetupIconFile=..\OAS_Logo.ico
 WizardImageFile=WizardImage.bmp
 WizardSmallImageFile=WizardSmallImage.bmp
-; Licence Apache 2.0
+; Licence GNU GPL v3
 LicenseFile=..\LICENSE
 
 [InstallDelete]

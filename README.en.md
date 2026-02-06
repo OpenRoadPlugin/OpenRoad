@@ -1,4 +1,4 @@
-[![fr](https://img.shields.io/badge/lang-fr-green.svg)](README.md)
+﻿[![fr](https://img.shields.io/badge/lang-fr-green.svg)](README.md)
 [![en](https://img.shields.io/badge/lang-en-red.svg)](README.en.md)
 
 # Open Asphalte
@@ -11,7 +11,7 @@
 
 [![AutoCAD 2025+](https://img.shields.io/badge/AutoCAD-2025+-blue.svg)](https://www.autodesk.com/products/autocad)
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
 ---
 
@@ -298,7 +298,7 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under **[Apache 2.0](LICENSE)** - free to use, modify, and distribute under the terms of the license.
+This project is licensed under **[GNU GPL v3](LICENSE)** - free to use, modify, and distribute under the terms of the license.
 See also the [NOTICE](NOTICE) file for mentions and trademarks.
 
 ### Disclaimer

@@ -1,4 +1,4 @@
-# Open Asphalte – Context IA Module
+﻿# Open Asphalte – Context IA Module
 
 > **Context IA pour le développement de MODULES** | Version 2026.02.05 | .NET 8.0 / AutoCAD 2025+
 
@@ -81,7 +81,7 @@ WriteMessage($"\n{T("select.point")}: ");
 | Architecture | Plugin modulaire avec découverte automatique |
 | Interface    | Menu contextuel + Ruban dynamiques           |
 | Multilingue  | FR, EN, ES                                   |
-| Licence      | Apache 2.0                                   |
+| Licence      | GNU GPL v3                                   |
 |--------------|----------------------------------------------|
 
 ---

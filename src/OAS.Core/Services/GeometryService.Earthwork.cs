@@ -1,19 +1,32 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Geometry;
 
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// GeometryService â€” Cubature, terrassement, tranchÃ©es et surfaces/MNT.
+/// GeometryService — Cubature, terrassement, tranchées et surfaces/MNT.
 /// </summary>
 public static partial class GeometryService
 {
     #region Cubature et Terrassement
 
     /// <summary>
-    /// Aires dÃ©blai/remblai d'un profil en travers par la mÃ©thode des trapÃ¨zes.
+    /// Aires déblai/remblai d'un profil en travers par la méthode des trapèzes.
     /// </summary>
     public static (double CutArea, double FillArea) CrossSectionAreas(
         IList<Point3d> profilePoints, double referenceLevel)
@@ -62,13 +75,13 @@ public static partial class GeometryService
         => (area1 + area2) * distance / 2;
 
     /// <summary>
-    /// Volume entre deux profils par la formule prismoÃ¯dale (plus prÃ©cis).
+    /// Volume entre deux profils par la formule prismoïdale (plus précis).
     /// </summary>
     public static double VolumeByPrismoidal(double area1, double areaMiddle, double area2, double distance)
         => (area1 + 4 * areaMiddle + area2) * distance / 6;
 
     /// <summary>
-    /// Volumes totaux de terrassement Ã  partir d'une sÃ©rie de profils.
+    /// Volumes totaux de terrassement à partir d'une série de profils.
     /// </summary>
     public static (double CutVolume, double FillVolume) TotalEarthworkVolumes(
         IList<(double Pk, double CutArea, double FillArea)> sections)
@@ -111,31 +124,31 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Applique le coefficient de foisonnement Ã  un volume en place.
+    /// Applique le coefficient de foisonnement à un volume en place.
     /// </summary>
     public static double ApplyBulking(double volumeInPlace, double bulkingFactor)
         => volumeInPlace * bulkingFactor;
 
     /// <summary>
-    /// Volume compactÃ© Ã  partir du volume foisonnÃ©.
+    /// Volume compacté à partir du volume foisonné.
     /// </summary>
     public static double CompactedVolume(double volumeLoose, double compactionRatio)
         => volumeLoose * compactionRatio;
 
     /// <summary>
-    /// Volume d'un tronc de pyramide (excavation Ã  talus).
+    /// Volume d'un tronc de pyramide (excavation à talus).
     /// </summary>
     public static double FrustumVolume(double topArea, double bottomArea, double height)
         => height * (topArea + bottomArea + Math.Sqrt(topArea * bottomArea)) / 3;
 
     /// <summary>
-    /// Volume d'une tranchÃ©e Ã  parois verticales.
+    /// Volume d'une tranchée à parois verticales.
     /// </summary>
     public static double TrenchVolume(double width, double depth, double length)
         => width * depth * length;
 
     /// <summary>
-    /// Volume d'une tranchÃ©e avec talutage.
+    /// Volume d'une tranchée avec talutage.
     /// </summary>
     public static double TrenchVolumeWithSlope(double bottomWidth, double depth, double length, double sideSlope)
     {
@@ -166,7 +179,7 @@ public static partial class GeometryService
     #region Surfaces et MNT
 
     /// <summary>
-    /// Interpole l'altitude Z en un point Ã  partir d'un plan dÃ©fini par trois points.
+    /// Interpole l'altitude Z en un point à partir d'un plan défini par trois points.
     /// </summary>
     public static double InterpolateZFromPlane(Point3d point, Point3d p1, Point3d p2, Point3d p3)
     {
@@ -181,7 +194,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Pente d'un plan dÃ©fini par trois points, en %.
+    /// Pente d'un plan défini par trois points, en %.
     /// </summary>
     public static double PlaneSlope(Point3d p1, Point3d p2, Point3d p3)
     {
@@ -210,7 +223,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Volume d'un prisme triangulaire (triangle â†’ plan horizontal de rÃ©fÃ©rence).
+    /// Volume d'un prisme triangulaire (triangle ? plan horizontal de référence).
     /// </summary>
     public static double TriangularPrismVolume(Point3d p1, Point3d p2, Point3d p3, double referenceZ)
     {
@@ -220,13 +233,13 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Aire d'un triangle en 2D (projetÃ©).
+    /// Aire d'un triangle en 2D (projeté).
     /// </summary>
     public static double CalculateTriangleArea(Point3d p1, Point3d p2, Point3d p3)
         => Math.Abs((p2.X - p1.X) * (p3.Y - p1.Y) - (p3.X - p1.X) * (p2.Y - p1.Y)) / 2;
 
     /// <summary>
-    /// Aire 3D d'un triangle (surface rÃ©elle inclinÃ©e).
+    /// Aire 3D d'un triangle (surface réelle inclinée).
     /// </summary>
     public static double CalculateTriangleArea3D(Point3d p1, Point3d p2, Point3d p3)
     {

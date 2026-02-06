@@ -1,19 +1,32 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Geometry;
 
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// CoordinateService â€” Transformations de coordonnÃ©es (Lambert, CC, UTM, Vincenty).
+/// CoordinateService — Transformations de coordonnées (Lambert, CC, UTM, Vincenty).
 /// </summary>
 public static partial class CoordinateService
 {
     #region Coordinate Transformations
 
     /// <summary>
-    /// Convertit des coordonnÃ©es Lambert 93 en WGS84 (longitude/latitude).
+    /// Convertit des coordonnées Lambert 93 en WGS84 (longitude/latitude).
     /// </summary>
     public static (double Longitude, double Latitude) Lambert93ToWgs84(double x, double y)
     {
@@ -43,7 +56,7 @@ public static partial class CoordinateService
     }
 
     /// <summary>
-    /// Convertit des coordonnÃ©es WGS84 (longitude/latitude) en Lambert 93.
+    /// Convertit des coordonnées WGS84 (longitude/latitude) en Lambert 93.
     /// </summary>
     public static (double X, double Y) Wgs84ToLambert93(double longitude, double latitude)
     {
@@ -68,17 +81,17 @@ public static partial class CoordinateService
     }
 
     /// <summary>
-    /// Convertit des coordonnÃ©es CC (Conique Conforme) en WGS84.
+    /// Convertit des coordonnées CC (Conique Conforme) en WGS84.
     /// </summary>
-    /// <param name="x">CoordonnÃ©e X en mÃ¨tres</param>
-    /// <param name="y">CoordonnÃ©e Y en mÃ¨tres</param>
-    /// <param name="zone">Zone CC (42 Ã  50)</param>
+    /// <param name="x">Coordonnée X en mètres</param>
+    /// <param name="y">Coordonnée Y en mètres</param>
+    /// <param name="zone">Zone CC (42 à 50)</param>
     public static (double Longitude, double Latitude) CCToWgs84(double x, double y, int zone)
     {
         if (zone < 42 || zone > 50)
-            throw new ArgumentOutOfRangeException(nameof(zone), "Zone CC doit Ãªtre entre 42 et 50");
+            throw new ArgumentOutOfRangeException(nameof(zone), "Zone CC doit être entre 42 et 50");
 
-        // ParamÃ¨tres de l'ellipsoÃ¯de GRS80
+        // Paramètres de l'ellipsoïde GRS80
         const double a = 6378137.0;
         const double e2 = 0.00669438002290;
         const double e = 0.0818191910428158;
@@ -132,7 +145,7 @@ public static partial class CoordinateService
     }
 
     /// <summary>
-    /// Convertit des coordonnÃ©es UTM en WGS84.
+    /// Convertit des coordonnées UTM en WGS84.
     /// </summary>
     public static (double Longitude, double Latitude) UtmToWgs84(double easting, double northing, int zone, bool northern = true)
     {
@@ -181,7 +194,7 @@ public static partial class CoordinateService
     }
 
     /// <summary>
-    /// Convertit des coordonnÃ©es WGS84 en UTM.
+    /// Convertit des coordonnées WGS84 en UTM.
     /// </summary>
     public static (int Zone, double Easting, double Northing, bool Northern) Wgs84ToUtm(double longitude, double latitude)
     {
@@ -230,9 +243,9 @@ public static partial class CoordinateService
     }
 
     /// <summary>
-    /// Calcule la distance gÃ©odÃ©sique (Vincenty) entre deux points WGS84.
+    /// Calcule la distance géodésique (Vincenty) entre deux points WGS84.
     /// </summary>
-    /// <returns>Distance en mÃ¨tres</returns>
+    /// <returns>Distance en mètres</returns>
     public static double VincentyDistance(double lon1, double lat1, double lon2, double lat2)
     {
         const double a = EarthRadiusEquatorial;

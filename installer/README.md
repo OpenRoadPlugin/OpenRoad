@@ -1,4 +1,4 @@
-# Open Asphalte Installer
+﻿# Open Asphalte Installer
 
 Ce dossier contient les fichiers nécessaires pour créer l'installateur du plugin Open Asphalte.
 
@@ -41,7 +41,7 @@ Ou utilisez le script automatisé :
 L'installateur scanne automatiquement le registre pour détecter les versions d'AutoCAD compatibles (2025+) et affiche un résumé à l'utilisateur.
 
 ### Acceptation de licence
-L'utilisateur doit accepter la licence Apache 2.0 avant de continuer l'installation.
+L'utilisateur doit accepter la licence GNU GPL v3 avant de continuer l'installation.
 
 ### Personnalisation du nom du menu
 L'installateur propose une page optionnelle permettant de personnaliser le nom du menu principal. Si l'utilisateur entre un nom (ex: "MonEntreprise"), le menu et le ruban dans AutoCAD afficheront "MonEntreprise - OA".

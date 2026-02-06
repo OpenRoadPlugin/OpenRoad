@@ -1083,7 +1083,7 @@ var voirie = ModuleDiscovery.GetModule<VoirieModule>();
 
 ## ⚠️ Avertissement pour les développeurs de modules
 
-### Licence Apache 2.0 et responsabilité
+### Licence GNU GPL v3 et responsabilité
 
 En développant un module pour Open Asphalte, vous reconnaissancez que :
 

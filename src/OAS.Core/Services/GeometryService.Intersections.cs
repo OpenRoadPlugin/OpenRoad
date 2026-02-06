@@ -1,19 +1,32 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Geometry;
 
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// GeometryService â€” Intersections entre lignes, cercles, arcs et points de tangence.
+/// GeometryService — Intersections entre lignes, cercles, arcs et points de tangence.
 /// </summary>
 public static partial class GeometryService
 {
     #region Intersections
 
     /// <summary>
-    /// RÃ©sultat d'une intersection entre deux lignes.
+    /// Résultat d'une intersection entre deux lignes.
     /// </summary>
     public readonly struct LineIntersectionResult
     {
@@ -73,7 +86,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// RÃ©sultat d'une intersection ligne/cercle.
+    /// Résultat d'une intersection ligne/cercle.
     /// </summary>
     public readonly struct LineCircleIntersectionResult
     {
@@ -128,7 +141,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// RÃ©sultat d'une intersection cercle/cercle.
+    /// Résultat d'une intersection cercle/cercle.
     /// </summary>
     public readonly struct CircleCircleIntersectionResult
     {
@@ -180,7 +193,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Calcule les points de tangence d'un point externe Ã  un cercle.
+    /// Calcule les points de tangence d'un point externe à un cercle.
     /// </summary>
     public static (Point3d, Point3d)? TangentPointsFromExternalPoint(Point3d externalPoint, Point3d center, double radius)
     {
@@ -244,7 +257,7 @@ public static partial class GeometryService
         => 2 * radius * Math.Sin(Math.Abs(angleRadians) / 2);
 
     /// <summary>
-    /// Calcule la flÃ¨che (sagita) d'un arc.
+    /// Calcule la flèche (sagita) d'un arc.
     /// </summary>
     public static double Sagita(double radius, double angleRadians)
         => radius * (1 - Math.Cos(Math.Abs(angleRadians) / 2));
