@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Diagnostics;
 using System.IO;
@@ -24,7 +29,7 @@ using L10n = OpenAsphalte.Localization.Localization;
 namespace OpenAsphalte.Commands;
 
 /// <summary>
-/// Fenêtre "à propos" d'Open Asphalte
+/// Fen�tre "� propos" d'Open Asphalte
 /// </summary>
 public partial class AboutWindow : Window
 {
@@ -50,7 +55,7 @@ public partial class AboutWindow : Window
         }
         catch (System.Exception ex)
         {
-            // Logo non trouvé, laisser vide
+            // Logo non trouv�, laisser vide
             Logger.Debug($"Logo loading failed: {ex.Message}");
         }
     }
@@ -106,7 +111,7 @@ public partial class AboutWindow : Window
     }
 
     /// <summary>
-    /// Met à jour le badge d'avertissement selon le canal de release
+    /// Met � jour le badge d'avertissement selon le canal de release
     /// </summary>
     private void UpdateChannelWarningBadge(string channel)
     {
@@ -119,7 +124,7 @@ public partial class AboutWindow : Window
                 System.Windows.Media.Color.FromRgb(231, 76, 60)); // Rouge
             brush.Freeze();
             badgeWarning.Background = brush;
-            txtBadge.Text = "⚠ ALPHA";
+            txtBadge.Text = "? ALPHA";
         }
         else if (lowerChannel == "beta")
         {
@@ -128,7 +133,7 @@ public partial class AboutWindow : Window
                 System.Windows.Media.Color.FromRgb(243, 156, 18)); // Orange
             brush.Freeze();
             badgeWarning.Background = brush;
-            txtBadge.Text = "⚠ BETA";
+            txtBadge.Text = "? BETA";
         }
         else
         {
@@ -149,7 +154,7 @@ public partial class AboutWindow : Window
     }
 
     /// <summary>
-    /// Met à jour les textes localisés
+    /// Met � jour les textes localis�s
     /// </summary>
     private void UpdateLocalizedText()
     {
@@ -165,9 +170,9 @@ public partial class AboutWindow : Window
 
         txtLicense.Text = L10n.T("about.license");
 
-        btnUpdate.Content = "⬇ " + L10n.T("about.checkUpdate");
-        btnCredits.Content = "❤ " + L10n.T("about.credits", "Credits");
-        btnReportBug.Content = "🐛 " + L10n.T("about.reportBug");
+        btnUpdate.Content = "? " + L10n.T("about.checkUpdate");
+        btnCredits.Content = "? " + L10n.T("about.credits", "Credits");
+        btnReportBug.Content = "?? " + L10n.T("about.reportBug");
         btnClose.Content = L10n.T("about.close");
     }
 
@@ -230,7 +235,7 @@ public partial class AboutWindow : Window
     }
 
     /// <summary>
-    /// Ferme la fen�tre
+    /// Ferme la fen?tre
     /// </summary>
     private void OnCloseClick(object sender, RoutedEventArgs e)
     {

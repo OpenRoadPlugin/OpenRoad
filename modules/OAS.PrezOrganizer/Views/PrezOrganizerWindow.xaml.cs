@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Windows;
 using System.Windows.Controls;
@@ -24,14 +29,14 @@ using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace OpenAsphalte.Modules.PrezOrganizer.Views;
 
 /// <summary>
-/// Fenêtre principale de l'organiseur de présentations.
-/// Gère la liste des présentations avec toutes les opérations de manipulation.
+/// Fen�tre principale de l'organiseur de pr�sentations.
+/// G�re la liste des pr�sentations avec toutes les op�rations de manipulation.
 /// </summary>
 public partial class PrezOrganizerWindow : Window
 {
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // CHAMPS
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     private readonly Database _database;
     private readonly List<LayoutItem> _originalItems;
@@ -41,23 +46,23 @@ public partial class PrezOrganizerWindow : Window
     private bool _isDragging;
     private string _filterText = string.Empty;
 
-    // ═══════════════════════════════════════════════════════════
-    // PROPRIÉTÉS PUBLIQUES (accessibles par la commande)
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // PROPRI�T�S PUBLIQUES (accessibles par la commande)
+    // -----------------------------------------------------------
 
     /// <summary>
-    /// Liste des items dans leur état actuel (pour application par la commande).
+    /// Liste des items dans leur �tat actuel (pour application par la commande).
     /// </summary>
     public List<LayoutItem> Items => _items;
 
     /// <summary>
-    /// Indique si des modifications ont été faites.
+    /// Indique si des modifications ont �t� faites.
     /// </summary>
     public bool HasChanges => _items.Any(i => i.IsModified) || HasOrderChanges();
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // CONSTRUCTEUR
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     public PrezOrganizerWindow(List<LayoutItem> layouts, Database database)
     {
@@ -67,7 +72,7 @@ public partial class PrezOrganizerWindow : Window
         _originalItems = layouts.Select(l => l.Clone()).ToList();
         _items = layouts;
 
-        // Restaurer la taille/position de la fenêtre
+        // Restaurer la taille/position de la fen�tre
         WindowStateHelper.RestoreState(this, "prezorganizer", 780);
         Closing += (s, e) => WindowStateHelper.SaveState(this, "prezorganizer");
 
@@ -79,9 +84,9 @@ public partial class PrezOrganizerWindow : Window
         Loaded += (s, e) => SearchBox.Focus();
     }
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // TRADUCTIONS
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     private void ApplyTranslations()
     {
@@ -116,7 +121,7 @@ public partial class PrezOrganizerWindow : Window
         CaseLower.Header = T("prezorganizer.case.lower");
         CaseTitle.Header = T("prezorganizer.case.title");
 
-        // Détails
+        // D�tails
         DetailHeader.Text = T("prezorganizer.detail.header");
         OriginalNameLabel.Text = T("prezorganizer.detail.originalName");
         NewNameLabel.Text = T("prezorganizer.detail.newName");
@@ -124,7 +129,7 @@ public partial class PrezOrganizerWindow : Window
         PendingHeader.Text = T("prezorganizer.detail.pending");
 
         // Boutons principaux
-        BtnUndo.Content = $"↩ {T("prezorganizer.btn.undo")}";
+        BtnUndo.Content = $"? {T("prezorganizer.btn.undo")}";
         BtnUndo.ToolTip = T("prezorganizer.btn.undo.tooltip");
         BtnReset.Content = T("prezorganizer.btn.reset");
         BtnReset.ToolTip = T("prezorganizer.btn.reset.tooltip");
@@ -137,9 +142,9 @@ public partial class PrezOrganizerWindow : Window
         BtnSetCurrent.ToolTip = T("prezorganizer.btn.setCurrent.tooltip");
     }
 
-    // ═══════════════════════════════════════════════════════════
-    // RAFRAÎCHISSEMENT DE L'AFFICHAGE
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // RAFRA�CHISSEMENT DE L'AFFICHAGE
+    // -----------------------------------------------------------
 
     private void RefreshList()
     {
@@ -162,7 +167,7 @@ public partial class PrezOrganizerWindow : Window
             LayoutListBox.Items.Add(lbi);
         }
 
-        // Restaurer la sélection
+        // Restaurer la s�lection
         foreach (int idx in selectedIndices)
         {
             if (idx < LayoutListBox.Items.Count)
@@ -183,7 +188,7 @@ public partial class PrezOrganizerWindow : Window
         {
             sp.Children.Add(new TextBlock
             {
-                Text = "✖ ",
+                Text = "? ",
                 Foreground = new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36)),
                 FontWeight = FontWeights.Bold
             });
@@ -198,7 +203,7 @@ public partial class PrezOrganizerWindow : Window
         {
             sp.Children.Add(new TextBlock
             {
-                Text = "★ ",
+                Text = "? ",
                 Foreground = new SolidColorBrush(Color.FromRgb(0x21, 0x96, 0xF3)),
                 FontWeight = FontWeights.Bold
             });
@@ -208,7 +213,7 @@ public partial class PrezOrganizerWindow : Window
         {
             sp.Children.Add(new TextBlock
             {
-                Text = "✎ ",
+                Text = "? ",
                 Foreground = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)),
                 FontWeight = FontWeights.Bold
             });
@@ -265,7 +270,7 @@ public partial class PrezOrganizerWindow : Window
         bool hasSelection = LayoutListBox.SelectedItems.Count > 0;
         bool hasFilter = !string.IsNullOrEmpty(_filterText);
 
-        // Déplacement désactivé quand un filtre est actif (l'ordre affiché ≠ ordre réel)
+        // D�placement d�sactiv� quand un filtre est actif (l'ordre affich� ? ordre r�el)
         BtnMoveUp.IsEnabled = hasSelection && !hasFilter;
         BtnMoveDown.IsEnabled = hasSelection && !hasFilter;
         BtnMoveTop.IsEnabled = hasSelection && !hasFilter;
@@ -319,9 +324,9 @@ public partial class PrezOrganizerWindow : Window
         }
     }
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // UNDO / SNAPSHOT
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     private void PushUndo()
     {
@@ -336,9 +341,9 @@ public partial class PrezOrganizerWindow : Window
         RefreshList();
     }
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // UTILITAIRES
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     private List<int> GetSelectedIndices()
     {
@@ -366,7 +371,7 @@ public partial class PrezOrganizerWindow : Window
     }
 
     /// <summary>
-    /// Convertit les indices filtrés en indices réels dans _items.
+    /// Convertit les indices filtr�s en indices r�els dans _items.
     /// </summary>
     private List<int> GetRealIndices(List<int> displayIndices)
     {
@@ -425,16 +430,16 @@ public partial class PrezOrganizerWindow : Window
                 ((ListBoxItem)LayoutListBox.Items[idx]).IsSelected = true;
         }
 
-        // Scroll vers le premier sélectionné
+        // Scroll vers le premier s�lectionn�
         if (indices.Count > 0 && indices[0] < LayoutListBox.Items.Count)
             LayoutListBox.ScrollIntoView(LayoutListBox.Items[indices[0]]);
     }
 
     private static string T(string key, string? defaultValue = null) => L10n.T(key, defaultValue ?? key);
 
-    // ═══════════════════════════════════════════════════════════
-    // EVENT HANDLERS — DÉPLACEMENT
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // EVENT HANDLERS � D�PLACEMENT
+    // -----------------------------------------------------------
 
     private void BtnMoveTop_Click(object sender, RoutedEventArgs e)
     {
@@ -491,9 +496,9 @@ public partial class PrezOrganizerWindow : Window
 
     }
 
-    // ═══════════════════════════════════════════════════════════
-    // EVENT HANDLERS — TRI
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // EVENT HANDLERS � TRI
+    // -----------------------------------------------------------
 
     private void BtnSort_Click(object sender, RoutedEventArgs e)
     {
@@ -547,9 +552,9 @@ public partial class PrezOrganizerWindow : Window
 
     }
 
-    // ═══════════════════════════════════════════════════════════
-    // EVENT HANDLERS — ÉDITION
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // EVENT HANDLERS � �DITION
+    // -----------------------------------------------------------
 
     private void BtnRename_Click(object sender, RoutedEventArgs e)
     {
@@ -561,7 +566,7 @@ public partial class PrezOrganizerWindow : Window
         var item = GetFirstSelectedItem();
         if (item == null) return;
 
-        // Boîte de dialogue de renommage simple
+        // Bo�te de dialogue de renommage simple
         var inputDialog = new InputDialog(
             T("prezorganizer.rename.title"),
             T("prezorganizer.rename.label"),
@@ -601,7 +606,7 @@ public partial class PrezOrganizerWindow : Window
             var copy = new LayoutItem(copyName, isNew: false, copySource: item.IsNew || item.IsCopy ? null : item.OriginalName);
             if (item.IsNew || item.IsCopy)
             {
-                // Si l'original est déjà un nouvel item, marquer comme nouveau simple
+                // Si l'original est d�j� un nouvel item, marquer comme nouveau simple
                 copy = new LayoutItem(copyName, isNew: true);
             }
             int idx = _items.IndexOf(item);
@@ -645,7 +650,7 @@ public partial class PrezOrganizerWindow : Window
         var selectedItems = GetSelectedItems();
         if (selectedItems.Count == 0) return;
 
-        // Vérifier qu'on ne supprime pas tout
+        // V�rifier qu'on ne supprime pas tout
         int remaining = _items.Count(i => !i.IsMarkedForDeletion) - selectedItems.Count(i => !i.IsMarkedForDeletion);
         if (remaining < 1)
         {
@@ -668,7 +673,7 @@ public partial class PrezOrganizerWindow : Window
         {
             if (item.IsNew || item.IsCopy)
             {
-                // Les items non encore dans AutoCAD sont simplement retirés
+                // Les items non encore dans AutoCAD sont simplement retir�s
                 _items.Remove(item);
             }
             else
@@ -681,9 +686,9 @@ public partial class PrezOrganizerWindow : Window
 
     }
 
-    // ═══════════════════════════════════════════════════════════
-    // EVENT HANDLERS — TRANSFORMATIONS
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // EVENT HANDLERS � TRANSFORMATIONS
+    // -----------------------------------------------------------
 
     private void BtnFindReplace_Click(object sender, RoutedEventArgs e)
     {
@@ -692,7 +697,7 @@ public partial class PrezOrganizerWindow : Window
         if (result == true && dialog.ChangesMade > 0)
         {
             PushUndo();
-            // Les modifications ont été appliquées directement aux items par le dialog
+            // Les modifications ont �t� appliqu�es directement aux items par le dialog
             // On restaure depuis le dialog
             for (int i = 0; i < _items.Count; i++)
             {
@@ -711,7 +716,7 @@ public partial class PrezOrganizerWindow : Window
         if (result == true && dialog.HasChanges)
         {
             PushUndo();
-            // Les modifications ont été appliquées aux items via le dialogue
+            // Les modifications ont �t� appliqu�es aux items via le dialogue
             RefreshList();
         }
     }
@@ -741,7 +746,7 @@ public partial class PrezOrganizerWindow : Window
         var selectedItems = GetSelectedItems();
         if (selectedItems.Count == 0)
         {
-            // Si rien de sélectionné, appliquer à tout
+            // Si rien de s�lectionn�, appliquer � tout
             selectedItems = _items.Where(i => !i.IsMarkedForDeletion).ToList();
         }
 
@@ -751,9 +756,9 @@ public partial class PrezOrganizerWindow : Window
 
     }
 
-    // ═══════════════════════════════════════════════════════════
-    // EVENT HANDLERS — LISTE
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // EVENT HANDLERS � LISTE
+    // -----------------------------------------------------------
 
     private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
     {
@@ -771,7 +776,7 @@ public partial class PrezOrganizerWindow : Window
     {
         if (e.OriginalSource is FrameworkElement fe)
         {
-            // S'assurer qu'on a cliqué sur un item
+            // S'assurer qu'on a cliqu� sur un item
             var item = GetFirstSelectedItem();
             if (item != null && !item.IsMarkedForDeletion)
             {
@@ -780,9 +785,9 @@ public partial class PrezOrganizerWindow : Window
         }
     }
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // DRAG & DROP
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     private void LayoutListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -827,7 +832,7 @@ public partial class PrezOrganizerWindow : Window
 
         var droppedItem = (LayoutItem)e.Data.GetData("LayoutItem")!;
 
-        // Déterminer la position de drop
+        // D�terminer la position de drop
         Point dropPos = e.GetPosition(LayoutListBox);
         int targetIndex = -1;
 
@@ -859,9 +864,9 @@ public partial class PrezOrganizerWindow : Window
 
     }
 
-    // ═══════════════════════════════════════════════════════════
-    // EVENT HANDLERS — BOUTONS PRINCIPAUX
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // EVENT HANDLERS � BOUTONS PRINCIPAUX
+    // -----------------------------------------------------------
 
     private void BtnUndo_Click(object sender, RoutedEventArgs e)
     {

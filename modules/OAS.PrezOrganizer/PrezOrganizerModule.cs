@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using OpenAsphalte.Abstractions;
 using OpenAsphalte.Modules.PrezOrganizer.Commands;
@@ -15,25 +20,25 @@ using OpenAsphalte.Modules.PrezOrganizer.Commands;
 namespace OpenAsphalte.Modules.PrezOrganizer;
 
 /// <summary>
-/// Module organiseur de présentations pour Open Asphalte.
-/// Fournit une interface graphique complète pour gérer, trier, renommer
-/// et réorganiser les onglets de présentation d'un dessin AutoCAD.
+/// Module organiseur de pr�sentations pour Open Asphalte.
+/// Fournit une interface graphique compl�te pour g�rer, trier, renommer
+/// et r�organiser les onglets de pr�sentation d'un dessin AutoCAD.
 ///
-/// Fonctionnalités :
-/// - Réorganisation par boutons (monter, descendre, haut, bas) et drag &amp; drop
-/// - Tri alphabétique, numérique et architectural
+/// Fonctionnalit�s :
+/// - R�organisation par boutons (monter, descendre, haut, bas) et drag &amp; drop
+/// - Tri alphab�tique, num�rique et architectural
 /// - Renommage par double-clic, batch rename avec patterns ({N}, {ORIG}, {DATE})
-/// - Préfixe/Suffixe et changement de casse (UPPER, lower, Title)
+/// - Pr�fixe/Suffixe et changement de casse (UPPER, lower, Title)
 /// - Rechercher &amp; Remplacer dans les noms
-/// - Ajout, copie et suppression de présentations
-/// - Filtrage par nom et compteur de présentations
-/// - Mode batch avec Undo et mode immédiat au choix
+/// - Ajout, copie et suppression de pr�sentations
+/// - Filtrage par nom et compteur de pr�sentations
+/// - Mode batch avec Undo et mode imm�diat au choix
 /// </summary>
 public class PrezOrganizerModule : ModuleBase
 {
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // IDENTIFICATION DU MODULE
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Identifiant unique du module
@@ -41,15 +46,15 @@ public class PrezOrganizerModule : ModuleBase
     public override string Id => "prezorganizer";
 
     /// <summary>
-    /// Nom affiché dans l'UI
+    /// Nom affich� dans l'UI
     /// </summary>
-    public override string Name => "Classer les présentations";
+    public override string Name => "Classer les pr�sentations";
 
     /// <summary>
     /// Description du module
     /// </summary>
     public override string Description =>
-        "Organiseur avancé de présentations AutoCAD : tri, renommage, copie, batch rename et réorganisation complète des onglets";
+        "Organiseur avanc� de pr�sentations AutoCAD : tri, renommage, copie, batch rename et r�organisation compl�te des onglets";
 
     /// <summary>
     /// Contributeurs du module
@@ -70,9 +75,9 @@ public class PrezOrganizerModule : ModuleBase
     /// </summary>
     public override string Author => "Charles TILLY";
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // CONFIGURATION AFFICHAGE UI
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Ordre d'affichage dans le menu et le ruban
@@ -80,7 +85,7 @@ public class PrezOrganizerModule : ModuleBase
     public override int Order => 30;
 
     /// <summary>
-    /// Clé de traduction pour le nom du module
+    /// Cl� de traduction pour le nom du module
     /// </summary>
     public override string? NameKey => "prezorganizer.name";
 
@@ -89,24 +94,24 @@ public class PrezOrganizerModule : ModuleBase
     /// </summary>
     public override string MinCoreVersion => "0.0.3";
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // COMMANDES
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
-    /// Retourne la commande de l'organiseur de présentations.
+    /// Retourne la commande de l'organiseur de pr�sentations.
     /// </summary>
     public override IEnumerable<Type> GetCommandTypes()
     {
         return [typeof(PrezOrganizerCommand)];
     }
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // TRADUCTIONS (FR, EN, ES)
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
-    /// Retourne les traductions spécifiques au module dans les 3 langues.
+    /// Retourne les traductions sp�cifiques au module dans les 3 langues.
     /// </summary>
     public override IDictionary<string, IDictionary<string, string>> GetTranslations()
     {
@@ -115,39 +120,39 @@ public class PrezOrganizerModule : ModuleBase
             ["fr"] = new Dictionary<string, string>
             {
                 // Module
-                ["prezorganizer.name"] = "Présentations",
+                ["prezorganizer.name"] = "Pr�sentations",
 
                 // Menu
                 ["menu.mep"] = "Mise en page",
 
                 // Commande
-                ["prezorganizer.cmd.title"] = "Organiseur de présentations",
-                ["prezorganizer.cmd.desc"] = "Organiser, trier et renommer les onglets de présentation",
+                ["prezorganizer.cmd.title"] = "Organiseur de pr�sentations",
+                ["prezorganizer.cmd.desc"] = "Organiser, trier et renommer les onglets de pr�sentation",
 
-                // Fenêtre principale
-                ["prezorganizer.window.title"] = "Organiseur de présentations",
-                ["prezorganizer.window.header"] = "Organiseur de présentations",
-                ["prezorganizer.window.search"] = "  Filtrer les présentations...",
-                ["prezorganizer.window.immediate"] = "Appliquer immédiatement",
-                ["prezorganizer.window.immediate.tooltip"] = "Chaque modification est appliquée directement au dessin (sans prévisualisation)",
+                // Fen�tre principale
+                ["prezorganizer.window.title"] = "Organiseur de pr�sentations",
+                ["prezorganizer.window.header"] = "Organiseur de pr�sentations",
+                ["prezorganizer.window.search"] = "  Filtrer les pr�sentations...",
+                ["prezorganizer.window.immediate"] = "Appliquer imm�diatement",
+                ["prezorganizer.window.immediate.tooltip"] = "Chaque modification est appliqu�e directement au dessin (sans pr�visualisation)",
 
-                // Boutons de déplacement
+                // Boutons de d�placement
                 ["prezorganizer.btn.moveTop"] = "Tout en haut",
                 ["prezorganizer.btn.moveUp"] = "Monter",
                 ["prezorganizer.btn.moveDown"] = "Descendre",
                 ["prezorganizer.btn.moveBottom"] = "Tout en bas",
-                ["prezorganizer.btn.reverse"] = "Inverser la sélection",
+                ["prezorganizer.btn.reverse"] = "Inverser la s�lection",
 
                 // Boutons de tri
                 ["prezorganizer.btn.sort"] = "Trier...",
-                ["prezorganizer.sort.alpha"] = "Alphabétique (A→Z)",
-                ["prezorganizer.sort.alphaDesc"] = "Alphabétique (Z→A)",
-                ["prezorganizer.sort.num"] = "Numérique (1→9)",
-                ["prezorganizer.sort.numDesc"] = "Numérique (9→1)",
+                ["prezorganizer.sort.alpha"] = "Alphab�tique (A?Z)",
+                ["prezorganizer.sort.alphaDesc"] = "Alphab�tique (Z?A)",
+                ["prezorganizer.sort.num"] = "Num�rique (1?9)",
+                ["prezorganizer.sort.numDesc"] = "Num�rique (9?1)",
                 ["prezorganizer.sort.arch"] = "Architectural",
                 ["prezorganizer.sort.archDesc"] = "Architectural (inverse)",
 
-                // Boutons d'édition
+                // Boutons d'�dition
                 ["prezorganizer.btn.rename"] = "Renommer",
                 ["prezorganizer.btn.copy"] = "Copier",
                 ["prezorganizer.btn.add"] = "Ajouter",
@@ -161,42 +166,42 @@ public class PrezOrganizerModule : ModuleBase
                 // Casse
                 ["prezorganizer.case.upper"] = "MAJUSCULES",
                 ["prezorganizer.case.lower"] = "minuscules",
-                ["prezorganizer.case.title"] = "Première Lettre Majuscule",
+                ["prezorganizer.case.title"] = "Premi�re Lettre Majuscule",
 
-                // Panneau de détails
-                ["prezorganizer.detail.header"] = "Détails",
+                // Panneau de d�tails
+                ["prezorganizer.detail.header"] = "D�tails",
                 ["prezorganizer.detail.originalName"] = "Nom original :",
                 ["prezorganizer.detail.newName"] = "Nouveau nom :",
                 ["prezorganizer.detail.status"] = "Statut :",
-                ["prezorganizer.detail.status.unchanged"] = "Inchangé",
-                ["prezorganizer.detail.status.renamed"] = "Renommé",
+                ["prezorganizer.detail.status.unchanged"] = "Inchang�",
+                ["prezorganizer.detail.status.renamed"] = "Renomm�",
                 ["prezorganizer.detail.status.new"] = "Nouveau",
                 ["prezorganizer.detail.status.copy"] = "Copie",
-                ["prezorganizer.detail.status.deleted"] = "Supprimé",
+                ["prezorganizer.detail.status.deleted"] = "Supprim�",
                 ["prezorganizer.detail.pending"] = "Modifications en attente",
                 ["prezorganizer.detail.renames"] = "{0} renommage(s)",
-                ["prezorganizer.detail.moves"] = "{0} déplacement(s)",
+                ["prezorganizer.detail.moves"] = "{0} d�placement(s)",
                 ["prezorganizer.detail.additions"] = "{0} ajout(s)",
                 ["prezorganizer.detail.deletions"] = "{0} suppression(s)",
 
                 // Barre de statut
-                ["prezorganizer.status.count"] = "{0} présentation(s)",
+                ["prezorganizer.status.count"] = "{0} pr�sentation(s)",
                 ["prezorganizer.status.pending"] = "{0} modification(s) en attente",
                 ["prezorganizer.status.noPending"] = "Aucune modification",
                 ["prezorganizer.btn.setCurrent"] = "Activer",
-                ["prezorganizer.btn.setCurrent.tooltip"] = "Rendre cette présentation active dans AutoCAD",
+                ["prezorganizer.btn.setCurrent.tooltip"] = "Rendre cette pr�sentation active dans AutoCAD",
 
                 // Boutons principaux
                 ["prezorganizer.btn.undo"] = "Annuler",
-                ["prezorganizer.btn.undo.tooltip"] = "Annuler la dernière opération",
-                ["prezorganizer.btn.reset"] = "Réinitialiser",
-                ["prezorganizer.btn.reset.tooltip"] = "Remettre toutes les présentations à leur état initial",
+                ["prezorganizer.btn.undo.tooltip"] = "Annuler la derni�re op�ration",
+                ["prezorganizer.btn.reset"] = "R�initialiser",
+                ["prezorganizer.btn.reset.tooltip"] = "Remettre toutes les pr�sentations � leur �tat initial",
                 ["prezorganizer.btn.close"] = "Fermer",
                 ["prezorganizer.btn.apply"] = "Appliquer",
                 ["prezorganizer.btn.apply.tooltip"] = "Appliquer toutes les modifications au dessin",
 
                 // Dialogues
-                ["prezorganizer.rename.title"] = "Renommer la présentation",
+                ["prezorganizer.rename.title"] = "Renommer la pr�sentation",
                 ["prezorganizer.rename.label"] = "Nouveau nom :",
                 ["prezorganizer.rename.ok"] = "OK",
                 ["prezorganizer.rename.cancel"] = "Annuler",
@@ -204,15 +209,15 @@ public class PrezOrganizerModule : ModuleBase
                 // Batch Rename
                 ["prezorganizer.batch.title"] = "Renommage par lot",
                 ["prezorganizer.batch.pattern"] = "Pattern :",
-                ["prezorganizer.batch.pattern.tooltip"] = "Variables : {N} numéro, {N:00} formaté, {ORIG} nom actuel, {DATE} date",
-                ["prezorganizer.batch.startNum"] = "Numéro de départ :",
-                ["prezorganizer.batch.increment"] = "Incrément :",
-                ["prezorganizer.batch.scope"] = "Appliquer à :",
-                ["prezorganizer.batch.scope.selected"] = "Sélection uniquement",
-                ["prezorganizer.batch.scope.all"] = "Toutes les présentations",
-                ["prezorganizer.batch.preview"] = "Prévisualisation",
+                ["prezorganizer.batch.pattern.tooltip"] = "Variables : {N} num�ro, {N:00} format�, {ORIG} nom actuel, {DATE} date",
+                ["prezorganizer.batch.startNum"] = "Num�ro de d�part :",
+                ["prezorganizer.batch.increment"] = "Incr�ment :",
+                ["prezorganizer.batch.scope"] = "Appliquer � :",
+                ["prezorganizer.batch.scope.selected"] = "S�lection uniquement",
+                ["prezorganizer.batch.scope.all"] = "Toutes les pr�sentations",
+                ["prezorganizer.batch.preview"] = "Pr�visualisation",
                 ["prezorganizer.batch.previewCol.before"] = "Avant",
-                ["prezorganizer.batch.previewCol.after"] = "Après",
+                ["prezorganizer.batch.previewCol.after"] = "Apr�s",
                 ["prezorganizer.batch.apply"] = "Appliquer",
                 ["prezorganizer.batch.cancel"] = "Annuler",
 
@@ -221,63 +226,63 @@ public class PrezOrganizerModule : ModuleBase
                 ["prezorganizer.findrepl.search"] = "Rechercher :",
                 ["prezorganizer.findrepl.replace"] = "Remplacer par :",
                 ["prezorganizer.findrepl.caseSensitive"] = "Respecter la casse",
-                ["prezorganizer.findrepl.preview"] = "Prévisualisation",
+                ["prezorganizer.findrepl.preview"] = "Pr�visualisation",
                 ["prezorganizer.findrepl.previewCol.before"] = "Avant",
-                ["prezorganizer.findrepl.previewCol.after"] = "Après",
+                ["prezorganizer.findrepl.previewCol.after"] = "Apr�s",
                 ["prezorganizer.findrepl.replaceAll"] = "Remplacer tout",
                 ["prezorganizer.findrepl.cancel"] = "Annuler",
-                ["prezorganizer.findrepl.noMatch"] = "Aucune correspondance trouvée",
+                ["prezorganizer.findrepl.noMatch"] = "Aucune correspondance trouv�e",
                 ["prezorganizer.findrepl.matches"] = "{0} correspondance(s)",
 
                 // Prefix / Suffix
-                ["prezorganizer.prefix.title"] = "Préfixe / Suffixe",
-                ["prezorganizer.prefix.prefix"] = "Préfixe :",
+                ["prezorganizer.prefix.title"] = "Pr�fixe / Suffixe",
+                ["prezorganizer.prefix.prefix"] = "Pr�fixe :",
                 ["prezorganizer.prefix.suffix"] = "Suffixe :",
-                ["prezorganizer.prefix.scope"] = "Appliquer à :",
-                ["prezorganizer.prefix.scope.selected"] = "Sélection uniquement",
-                ["prezorganizer.prefix.scope.all"] = "Toutes les présentations",
-                ["prezorganizer.prefix.preview"] = "Prévisualisation",
+                ["prezorganizer.prefix.scope"] = "Appliquer � :",
+                ["prezorganizer.prefix.scope.selected"] = "S�lection uniquement",
+                ["prezorganizer.prefix.scope.all"] = "Toutes les pr�sentations",
+                ["prezorganizer.prefix.preview"] = "Pr�visualisation",
                 ["prezorganizer.prefix.previewCol.before"] = "Avant",
-                ["prezorganizer.prefix.previewCol.after"] = "Après",
+                ["prezorganizer.prefix.previewCol.after"] = "Apr�s",
                 ["prezorganizer.prefix.apply"] = "Appliquer",
                 ["prezorganizer.prefix.cancel"] = "Annuler",
 
-                // Outil de renommage (fusionné)
+                // Outil de renommage (fusionn�)
                 ["prezorganizer.renameTool.title"] = "Outil de renommage",
                 ["prezorganizer.renameTool.mode"] = "Mode de renommage :",
-                ["prezorganizer.renameTool.mode.prefixSuffix"] = "Préfixe / Suffixe",
+                ["prezorganizer.renameTool.mode.prefixSuffix"] = "Pr�fixe / Suffixe",
                 ["prezorganizer.renameTool.mode.pattern"] = "Pattern avec variables",
-                ["prezorganizer.renameTool.prefix"] = "Préfixe :",
+                ["prezorganizer.renameTool.prefix"] = "Pr�fixe :",
                 ["prezorganizer.renameTool.suffix"] = "Suffixe :",
                 ["prezorganizer.renameTool.pattern"] = "Pattern :",
-                ["prezorganizer.renameTool.pattern.help"] = "Variables : {N} numéro, {N:00} formaté, {ORIG} nom actuel, {DATE} date",
-                ["prezorganizer.renameTool.startNum"] = "Numéro de départ :",
-                ["prezorganizer.renameTool.increment"] = "Incrément :",
-                ["prezorganizer.renameTool.scope"] = "Appliquer à :",
-                ["prezorganizer.renameTool.scope.selected"] = "Sélection uniquement",
-                ["prezorganizer.renameTool.scope.all"] = "Toutes les présentations",
-                ["prezorganizer.renameTool.preview"] = "Prévisualisation",
+                ["prezorganizer.renameTool.pattern.help"] = "Variables : {N} num�ro, {N:00} format�, {ORIG} nom actuel, {DATE} date",
+                ["prezorganizer.renameTool.startNum"] = "Num�ro de d�part :",
+                ["prezorganizer.renameTool.increment"] = "Incr�ment :",
+                ["prezorganizer.renameTool.scope"] = "Appliquer � :",
+                ["prezorganizer.renameTool.scope.selected"] = "S�lection uniquement",
+                ["prezorganizer.renameTool.scope.all"] = "Toutes les pr�sentations",
+                ["prezorganizer.renameTool.preview"] = "Pr�visualisation",
                 ["prezorganizer.renameTool.preview.before"] = "Avant",
-                ["prezorganizer.renameTool.preview.after"] = "Après",
+                ["prezorganizer.renameTool.preview.after"] = "Apr�s",
                 ["prezorganizer.renameTool.apply"] = "Appliquer",
                 ["prezorganizer.renameTool.cancel"] = "Annuler",
-                ["prezorganizer.renameTool.error.invalid"] = "Nom de présentation invalide",
+                ["prezorganizer.renameTool.error.invalid"] = "Nom de pr�sentation invalide",
 
                 // Messages
-                ["prezorganizer.success"] = "Modifications appliquées avec succès",
-                ["prezorganizer.success.count"] = "{0} modification(s) appliquée(s)",
-                ["prezorganizer.cancelled"] = "Organiseur fermé sans modification",
-                ["prezorganizer.confirm.delete"] = "Supprimer {0} présentation(s) ?",
-                ["prezorganizer.confirm.reset"] = "Réinitialiser toutes les modifications ?",
-                ["prezorganizer.confirm.deleteAll"] = "Impossible de supprimer toutes les présentations.\nIl doit rester au moins une présentation.",
+                ["prezorganizer.success"] = "Modifications appliqu�es avec succ�s",
+                ["prezorganizer.success.count"] = "{0} modification(s) appliqu�e(s)",
+                ["prezorganizer.cancelled"] = "Organiseur ferm� sans modification",
+                ["prezorganizer.confirm.delete"] = "Supprimer {0} pr�sentation(s) ?",
+                ["prezorganizer.confirm.reset"] = "R�initialiser toutes les modifications ?",
+                ["prezorganizer.confirm.deleteAll"] = "Impossible de supprimer toutes les pr�sentations.\nIl doit rester au moins une pr�sentation.",
 
                 // Erreurs
-                ["prezorganizer.error.emptyName"] = "Le nom ne peut pas être vide",
-                ["prezorganizer.error.nameTooLong"] = "Le nom ne peut pas dépasser 255 caractères",
-                ["prezorganizer.error.reservedName"] = "\"Model\" est un nom réservé",
-                ["prezorganizer.error.invalidChars"] = "Le nom contient des caractères interdits (< > / \\ \" : ; ? * | , = `)",
-                ["prezorganizer.error.duplicateName"] = "Ce nom est déjà utilisé",
-                ["prezorganizer.error.noSelection"] = "Aucune présentation sélectionnée",
+                ["prezorganizer.error.emptyName"] = "Le nom ne peut pas �tre vide",
+                ["prezorganizer.error.nameTooLong"] = "Le nom ne peut pas d�passer 255 caract�res",
+                ["prezorganizer.error.reservedName"] = "\"Model\" est un nom r�serv�",
+                ["prezorganizer.error.invalidChars"] = "Le nom contient des caract�res interdits (< > / \\ \" : ; ? * | , = `)",
+                ["prezorganizer.error.duplicateName"] = "Ce nom est d�j� utilis�",
+                ["prezorganizer.error.noSelection"] = "Aucune pr�sentation s�lectionn�e",
                 ["prezorganizer.error.applyFailed"] = "Erreur lors de l'application des modifications",
             },
 
@@ -309,10 +314,10 @@ public class PrezOrganizerModule : ModuleBase
 
                 // Sort buttons
                 ["prezorganizer.btn.sort"] = "Sort...",
-                ["prezorganizer.sort.alpha"] = "Alphabetical (A→Z)",
-                ["prezorganizer.sort.alphaDesc"] = "Alphabetical (Z→A)",
-                ["prezorganizer.sort.num"] = "Numerical (1→9)",
-                ["prezorganizer.sort.numDesc"] = "Numerical (9→1)",
+                ["prezorganizer.sort.alpha"] = "Alphabetical (A?Z)",
+                ["prezorganizer.sort.alphaDesc"] = "Alphabetical (Z?A)",
+                ["prezorganizer.sort.num"] = "Numerical (1?9)",
+                ["prezorganizer.sort.numDesc"] = "Numerical (9?1)",
                 ["prezorganizer.sort.arch"] = "Architectural",
                 ["prezorganizer.sort.archDesc"] = "Architectural (reverse)",
 
@@ -452,15 +457,15 @@ public class PrezOrganizerModule : ModuleBase
 
             ["es"] = new Dictionary<string, string>
             {
-                // Módulo
+                // M�dulo
                 ["prezorganizer.name"] = "Presentaciones",
 
-                // Menú
-                ["menu.mep"] = "Configuración de página",
+                // Men�
+                ["menu.mep"] = "Configuraci�n de p�gina",
 
                 // Comando
                 ["prezorganizer.cmd.title"] = "Organizador de presentaciones",
-                ["prezorganizer.cmd.desc"] = "Organizar, ordenar y renombrar las pestañas de presentación",
+                ["prezorganizer.cmd.desc"] = "Organizar, ordenar y renombrar las pesta�as de presentaci�n",
 
                 // Ventana principal
                 ["prezorganizer.window.title"] = "Organizador de presentaciones",
@@ -474,32 +479,32 @@ public class PrezOrganizerModule : ModuleBase
                 ["prezorganizer.btn.moveUp"] = "Subir",
                 ["prezorganizer.btn.moveDown"] = "Bajar",
                 ["prezorganizer.btn.moveBottom"] = "Mover abajo del todo",
-                ["prezorganizer.btn.reverse"] = "Invertir selección",
+                ["prezorganizer.btn.reverse"] = "Invertir selecci�n",
 
                 // Botones de ordenar
                 ["prezorganizer.btn.sort"] = "Ordenar...",
-                ["prezorganizer.sort.alpha"] = "Alfabético (A→Z)",
-                ["prezorganizer.sort.alphaDesc"] = "Alfabético (Z→A)",
-                ["prezorganizer.sort.num"] = "Numérico (1→9)",
-                ["prezorganizer.sort.numDesc"] = "Numérico (9→1)",
-                ["prezorganizer.sort.arch"] = "Arquitectónico",
-                ["prezorganizer.sort.archDesc"] = "Arquitectónico (inverso)",
+                ["prezorganizer.sort.alpha"] = "Alfab�tico (A?Z)",
+                ["prezorganizer.sort.alphaDesc"] = "Alfab�tico (Z?A)",
+                ["prezorganizer.sort.num"] = "Num�rico (1?9)",
+                ["prezorganizer.sort.numDesc"] = "Num�rico (9?1)",
+                ["prezorganizer.sort.arch"] = "Arquitect�nico",
+                ["prezorganizer.sort.archDesc"] = "Arquitect�nico (inverso)",
 
-                // Botones de edición
+                // Botones de edici�n
                 ["prezorganizer.btn.rename"] = "Renombrar",
                 ["prezorganizer.btn.copy"] = "Copiar",
-                ["prezorganizer.btn.add"] = "Añadir",
+                ["prezorganizer.btn.add"] = "A�adir",
                 ["prezorganizer.btn.delete"] = "Eliminar",
 
-                // Botones de transformación
+                // Botones de transformaci�n
                 ["prezorganizer.btn.findReplace"] = "Buscar / Reemplazar",
                 ["prezorganizer.btn.renameTool"] = "Herramienta de renombrado",
-                ["prezorganizer.btn.case"] = "Cambiar mayúsculas",
+                ["prezorganizer.btn.case"] = "Cambiar may�sculas",
 
-                // Mayúsculas/minúsculas
-                ["prezorganizer.case.upper"] = "MAYÚSCULAS",
-                ["prezorganizer.case.lower"] = "minúsculas",
-                ["prezorganizer.case.title"] = "Primera Letra Mayúscula",
+                // May�sculas/min�sculas
+                ["prezorganizer.case.upper"] = "MAY�SCULAS",
+                ["prezorganizer.case.lower"] = "min�sculas",
+                ["prezorganizer.case.title"] = "Primera Letra May�scula",
 
                 // Panel de detalles
                 ["prezorganizer.detail.header"] = "Detalles",
@@ -514,43 +519,43 @@ public class PrezOrganizerModule : ModuleBase
                 ["prezorganizer.detail.pending"] = "Cambios pendientes",
                 ["prezorganizer.detail.renames"] = "{0} renombrado(s)",
                 ["prezorganizer.detail.moves"] = "{0} desplazamiento(s)",
-                ["prezorganizer.detail.additions"] = "{0} adición(es)",
-                ["prezorganizer.detail.deletions"] = "{0} eliminación(es)",
+                ["prezorganizer.detail.additions"] = "{0} adici�n(es)",
+                ["prezorganizer.detail.deletions"] = "{0} eliminaci�n(es)",
 
                 // Barra de estado
-                ["prezorganizer.status.count"] = "{0} presentación(es)",
+                ["prezorganizer.status.count"] = "{0} presentaci�n(es)",
                 ["prezorganizer.status.pending"] = "{0} cambio(s) pendiente(s)",
                 ["prezorganizer.status.noPending"] = "Sin cambios",
                 ["prezorganizer.btn.setCurrent"] = "Activar",
-                ["prezorganizer.btn.setCurrent.tooltip"] = "Hacer esta presentación activa en AutoCAD",
+                ["prezorganizer.btn.setCurrent.tooltip"] = "Hacer esta presentaci�n activa en AutoCAD",
 
                 // Botones principales
                 ["prezorganizer.btn.undo"] = "Deshacer",
-                ["prezorganizer.btn.undo.tooltip"] = "Deshacer la última operación",
+                ["prezorganizer.btn.undo.tooltip"] = "Deshacer la �ltima operaci�n",
                 ["prezorganizer.btn.reset"] = "Restablecer",
                 ["prezorganizer.btn.reset.tooltip"] = "Restablecer todas las presentaciones a su estado inicial",
                 ["prezorganizer.btn.close"] = "Cerrar",
                 ["prezorganizer.btn.apply"] = "Aplicar",
                 ["prezorganizer.btn.apply.tooltip"] = "Aplicar todos los cambios al dibujo",
 
-                // Diálogos
-                ["prezorganizer.rename.title"] = "Renombrar presentación",
+                // Di�logos
+                ["prezorganizer.rename.title"] = "Renombrar presentaci�n",
                 ["prezorganizer.rename.label"] = "Nuevo nombre:",
                 ["prezorganizer.rename.ok"] = "Aceptar",
                 ["prezorganizer.rename.cancel"] = "Cancelar",
 
                 // Renombrado por lotes
                 ["prezorganizer.batch.title"] = "Renombrado por lotes",
-                ["prezorganizer.batch.pattern"] = "Patrón:",
-                ["prezorganizer.batch.pattern.tooltip"] = "Variables: {N} número, {N:00} formateado, {ORIG} nombre actual, {DATE} fecha",
-                ["prezorganizer.batch.startNum"] = "Número inicial:",
+                ["prezorganizer.batch.pattern"] = "Patr�n:",
+                ["prezorganizer.batch.pattern.tooltip"] = "Variables: {N} n�mero, {N:00} formateado, {ORIG} nombre actual, {DATE} fecha",
+                ["prezorganizer.batch.startNum"] = "N�mero inicial:",
                 ["prezorganizer.batch.increment"] = "Incremento:",
                 ["prezorganizer.batch.scope"] = "Aplicar a:",
-                ["prezorganizer.batch.scope.selected"] = "Solo selección",
+                ["prezorganizer.batch.scope.selected"] = "Solo selecci�n",
                 ["prezorganizer.batch.scope.all"] = "Todas las presentaciones",
                 ["prezorganizer.batch.preview"] = "Vista previa",
                 ["prezorganizer.batch.previewCol.before"] = "Antes",
-                ["prezorganizer.batch.previewCol.after"] = "Después",
+                ["prezorganizer.batch.previewCol.after"] = "Despu�s",
                 ["prezorganizer.batch.apply"] = "Aplicar",
                 ["prezorganizer.batch.cancel"] = "Cancelar",
 
@@ -558,10 +563,10 @@ public class PrezOrganizerModule : ModuleBase
                 ["prezorganizer.findrepl.title"] = "Buscar y Reemplazar",
                 ["prezorganizer.findrepl.search"] = "Buscar:",
                 ["prezorganizer.findrepl.replace"] = "Reemplazar con:",
-                ["prezorganizer.findrepl.caseSensitive"] = "Coincidir mayúsculas",
+                ["prezorganizer.findrepl.caseSensitive"] = "Coincidir may�sculas",
                 ["prezorganizer.findrepl.preview"] = "Vista previa",
                 ["prezorganizer.findrepl.previewCol.before"] = "Antes",
-                ["prezorganizer.findrepl.previewCol.after"] = "Después",
+                ["prezorganizer.findrepl.previewCol.after"] = "Despu�s",
                 ["prezorganizer.findrepl.replaceAll"] = "Reemplazar todo",
                 ["prezorganizer.findrepl.cancel"] = "Cancelar",
                 ["prezorganizer.findrepl.noMatch"] = "No se encontraron coincidencias",
@@ -572,11 +577,11 @@ public class PrezOrganizerModule : ModuleBase
                 ["prezorganizer.prefix.prefix"] = "Prefijo:",
                 ["prezorganizer.prefix.suffix"] = "Sufijo:",
                 ["prezorganizer.prefix.scope"] = "Aplicar a:",
-                ["prezorganizer.prefix.scope.selected"] = "Solo selección",
+                ["prezorganizer.prefix.scope.selected"] = "Solo selecci�n",
                 ["prezorganizer.prefix.scope.all"] = "Todas las presentaciones",
                 ["prezorganizer.prefix.preview"] = "Vista previa",
                 ["prezorganizer.prefix.previewCol.before"] = "Antes",
-                ["prezorganizer.prefix.previewCol.after"] = "Después",
+                ["prezorganizer.prefix.previewCol.after"] = "Despu�s",
                 ["prezorganizer.prefix.apply"] = "Aplicar",
                 ["prezorganizer.prefix.cancel"] = "Cancelar",
 
@@ -584,38 +589,38 @@ public class PrezOrganizerModule : ModuleBase
                 ["prezorganizer.renameTool.title"] = "Herramienta de renombrado",
                 ["prezorganizer.renameTool.mode"] = "Modo de renombrado:",
                 ["prezorganizer.renameTool.mode.prefixSuffix"] = "Prefijo / Sufijo",
-                ["prezorganizer.renameTool.mode.pattern"] = "Patrón con variables",
+                ["prezorganizer.renameTool.mode.pattern"] = "Patr�n con variables",
                 ["prezorganizer.renameTool.prefix"] = "Prefijo:",
                 ["prezorganizer.renameTool.suffix"] = "Sufijo:",
-                ["prezorganizer.renameTool.pattern"] = "Patrón:",
-                ["prezorganizer.renameTool.pattern.help"] = "Variables: {N} número, {N:00} formateado, {ORIG} nombre actual, {DATE} fecha",
-                ["prezorganizer.renameTool.startNum"] = "Número inicial:",
+                ["prezorganizer.renameTool.pattern"] = "Patr�n:",
+                ["prezorganizer.renameTool.pattern.help"] = "Variables: {N} n�mero, {N:00} formateado, {ORIG} nombre actual, {DATE} fecha",
+                ["prezorganizer.renameTool.startNum"] = "N�mero inicial:",
                 ["prezorganizer.renameTool.increment"] = "Incremento:",
                 ["prezorganizer.renameTool.scope"] = "Aplicar a:",
-                ["prezorganizer.renameTool.scope.selected"] = "Solo selección",
+                ["prezorganizer.renameTool.scope.selected"] = "Solo selecci�n",
                 ["prezorganizer.renameTool.scope.all"] = "Todas las presentaciones",
                 ["prezorganizer.renameTool.preview"] = "Vista previa",
                 ["prezorganizer.renameTool.preview.before"] = "Antes",
-                ["prezorganizer.renameTool.preview.after"] = "Después",
+                ["prezorganizer.renameTool.preview.after"] = "Despu�s",
                 ["prezorganizer.renameTool.apply"] = "Aplicar",
                 ["prezorganizer.renameTool.cancel"] = "Cancelar",
-                ["prezorganizer.renameTool.error.invalid"] = "Nombre de presentación no válido",
+                ["prezorganizer.renameTool.error.invalid"] = "Nombre de presentaci�n no v�lido",
 
                 // Mensajes
-                ["prezorganizer.success"] = "Cambios aplicados con éxito",
+                ["prezorganizer.success"] = "Cambios aplicados con �xito",
                 ["prezorganizer.success.count"] = "{0} cambio(s) aplicado(s)",
                 ["prezorganizer.cancelled"] = "Organizador cerrado sin cambios",
-                ["prezorganizer.confirm.delete"] = "¿Eliminar {0} presentación(es)?",
-                ["prezorganizer.confirm.reset"] = "¿Restablecer todos los cambios?",
-                ["prezorganizer.confirm.deleteAll"] = "No se pueden eliminar todas las presentaciones.\nDebe quedar al menos una presentación.",
+                ["prezorganizer.confirm.delete"] = "�Eliminar {0} presentaci�n(es)?",
+                ["prezorganizer.confirm.reset"] = "�Restablecer todos los cambios?",
+                ["prezorganizer.confirm.deleteAll"] = "No se pueden eliminar todas las presentaciones.\nDebe quedar al menos una presentaci�n.",
 
                 // Errores
-                ["prezorganizer.error.emptyName"] = "El nombre no puede estar vacío",
+                ["prezorganizer.error.emptyName"] = "El nombre no puede estar vac�o",
                 ["prezorganizer.error.nameTooLong"] = "El nombre no puede superar los 255 caracteres",
                 ["prezorganizer.error.reservedName"] = "\"Model\" es un nombre reservado",
-                ["prezorganizer.error.invalidChars"] = "El nombre contiene caracteres no válidos (< > / \\ \" : ; ? * | , = `)",
-                ["prezorganizer.error.duplicateName"] = "Este nombre ya está en uso",
-                ["prezorganizer.error.noSelection"] = "No hay presentación seleccionada",
+                ["prezorganizer.error.invalidChars"] = "El nombre contiene caracteres no v�lidos (< > / \\ \" : ; ? * | , = `)",
+                ["prezorganizer.error.duplicateName"] = "Este nombre ya est� en uso",
+                ["prezorganizer.error.noSelection"] = "No hay presentaci�n seleccionada",
                 ["prezorganizer.error.applyFailed"] = "Error al aplicar los cambios",
             },
         };

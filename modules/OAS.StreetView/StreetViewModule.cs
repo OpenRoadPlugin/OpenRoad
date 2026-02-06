@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using OpenAsphalte.Abstractions;
 using OpenAsphalte.Modules.StreetView.Commands;
@@ -16,19 +21,19 @@ namespace OpenAsphalte.Modules.StreetView;
 
 /// <summary>
 /// Module Street View pour Open Asphalte.
-/// Permet d'ouvrir Google Street View depuis un point sélectionné dans un dessin géoréférencé.
+/// Permet d'ouvrir Google Street View depuis un point s�lectionn� dans un dessin g�or�f�renc�.
 /// </summary>
 /// <remarks>
-/// Ce module DÉPEND du module "setprojection" (Géoréférencement) pour :
-/// - Récupérer le système de coordonnées actuel du dessin
-/// - Convertir les coordonnées projetées vers WGS84 (latitude/longitude)
-/// - Accéder à la fenêtre de définition de projection si nécessaire
+/// Ce module D�PEND du module "setprojection" (G�or�f�rencement) pour :
+/// - R�cup�rer le syst�me de coordonn�es actuel du dessin
+/// - Convertir les coordonn�es projet�es vers WGS84 (latitude/longitude)
+/// - Acc�der � la fen�tre de d�finition de projection si n�cessaire
 /// </remarks>
 public class StreetViewModule : ModuleBase
 {
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // IDENTIFICATION DU MODULE
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Identifiant unique du module
@@ -36,14 +41,14 @@ public class StreetViewModule : ModuleBase
     public override string Id => "streetview";
 
     /// <summary>
-    /// Nom affiché dans les menus et rubans
+    /// Nom affich� dans les menus et rubans
     /// </summary>
     public override string Name => "Street View";
 
     /// <summary>
     /// Description du module
     /// </summary>
-    public override string Description => "Ouvrir Google Street View depuis un dessin géoréférencé";
+    public override string Description => "Ouvrir Google Street View depuis un dessin g�or�f�renc�";
 
     /// <summary>
     /// Contributeurs du module
@@ -64,31 +69,31 @@ public class StreetViewModule : ModuleBase
     /// </summary>
     public override string Author => "Charles TILLY";
 
-    // ═══════════════════════════════════════════════════════════
-    // DÉPENDANCES
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // D�PENDANCES
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Liste des modules requis pour le fonctionnement
     /// </summary>
     /// <remarks>
-    /// Le module "setprojection" est OBLIGATOIRE car Street View nécessite :
-    /// - Un dessin géoréférencé (système de coordonnées défini)
-    /// - Les services de conversion de coordonnées
+    /// Le module "setprojection" est OBLIGATOIRE car Street View n�cessite :
+    /// - Un dessin g�or�f�renc� (syst�me de coordonn�es d�fini)
+    /// - Les services de conversion de coordonn�es
     /// </remarks>
     public override IReadOnlyList<string> Dependencies => ["setprojection"];
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // AFFICHAGE UI
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Ordre d'affichage (modules officiels entre 10-50)
     /// </summary>
-    public override int Order => 11;  // Juste après Géoréférencement (10)
+    public override int Order => 11;  // Juste apr�s G�or�f�rencement (10)
 
     /// <summary>
-    /// Clé de traduction pour le nom
+    /// Cl� de traduction pour le nom
     /// </summary>
     public override string? NameKey => "streetview.name";
 
@@ -97,9 +102,9 @@ public class StreetViewModule : ModuleBase
     /// </summary>
     public override string MinCoreVersion => "0.0.1";
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // COMMANDES
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Retourne tous les types contenant des commandes [CommandMethod]
@@ -109,20 +114,20 @@ public class StreetViewModule : ModuleBase
         return [typeof(StreetViewCommand)];
     }
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // TRADUCTIONS (FR, EN, ES)
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
-    /// Retourne les traductions spécifiques au module
+    /// Retourne les traductions sp�cifiques au module
     /// </summary>
     public override IDictionary<string, IDictionary<string, string>> GetTranslations()
     {
         return new Dictionary<string, IDictionary<string, string>>
         {
-            // ═══════════════════════════════════════════════════════
-            // FRANÇAIS
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
+            // FRAN�AIS
+            // -------------------------------------------------------
             ["fr"] = new Dictionary<string, string>
             {
                 // Module
@@ -135,39 +140,39 @@ public class StreetViewModule : ModuleBase
                 // Menus
                 ["menu.carto"] = "Cartographie",
 
-                // Messages de sélection
-                ["streetview.select.point"] = "Sélectionnez le point de vue (position de l'observateur)",
-                ["streetview.select.direction"] = "Sélectionnez un point pour la direction du regard",
+                // Messages de s�lection
+                ["streetview.select.point"] = "S�lectionnez le point de vue (position de l'observateur)",
+                ["streetview.select.direction"] = "S�lectionnez un point pour la direction du regard",
 
-                // Messages d'état
-                ["streetview.converting"] = "Conversion des coordonnées vers WGS84...",
+                // Messages d'�tat
+                ["streetview.converting"] = "Conversion des coordonn�es vers WGS84...",
                 ["streetview.opening"] = "Ouverture de Google Street View...",
                 ["streetview.success"] = "Street View ouvert dans le navigateur",
 
                 // Messages d'erreur
-                ["streetview.error.noprojection"] = "Aucun système de coordonnées défini dans le dessin",
-                ["streetview.error.noprojection.detail"] = "Veuillez définir une projection avec la commande OAS_GEOREF_SETPROJECTION",
-                ["streetview.error.conversion"] = "Impossible de convertir les coordonnées vers WGS84",
+                ["streetview.error.noprojection"] = "Aucun syst�me de coordonn�es d�fini dans le dessin",
+                ["streetview.error.noprojection.detail"] = "Veuillez d�finir une projection avec la commande OAS_GEOREF_SETPROJECTION",
+                ["streetview.error.conversion"] = "Impossible de convertir les coordonn�es vers WGS84",
                 ["streetview.error.browser"] = "Impossible d'ouvrir le navigateur",
                 ["streetview.error.unknownprojection"] = "Projection '{0}' non reconnue pour la conversion",
 
-                // Coordonnées
-                ["streetview.coords.local"] = "Coordonnées locales: X={0:F2}, Y={1:F2}",
-                ["streetview.coords.wgs84"] = "Coordonnées WGS84: Lat={0:F6}°, Lon={1:F6}°",
-                ["streetview.heading"] = "Direction: {0:F1}°",
+                // Coordonn�es
+                ["streetview.coords.local"] = "Coordonn�es locales: X={0:F2}, Y={1:F2}",
+                ["streetview.coords.wgs84"] = "Coordonn�es WGS84: Lat={0:F6}�, Lon={1:F6}�",
+                ["streetview.heading"] = "Direction: {0:F1}�",
 
-                // Question pour définir projection
-                ["streetview.askprojection"] = "Voulez-vous définir une projection maintenant ?",
-                ["streetview.projection.applied"] = "Projection {0} appliquée",
+                // Question pour d�finir projection
+                ["streetview.askprojection"] = "Voulez-vous d�finir une projection maintenant ?",
+                ["streetview.projection.applied"] = "Projection {0} appliqu�e",
                 ["streetview.projection.error"] = "Impossible d'appliquer la projection",
-                ["streetview.projection.windowerror"] = "Erreur ouverture fenêtre projection",
+                ["streetview.projection.windowerror"] = "Erreur ouverture fen�tre projection",
                 ["common.yes"] = "Oui",
                 ["common.no"] = "Non",
             },
 
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
             // ANGLAIS
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
             ["en"] = new Dictionary<string, string>
             {
                 // Module
@@ -180,11 +185,11 @@ public class StreetViewModule : ModuleBase
                 // Menus
                 ["menu.carto"] = "Mapping",
 
-                // Messages de sélection
+                // Messages de s�lection
                 ["streetview.select.point"] = "Select viewpoint (observer position)",
                 ["streetview.select.direction"] = "Select a point for viewing direction",
 
-                // Messages d'état
+                // Messages d'�tat
                 ["streetview.converting"] = "Converting coordinates to WGS84...",
                 ["streetview.opening"] = "Opening Google Street View...",
                 ["streetview.success"] = "Street View opened in browser",
@@ -196,12 +201,12 @@ public class StreetViewModule : ModuleBase
                 ["streetview.error.browser"] = "Unable to open browser",
                 ["streetview.error.unknownprojection"] = "Projection '{0}' not recognized for conversion",
 
-                // Coordonnées
+                // Coordonn�es
                 ["streetview.coords.local"] = "Local coordinates: X={0:F2}, Y={1:F2}",
-                ["streetview.coords.wgs84"] = "WGS84 coordinates: Lat={0:F6}°, Lon={1:F6}°",
-                ["streetview.heading"] = "Heading: {0:F1}°",
+                ["streetview.coords.wgs84"] = "WGS84 coordinates: Lat={0:F6}�, Lon={1:F6}�",
+                ["streetview.heading"] = "Heading: {0:F1}�",
 
-                // Question pour définir projection
+                // Question pour d�finir projection
                 ["streetview.askprojection"] = "Do you want to define a projection now?",
                 ["streetview.projection.applied"] = "Projection {0} applied",
                 ["streetview.projection.error"] = "Unable to apply projection",
@@ -210,9 +215,9 @@ public class StreetViewModule : ModuleBase
                 ["common.no"] = "No",
             },
 
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
             // ESPAGNOL
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
             ["es"] = new Dictionary<string, string>
             {
                 // Module
@@ -223,35 +228,35 @@ public class StreetViewModule : ModuleBase
                 ["streetview.cmd.desc"] = "Abrir Google Street View desde un punto del dibujo",
 
                 // Menus
-                ["menu.carto"] = "Cartografía",
+                ["menu.carto"] = "Cartograf�a",
 
-                // Messages de sélection
-                ["streetview.select.point"] = "Seleccione el punto de vista (posición del observador)",
-                ["streetview.select.direction"] = "Seleccione un punto para la dirección de la mirada",
+                // Messages de s�lection
+                ["streetview.select.point"] = "Seleccione el punto de vista (posici�n del observador)",
+                ["streetview.select.direction"] = "Seleccione un punto para la direcci�n de la mirada",
 
-                // Messages d'état
+                // Messages d'�tat
                 ["streetview.converting"] = "Convirtiendo coordenadas a WGS84...",
                 ["streetview.opening"] = "Abriendo Google Street View...",
                 ["streetview.success"] = "Street View abierto en el navegador",
 
                 // Messages d'erreur
                 ["streetview.error.noprojection"] = "No hay sistema de coordenadas definido en el dibujo",
-                ["streetview.error.noprojection.detail"] = "Por favor defina una proyección con el comando OAS_GEOREF_SETPROJECTION",
+                ["streetview.error.noprojection.detail"] = "Por favor defina una proyecci�n con el comando OAS_GEOREF_SETPROJECTION",
                 ["streetview.error.conversion"] = "No se pueden convertir las coordenadas a WGS84",
                 ["streetview.error.browser"] = "No se puede abrir el navegador",
-                ["streetview.error.unknownprojection"] = "Proyección '{0}' no reconocida para la conversión",
+                ["streetview.error.unknownprojection"] = "Proyecci�n '{0}' no reconocida para la conversi�n",
 
-                // Coordonnées
+                // Coordonn�es
                 ["streetview.coords.local"] = "Coordenadas locales: X={0:F2}, Y={1:F2}",
-                ["streetview.coords.wgs84"] = "Coordenadas WGS84: Lat={0:F6}°, Lon={1:F6}°",
-                ["streetview.heading"] = "Dirección: {0:F1}°",
+                ["streetview.coords.wgs84"] = "Coordenadas WGS84: Lat={0:F6}�, Lon={1:F6}�",
+                ["streetview.heading"] = "Direcci�n: {0:F1}�",
 
-                // Question pour définir projection
-                ["streetview.askprojection"] = "¿Desea definir una proyección ahora?",
-                ["streetview.projection.applied"] = "Proyección {0} aplicada",
-                ["streetview.projection.error"] = "No se puede aplicar la proyección",
-                ["streetview.projection.windowerror"] = "Error al abrir la ventana de proyección",
-                ["common.yes"] = "Sí",
+                // Question pour d�finir projection
+                ["streetview.askprojection"] = "�Desea definir una proyecci�n ahora?",
+                ["streetview.projection.applied"] = "Proyecci�n {0} aplicada",
+                ["streetview.projection.error"] = "No se puede aplicar la proyecci�n",
+                ["streetview.projection.windowerror"] = "Error al abrir la ventana de proyecci�n",
+                ["common.yes"] = "S�",
                 ["common.no"] = "No",
             },
         };

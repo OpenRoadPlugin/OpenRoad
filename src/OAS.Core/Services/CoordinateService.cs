@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Geometry;
 using System.IO;
@@ -16,24 +21,24 @@ using System.Text.Json;
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// Service de gestion des systÃ¨mes de coordonnÃ©es et de conversion.
-/// Fournit des mÃ©thodes pour identifier, convertir et gÃ©rer les projections cartographiques.
+/// Service de gestion des systèmes de coordonnées et de conversion.
+/// Fournit des méthodes pour identifier, convertir et gérer les projections cartographiques.
 /// </summary>
 /// <remarks>
-/// Ce service gÃ¨re les systÃ¨mes de coordonnÃ©es compatibles avec AutoCAD (variable CGEOCS).
-/// Il peut charger des dÃ©finitions de projections depuis un fichier JSON externe.
+/// Ce service gère les systèmes de coordonnées compatibles avec AutoCAD (variable CGEOCS).
+/// Il peut charger des définitions de projections depuis un fichier JSON externe.
 /// </remarks>
 public static partial class CoordinateService
 {
     #region Constants
 
     /// <summary>
-    /// Rayon Ã©quatorial de la Terre (WGS84) en mÃ¨tres
+    /// Rayon équatorial de la Terre (WGS84) en mètres
     /// </summary>
     public const double EarthRadiusEquatorial = 6378137.0;
 
     /// <summary>
-    /// Rayon polaire de la Terre (WGS84) en mÃ¨tres
+    /// Rayon polaire de la Terre (WGS84) en mètres
     /// </summary>
     public const double EarthRadiusPolar = 6356752.314245;
 
@@ -43,13 +48,13 @@ public static partial class CoordinateService
     public const double EarthFlattening = 1.0 / 298.257223563;
 
     /// <summary>
-    /// ExcentricitÃ© au carrÃ© (WGS84)
+    /// Excentricité au carré (WGS84)
     /// </summary>
     public const double EarthEccentricitySquared = 0.00669437999014;
 
     /// <summary>
-    /// Seuil de distance au centre (origine) en dessous duquel un point est ignorÃ©
-    /// pour la dÃ©tection automatique de projection (en unitÃ©s du dessin)
+    /// Seuil de distance au centre (origine) en dessous duquel un point est ignoré
+    /// pour la détection automatique de projection (en unités du dessin)
     /// </summary>
     public const double OriginThreshold = 1000.0;
 
@@ -73,7 +78,7 @@ public static partial class CoordinateService
     }
 
     /// <summary>
-    /// Charge les projections depuis le fichier JSON ou utilise les projections intÃ©grÃ©es
+    /// Charge les projections depuis le fichier JSON ou utilise les projections intégrées
     /// </summary>
     private static void EnsureProjectionsLoaded()
     {
@@ -105,17 +110,17 @@ public static partial class CoordinateService
                 }
                 catch
                 {
-                    // Fallback aux projections intÃ©grÃ©es
+                    // Fallback aux projections intégrées
                 }
             }
 
-            // Projections intÃ©grÃ©es (France, Belgique, Suisse, etc.)
+            // Projections intégrées (France, Belgique, Suisse, etc.)
             LoadBuiltInProjections();
         }
     }
 
     /// <summary>
-    /// Recharge les projections depuis le fichier externe ou la liste intÃ©grÃ©e.
+    /// Recharge les projections depuis le fichier externe ou la liste intégrée.
     /// </summary>
     public static void ReloadProjections()
     {
@@ -145,7 +150,7 @@ public static partial class CoordinateService
     }
 
     /// <summary>
-    /// Recherche des projections par texte (nom, code, pays, rÃ©gion).
+    /// Recherche des projections par texte (nom, code, pays, région).
     /// </summary>
     public static IEnumerable<ProjectionInfo> SearchProjections(string searchText)
     {
@@ -162,7 +167,7 @@ public static partial class CoordinateService
     }
 
     /// <summary>
-    /// Retourne les projections groupÃ©es par pays.
+    /// Retourne les projections groupées par pays.
     /// </summary>
     public static IEnumerable<IGrouping<string, ProjectionInfo>> GetProjectionsByCountry()
     {
@@ -174,7 +179,7 @@ public static partial class CoordinateService
     #region Projection Detection
 
     /// <summary>
-    /// DÃ©tecte automatiquement la projection la plus probable Ã  partir d'un ensemble de points.
+    /// Détecte automatiquement la projection la plus probable à partir d'un ensemble de points.
     /// </summary>
     public static ProjectionInfo? DetectProjection(IEnumerable<Point3d> points)
     {
@@ -192,7 +197,7 @@ public static partial class CoordinateService
     }
 
     /// <summary>
-    /// DÃ©tecte automatiquement la projection la plus probable Ã  partir de coordonnÃ©es moyennes.
+    /// Détecte automatiquement la projection la plus probable à partir de coordonnées moyennes.
     /// </summary>
     public static ProjectionInfo? DetectProjection(double x, double y)
     {
@@ -218,7 +223,7 @@ public static partial class CoordinateService
 }
 
 /// <summary>
-/// Informations sur un systÃ¨me de projection cartographique.
+/// Informations sur un système de projection cartographique.
 /// </summary>
 public class ProjectionInfo
 {
@@ -231,46 +236,46 @@ public class ProjectionInfo
     /// <summary>Pays principal d'utilisation</summary>
     public string Country { get; init; } = "";
 
-    /// <summary>RÃ©gion ou zone gÃ©ographique</summary>
+    /// <summary>Région ou zone géographique</summary>
     public string Region { get; init; } = "";
 
-    /// <summary>Code EPSG (pour rÃ©fÃ©rence et interopÃ©rabilitÃ©)</summary>
+    /// <summary>Code EPSG (pour référence et interopérabilité)</summary>
     public int Epsg { get; init; }
 
-    /// <summary>UnitÃ© de mesure ("m" pour mÃ¨tres, "deg" pour degrÃ©s)</summary>
+    /// <summary>Unité de mesure ("m" pour mètres, "deg" pour degrés)</summary>
     public string Unit { get; init; } = "m";
 
-    /// <summary>MÃ©ridien central en degrÃ©s</summary>
+    /// <summary>Méridien central en degrés</summary>
     public double CentralMeridian { get; init; }
 
-    /// <summary>Latitude d'origine en degrÃ©s</summary>
+    /// <summary>Latitude d'origine en degrés</summary>
     public double LatitudeOrigin { get; init; }
 
-    /// <summary>Faux Est (False Easting) en mÃ¨tres</summary>
+    /// <summary>Faux Est (False Easting) en mètres</summary>
     public double FalseEasting { get; init; }
 
-    /// <summary>Faux Nord (False Northing) en mÃ¨tres</summary>
+    /// <summary>Faux Nord (False Northing) en mètres</summary>
     public double FalseNorthing { get; init; }
 
-    /// <summary>CoordonnÃ©e X minimale typique</summary>
+    /// <summary>Coordonnée X minimale typique</summary>
     public double MinX { get; init; }
 
-    /// <summary>CoordonnÃ©e X maximale typique</summary>
+    /// <summary>Coordonnée X maximale typique</summary>
     public double MaxX { get; init; }
 
-    /// <summary>CoordonnÃ©e Y minimale typique</summary>
+    /// <summary>Coordonnée Y minimale typique</summary>
     public double MinY { get; init; }
 
-    /// <summary>CoordonnÃ©e Y maximale typique</summary>
+    /// <summary>Coordonnée Y maximale typique</summary>
     public double MaxY { get; init; }
 
-    /// <summary>Description dÃ©taillÃ©e</summary>
+    /// <summary>Description détaillée</summary>
     public string Description { get; init; } = "";
 
-    /// <summary>Affichage formatÃ© pour UI</summary>
+    /// <summary>Affichage formaté pour UI</summary>
     public string DisplayName => $"{Name} [{Code}]";
 
-    /// <summary>VÃ©rifie si un point est dans les bornes typiques de cette projection</summary>
+    /// <summary>Vérifie si un point est dans les bornes typiques de cette projection</summary>
     public bool ContainsPoint(double x, double y)
         => x >= MinX && x <= MaxX && y >= MinY && y <= MaxY;
 

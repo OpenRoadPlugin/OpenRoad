@@ -81,7 +81,7 @@ WriteMessage($"\n{T("select.point")}: ");
 | Architecture | Plugin modulaire avec découverte automatique |
 | Interface    | Menu contextuel + Ruban dynamiques           |
 | Multilingue  | FR, EN, ES                                   |
-| Licence      | Apache 2.0                                   |
+| Licence      | GNU GPL v3                                   |
 |--------------|----------------------------------------------|
 
 ---

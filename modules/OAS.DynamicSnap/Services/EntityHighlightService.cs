@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
@@ -21,40 +26,40 @@ using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace OpenAsphalte.Modules.DynamicSnap.Services;
 
 /// <summary>
-/// Service de surbrillance des entitÃ©s sÃ©lectionnÃ©es.
-/// Utilise TransientManager pour superposer des clones colorÃ©s temporaires
-/// sur les entitÃ©s du dessin, sans modifier la base de donnÃ©es.
+/// Service de surbrillance des entités sélectionnées.
+/// Utilise TransientManager pour superposer des clones colorés temporaires
+/// sur les entités du dessin, sans modifier la base de données.
 ///
 /// Deux niveaux visuels :
-/// - Primary : trait continu + Ã©paisseur forte (entitÃ© active)
-/// - Secondary : trait pointillÃ© + Ã©paisseur fine (entitÃ©s en arriÃ¨re-plan)
+/// - Primary : trait continu + épaisseur forte (entité active)
+/// - Secondary : trait pointillé + épaisseur fine (entités en arrière-plan)
 /// </summary>
 public static class EntityHighlightService
 {
     #region Fields
 
     /// <summary>
-    /// EntitÃ©s transitoires par ObjectId source
+    /// Entités transitoires par ObjectId source
     /// </summary>
     private static readonly Dictionary<ObjectId, List<Drawable>> _highlightedEntities = new();
 
     /// <summary>
-    /// Ensemble ordonnÃ© des ObjectIds actuellement mis en surbrillance
+    /// Ensemble ordonné des ObjectIds actuellement mis en surbrillance
     /// </summary>
     private static readonly List<ObjectId> _highlightedIds = new();
 
     /// <summary>
-    /// ObjectId de l'entitÃ© principale (active) â€” ObjectId.Null si pas de distinction
+    /// ObjectId de l'entité principale (active) — ObjectId.Null si pas de distinction
     /// </summary>
     private static ObjectId _primaryEntityId = ObjectId.Null;
 
     /// <summary>
-    /// Cache du linetype DASHED pour les entitÃ©s secondaires
+    /// Cache du linetype DASHED pour les entités secondaires
     /// </summary>
     private static ObjectId _dashedLinetypeId = ObjectId.Null;
 
     /// <summary>
-    /// Verrou pour accÃ¨s thread-safe
+    /// Verrou pour accès thread-safe
     /// </summary>
     private static readonly object _lock = new();
 
@@ -68,7 +73,7 @@ public static class EntityHighlightService
     #region Properties
 
     /// <summary>
-    /// Indique si la surbrillance est activÃ©e dans la configuration
+    /// Indique si la surbrillance est activée dans la configuration
     /// </summary>
     public static bool IsEnabled => _config.Enabled;
 
@@ -82,7 +87,7 @@ public static class EntityHighlightService
     }
 
     /// <summary>
-    /// Nombre d'entitÃ©s actuellement mises en surbrillance
+    /// Nombre d'entités actuellement mises en surbrillance
     /// </summary>
     public static int HighlightedCount
     {
@@ -97,11 +102,11 @@ public static class EntityHighlightService
     #region Public API
 
     /// <summary>
-    /// Met en surbrillance une ou plusieurs entitÃ©s.
-    /// Toutes les entitÃ©s reÃ§oivent le style Primary (trait continu, Ã©paisseur forte).
-    /// Appeler <see cref="SetPrimaryEntity"/> ensuite pour distinguer une entitÃ© active.
+    /// Met en surbrillance une ou plusieurs entités.
+    /// Toutes les entités reçoivent le style Primary (trait continu, épaisseur forte).
+    /// Appeler <see cref="SetPrimaryEntity"/> ensuite pour distinguer une entité active.
     /// </summary>
-    /// <param name="entityIds">ObjectIds des entitÃ©s Ã  mettre en surbrillance</param>
+    /// <param name="entityIds">ObjectIds des entités à mettre en surbrillance</param>
     public static void HighlightEntities(params ObjectId[] entityIds)
     {
         lock (_lock)
@@ -155,11 +160,11 @@ public static class EntityHighlightService
     }
 
     /// <summary>
-    /// DÃ©finit une entitÃ© comme "principale" (active).
-    /// L'entitÃ© principale garde le trait continu Ã©pais.
-    /// Les autres entitÃ©s passent en trait pointillÃ© fin (opacitÃ© simulÃ©e).
+    /// Définit une entité comme "principale" (active).
+    /// L'entité principale garde le trait continu épais.
+    /// Les autres entités passent en trait pointillé fin (opacité simulée).
     /// </summary>
-    /// <param name="primaryId">ObjectId de l'entitÃ© principale</param>
+    /// <param name="primaryId">ObjectId de l'entité principale</param>
     public static void SetPrimaryEntity(ObjectId primaryId)
     {
         lock (_lock)
@@ -175,7 +180,7 @@ public static class EntityHighlightService
     }
 
     /// <summary>
-    /// Supprime la surbrillance de toutes les entitÃ©s
+    /// Supprime la surbrillance de toutes les entités
     /// </summary>
     public static void ClearHighlight()
     {
@@ -189,9 +194,9 @@ public static class EntityHighlightService
     }
 
     /// <summary>
-    /// Supprime la surbrillance d'une entitÃ© spÃ©cifique
+    /// Supprime la surbrillance d'une entité spécifique
     /// </summary>
-    /// <param name="entityId">ObjectId de l'entitÃ© Ã  dÃ©-surbriller</param>
+    /// <param name="entityId">ObjectId de l'entité à dé-surbriller</param>
     public static void ClearHighlight(ObjectId entityId)
     {
         lock (_lock)
@@ -205,7 +210,7 @@ public static class EntityHighlightService
     }
 
     /// <summary>
-    /// VÃ©rifie si une entitÃ© est actuellement mise en surbrillance
+    /// Vérifie si une entité est actuellement mise en surbrillance
     /// </summary>
     public static bool IsHighlighted(ObjectId entityId)
     {
@@ -221,7 +226,7 @@ public static class EntityHighlightService
 
     /// <summary>
     /// Reconstruit tous les transients en appliquant le style Primary/Secondary
-    /// selon l'entitÃ© principale courante.
+    /// selon l'entité principale courante.
     /// </summary>
     private static void RebuildAllTransients()
     {
@@ -234,7 +239,7 @@ public static class EntityHighlightService
 
         try
         {
-            // Charger le linetype DASHED si nÃ©cessaire et si on a un primary
+            // Charger le linetype DASHED si nécessaire et si on a un primary
             if (!_primaryEntityId.IsNull)
             {
                 _dashedLinetypeId = GetDashedLinetypeId(doc.Database);
@@ -280,7 +285,7 @@ public static class EntityHighlightService
     }
 
     /// <summary>
-    /// CrÃ©e un clone transient d'une entitÃ© avec les propriÃ©tÃ©s visuelles spÃ©cifiÃ©es.
+    /// Crée un clone transient d'une entité avec les propriétés visuelles spécifiées.
     /// Supporte : Polyline, Line, Circle, Arc, Ellipse, Spline et toute Entity clonable.
     /// </summary>
     private static List<Drawable> CreateHighlightClone(
@@ -297,7 +302,7 @@ public static class EntityHighlightService
             clone.Color = color;
             clone.LineWeight = lineWeight;
 
-            // Appliquer le linetype (DASHED) pour les entitÃ©s secondaires
+            // Appliquer le linetype (DASHED) pour les entités secondaires
             if (!linetypeId.IsNull)
             {
                 try
@@ -306,7 +311,7 @@ public static class EntityHighlightService
                 }
                 catch
                 {
-                    // Si le linetype ne peut pas Ãªtre appliquÃ©, on continue sans
+                    // Si le linetype ne peut pas être appliqué, on continue sans
                     Logger.Debug("EntityHighlightService: LinetypeId assignment failed, using continuous");
                 }
             }
@@ -322,7 +327,7 @@ public static class EntityHighlightService
     }
 
     /// <summary>
-    /// Ajoute des drawables transients pour une entitÃ© et les enregistre dans le tracking
+    /// Ajoute des drawables transients pour une entité et les enregistre dans le tracking
     /// </summary>
     private static void AddTransients(ObjectId entityId, List<Drawable> drawables)
     {
@@ -373,7 +378,7 @@ public static class EntityHighlightService
     }
 
     /// <summary>
-    /// Efface les transients d'une entitÃ© spÃ©cifique
+    /// Efface les transients d'une entité spécifique
     /// </summary>
     private static void EraseTransients(ObjectId entityId)
     {
@@ -400,18 +405,18 @@ public static class EntityHighlightService
     #region Private Methods - Linetype
 
     /// <summary>
-    /// RÃ©cupÃ¨re (ou charge) l'ObjectId du linetype DASHED depuis la base de donnÃ©es.
-    /// UtilisÃ© pour l'effet "opacitÃ© simulÃ©e" des entitÃ©s secondaires.
+    /// Récupère (ou charge) l'ObjectId du linetype DASHED depuis la base de données.
+    /// Utilisé pour l'effet "opacité simulée" des entités secondaires.
     /// </summary>
     private static ObjectId GetDashedLinetypeId(Database db)
     {
-        // VÃ©rifier le cache
+        // Vérifier le cache
         if (!_dashedLinetypeId.IsNull)
             return _dashedLinetypeId;
 
         try
         {
-            // VÃ©rifier si DASHED existe dÃ©jÃ 
+            // Vérifier si DASHED existe déjà
             using (var tr = db.TransactionManager.StartTransaction())
             {
                 var ltTable = (LinetypeTable)tr.GetObject(db.LinetypeTableId, OpenMode.ForRead);
@@ -431,12 +436,12 @@ public static class EntityHighlightService
             }
             catch
             {
-                // Fichier lin introuvable ou autre erreur â€” on continue sans
+                // Fichier lin introuvable ou autre erreur — on continue sans
                 Logger.Debug("EntityHighlightService: Could not load DASHED linetype from acad.lin");
                 return ObjectId.Null;
             }
 
-            // Relire l'ID aprÃ¨s chargement
+            // Relire l'ID après chargement
             using (var tr = db.TransactionManager.StartTransaction())
             {
                 var ltTable = (LinetypeTable)tr.GetObject(db.LinetypeTableId, OpenMode.ForRead);

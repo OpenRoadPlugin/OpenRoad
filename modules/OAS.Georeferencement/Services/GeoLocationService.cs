@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -20,23 +25,23 @@ using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace OpenAsphalte.Modules.Georeferencement.Services;
 
 /// <summary>
-/// Service de géolocalisation pour appliquer et gérer les systèmes de coordonnées.
-/// Utilise l'API GeoLocationData native d'AutoCAD avec PostToDb() pour une compatibilité
-/// complète avec Bing Maps, GEOMAP et la géolocalisation.
+/// Service de g�olocalisation pour appliquer et g�rer les syst�mes de coordonn�es.
+/// Utilise l'API GeoLocationData native d'AutoCAD avec PostToDb() pour une compatibilit�
+/// compl�te avec Bing Maps, GEOMAP et la g�olocalisation.
 /// </summary>
 /// <remarks>
-/// IMPORTANT: Cette implémentation utilise la méthode PostToDb() qui est CRITIQUE
-/// pour que les cartes Bing Maps fonctionnent correctement. L'ancienne méthode
-/// d'ajout manuel au dictionnaire ne permettait pas une intégration complète.
+/// IMPORTANT: Cette impl�mentation utilise la m�thode PostToDb() qui est CRITIQUE
+/// pour que les cartes Bing Maps fonctionnent correctement. L'ancienne m�thode
+/// d'ajout manuel au dictionnaire ne permettait pas une int�gration compl�te.
 ///
-/// Référence: Kean Walmsley (Autodesk) - "Through the Interface" blog
+/// R�f�rence: Kean Walmsley (Autodesk) - "Through the Interface" blog
 /// </remarks>
 public static partial class GeoLocationService
 {
     #region Constants
 
     /// <summary>
-    /// Clé du dictionnaire pour les données géographiques (référence uniquement)
+    /// Cl� du dictionnaire pour les donn�es g�ographiques (r�f�rence uniquement)
     /// </summary>
     private const string GeoDataDictionaryKey = "ACAD_GEOGRAPHICDATA";
 
@@ -45,15 +50,15 @@ public static partial class GeoLocationService
     #region Public Methods - Main API
 
     /// <summary>
-    /// Applique un système de coordonnées au dessin avec configuration complète pour Bing Maps.
-    /// Cette méthode utilise PostToDb() et les transformations natives d'AutoCAD.
+    /// Applique un syst�me de coordonn�es au dessin avec configuration compl�te pour Bing Maps.
+    /// Cette m�thode utilise PostToDb() et les transformations natives d'AutoCAD.
     /// </summary>
-    /// <param name="db">Base de données AutoCAD</param>
+    /// <param name="db">Base de donn�es AutoCAD</param>
     /// <param name="tr">Transaction active</param>
-    /// <param name="projection">Informations sur la projection à appliquer</param>
-    /// <param name="designPoint">Point de référence dans le dessin (coordonnées projetées).
-    /// Si null, calcule automatiquement un point approprié.</param>
-    /// <returns>True si l'opération a réussi</returns>
+    /// <param name="projection">Informations sur la projection � appliquer</param>
+    /// <param name="designPoint">Point de r�f�rence dans le dessin (coordonn�es projet�es).
+    /// Si null, calcule automatiquement un point appropri�.</param>
+    /// <returns>True si l'op�ration a r�ussi</returns>
     public static bool ApplyCoordinateSystem(Database db, Transaction tr, ProjectionInfo projection, Point3d? designPoint = null)
     {
         if (db == null) throw new ArgumentNullException(nameof(db));
@@ -62,31 +67,31 @@ public static partial class GeoLocationService
 
         try
         {
-            // Vérifier si le code de projection est valide dans AutoCAD
+            // V�rifier si le code de projection est valide dans AutoCAD
             string validCode = projection.Code;
             if (!IsValidCoordinateSystemCode(projection.Code))
             {
-                Logger.Warning($"Code de projection '{projection.Code}' non trouvé. Recherche d'alternatives...");
+                Logger.Warning($"Code de projection '{projection.Code}' non trouv�. Recherche d'alternatives...");
 
                 var foundCode = FindValidCoordinateSystemCode(projection);
                 if (foundCode == null)
                 {
-                    Logger.Error($"Aucun code de projection valide trouvé pour {projection.Name} (EPSG:{projection.Epsg})");
+                    Logger.Error($"Aucun code de projection valide trouv� pour {projection.Name} (EPSG:{projection.Epsg})");
                     return false;
                 }
                 validCode = foundCode;
-                Logger.Info($"Code de projection alternatif trouvé: {validCode}");
+                Logger.Info($"Code de projection alternatif trouv�: {validCode}");
             }
 
             var msId = SymbolUtilityServices.GetBlockModelSpaceId(db);
             GeoLocationData geoData;
 
-            // ═══════════════════════════════════════════════════════════════════
-            // ÉTAPE 1: Récupérer ou créer GeoLocationData avec PostToDb()
+            // -------------------------------------------------------------------
+            // �TAPE 1: R�cup�rer ou cr�er GeoLocationData avec PostToDb()
             // CRITIQUE: PostToDb() est OBLIGATOIRE pour que Bing Maps fonctionne
-            // ═══════════════════════════════════════════════════════════════════
+            // -------------------------------------------------------------------
 
-            // Méthode 1: Via la propriété GeoDataObject (méthode préférée)
+            // M�thode 1: Via la propri�t� GeoDataObject (m�thode pr�f�r�e)
             ObjectId existingId = ObjectId.Null;
             try
             {
@@ -97,11 +102,11 @@ public static partial class GeoLocationService
             if (existingId != ObjectId.Null && existingId.IsValid)
             {
                 geoData = (GeoLocationData)tr.GetObject(existingId, OpenMode.ForWrite);
-                Logger.Debug("GeoLocationData existant trouvé via GeoDataObject");
+                Logger.Debug("GeoLocationData existant trouv� via GeoDataObject");
             }
             else
             {
-                // Méthode 2: Vérifier dans le dictionnaire nommé
+                // M�thode 2: V�rifier dans le dictionnaire nomm�
                 var nod = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
 
                 if (nod.Contains(GeoDataDictionaryKey))
@@ -110,11 +115,11 @@ public static partial class GeoLocationService
                     {
                         var geoId = nod.GetAt(GeoDataDictionaryKey);
                         geoData = (GeoLocationData)tr.GetObject(geoId, OpenMode.ForWrite);
-                        Logger.Debug("GeoLocationData existant trouvé via dictionnaire");
+                        Logger.Debug("GeoLocationData existant trouv� via dictionnaire");
                     }
                     catch
                     {
-                        // Dictionnaire corrompu, supprimer et recréer
+                        // Dictionnaire corrompu, supprimer et recr�er
                         nod.UpgradeOpen();
                         try { nod.Remove(GeoDataDictionaryKey); } catch { }
                         geoData = CreateNewGeoLocationData(db, tr, msId);
@@ -122,24 +127,24 @@ public static partial class GeoLocationService
                 }
                 else
                 {
-                    // Créer nouveau avec PostToDb() - CRITIQUE!
+                    // Cr�er nouveau avec PostToDb() - CRITIQUE!
                     geoData = CreateNewGeoLocationData(db, tr, msId);
                 }
             }
 
-            // ═══════════════════════════════════════════════════════════════════
-            // ÉTAPE 2: Configurer le système de coordonnées
-            // ═══════════════════════════════════════════════════════════════════
+            // -------------------------------------------------------------------
+            // �TAPE 2: Configurer le syst�me de coordonn�es
+            // -------------------------------------------------------------------
 
-            // Type de coordonnées: Grid = système projeté
+            // Type de coordonn�es: Grid = syst�me projet�
             geoData.TypeOfCoordinates = TypeOfCoordinates.CoordinateTypeGrid;
 
-            // Définir le système de coordonnées (met à jour CGEOCS automatiquement)
+            // D�finir le syst�me de coordonn�es (met � jour CGEOCS automatiquement)
             geoData.CoordinateSystem = validCode;
 
-            // ═══════════════════════════════════════════════════════════════════
-            // ÉTAPE 3: Calculer les points de référence
-            // ═══════════════════════════════════════════════════════════════════
+            // -------------------------------------------------------------------
+            // �TAPE 3: Calculer les points de r�f�rence
+            // -------------------------------------------------------------------
 
             Point3d refDesignPoint;
             Point3d refGeoPoint;
@@ -160,7 +165,7 @@ public static partial class GeoLocationService
                 refGeoPoint = geoData.TransformToLonLatAlt(refDesignPoint);
                 useNativeTransform = true;
                 Logger.Debug($"Transformation native: ({refDesignPoint.X:N2}, {refDesignPoint.Y:N2}) -> " +
-                           $"(Lon:{refGeoPoint.X:F6}°, Lat:{refGeoPoint.Y:F6}°)");
+                           $"(Lon:{refGeoPoint.X:F6}�, Lat:{refGeoPoint.Y:F6}�)");
             }
             catch
             {
@@ -168,28 +173,28 @@ public static partial class GeoLocationService
                 var (lon, lat) = ProjectedToGeographic(refDesignPoint.X, refDesignPoint.Y, projection);
                 refGeoPoint = new Point3d(lon, lat, refDesignPoint.Z);
                 Logger.Debug($"Transformation manuelle: ({refDesignPoint.X:N2}, {refDesignPoint.Y:N2}) -> " +
-                           $"(Lon:{lon:F6}°, Lat:{lat:F6}°)");
+                           $"(Lon:{lon:F6}�, Lat:{lat:F6}�)");
             }
 
-            // ═══════════════════════════════════════════════════════════════════
-            // ÉTAPE 4: Appliquer les points de référence
+            // -------------------------------------------------------------------
+            // �TAPE 4: Appliquer les points de r�f�rence
             // CRITICAL: ReferencePoint = (longitude, latitude, altitude)
-            // ═══════════════════════════════════════════════════════════════════
+            // -------------------------------------------------------------------
             geoData.DesignPoint = refDesignPoint;
             geoData.ReferencePoint = refGeoPoint;
 
-            // ═══════════════════════════════════════════════════════════════════
-            // ÉTAPE 5: Configurer les propriétés additionnelles
-            // ═══════════════════════════════════════════════════════════════════
+            // -------------------------------------------------------------------
+            // �TAPE 5: Configurer les propri�t�s additionnelles
+            // -------------------------------------------------------------------
 
-            // Unités horizontales
+            // Unit�s horizontales
             var units = db.Insunits;
             geoData.HorizontalUnits = (units != UnitsValue.Undefined) ? units : UnitsValue.Meters;
 
             // Note: UpDirection et NorthDirection sont en lecture seule dans cette version de l'API
-            // Ils sont configurés automatiquement par AutoCAD
+            // Ils sont configur�s automatiquement par AutoCAD
 
-            Logger.Debug($"GeoLocationData configuré: CS={validCode}, " +
+            Logger.Debug($"GeoLocationData configur�: CS={validCode}, " +
                         $"Design=({refDesignPoint.X:N2}, {refDesignPoint.Y:N2}), " +
                         $"Geo=({refGeoPoint.X:F6}, {refGeoPoint.Y:F6})" +
                         (useNativeTransform ? " [Native]" : " [Manual]"));
@@ -198,35 +203,35 @@ public static partial class GeoLocationService
         }
         catch (System.Exception ex)
         {
-            Logger.Error($"Erreur lors de l'application du système de coordonnées: {ex.Message}");
+            Logger.Error($"Erreur lors de l'application du syst�me de coordonn�es: {ex.Message}");
             Logger.Debug(ex.ToString());
             throw;
         }
     }
 
     /// <summary>
-    /// Crée un nouveau GeoLocationData et l'ajoute à la base de données avec PostToDb()
+    /// Cr�e un nouveau GeoLocationData et l'ajoute � la base de donn�es avec PostToDb()
     /// </summary>
     private static GeoLocationData CreateNewGeoLocationData(Database db, Transaction tr, ObjectId modelSpaceId)
     {
         var geoData = new GeoLocationData();
         geoData.BlockTableRecordId = modelSpaceId;
 
-        // CRITIQUE: PostToDb() est ce qui permet à Bing Maps de fonctionner !
-        // Cette méthode ajoute correctement le GeoLocationData à la structure de la base de données
+        // CRITIQUE: PostToDb() est ce qui permet � Bing Maps de fonctionner !
+        // Cette m�thode ajoute correctement le GeoLocationData � la structure de la base de donn�es
         geoData.PostToDb();
         tr.AddNewlyCreatedDBObject(geoData, true);
 
-        Logger.Debug("Nouveau GeoLocationData créé avec PostToDb()");
+        Logger.Debug("Nouveau GeoLocationData cr�� avec PostToDb()");
         return geoData;
     }
 
     /// <summary>
-    /// Supprime le système de coordonnées du dessin
+    /// Supprime le syst�me de coordonn�es du dessin
     /// </summary>
-    /// <param name="db">Base de données AutoCAD</param>
+    /// <param name="db">Base de donn�es AutoCAD</param>
     /// <param name="tr">Transaction active</param>
-    /// <returns>True si le système a été supprimé, False s'il n'existait pas</returns>
+    /// <returns>True si le syst�me a �t� supprim�, False s'il n'existait pas</returns>
     public static bool ClearCoordinateSystem(Database db, Transaction tr)
     {
         if (db == null) throw new ArgumentNullException(nameof(db));
@@ -234,7 +239,7 @@ public static partial class GeoLocationService
 
         bool found = false;
 
-        // Méthode 1: Via GeoDataObject
+        // M�thode 1: Via GeoDataObject
         try
         {
             var geoId = db.GeoDataObject;
@@ -247,7 +252,7 @@ public static partial class GeoLocationService
         }
         catch { }
 
-        // Méthode 2: Via le dictionnaire nommé (nettoyage supplémentaire)
+        // M�thode 2: Via le dictionnaire nomm� (nettoyage suppl�mentaire)
         var nod = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForWrite);
         if (nod.Contains(GeoDataDictionaryKey))
         {
@@ -267,17 +272,17 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Récupère le GeoLocationData actuel du dessin
+    /// R�cup�re le GeoLocationData actuel du dessin
     /// </summary>
-    /// <param name="db">Base de données AutoCAD</param>
+    /// <param name="db">Base de donn�es AutoCAD</param>
     /// <param name="tr">Transaction active</param>
-    /// <returns>GeoLocationData ou null si non défini</returns>
+    /// <returns>GeoLocationData ou null si non d�fini</returns>
     public static GeoLocationData? GetGeoLocationData(Database db, Transaction tr)
     {
         if (db == null) throw new ArgumentNullException(nameof(db));
         if (tr == null) throw new ArgumentNullException(nameof(tr));
 
-        // Méthode 1: Via GeoDataObject (préférée)
+        // M�thode 1: Via GeoDataObject (pr�f�r�e)
         try
         {
             var geoId = db.GeoDataObject;
@@ -288,7 +293,7 @@ public static partial class GeoLocationService
         }
         catch (System.Exception ex) { Logger.Debug($"GetGeoLocationData: {ex.Message}"); }
 
-        // Méthode 2: Via le dictionnaire nommé
+        // M�thode 2: Via le dictionnaire nomm�
         var nod = (DBDictionary)tr.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
         if (nod.Contains(GeoDataDictionaryKey))
         {
@@ -300,7 +305,7 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Active ou désactive l'affichage de la carte Bing Maps
+    /// Active ou d�sactive l'affichage de la carte Bing Maps
     /// </summary>
     /// <param name="mode">Mode: "AERIAL", "ROAD", "HYBRID", ou "OFF"</param>
     public static void SetGeoMapMode(string mode)
@@ -310,10 +315,10 @@ public static partial class GeoLocationService
             var doc = AcadApp.DocumentManager.MdiActiveDocument;
             if (doc == null) return;
 
-            // Exécuter la commande GEOMAP de manière asynchrone
+            // Ex�cuter la commande GEOMAP de mani�re asynchrone
             doc.SendStringToExecute($"_.GEOMAP _{mode} ", true, false, false);
 
-            Logger.Debug($"GEOMAP mode défini: {mode}");
+            Logger.Debug($"GEOMAP mode d�fini: {mode}");
         }
         catch (System.Exception ex)
         {
@@ -326,7 +331,7 @@ public static partial class GeoLocationService
     #region Public Methods - Coordinate System Validation
 
     /// <summary>
-    /// Vérifie si un code de système de coordonnées est valide dans AutoCAD
+    /// V�rifie si un code de syst�me de coordonn�es est valide dans AutoCAD
     /// </summary>
     public static bool IsValidCoordinateSystemCode(string code)
     {
@@ -335,7 +340,7 @@ public static partial class GeoLocationService
 
         try
         {
-            // La méthode la plus fiable est d'essayer de créer le système
+            // La m�thode la plus fiable est d'essayer de cr�er le syst�me
             var cs = GeoCoordinateSystem.Create(code);
             return cs != null;
         }
@@ -347,11 +352,11 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Trouve un code de système de coordonnées valide pour une projection
+    /// Trouve un code de syst�me de coordonn�es valide pour une projection
     /// </summary>
     public static string? FindValidCoordinateSystemCode(ProjectionInfo projection)
     {
-        // Variantes du code à essayer
+        // Variantes du code � essayer
         var codeVariants = new List<string>
         {
             projection.Code,
@@ -367,7 +372,7 @@ public static partial class GeoLocationService
             codeVariants.Add($"EPSG:{projection.Epsg}");
         }
 
-        // Mappages spéciaux pour les systèmes français courants
+        // Mappages sp�ciaux pour les syst�mes fran�ais courants
         var specialMappings = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
         {
             { "RGF93.LAMB93", new[] { "RGF93.LAMB93", "RGF93-LAMB93", "RGF93/LAMB93", "LAMB93" } },
@@ -395,7 +400,7 @@ public static partial class GeoLocationService
                 var cs = GeoCoordinateSystem.Create(code);
                 if (cs != null)
                 {
-                    Logger.Debug($"Code valide trouvé: {code}");
+                    Logger.Debug($"Code valide trouv�: {code}");
                     return code;
                 }
             }
@@ -405,7 +410,7 @@ public static partial class GeoLocationService
             }
         }
 
-        Logger.Debug($"Aucun code valide trouvé pour {projection.Name} (EPSG:{projection.Epsg})");
+        Logger.Debug($"Aucun code valide trouv� pour {projection.Name} (EPSG:{projection.Epsg})");
         return null;
     }
 
@@ -414,41 +419,41 @@ public static partial class GeoLocationService
     #region Coordinate Conversion
 
     /// <summary>
-    /// Convertit des coordonnées projetées en coordonnées géographiques (WGS84)
+    /// Convertit des coordonn�es projet�es en coordonn�es g�ographiques (WGS84)
     /// selon le type de projection.
     /// </summary>
-    /// <param name="x">Coordonnée X (Est) en mètres</param>
-    /// <param name="y">Coordonnée Y (Nord) en mètres</param>
+    /// <param name="x">Coordonn�e X (Est) en m�tres</param>
+    /// <param name="y">Coordonn�e Y (Nord) en m�tres</param>
     /// <param name="projection">Projection source</param>
-    /// <returns>Tuple (longitude, latitude) en degrés décimaux</returns>
+    /// <returns>Tuple (longitude, latitude) en degr�s d�cimaux</returns>
     public static (double Longitude, double Latitude) ProjectedToGeographic(double x, double y, ProjectionInfo projection)
     {
         if (projection == null)
             throw new ArgumentNullException(nameof(projection));
 
-        // Si déjà en coordonnées géographiques
+        // Si d�j� en coordonn�es g�ographiques
         if (projection.Unit == "deg")
             return (x, y);
 
         var code = projection.Code.ToUpperInvariant();
 
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         // RGF93 / Lambert 93 (EPSG:2154)
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         if (code.Contains("LAMB93") || projection.Epsg == 2154)
         {
             return CoordinateService.Lambert93ToWgs84(x, y);
         }
 
-        // ═══════════════════════════════════════════════════════════
-        // RGF93 / CC42 à CC50 (EPSG:3942-3950)
+        // -----------------------------------------------------------
+        // RGF93 / CC42 � CC50 (EPSG:3942-3950)
         // Accepte toutes les variantes: RGF93.CC49, RGF93-CC49, CC49, etc.
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         if (code.Contains("CC") || (projection.Epsg >= 3942 && projection.Epsg <= 3950))
         {
             int zone = ExtractCCZone(code);
 
-            // Si pas trouvé dans le code, essayer via EPSG
+            // Si pas trouv� dans le code, essayer via EPSG
             if (zone == 0 && projection.Epsg >= 3942 && projection.Epsg <= 3950)
             {
                 zone = projection.Epsg - 3900;  // EPSG 3942 -> zone 42
@@ -460,9 +465,9 @@ public static partial class GeoLocationService
             }
         }
 
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         // UTM Zones (WGS84, ETRS89, etc.)
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         if (code.Contains("UTM"))
         {
             var (zone, northern) = ExtractUtmZoneInfo(code, projection);
@@ -472,74 +477,74 @@ public static partial class GeoLocationService
             }
         }
 
-        // ═══════════════════════════════════════════════════════════
-        // NTF / Lambert zones (ancien système français)
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
+        // NTF / Lambert zones (ancien syst�me fran�ais)
+        // -----------------------------------------------------------
         if (code.Contains("NTF") && code.Contains("LAMBERT"))
         {
             return NtfLambertToWgs84(x, y, code);
         }
 
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         // Suisse CH1903/CH1903+ (LV03/LV95)
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         if (code.Contains("CH1903") || code.Contains("LV03") || code.Contains("LV95"))
         {
             return SwissToWgs84(x, y, projection);
         }
 
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         // Belgique BD72 / Lambert 72 et ETRS89 / Lambert 2008
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         if (code.Contains("BELGIAN") || code.Contains("BD72") || projection.Epsg == 31370 || projection.Epsg == 3812)
         {
             return BelgianLambertToWgs84(x, y, projection);
         }
 
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         // Luxembourg LUREF
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         if (code.Contains("LUREF") || code.Contains("LUXEMBOURG") || projection.Epsg == 2169)
         {
             return LuxembourgToWgs84(x, y);
         }
 
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         // Pays-Bas Amersfoort / RD New
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         if (code.Contains("AMERSFOORT") || code.Contains("RD-NEW") || projection.Epsg == 28992)
         {
             return DutchRdToWgs84(x, y);
         }
 
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         // Royaume-Uni OSGB36 / British National Grid
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
         if (code.Contains("OSGB") || code.Contains("BRITISH") || projection.Epsg == 27700)
         {
             return BritishNationalGridToWgs84(x, y);
         }
 
-        // ═══════════════════════════════════════════════════════════
-        // Fallback: Approximation basée sur les paramètres de projection
-        // ═══════════════════════════════════════════════════════════
+        // -----------------------------------------------------------
+        // Fallback: Approximation bas�e sur les param�tres de projection
+        // -----------------------------------------------------------
         return ApproximateInverseProjection(x, y, projection);
     }
 
     /// <summary>
-    /// Convertit des coordonnées géographiques (WGS84) en coordonnées projetées
+    /// Convertit des coordonn�es g�ographiques (WGS84) en coordonn�es projet�es
     /// selon le type de projection.
     /// </summary>
-    /// <param name="longitude">Longitude en degrés décimaux</param>
-    /// <param name="latitude">Latitude en degrés décimaux</param>
+    /// <param name="longitude">Longitude en degr�s d�cimaux</param>
+    /// <param name="latitude">Latitude en degr�s d�cimaux</param>
     /// <param name="projection">Projection cible</param>
-    /// <returns>Tuple (X, Y) en mètres</returns>
+    /// <returns>Tuple (X, Y) en m�tres</returns>
     public static (double X, double Y) GeographicToProjected(double longitude, double latitude, ProjectionInfo projection)
     {
         if (projection == null)
             throw new ArgumentNullException(nameof(projection));
 
-        // Si déjà en coordonnées géographiques
+        // Si d�j� en coordonn�es g�ographiques
         if (projection.Unit == "deg")
             return (longitude, latitude);
 
@@ -573,11 +578,11 @@ public static partial class GeoLocationService
     #region Private Methods - Helpers
 
     /// <summary>
-    /// Détermine le point de référence par défaut dans le dessin
+    /// D�termine le point de r�f�rence par d�faut dans le dessin
     /// </summary>
     private static Point3d GetDefaultDesignPoint(Database db, Transaction tr, ProjectionInfo projection)
     {
-        // 1. Essayer de calculer le centroïde des objets du dessin
+        // 1. Essayer de calculer le centro�de des objets du dessin
         var centroid = CalculateDrawingCentroid(db, tr);
 
         if (centroid.HasValue && projection.ContainsPoint(centroid.Value.X, centroid.Value.Y))
@@ -589,7 +594,7 @@ public static partial class GeoLocationService
         double centerX = (projection.MinX + projection.MaxX) / 2;
         double centerY = (projection.MinY + projection.MaxY) / 2;
 
-        // 3. Vérifier les limites du dessin
+        // 3. V�rifier les limites du dessin
         try
         {
             var extents = db.Extmin;
@@ -615,11 +620,11 @@ public static partial class GeoLocationService
     }
 
     /// <summary>
-    /// Calcule le centroïde approximatif des objets du dessin
+    /// Calcule le centro�de approximatif des objets du dessin
     /// </summary>
-    /// <param name="db">Base de données AutoCAD</param>
+    /// <param name="db">Base de donn�es AutoCAD</param>
     /// <param name="tr">Transaction active</param>
-    /// <returns>Centroïde ou null si aucun objet valide</returns>
+    /// <returns>Centro�de ou null si aucun objet valide</returns>
     public static Point3d? CalculateDrawingCentroid(Database db, Transaction tr)
     {
         var bt = (BlockTable)tr.GetObject(db.BlockTableId, OpenMode.ForRead);
@@ -648,12 +653,12 @@ public static partial class GeoLocationService
                 sumY += cy;
                 count++;
 
-                // Limiter le nombre d'objets analysés
+                // Limiter le nombre d'objets analys�s
                 if (count > 1000) break;
             }
             catch
             {
-                // Ignorer les entités problématiques
+                // Ignorer les entit�s probl�matiques
             }
         }
 

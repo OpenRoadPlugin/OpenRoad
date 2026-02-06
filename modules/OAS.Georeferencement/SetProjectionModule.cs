@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using OpenAsphalte.Abstractions;
 using OpenAsphalte.Modules.Georeferencement.Commands;
@@ -15,14 +20,14 @@ using OpenAsphalte.Modules.Georeferencement.Commands;
 namespace OpenAsphalte.Modules.Georeferencement;
 
 /// <summary>
-/// Module de géoréférencement pour Open Asphalte.
-/// Gestion des systèmes de coordonnées et projection des dessins AutoCAD.
+/// Module de g�or�f�rencement pour Open Asphalte.
+/// Gestion des syst�mes de coordonn�es et projection des dessins AutoCAD.
 /// </summary>
 public class SetProjectionModule : ModuleBase
 {
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // IDENTIFICATION DU MODULE
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Identifiant unique du module
@@ -30,14 +35,14 @@ public class SetProjectionModule : ModuleBase
     public override string Id => "setprojection";
 
     /// <summary>
-    /// Nom affiché dans les menus et rubans
+    /// Nom affich� dans les menus et rubans
     /// </summary>
-    public override string Name => "Définir une projection";
+    public override string Name => "D�finir une projection";
 
     /// <summary>
     /// Description du module
     /// </summary>
-    public override string Description => "Outils pour définir le système de projection du dessin";
+    public override string Description => "Outils pour d�finir le syst�me de projection du dessin";
 
     /// <summary>
     /// Contributeurs du module
@@ -58,9 +63,9 @@ public class SetProjectionModule : ModuleBase
     /// </summary>
     public override string Author => "Charles TILLY";
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // AFFICHAGE UI
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Ordre d'affichage (modules officiels entre 10-50)
@@ -68,7 +73,7 @@ public class SetProjectionModule : ModuleBase
     public override int Order => 10;
 
     /// <summary>
-    /// Clé de traduction pour le nom
+    /// Cl� de traduction pour le nom
     /// </summary>
     public override string? NameKey => "setproj.name";
 
@@ -77,9 +82,9 @@ public class SetProjectionModule : ModuleBase
     /// </summary>
     public override string MinCoreVersion => "0.0.1";
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // COMMANDES
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Retourne tous les types contenant des commandes [CommandMethod]
@@ -89,80 +94,80 @@ public class SetProjectionModule : ModuleBase
         return [typeof(SetProjectionCommand)];
     }
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // TRADUCTIONS (FR, EN, ES)
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
-    /// Retourne les traductions spécifiques au module
+    /// Retourne les traductions sp�cifiques au module
     /// </summary>
     public override IDictionary<string, IDictionary<string, string>> GetTranslations()
     {
         return new Dictionary<string, IDictionary<string, string>>
         {
-            // ═══════════════════════════════════════════════════════
-            // FRANÇAIS
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
+            // FRAN�AIS
+            // -------------------------------------------------------
             ["fr"] = new Dictionary<string, string>
             {
-                // Menus / Catégories
+                // Menus / Cat�gories
                 ["menu.carto"] = "Cartographie",
-                ["menu.georef"] = "Géoréférencement",
+                ["menu.georef"] = "G�or�f�rencement",
 
                 // Module
-                ["setproj.name"] = "Définir une projection",
-                ["georef.name"] = "Géoréférencement",
+                ["setproj.name"] = "D�finir une projection",
+                ["georef.name"] = "G�or�f�rencement",
 
-                // Commande: Définir projection
-                ["georef.setproj.title"] = "Définir une projection",
-                ["georef.setproj.desc"] = "Définir le système de coordonnées du dessin",
-                ["georef.setproj.success"] = "Système de coordonnées défini : {0}",
-                ["georef.setproj.cancelled"] = "Opération annulée",
-                ["georef.setproj.cleared"] = "Système de coordonnées supprimé",
-                ["georef.setproj.error"] = "Erreur lors de la définition du système de coordonnées",
-                ["georef.setproj.error.notfound"] = "Système de coordonnées non reconnu. Vérifiez qu'AutoCAD Map 3D ou Civil 3D est installé et que le système est disponible.",
-                ["georef.setproj.current"] = "Système actuel : {0}",
-                ["georef.setproj.none"] = "Aucun système défini",
-                ["georef.setproj.detected"] = "Système détecté automatiquement : {0}",
-                ["georef.setproj.nodetection"] = "Impossible de détecter automatiquement le système",
-                ["georef.setproj.applied_info"] = "✓ Géolocalisation appliquée - Les Bing Maps et cartes sont maintenant géoréférencés",
+                // Commande: D�finir projection
+                ["georef.setproj.title"] = "D�finir une projection",
+                ["georef.setproj.desc"] = "D�finir le syst�me de coordonn�es du dessin",
+                ["georef.setproj.success"] = "Syst�me de coordonn�es d�fini : {0}",
+                ["georef.setproj.cancelled"] = "Op�ration annul�e",
+                ["georef.setproj.cleared"] = "Syst�me de coordonn�es supprim�",
+                ["georef.setproj.error"] = "Erreur lors de la d�finition du syst�me de coordonn�es",
+                ["georef.setproj.error.notfound"] = "Syst�me de coordonn�es non reconnu. V�rifiez qu'AutoCAD Map 3D ou Civil 3D est install� et que le syst�me est disponible.",
+                ["georef.setproj.current"] = "Syst�me actuel : {0}",
+                ["georef.setproj.none"] = "Aucun syst�me d�fini",
+                ["georef.setproj.detected"] = "Syst�me d�tect� automatiquement : {0}",
+                ["georef.setproj.nodetection"] = "Impossible de d�tecter automatiquement le syst�me",
+                ["georef.setproj.applied_info"] = "? G�olocalisation appliqu�e - Les Bing Maps et cartes sont maintenant g�or�f�renc�s",
 
-                // Fenêtre de sélection
-                ["georef.window.title"] = "Définir le système de coordonnées",
+                // Fen�tre de s�lection
+                ["georef.window.title"] = "D�finir le syst�me de coordonn�es",
                 ["georef.window.search"] = "Rechercher...",
-                ["georef.window.search.tooltip"] = "Rechercher par nom, code, pays ou région",
-                ["georef.window.list.header.name"] = "Système de coordonnées",
+                ["georef.window.search.tooltip"] = "Rechercher par nom, code, pays ou r�gion",
+                ["georef.window.list.header.name"] = "Syst�me de coordonn�es",
                 ["georef.window.list.header.code"] = "Code",
                 ["georef.window.list.header.country"] = "Pays",
-                ["georef.window.list.header.region"] = "Région",
-                ["georef.window.details"] = "Détails",
+                ["georef.window.list.header.region"] = "R�gion",
+                ["georef.window.details"] = "D�tails",
                 ["georef.window.details.name"] = "Nom :",
                 ["georef.window.details.code"] = "Code AutoCAD :",
                 ["georef.window.details.epsg"] = "EPSG :",
-                ["georef.window.details.unit"] = "Unité :",
+                ["georef.window.details.unit"] = "Unit� :",
                 ["georef.window.details.bounds"] = "Limites :",
                 ["georef.window.details.description"] = "Description :",
-                ["georef.window.current"] = "Système actuel :",
-                ["georef.window.detected"] = "Système détecté :",
+                ["georef.window.current"] = "Syst�me actuel :",
+                ["georef.window.detected"] = "Syst�me d�tect� :",
                 ["georef.window.none"] = "(Aucun)",
                 ["georef.window.clear"] = "Supprimer",
-                ["georef.window.clear.tooltip"] = "Supprimer le système de coordonnées actuel",
+                ["georef.window.clear.tooltip"] = "Supprimer le syst�me de coordonn�es actuel",
                 ["georef.window.apply"] = "Appliquer",
                 ["georef.window.cancel"] = "Annuler",
                 ["georef.window.groupby"] = "Grouper par pays",
                 ["georef.window.enablegeomap"] = "Activer Bing Maps (GEOMAP)",
-                ["georef.window.enablegeomap.tooltip"] = "Active l'affichage de la carte aérienne Bing Maps après application",
-                ["georef.window.results.none"] = "Aucun système trouvé",
-                ["georef.window.results.one"] = "1 système",
-                ["georef.window.results.many"] = "{0} systèmes",
-                ["georef.window.unit.meters"] = "Mètres",
-                ["georef.window.unit.degrees"] = "Degrés",
+                ["georef.window.enablegeomap.tooltip"] = "Active l'affichage de la carte a�rienne Bing Maps apr�s application",
+                ["georef.window.results.none"] = "Aucun syst�me trouv�",
+                ["georef.window.results.one"] = "1 syst�me",
+                ["georef.window.results.many"] = "{0} syst�mes",
+                ["georef.window.unit.meters"] = "M�tres",
+                ["georef.window.unit.degrees"] = "Degr�s",
                 ["georef.setproj.geomap.activating"] = "Activation de Bing Maps (GEOMAP)...",
             },
 
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
             // ENGLISH
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
             ["en"] = new Dictionary<string, string>
             {
                 // Menus / Categories
@@ -185,7 +190,7 @@ public class SetProjectionModule : ModuleBase
                 ["georef.setproj.none"] = "No system defined",
                 ["georef.setproj.detected"] = "Automatically detected system: {0}",
                 ["georef.setproj.nodetection"] = "Unable to automatically detect system",
-                ["georef.setproj.applied_info"] = "✓ Geolocation applied - Bing Maps and maps are now georeferenced",
+                ["georef.setproj.applied_info"] = "? Geolocation applied - Bing Maps and maps are now georeferenced",
                 ["georef.setproj.geomap.activating"] = "Activating Bing Maps (GEOMAP)...",
 
                 // Selection window
@@ -220,49 +225,49 @@ public class SetProjectionModule : ModuleBase
                 ["georef.window.unit.degrees"] = "Degrees",
             },
 
-            // ═══════════════════════════════════════════════════════
-            // ESPAÑOL
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
+            // ESPA�OL
+            // -------------------------------------------------------
             ["es"] = new Dictionary<string, string>
             {
                 // Menus / Categorias
-                ["menu.carto"] = "Cartografía",
-                ["menu.georef"] = "Georreferenciación",
+                ["menu.carto"] = "Cartograf�a",
+                ["menu.georef"] = "Georreferenciaci�n",
 
-                // Módulo
-                ["setproj.name"] = "Definir proyección",
-                ["georef.name"] = "Georreferenciación",
+                // M�dulo
+                ["setproj.name"] = "Definir proyecci�n",
+                ["georef.name"] = "Georreferenciaci�n",
 
-                // Comando: Definir proyección
-                ["georef.setproj.title"] = "Definir proyección",
+                // Comando: Definir proyecci�n
+                ["georef.setproj.title"] = "Definir proyecci�n",
                 ["georef.setproj.desc"] = "Definir el sistema de coordenadas del dibujo",
                 ["georef.setproj.success"] = "Sistema de coordenadas definido: {0}",
-                ["georef.setproj.cancelled"] = "Operación cancelada",
+                ["georef.setproj.cancelled"] = "Operaci�n cancelada",
                 ["georef.setproj.cleared"] = "Sistema de coordenadas eliminado",
                 ["georef.setproj.error"] = "Error al definir el sistema de coordenadas",
-                ["georef.setproj.error.notfound"] = "Sistema de coordenadas no reconocido. Verifique que AutoCAD Map 3D o Civil 3D esté instalado y que el sistema esté disponible.",
+                ["georef.setproj.error.notfound"] = "Sistema de coordenadas no reconocido. Verifique que AutoCAD Map 3D o Civil 3D est� instalado y que el sistema est� disponible.",
                 ["georef.setproj.current"] = "Sistema actual: {0}",
-                ["georef.setproj.none"] = "Ningún sistema definido",
-                ["georef.setproj.detected"] = "Sistema detectado automáticamente: {0}",
-                ["georef.setproj.nodetection"] = "No se puede detectar el sistema automáticamente",
-                ["georef.setproj.applied_info"] = "✓ Geolocalización aplicada - Bing Maps y mapas están ahora georreferenciados",
+                ["georef.setproj.none"] = "Ning�n sistema definido",
+                ["georef.setproj.detected"] = "Sistema detectado autom�ticamente: {0}",
+                ["georef.setproj.nodetection"] = "No se puede detectar el sistema autom�ticamente",
+                ["georef.setproj.applied_info"] = "? Geolocalizaci�n aplicada - Bing Maps y mapas est�n ahora georreferenciados",
                 ["georef.setproj.geomap.activating"] = "Activando Bing Maps (GEOMAP)...",
 
-                // Ventana de selección
+                // Ventana de selecci�n
                 ["georef.window.title"] = "Definir sistema de coordenadas",
                 ["georef.window.search"] = "Buscar...",
-                ["georef.window.search.tooltip"] = "Buscar por nombre, código, país o región",
+                ["georef.window.search.tooltip"] = "Buscar por nombre, c�digo, pa�s o regi�n",
                 ["georef.window.list.header.name"] = "Sistema de coordenadas",
-                ["georef.window.list.header.code"] = "Código",
-                ["georef.window.list.header.country"] = "País",
-                ["georef.window.list.header.region"] = "Región",
+                ["georef.window.list.header.code"] = "C�digo",
+                ["georef.window.list.header.country"] = "Pa�s",
+                ["georef.window.list.header.region"] = "Regi�n",
                 ["georef.window.details"] = "Detalles",
                 ["georef.window.details.name"] = "Nombre:",
-                ["georef.window.details.code"] = "Código AutoCAD:",
+                ["georef.window.details.code"] = "C�digo AutoCAD:",
                 ["georef.window.details.epsg"] = "EPSG:",
                 ["georef.window.details.unit"] = "Unidad:",
-                ["georef.window.details.bounds"] = "Límites:",
-                ["georef.window.details.description"] = "Descripción:",
+                ["georef.window.details.bounds"] = "L�mites:",
+                ["georef.window.details.description"] = "Descripci�n:",
                 ["georef.window.current"] = "Sistema actual:",
                 ["georef.window.detected"] = "Sistema detectado:",
                 ["georef.window.none"] = "(Ninguno)",
@@ -270,10 +275,10 @@ public class SetProjectionModule : ModuleBase
                 ["georef.window.clear.tooltip"] = "Eliminar sistema de coordenadas actual",
                 ["georef.window.apply"] = "Aplicar",
                 ["georef.window.cancel"] = "Cancelar",
-                ["georef.window.groupby"] = "Agrupar por país",
+                ["georef.window.groupby"] = "Agrupar por pa�s",
                 ["georef.window.enablegeomap"] = "Activar Bing Maps (GEOMAP)",
-                ["georef.window.enablegeomap.tooltip"] = "Activa la imagen aérea de Bing Maps después de aplicar la proyección",
-                ["georef.window.results.none"] = "Ningún sistema encontrado",
+                ["georef.window.enablegeomap.tooltip"] = "Activa la imagen a�rea de Bing Maps despu�s de aplicar la proyecci�n",
+                ["georef.window.results.none"] = "Ning�n sistema encontrado",
                 ["georef.window.results.one"] = "1 sistema",
                 ["georef.window.results.many"] = "{0} sistemas",
                 ["georef.window.unit.meters"] = "Metros",

@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Windows;
 using System.Windows.Controls;
@@ -20,15 +25,15 @@ using L10n = OpenAsphalte.Localization.Localization;
 namespace OpenAsphalte.Modules.DynamicSnap.Views;
 
 /// <summary>
-/// Fenêtre de paramétrage de l'accrochage dynamique OAS.
-/// Permet de choisir les modes d'accrochage, couleurs et tolérances.
-/// Les paramètres sont stockés globalement dans config.json.
+/// Fen�tre de param�trage de l'accrochage dynamique OAS.
+/// Permet de choisir les modes d'accrochage, couleurs et tol�rances.
+/// Les param�tres sont stock�s globalement dans config.json.
 /// </summary>
 public partial class DynamicSnapSettingsWindow : Window
 {
-    // ═══════════════════════════════════════════════════════════
-    // Mapping slider tick → LineWeight int value
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // Mapping slider tick ? LineWeight int value
+    // -----------------------------------------------------------
     private static readonly int[] LineWeightValues = [15, 20, 25, 30, 40, 50, 70];
 
     #region Constructor
@@ -46,8 +51,8 @@ public partial class DynamicSnapSettingsWindow : Window
     #region Private Methods
 
     /// <summary>
-    /// Remplit les ComboBox de couleurs avec des pastilles colorées (pas d'emoji).
-    /// Chaque item est un StackPanel contenant un Rectangle coloré + un TextBlock.
+    /// Remplit les ComboBox de couleurs avec des pastilles color�es (pas d'emoji).
+    /// Chaque item est un StackPanel contenant un Rectangle color� + un TextBlock.
     /// </summary>
     private void PopulateColorCombos()
     {
@@ -68,14 +73,14 @@ public partial class DynamicSnapSettingsWindow : Window
     }
 
     /// <summary>
-    /// Ajoute les items colorés à un ComboBox
+    /// Ajoute les items color�s � un ComboBox
     /// </summary>
     private static void PopulateOneColorCombo(ComboBox combo, (short tag, Color color, string nameFr)[] colors)
     {
         combo.Items.Clear();
         foreach (var (tag, color, nameFr) in colors)
         {
-            // Clé de traduction par couleur
+            // Cl� de traduction par couleur
             string key = $"dynamicsnap.color.{nameFr.ToLowerInvariant()}";
             string label = L10n.T(key, nameFr);
 
@@ -116,17 +121,17 @@ public partial class DynamicSnapSettingsWindow : Window
     }
 
     /// <summary>
-    /// Applique les traductions aux éléments de l'interface
+    /// Applique les traductions aux �l�ments de l'interface
     /// </summary>
     private void ApplyTranslations()
     {
-        Title = L10n.T("dynamicsnap.settings.title", "Paramètres d'accrochage OAS");
-        TitleLabel.Text = L10n.T("dynamicsnap.settings.header", "Paramètres d'accrochage OAS");
+        Title = L10n.T("dynamicsnap.settings.title", "Param�tres d'accrochage OAS");
+        TitleLabel.Text = L10n.T("dynamicsnap.settings.header", "Param�tres d'accrochage OAS");
         SnapModesHeader.Text = L10n.T("dynamicsnap.settings.modes", "Modes d'accrochage actifs");
         AppearanceHeader.Text = L10n.T("dynamicsnap.settings.appearance", "Apparence des marqueurs");
 
         VertexCheckBox.Content = L10n.T("dynamicsnap.settings.vertex", "Sommets (Vertex)");
-        EndpointCheckBox.Content = L10n.T("dynamicsnap.settings.endpoint", "Extrémités (Endpoint)");
+        EndpointCheckBox.Content = L10n.T("dynamicsnap.settings.endpoint", "Extr�mit�s (Endpoint)");
         MidpointCheckBox.Content = L10n.T("dynamicsnap.settings.midpoint", "Milieux de segments (Midpoint)");
         NearestCheckBox.Content = L10n.T("dynamicsnap.settings.nearest", "Point le plus proche (Nearest)");
 
@@ -139,8 +144,8 @@ public partial class DynamicSnapSettingsWindow : Window
         ActiveColorLabel.Text = L10n.T("dynamicsnap.settings.activecolor", "Couleur actif :");
         FilledCheckBox.Content = L10n.T("dynamicsnap.settings.filled", "Marqueurs pleins");
         FilledCheckBox.ToolTip = L10n.T("dynamicsnap.settings.filled.tooltip", "Remplir les marqueurs au lieu d'afficher uniquement le contour");
-        LineWeightLabel.Text = L10n.T("dynamicsnap.settings.lineweight", "Épaisseur trait :");
-        ToleranceLabel.Text = L10n.T("dynamicsnap.settings.tolerance", "Tolérance :");
+        LineWeightLabel.Text = L10n.T("dynamicsnap.settings.lineweight", "�paisseur trait :");
+        ToleranceLabel.Text = L10n.T("dynamicsnap.settings.tolerance", "Tol�rance :");
         MarkerSizeLabel.Text = L10n.T("dynamicsnap.settings.markersize", "Taille marqueur :");
 
         MarkerColorCombo.ToolTip = L10n.T("dynamicsnap.settings.color.tooltip");
@@ -149,24 +154,24 @@ public partial class DynamicSnapSettingsWindow : Window
         MarkerSizeSlider.ToolTip = L10n.T("dynamicsnap.settings.markersize.tooltip");
 
         // Traductions surbrillance
-        HighlightHeader.Text = L10n.T("dynamicsnap.highlight.header", "Surbrillance des entités");
+        HighlightHeader.Text = L10n.T("dynamicsnap.highlight.header", "Surbrillance des entit�s");
         HighlightEnabledCheckBox.Content = L10n.T("dynamicsnap.highlight.enabled", "Activer la surbrillance");
         HighlightEnabledCheckBox.ToolTip = L10n.T("dynamicsnap.highlight.enabled.tooltip");
         HighlightColorLabel.Text = L10n.T("dynamicsnap.highlight.color", "Couleur surbrillance :");
         HighlightColorCombo.ToolTip = L10n.T("dynamicsnap.highlight.color.tooltip");
-        HighlightPrimaryWeightLabel.Text = L10n.T("dynamicsnap.highlight.primaryweight", "Épaisseur principale :");
+        HighlightPrimaryWeightLabel.Text = L10n.T("dynamicsnap.highlight.primaryweight", "�paisseur principale :");
         HighlightPrimaryWeightSlider.ToolTip = L10n.T("dynamicsnap.highlight.primaryweight.tooltip");
-        HighlightSecondaryWeightLabel.Text = L10n.T("dynamicsnap.highlight.secondaryweight", "Épaisseur secondaire :");
+        HighlightSecondaryWeightLabel.Text = L10n.T("dynamicsnap.highlight.secondaryweight", "�paisseur secondaire :");
         HighlightSecondaryWeightSlider.ToolTip = L10n.T("dynamicsnap.highlight.secondaryweight.tooltip");
 
         ApplyButton.Content = L10n.T("dynamicsnap.settings.apply", "Appliquer");
         CancelButton.Content = L10n.T("dynamicsnap.settings.cancel", "Annuler");
-        ResetButton.Content = L10n.T("dynamicsnap.settings.reset", "Réinitialiser");
+        ResetButton.Content = L10n.T("dynamicsnap.settings.reset", "R�initialiser");
         ResetButton.ToolTip = L10n.T("dynamicsnap.settings.reset.tooltip");
     }
 
     /// <summary>
-    /// Charge les paramètres actuels dans l'interface
+    /// Charge les param�tres actuels dans l'interface
     /// </summary>
     private void LoadSettingsToUI()
     {
@@ -185,17 +190,17 @@ public partial class DynamicSnapSettingsWindow : Window
         // Marqueurs pleins
         FilledCheckBox.IsChecked = config.FilledMarkers;
 
-        // Épaisseur de ligne (trouver l'index du slider)
+        // �paisseur de ligne (trouver l'index du slider)
         LineWeightSlider.Value = LineWeightValueToSlider(config.MarkerLineWeight);
         UpdateLineWeightLabel();
 
-        // Tolérance et taille
+        // Tol�rance et taille
         ToleranceSlider.Value = config.ToleranceViewRatio;
         MarkerSizeSlider.Value = config.MarkerViewRatio;
         UpdateToleranceLabel();
         UpdateMarkerSizeLabel();
 
-        // Charger paramètres surbrillance
+        // Charger param�tres surbrillance
         var hlConfig = DynamicSnapService.HighlightConfiguration;
         HighlightEnabledCheckBox.IsChecked = hlConfig.Enabled;
         SelectComboByTag(HighlightColorCombo, hlConfig.HighlightColor);
@@ -207,7 +212,7 @@ public partial class DynamicSnapSettingsWindow : Window
     }
 
     /// <summary>
-    /// Sélectionne un élément dans un ComboBox par son Tag
+    /// S�lectionne un �l�ment dans un ComboBox par son Tag
     /// </summary>
     private static void SelectComboByTag(ComboBox combo, short tag)
     {
@@ -226,7 +231,7 @@ public partial class DynamicSnapSettingsWindow : Window
     }
 
     /// <summary>
-    /// Récupère la valeur Tag du ComboBox sélectionné
+    /// R�cup�re la valeur Tag du ComboBox s�lectionn�
     /// </summary>
     private static short GetComboTag(ComboBox combo, short defaultValue)
     {
@@ -249,7 +254,7 @@ public partial class DynamicSnapSettingsWindow : Window
             if (LineWeightValues[i] >= value)
                 return i;
         }
-        return 3; // 0.30mm par défaut
+        return 3; // 0.30mm par d�faut
     }
 
     /// <summary>
@@ -263,7 +268,7 @@ public partial class DynamicSnapSettingsWindow : Window
     }
 
     /// <summary>
-    /// Applique les valeurs de l'interface à la configuration et sauvegarde
+    /// Applique les valeurs de l'interface � la configuration et sauvegarde
     /// </summary>
     private void ApplyUIToSettings()
     {
@@ -276,7 +281,7 @@ public partial class DynamicSnapSettingsWindow : Window
         if (MidpointCheckBox.IsChecked == true) modes |= SnapMode.Midpoint;
         if (NearestCheckBox.IsChecked == true) modes |= SnapMode.Nearest;
 
-        // Au moins un mode doit être actif
+        // Au moins un mode doit �tre actif
         if (modes == SnapMode.None)
         {
             modes = SnapMode.PolylineFull;
@@ -292,7 +297,7 @@ public partial class DynamicSnapSettingsWindow : Window
 
         DynamicSnapService.DefaultConfiguration = config;
 
-        // Appliquer paramètres surbrillance
+        // Appliquer param�tres surbrillance
         var hlConfig = DynamicSnapService.HighlightConfiguration;
         hlConfig.Enabled = HighlightEnabledCheckBox.IsChecked == true;
         hlConfig.HighlightColor = GetComboTag(HighlightColorCombo, 4);
@@ -304,7 +309,7 @@ public partial class DynamicSnapSettingsWindow : Window
     }
 
     /// <summary>
-    /// Réinitialise tous les paramètres aux valeurs par défaut
+    /// R�initialise tous les param�tres aux valeurs par d�faut
     /// </summary>
     private void ResetToDefaults()
     {
@@ -342,7 +347,7 @@ public partial class DynamicSnapSettingsWindow : Window
     }
 
     /// <summary>
-    /// Active/désactive les contrôles de surbrillance selon l'état de la checkbox
+    /// Active/d�sactive les contr�les de surbrillance selon l'�tat de la checkbox
     /// </summary>
     private void UpdateHighlightControlsEnabled()
     {
@@ -351,7 +356,7 @@ public partial class DynamicSnapSettingsWindow : Window
         HighlightPrimaryWeightGrid.IsEnabled = enabled;
         HighlightSecondaryWeightGrid.IsEnabled = enabled;
 
-        // Opacité visuelle pour les contrôles désactivés
+        // Opacit� visuelle pour les contr�les d�sactiv�s
         HighlightColorGrid.Opacity = enabled ? 1.0 : 0.5;
         HighlightPrimaryWeightGrid.Opacity = enabled ? 1.0 : 0.5;
         HighlightSecondaryWeightGrid.Opacity = enabled ? 1.0 : 0.5;

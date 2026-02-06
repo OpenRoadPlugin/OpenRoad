@@ -7,7 +7,7 @@
 #ifndef MyAppVersion
   #define MyAppVersion GetStringFileInfo("..\bin\OAS.Core.dll", "ProductVersion")
   #if MyAppVersion == ""
-    #define MyAppVersion "0.0.1"
+    #define MyAppVersion "0.0.3"
   #endif
 #endif
 

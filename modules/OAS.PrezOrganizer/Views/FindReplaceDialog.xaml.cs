@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Windows;
 using System.Windows.Controls;
@@ -18,8 +23,8 @@ using L10n = OpenAsphalte.Localization.Localization;
 namespace OpenAsphalte.Modules.PrezOrganizer.Views;
 
 /// <summary>
-/// BoÃ®te de dialogue Chercher et Remplacer dans les noms de prÃ©sentations.
-/// Fournit une prÃ©visualisation en temps rÃ©el des modifications.
+/// Boîte de dialogue Chercher et Remplacer dans les noms de présentations.
+/// Fournit une prévisualisation en temps réel des modifications.
 /// </summary>
 public partial class FindReplaceDialog : Window
 {
@@ -27,19 +32,19 @@ public partial class FindReplaceDialog : Window
     private List<LayoutItem> _previewItems;
 
     /// <summary>
-    /// Items avec les noms modifiÃ©s aprÃ¨s remplacement.
+    /// Items avec les noms modifiés après remplacement.
     /// </summary>
     public List<LayoutItem> ResultItems => _previewItems;
 
     /// <summary>
-    /// Nombre de remplacements effectuÃ©s.
+    /// Nombre de remplacements effectués.
     /// </summary>
     public int ChangesMade { get; private set; }
 
     /// <summary>
-    /// CrÃ©e le dialogue Find &amp; Replace.
+    /// Crée le dialogue Find &amp; Replace.
     /// </summary>
-    /// <param name="items">Liste des prÃ©sentations courantes</param>
+    /// <param name="items">Liste des présentations courantes</param>
     public FindReplaceDialog(List<LayoutItem> items)
     {
         InitializeComponent();
@@ -66,7 +71,7 @@ public partial class FindReplaceDialog : Window
     }
 
     /// <summary>
-    /// Met Ã  jour la prÃ©visualisation quand les champs changent.
+    /// Met à jour la prévisualisation quand les champs changent.
     /// </summary>
     private void OnFieldChanged(object sender, RoutedEventArgs e)
     {
@@ -88,7 +93,7 @@ public partial class FindReplaceDialog : Window
             return;
         }
 
-        // RecrÃ©er la prÃ©visualisation
+        // Recréer la prévisualisation
         _previewItems = _items.Select(i => i.Clone()).ToList();
         var comparison = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
         int matchCount = 0;
@@ -141,7 +146,7 @@ public partial class FindReplaceDialog : Window
     }
 
     /// <summary>
-    /// Remplacement de chaÃ®ne avec contrÃ´le de la casse.
+    /// Remplacement de chaîne avec contrôle de la casse.
     /// </summary>
     private static string ReplaceString(string input, string search, string replace, StringComparison comparison)
     {
@@ -170,7 +175,7 @@ public partial class FindReplaceDialog : Window
     private static string T(string key, string? defaultValue = null) => L10n.T(key, defaultValue ?? key);
 
     /// <summary>
-    /// ModÃ¨le pour les lignes de prÃ©visualisation.
+    /// Modèle pour les lignes de prévisualisation.
     /// </summary>
     private class PreviewRow
     {

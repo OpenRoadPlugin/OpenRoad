@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.DatabaseServices;
 using AcColor = Autodesk.AutoCAD.Colors.Color;
@@ -17,22 +22,22 @@ namespace OpenAsphalte.Services;
 
 /// <summary>
 /// Service de gestion des calques AutoCAD.
-/// Fournit des mÃ©thodes utilitaires pour crÃ©er, modifier et interroger les calques.
+/// Fournit des méthodes utilitaires pour créer, modifier et interroger les calques.
 /// </summary>
 /// <remarks>
-/// Toutes les mÃ©thodes nÃ©cessitent une transaction active.
+/// Toutes les méthodes nécessitent une transaction active.
 /// Utilisez <c>CommandBase.ExecuteInTransaction</c> pour obtenir une transaction.
 /// </remarks>
 public static class LayerService
 {
     /// <summary>
-    /// CrÃ©e un calque s'il n'existe pas, ou rÃ©cupÃ¨re son ObjectId s'il existe dÃ©jÃ .
+    /// Crée un calque s'il n'existe pas, ou récupère son ObjectId s'il existe déjà.
     /// </summary>
     /// <param name="db">Database AutoCAD cible</param>
-    /// <param name="tr">Transaction active (doit Ãªtre en cours)</param>
-    /// <param name="layerName">Nom du calque Ã  crÃ©er ou rÃ©cupÃ©rer</param>
-    /// <param name="color">Couleur du calque (dÃ©faut: blanc/noir selon fond)</param>
-    /// <param name="linetype">Type de ligne (dÃ©faut: CONTINUOUS). Doit exister dans le dessin.</param>
+    /// <param name="tr">Transaction active (doit être en cours)</param>
+    /// <param name="layerName">Nom du calque à créer ou récupérer</param>
+    /// <param name="color">Couleur du calque (défaut: blanc/noir selon fond)</param>
+    /// <param name="linetype">Type de ligne (défaut: CONTINUOUS). Doit exister dans le dessin.</param>
     /// <returns>ObjectId du calque (nouveau ou existant)</returns>
     /// <example>
     /// <code>
@@ -75,13 +80,13 @@ public static class LayerService
     }
     
     /// <summary>
-    /// RÃ©cupÃ¨re tous les calques du dessin avec leurs propriÃ©tÃ©s.
+    /// Récupère tous les calques du dessin avec leurs propriétés.
     /// </summary>
     /// <param name="db">Database AutoCAD source</param>
     /// <param name="tr">Transaction active</param>
-    /// <returns>Liste de <see cref="LayerInfo"/> contenant les propriÃ©tÃ©s de chaque calque</returns>
+    /// <returns>Liste de <see cref="LayerInfo"/> contenant les propriétés de chaque calque</returns>
     /// <remarks>
-    /// Inclut le calque "0" et tous les calques crÃ©Ã©s par l'utilisateur.
+    /// Inclut le calque "0" et tous les calques créés par l'utilisateur.
     /// Pour filtrer les calques visibles, utilisez <see cref="GetVisibleLayers"/>.
     /// </remarks>
     public static List<LayerInfo> GetAllLayers(Database db, Transaction tr)
@@ -107,7 +112,7 @@ public static class LayerService
     }
     
     /// <summary>
-    /// RÃ©cupÃ¨re les calques visibles (non Ã©teints, non gelÃ©s)
+    /// Récupère les calques visibles (non éteints, non gelés)
     /// </summary>
     public static List<LayerInfo> GetVisibleLayers(Database db, Transaction tr)
     {
@@ -117,7 +122,7 @@ public static class LayerService
     }
     
     /// <summary>
-    /// VÃ©rifie si un calque existe
+    /// Vérifie si un calque existe
     /// </summary>
     public static bool LayerExists(Database db, Transaction tr, string layerName)
     {
@@ -126,7 +131,7 @@ public static class LayerService
     }
     
     /// <summary>
-    /// DÃ©finit le calque courant
+    /// Définit le calque courant
     /// </summary>
     public static void SetCurrentLayer(Database db, Transaction tr, string layerName)
     {
@@ -138,7 +143,7 @@ public static class LayerService
     }
     
     /// <summary>
-    /// Active/dÃ©sactive un calque
+    /// Active/désactive un calque
     /// </summary>
     public static void SetLayerOn(Database db, Transaction tr, string layerName, bool on)
     {
@@ -151,7 +156,7 @@ public static class LayerService
     }
     
     /// <summary>
-    /// GÃ¨le/dÃ©gÃ¨le un calque
+    /// Gèle/dégèle un calque
     /// </summary>
     public static void SetLayerFrozen(Database db, Transaction tr, string layerName, bool frozen)
     {
@@ -178,12 +183,12 @@ public class LayerInfo
     /// <summary>ObjectId du calque</summary>
     public ObjectId ObjectId { get; set; }
     
-    /// <summary>Calque allumÃ©</summary>
+    /// <summary>Calque allumé</summary>
     public bool IsOn { get; set; } = true;
     
-    /// <summary>Calque gelÃ©</summary>
+    /// <summary>Calque gelé</summary>
     public bool IsFrozen { get; set; } = false;
     
-    /// <summary>Calque verrouillÃ©</summary>
+    /// <summary>Calque verrouillé</summary>
     public bool IsLocked { get; set; } = false;
 }

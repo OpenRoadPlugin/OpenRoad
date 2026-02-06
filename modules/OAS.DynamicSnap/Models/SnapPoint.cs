@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -15,18 +20,18 @@ using Autodesk.AutoCAD.DatabaseServices;
 namespace OpenAsphalte.Modules.DynamicSnap.Models;
 
 /// <summary>
-/// ReprÃ©sente un point d'accrochage dÃ©tectÃ© par le systÃ¨me OAS Dynamic Snap.
-/// Contient les coordonnÃ©es, le type d'accrochage et les mÃ©tadonnÃ©es associÃ©es.
+/// Représente un point d'accrochage détecté par le système OAS Dynamic Snap.
+/// Contient les coordonnées, le type d'accrochage et les métadonnées associées.
 /// </summary>
 public sealed class SnapPoint : IComparable<SnapPoint>
 {
     /// <summary>
-    /// CoordonnÃ©es 3D du point d'accrochage
+    /// Coordonnées 3D du point d'accrochage
     /// </summary>
     public Point3d Point { get; init; }
 
     /// <summary>
-    /// Type d'accrochage qui a gÃ©nÃ©rÃ© ce point
+    /// Type d'accrochage qui a généré ce point
     /// </summary>
     public SnapMode Mode { get; init; }
 
@@ -36,7 +41,7 @@ public sealed class SnapPoint : IComparable<SnapPoint>
     public double Distance { get; init; }
 
     /// <summary>
-    /// ObjectId de l'entitÃ© source (si applicable)
+    /// ObjectId de l'entité source (si applicable)
     /// </summary>
     public ObjectId EntityId { get; init; }
 
@@ -46,22 +51,22 @@ public sealed class SnapPoint : IComparable<SnapPoint>
     public int VertexIndex { get; init; } = -1;
 
     /// <summary>
-    /// ParamÃ¨tre sur la courbe (pour les modes basÃ©s sur courbe)
+    /// Paramètre sur la courbe (pour les modes basés sur courbe)
     /// </summary>
     public double CurveParameter { get; init; } = double.NaN;
 
     /// <summary>
-    /// Distance curviligne sur l'entitÃ© (pour polylignes)
+    /// Distance curviligne sur l'entité (pour polylignes)
     /// </summary>
     public double DistanceAlongCurve { get; init; } = double.NaN;
 
     /// <summary>
-    /// PrioritÃ© d'affichage (plus bas = plus prioritaire)
+    /// Priorité d'affichage (plus bas = plus prioritaire)
     /// </summary>
     public int Priority { get; init; } = 100;
 
     /// <summary>
-    /// Indique si ce point est actuellement surlignÃ©
+    /// Indique si ce point est actuellement surligné
     /// </summary>
     public bool IsHighlighted { get; set; }
 
@@ -78,7 +83,7 @@ public sealed class SnapPoint : IComparable<SnapPoint>
     }
 
     /// <summary>
-    /// DÃ©termine la prioritÃ© selon le mode d'accrochage
+    /// Détermine la priorité selon le mode d'accrochage
     /// </summary>
     private static int GetPriorityForMode(SnapMode mode)
     {
@@ -101,7 +106,7 @@ public sealed class SnapPoint : IComparable<SnapPoint>
     }
 
     /// <summary>
-    /// CrÃ©e un SnapPoint pour un sommet de polyligne
+    /// Crée un SnapPoint pour un sommet de polyligne
     /// </summary>
     public static SnapPoint FromVertex(Point3d point, double distance, ObjectId entityId, int vertexIndex, double distanceAlongCurve)
     {
@@ -113,7 +118,7 @@ public sealed class SnapPoint : IComparable<SnapPoint>
     }
 
     /// <summary>
-    /// CrÃ©e un SnapPoint pour une extrÃ©mitÃ©
+    /// Crée un SnapPoint pour une extrémité
     /// </summary>
     public static SnapPoint FromEndpoint(Point3d point, double distance, ObjectId entityId, bool isStart)
     {
@@ -124,7 +129,7 @@ public sealed class SnapPoint : IComparable<SnapPoint>
     }
 
     /// <summary>
-    /// CrÃ©e un SnapPoint pour un milieu de segment
+    /// Crée un SnapPoint pour un milieu de segment
     /// </summary>
     public static SnapPoint FromMidpoint(Point3d point, double distance, ObjectId entityId, int segmentIndex, double distanceAlongCurve)
     {
@@ -136,7 +141,7 @@ public sealed class SnapPoint : IComparable<SnapPoint>
     }
 
     /// <summary>
-    /// CrÃ©e un SnapPoint pour le point le plus proche
+    /// Crée un SnapPoint pour le point le plus proche
     /// </summary>
     public static SnapPoint FromNearest(Point3d point, double distance, ObjectId entityId, double parameter, double distanceAlongCurve)
     {
@@ -148,7 +153,7 @@ public sealed class SnapPoint : IComparable<SnapPoint>
     }
 
     /// <summary>
-    /// CrÃ©e un SnapPoint pour un centre
+    /// Crée un SnapPoint pour un centre
     /// </summary>
     public static SnapPoint FromCenter(Point3d point, double distance, ObjectId entityId)
     {
@@ -156,7 +161,7 @@ public sealed class SnapPoint : IComparable<SnapPoint>
     }
 
     /// <summary>
-    /// Compare deux SnapPoints par prioritÃ© puis par distance
+    /// Compare deux SnapPoints par priorité puis par distance
     /// </summary>
     public int CompareTo(SnapPoint? other)
     {

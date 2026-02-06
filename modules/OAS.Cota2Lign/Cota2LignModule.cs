@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using OpenAsphalte.Abstractions;
 using OpenAsphalte.Modules.Cota2Lign.Commands;
@@ -16,14 +21,14 @@ namespace OpenAsphalte.Modules.Cota2Lign;
 
 /// <summary>
 /// Module de cotation entre deux polylignes pour Open Asphalte.
-/// Permet de créer automatiquement des cotations alignées entre deux polylignes
-/// avec différentes options (interdistance, cotation aux sommets, etc.).
+/// Permet de cr�er automatiquement des cotations align�es entre deux polylignes
+/// avec diff�rentes options (interdistance, cotation aux sommets, etc.).
 /// </summary>
 public class Cota2LignModule : ModuleBase
 {
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // IDENTIFICATION DU MODULE
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Identifiant unique du module
@@ -31,14 +36,14 @@ public class Cota2LignModule : ModuleBase
     public override string Id => "cota2lign";
 
     /// <summary>
-    /// Nom affiché dans les menus et rubans
+    /// Nom affich� dans les menus et rubans
     /// </summary>
     public override string Name => "Cotation entre deux lignes";
 
     /// <summary>
     /// Description du module
     /// </summary>
-    public override string Description => "Crée des cotations alignées entre deux polylignes";
+    public override string Description => "Cr�e des cotations align�es entre deux polylignes";
 
     /// <summary>
     /// Contributeurs du module
@@ -59,9 +64,9 @@ public class Cota2LignModule : ModuleBase
     /// </summary>
     public override string Author => "Charles TILLY";
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // AFFICHAGE UI
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Ordre d'affichage (modules officiels entre 10-50)
@@ -69,7 +74,7 @@ public class Cota2LignModule : ModuleBase
     public override int Order => 20;
 
     /// <summary>
-    /// Clé de traduction pour le nom
+    /// Cl� de traduction pour le nom
     /// </summary>
     public override string? NameKey => "cota2lign.name";
 
@@ -78,9 +83,9 @@ public class Cota2LignModule : ModuleBase
     /// </summary>
     public override string MinCoreVersion => "0.0.1";
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // COMMANDES
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
     /// Retourne tous les types contenant des commandes [CommandMethod]
@@ -93,23 +98,23 @@ public class Cota2LignModule : ModuleBase
         ];
     }
 
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
     // TRADUCTIONS (FR, EN, ES)
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
 
     /// <summary>
-    /// Retourne les traductions spécifiques au module
+    /// Retourne les traductions sp�cifiques au module
     /// </summary>
     public override IDictionary<string, IDictionary<string, string>> GetTranslations()
     {
         return new Dictionary<string, IDictionary<string, string>>
         {
-            // ═══════════════════════════════════════════════════════
-            // FRANÇAIS
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
+            // FRAN�AIS
+            // -------------------------------------------------------
             ["fr"] = new Dictionary<string, string>
             {
-                // Menus / Catégories
+                // Menus / Cat�gories
                 ["menu.dessin"] = "Dessin",
                 ["menu.cotations"] = "Cotations",
 
@@ -118,69 +123,69 @@ public class Cota2LignModule : ModuleBase
 
                 // Commande principale
                 ["cota2lign.cmd.title"] = "Cotation entre 2 lignes",
-                ["cota2lign.cmd.desc"] = "Crée des cotations alignées entre deux polylignes",
+                ["cota2lign.cmd.desc"] = "Cr�e des cotations align�es entre deux polylignes",
 
                 // Messages console
-                ["cota2lign.select.pl1"] = "Sélectionnez la polyligne de référence (n°1)",
-                ["cota2lign.select.pl2"] = "Sélectionnez la polyligne cible (n°2)",
-                ["cota2lign.select.start"] = "Point de départ sur la polyligne 1",
-                ["cota2lign.select.end"] = "Point d'arrivée sur la polyligne 1",
-                ["cota2lign.error.notpolyline"] = "L'entité sélectionnée n'est pas une polyligne",
-                ["cota2lign.error.sameentity"] = "Veuillez sélectionner une polyligne différente",
-                ["cota2lign.cancelled"] = "Opération annulée",
+                ["cota2lign.select.pl1"] = "S�lectionnez la polyligne de r�f�rence (n�1)",
+                ["cota2lign.select.pl2"] = "S�lectionnez la polyligne cible (n�2)",
+                ["cota2lign.select.start"] = "Point de d�part sur la polyligne 1",
+                ["cota2lign.select.end"] = "Point d'arriv�e sur la polyligne 1",
+                ["cota2lign.error.notpolyline"] = "L'entit� s�lectionn�e n'est pas une polyligne",
+                ["cota2lign.error.sameentity"] = "Veuillez s�lectionner une polyligne diff�rente",
+                ["cota2lign.cancelled"] = "Op�ration annul�e",
 
                 // Options de commande
-                ["cota2lign.option.params"] = "Paramètres",
+                ["cota2lign.option.params"] = "Param�tres",
                 ["cota2lign.option.interdist"] = "Interdistance",
                 ["cota2lign.option.vertices"] = "Sommets",
                 ["cota2lign.option.reverse"] = "Inverser",
-                ["cota2lign.prompt.interdist"] = "Interdistance entre cotations (0 = désactivé)",
+                ["cota2lign.prompt.interdist"] = "Interdistance entre cotations (0 = d�sactiv�)",
                 ["cota2lign.prompt.vertices"] = "Coter aux sommets",
-                ["cota2lign.prompt.reverse"] = "Inverser le côté de décalage",
+                ["cota2lign.prompt.reverse"] = "Inverser le c�t� de d�calage",
 
-                // Résultats
-                ["cota2lign.success"] = "{0} cotation(s) créée(s)",
-                ["cota2lign.nostations"] = "Aucune station de cotation générée",
-                ["cota2lign.preview"] = "Prévisualisation de {0} cotation(s) - Appuyez sur Entrée pour valider",
+                // R�sultats
+                ["cota2lign.success"] = "{0} cotation(s) cr��e(s)",
+                ["cota2lign.nostations"] = "Aucune station de cotation g�n�r�e",
+                ["cota2lign.preview"] = "Pr�visualisation de {0} cotation(s) - Appuyez sur Entr�e pour valider",
 
-                // Fenêtre paramètres
-                ["cota2lign.settings.title"] = "Paramètres - Cotation entre deux lignes",
-                ["cota2lign.settings.header"] = "Paramètres de cotation",
+                // Fen�tre param�tres
+                ["cota2lign.settings.title"] = "Param�tres - Cotation entre deux lignes",
+                ["cota2lign.settings.header"] = "Param�tres de cotation",
                 ["cota2lign.settings.interdist"] = "Interdistance (m) :",
-                ["cota2lign.settings.interdist.tooltip"] = "Distance entre chaque cotation (0 pour désactiver)",
+                ["cota2lign.settings.interdist.tooltip"] = "Distance entre chaque cotation (0 pour d�sactiver)",
                 ["cota2lign.settings.vertices"] = "Coter aux sommets",
-                ["cota2lign.settings.vertices.tooltip"] = "Ajouter une cotation à chaque sommet de la polyligne",
-                ["cota2lign.settings.offset"] = "Décalage des cotations (m) :",
-                ["cota2lign.settings.offset.tooltip"] = "Distance de décalage du texte de cotation",
+                ["cota2lign.settings.vertices.tooltip"] = "Ajouter une cotation � chaque sommet de la polyligne",
+                ["cota2lign.settings.offset"] = "D�calage des cotations (m) :",
+                ["cota2lign.settings.offset.tooltip"] = "Distance de d�calage du texte de cotation",
                 ["cota2lign.settings.layer"] = "Calque de destination :",
-                ["cota2lign.settings.layer.tooltip"] = "Calque sur lequel créer les cotations (vide = calque courant)",
+                ["cota2lign.settings.layer.tooltip"] = "Calque sur lequel cr�er les cotations (vide = calque courant)",
                 ["cota2lign.settings.layer.current"] = "(Calque courant)",
-                ["cota2lign.settings.reverse"] = "Inverser le côté",
-                ["cota2lign.settings.reverse.tooltip"] = "Place les cotations de l'autre côté de la polyligne",
+                ["cota2lign.settings.reverse"] = "Inverser le c�t�",
+                ["cota2lign.settings.reverse.tooltip"] = "Place les cotations de l'autre c�t� de la polyligne",
                 ["cota2lign.settings.apply"] = "Appliquer",
                 ["cota2lign.settings.cancel"] = "Annuler",
-                ["cota2lign.settings.reset"] = "Réinitialiser",
-                ["cota2lign.settings.saved"] = "Paramètres enregistrés dans le dessin",
+                ["cota2lign.settings.reset"] = "R�initialiser",
+                ["cota2lign.settings.saved"] = "Param�tres enregistr�s dans le dessin",
 
-                // Intégration DynamicSnap
-                ["cota2lign.snap.dynamicsnap"] = "[Cota2Lign] Module DynamicSnap détecté - accrochage intelligent activé",
-                ["cota2lign.snap.fallback"] = "[Cota2Lign] Module DynamicSnap non disponible - accrochage AutoCAD utilisé",
+                // Int�gration DynamicSnap
+                ["cota2lign.snap.dynamicsnap"] = "[Cota2Lign] Module DynamicSnap d�tect� - accrochage intelligent activ�",
+                ["cota2lign.snap.fallback"] = "[Cota2Lign] Module DynamicSnap non disponible - accrochage AutoCAD utilis�",
 
-                // Paramètres d'accrochage OAS
+                // Param�tres d'accrochage OAS
                 ["cota2lign.settings.useoassnap"] = "Utiliser l'accrochage OAS",
                 ["cota2lign.settings.useoassnap.tooltip"] = "Utiliser le module DynamicSnap pour l'accrochage intelligent",
-                ["cota2lign.settings.oassnap.unavailable"] = "Module DynamicSnap non installé - fonctionnalité désactivée",
-                ["cota2lign.settings.reset.tooltip"] = "Réinitialiser tous les paramètres aux valeurs par défaut",
+                ["cota2lign.settings.oassnap.unavailable"] = "Module DynamicSnap non install� - fonctionnalit� d�sactiv�e",
+                ["cota2lign.settings.reset.tooltip"] = "R�initialiser tous les param�tres aux valeurs par d�faut",
 
                 // Validation
                 ["cota2lign.validation.error"] = "Erreur de validation",
-                ["cota2lign.validation.invalidInterdist"] = "Veuillez saisir une valeur numérique valide pour l'interdistance.",
-                ["cota2lign.validation.invalidOffset"] = "Veuillez saisir une valeur numérique valide pour le décalage.",
+                ["cota2lign.validation.invalidInterdist"] = "Veuillez saisir une valeur num�rique valide pour l'interdistance.",
+                ["cota2lign.validation.invalidOffset"] = "Veuillez saisir une valeur num�rique valide pour le d�calage.",
             },
 
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
             // ENGLISH
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
             ["en"] = new Dictionary<string, string>
             {
                 // Menus / Categories
@@ -252,38 +257,38 @@ public class Cota2LignModule : ModuleBase
                 ["cota2lign.validation.invalidOffset"] = "Please enter a valid numeric value for offset.",
             },
 
-            // ═══════════════════════════════════════════════════════
-            // ESPAÑOL
-            // ═══════════════════════════════════════════════════════
+            // -------------------------------------------------------
+            // ESPA�OL
+            // -------------------------------------------------------
             ["es"] = new Dictionary<string, string>
             {
-                // Menus / Categorías
+                // Menus / Categor�as
                 ["menu.dessin"] = "Dibujo",
                 ["menu.cotations"] = "Cotas",
 
-                // Módulo
-                ["cota2lign.name"] = "Cota entre dos líneas",
+                // M�dulo
+                ["cota2lign.name"] = "Cota entre dos l�neas",
 
                 // Comando principal
-                ["cota2lign.cmd.title"] = "Cota entre 2 líneas",
-                ["cota2lign.cmd.desc"] = "Crea cotas alineadas entre dos polilíneas",
+                ["cota2lign.cmd.title"] = "Cota entre 2 l�neas",
+                ["cota2lign.cmd.desc"] = "Crea cotas alineadas entre dos polil�neas",
 
                 // Mensajes consola
-                ["cota2lign.select.pl1"] = "Seleccione la polilínea de referencia (n°1)",
-                ["cota2lign.select.pl2"] = "Seleccione la polilínea destino (n°2)",
-                ["cota2lign.select.start"] = "Punto inicial en la polilínea 1",
-                ["cota2lign.select.end"] = "Punto final en la polilínea 1",
-                ["cota2lign.error.notpolyline"] = "La entidad seleccionada no es una polilínea",
-                ["cota2lign.error.sameentity"] = "Por favor seleccione una polilínea diferente",
-                ["cota2lign.cancelled"] = "Operación cancelada",
+                ["cota2lign.select.pl1"] = "Seleccione la polil�nea de referencia (n�1)",
+                ["cota2lign.select.pl2"] = "Seleccione la polil�nea destino (n�2)",
+                ["cota2lign.select.start"] = "Punto inicial en la polil�nea 1",
+                ["cota2lign.select.end"] = "Punto final en la polil�nea 1",
+                ["cota2lign.error.notpolyline"] = "La entidad seleccionada no es una polil�nea",
+                ["cota2lign.error.sameentity"] = "Por favor seleccione una polil�nea diferente",
+                ["cota2lign.cancelled"] = "Operaci�n cancelada",
 
                 // Opciones de comando
-                ["cota2lign.option.params"] = "Parámetros",
+                ["cota2lign.option.params"] = "Par�metros",
                 ["cota2lign.option.interdist"] = "Espaciado",
-                ["cota2lign.option.vertices"] = "Vértices",
+                ["cota2lign.option.vertices"] = "V�rtices",
                 ["cota2lign.option.reverse"] = "Invertir",
                 ["cota2lign.prompt.interdist"] = "Espaciado entre cotas (0 = desactivado)",
-                ["cota2lign.prompt.vertices"] = "Cotar en vértices",
+                ["cota2lign.prompt.vertices"] = "Cotar en v�rtices",
                 ["cota2lign.prompt.reverse"] = "Invertir lado de desplazamiento",
 
                 // Resultados
@@ -291,39 +296,39 @@ public class Cota2LignModule : ModuleBase
                 ["cota2lign.nostations"] = "No se generaron estaciones de cota",
                 ["cota2lign.preview"] = "Vista previa de {0} cota(s) - Presione Enter para confirmar",
 
-                // Ventana parámetros
-                ["cota2lign.settings.title"] = "Parámetros - Cota entre dos líneas",
-                ["cota2lign.settings.header"] = "Parámetros de cota",
+                // Ventana par�metros
+                ["cota2lign.settings.title"] = "Par�metros - Cota entre dos l�neas",
+                ["cota2lign.settings.header"] = "Par�metros de cota",
                 ["cota2lign.settings.interdist"] = "Espaciado (m):",
                 ["cota2lign.settings.interdist.tooltip"] = "Distancia entre cada cota (0 para desactivar)",
-                ["cota2lign.settings.vertices"] = "Cotar en vértices",
-                ["cota2lign.settings.vertices.tooltip"] = "Agregar una cota en cada vértice de la polilínea",
+                ["cota2lign.settings.vertices"] = "Cotar en v�rtices",
+                ["cota2lign.settings.vertices.tooltip"] = "Agregar una cota en cada v�rtice de la polil�nea",
                 ["cota2lign.settings.offset"] = "Desplazamiento de cotas (m):",
                 ["cota2lign.settings.offset.tooltip"] = "Distancia de desplazamiento del texto de cota",
                 ["cota2lign.settings.layer"] = "Capa de destino:",
-                ["cota2lign.settings.layer.tooltip"] = "Capa para las cotas (vacío = capa actual)",
+                ["cota2lign.settings.layer.tooltip"] = "Capa para las cotas (vac�o = capa actual)",
                 ["cota2lign.settings.layer.current"] = "(Capa actual)",
                 ["cota2lign.settings.reverse"] = "Invertir lado",
-                ["cota2lign.settings.reverse.tooltip"] = "Colocar cotas del otro lado de la polilínea",
+                ["cota2lign.settings.reverse.tooltip"] = "Colocar cotas del otro lado de la polil�nea",
                 ["cota2lign.settings.apply"] = "Aplicar",
                 ["cota2lign.settings.cancel"] = "Cancelar",
                 ["cota2lign.settings.reset"] = "Restablecer",
-                ["cota2lign.settings.saved"] = "Parámetros guardados en el dibujo",
+                ["cota2lign.settings.saved"] = "Par�metros guardados en el dibujo",
 
-                // Integración DynamicSnap
-                ["cota2lign.snap.dynamicsnap"] = "[Cota2Lign] Módulo DynamicSnap detectado - enganche inteligente activado",
-                ["cota2lign.snap.fallback"] = "[Cota2Lign] Módulo DynamicSnap no disponible - usando OSNAP de AutoCAD",
+                // Integraci�n DynamicSnap
+                ["cota2lign.snap.dynamicsnap"] = "[Cota2Lign] M�dulo DynamicSnap detectado - enganche inteligente activado",
+                ["cota2lign.snap.fallback"] = "[Cota2Lign] M�dulo DynamicSnap no disponible - usando OSNAP de AutoCAD",
 
-                // Parámetros de enganche OAS
+                // Par�metros de enganche OAS
                 ["cota2lign.settings.useoassnap"] = "Usar enganche OAS",
-                ["cota2lign.settings.useoassnap.tooltip"] = "Usar el módulo DynamicSnap para enganche inteligente",
-                ["cota2lign.settings.oassnap.unavailable"] = "Módulo DynamicSnap no instalado - función desactivada",
-                ["cota2lign.settings.reset.tooltip"] = "Restablecer todos los parámetros a los valores predeterminados",
+                ["cota2lign.settings.useoassnap.tooltip"] = "Usar el m�dulo DynamicSnap para enganche inteligente",
+                ["cota2lign.settings.oassnap.unavailable"] = "M�dulo DynamicSnap no instalado - funci�n desactivada",
+                ["cota2lign.settings.reset.tooltip"] = "Restablecer todos los par�metros a los valores predeterminados",
 
-                // Validación
-                ["cota2lign.validation.error"] = "Error de validación",
-                ["cota2lign.validation.invalidInterdist"] = "Por favor ingrese un valor numérico válido para el espaciado.",
-                ["cota2lign.validation.invalidOffset"] = "Por favor ingrese un valor numérico válido para el desplazamiento.",
+                // Validaci�n
+                ["cota2lign.validation.error"] = "Error de validaci�n",
+                ["cota2lign.validation.invalidInterdist"] = "Por favor ingrese un valor num�rico v�lido para el espaciado.",
+                ["cota2lign.validation.invalidOffset"] = "Por favor ingrese un valor num�rico v�lido para el desplazamiento.",
             }
         };
     }

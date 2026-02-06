@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
@@ -16,24 +21,24 @@ namespace OpenAsphalte.Modules.Cota2Lign.Services;
 
 /// <summary>
 /// Service de calcul des stations de cotation le long d'une polyligne.
-/// GÃ¨re l'interdistance, les sommets et les arcs.
+/// Gère l'interdistance, les sommets et les arcs.
 /// </summary>
 public static class StationService
 {
     /// <summary>
-    /// TolÃ©rance pour la comparaison des distances (Ã©vite les doublons)
+    /// Tolérance pour la comparaison des distances (évite les doublons)
     /// </summary>
     private const double DistanceTolerance = 1e-6;
 
     /// <summary>
     /// Construit la liste des stations de cotation entre deux distances sur une polyligne.
     /// </summary>
-    /// <param name="polyline">Polyligne de rÃ©fÃ©rence</param>
-    /// <param name="startDist">Distance curviligne de dÃ©part</param>
-    /// <param name="endDist">Distance curviligne d'arrivÃ©e</param>
-    /// <param name="interdistance">Interdistance entre les stations (0 = dÃ©sactivÃ©)</param>
+    /// <param name="polyline">Polyligne de référence</param>
+    /// <param name="startDist">Distance curviligne de départ</param>
+    /// <param name="endDist">Distance curviligne d'arrivée</param>
+    /// <param name="interdistance">Interdistance entre les stations (0 = désactivé)</param>
     /// <param name="addVertices">Ajouter les sommets comme stations</param>
-    /// <returns>Liste triÃ©e des distances de station</returns>
+    /// <returns>Liste triée des distances de station</returns>
     public static List<double> BuildStations(
         Polyline polyline,
         double startDist,
@@ -48,11 +53,11 @@ public static class StationService
         double maxDist = Math.Max(startDist, endDist);
         bool isReversed = startDist > endDist;
 
-        // Toujours ajouter le point de dÃ©part et d'arrivÃ©e
+        // Toujours ajouter le point de départ et d'arrivée
         stations.Add(minDist);
         stations.Add(maxDist);
 
-        // Ajouter les stations Ã  interdistance rÃ©guliÃ¨re
+        // Ajouter les stations à interdistance régulière
         if (interdistance > 0)
         {
             AddInterdistanceStations(stations, minDist, maxDist, interdistance);
@@ -68,7 +73,7 @@ public static class StationService
         var result = stations.ToList();
         result.Sort();
 
-        // Inverser si nÃ©cessaire pour respecter le sens de parcours
+        // Inverser si nécessaire pour respecter le sens de parcours
         if (isReversed)
         {
             result.Reverse();
@@ -78,7 +83,7 @@ public static class StationService
     }
 
     /// <summary>
-    /// Ajoute les stations Ã  interdistance rÃ©guliÃ¨re.
+    /// Ajoute les stations à interdistance régulière.
     /// </summary>
     private static void AddInterdistanceStations(
         HashSet<double> stations,
@@ -97,7 +102,7 @@ public static class StationService
 
     /// <summary>
     /// Ajoute les sommets de la polyligne comme stations.
-    /// GÃ¨re Ã©galement les arcs (segments avec bulge non nul).
+    /// Gère également les arcs (segments avec bulge non nul).
     /// </summary>
     private static void AddVertexStations(
         Polyline polyline,
@@ -118,13 +123,13 @@ public static class StationService
             }
         }
 
-        // Pour les arcs (segments avec bulge), ajouter des points intermÃ©diaires
-        // pour une meilleure reprÃ©sentation
+        // Pour les arcs (segments avec bulge), ajouter des points intermédiaires
+        // pour une meilleure représentation
         AddArcStations(polyline, stations, minDist, maxDist);
     }
 
     /// <summary>
-    /// Ajoute des stations supplÃ©mentaires sur les arcs de la polyligne.
+    /// Ajoute des stations supplémentaires sur les arcs de la polyligne.
     /// </summary>
     private static void AddArcStations(
         Polyline polyline,
@@ -139,7 +144,7 @@ public static class StationService
             // Si c'est un arc (bulge non nul)
             if (Math.Abs(bulge) > DistanceTolerance)
             {
-                // RÃ©cupÃ©rer les distances de dÃ©but et fin du segment
+                // Récupérer les distances de début et fin du segment
                 double segStartDist = GetDistanceAtVertex(polyline, i);
                 double segEndDist = GetDistanceAtVertex(polyline, i + 1);
 
@@ -156,7 +161,7 @@ public static class StationService
             }
         }
 
-        // GÃ©rer le dernier segment si la polyligne est fermÃ©e
+        // Gérer le dernier segment si la polyligne est fermée
         if (polyline.Closed && polyline.NumberOfVertices > 0)
         {
             int lastIndex = polyline.NumberOfVertices - 1;
@@ -178,7 +183,7 @@ public static class StationService
     }
 
     /// <summary>
-    /// Calcule la distance curviligne Ã  un sommet donnÃ© de la polyligne.
+    /// Calcule la distance curviligne à un sommet donné de la polyligne.
     /// </summary>
     private static double GetDistanceAtVertex(Polyline polyline, int vertexIndex)
     {

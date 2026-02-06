@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -23,8 +28,8 @@ namespace OpenAsphalte.Modules.DynamicSnap.Services;
 
 /// <summary>
 /// Service principal d'accrochage dynamique OAS.
-/// Fournit une API pour sÃ©lectionner des points avec accrochage visuel interactif
-/// en temps rÃ©el via PointMonitor + TransientManager.
+/// Fournit une API pour sélectionner des points avec accrochage visuel interactif
+/// en temps réel via PointMonitor + TransientManager.
 /// </summary>
 public static class DynamicSnapService
 {
@@ -38,7 +43,7 @@ public static class DynamicSnapService
     private const string ConfigKeyFilledMarkers = "dynamicsnap.filledMarkers";
     private const string ConfigKeyMarkerLineWeight = "dynamicsnap.markerLineWeight";
 
-    // ClÃ©s de configuration pour la surbrillance
+    // Clés de configuration pour la surbrillance
     private const string ConfigKeyHighlightEnabled = "dynamicsnap.highlight.enabled";
     private const string ConfigKeyHighlightColor = "dynamicsnap.highlight.color";
     private const string ConfigKeyHighlightPrimaryWeight = "dynamicsnap.highlight.primaryWeight";
@@ -55,19 +60,19 @@ public static class DynamicSnapService
     #region Properties
 
     /// <summary>
-    /// Indique si le service est initialisÃ© et disponible
+    /// Indique si le service est initialisé et disponible
     /// </summary>
     public static bool IsAvailable => _isInitialized;
 
     /// <summary>
-    /// Configuration par dÃ©faut utilisÃ©e si aucune n'est spÃ©cifiÃ©e.
-    /// ChargÃ©e depuis les paramÃ¨tres globaux (config.json).
+    /// Configuration par défaut utilisée si aucune n'est spécifiée.
+    /// Chargée depuis les paramètres globaux (config.json).
     /// </summary>
     public static SnapConfiguration DefaultConfiguration { get; set; } = new();
 
     /// <summary>
-    /// Configuration de surbrillance des entitÃ©s.
-    /// ChargÃ©e depuis les paramÃ¨tres globaux (config.json).
+    /// Configuration de surbrillance des entités.
+    /// Chargée depuis les paramètres globaux (config.json).
     /// </summary>
     public static HighlightConfiguration HighlightConfiguration
     {
@@ -80,7 +85,7 @@ public static class DynamicSnapService
     #region Initialization
 
     /// <summary>
-    /// Initialise le service d'accrochage dynamique et charge les paramÃ¨tres globaux
+    /// Initialise le service d'accrochage dynamique et charge les paramètres globaux
     /// </summary>
     public static void Initialize()
     {
@@ -88,19 +93,19 @@ public static class DynamicSnapService
 
         LoadSettings();
 
-        Logger.Debug(L10n.T("dynamicsnap.init", "[DynamicSnap] Service initialisÃ©"));
+        Logger.Debug(L10n.T("dynamicsnap.init", "[DynamicSnap] Service initialisé"));
         _isInitialized = true;
     }
 
     /// <summary>
-    /// ArrÃªte le service d'accrochage dynamique
+    /// Arrête le service d'accrochage dynamique
     /// </summary>
     public static void Shutdown()
     {
         MarkerRenderer.ClearAllMarkers();
         EntityHighlightService.ClearHighlight();
         _isInitialized = false;
-        Logger.Debug(L10n.T("dynamicsnap.shutdown", "[DynamicSnap] Service arrÃªtÃ©"));
+        Logger.Debug(L10n.T("dynamicsnap.shutdown", "[DynamicSnap] Service arrêté"));
     }
 
     #endregion
@@ -108,7 +113,7 @@ public static class DynamicSnapService
     #region Settings
 
     /// <summary>
-    /// Charge les paramÃ¨tres depuis la configuration globale (config.json)
+    /// Charge les paramètres depuis la configuration globale (config.json)
     /// </summary>
     public static void LoadSettings()
     {
@@ -143,7 +148,7 @@ public static class DynamicSnapService
     }
 
     /// <summary>
-    /// Sauvegarde les paramÃ¨tres dans la configuration globale (config.json)
+    /// Sauvegarde les paramètres dans la configuration globale (config.json)
     /// </summary>
     public static void SaveSettings()
     {
@@ -172,13 +177,13 @@ public static class DynamicSnapService
     #region Main API
 
     /// <summary>
-    /// SÃ©lectionne un point sur une entitÃ© spÃ©cifique avec accrochage visuel en temps rÃ©el.
-    /// Les marqueurs s'affichent dynamiquement pendant le dÃ©placement de la souris.
+    /// Sélectionne un point sur une entité spécifique avec accrochage visuel en temps réel.
+    /// Les marqueurs s'affichent dynamiquement pendant le déplacement de la souris.
     /// </summary>
-    /// <param name="entity">EntitÃ© sur laquelle accrocher</param>
-    /// <param name="prompt">Message de prompt Ã  afficher</param>
-    /// <param name="config">Configuration d'accrochage (null = dÃ©faut global)</param>
-    /// <returns>Point sÃ©lectionnÃ© ou null si annulÃ©</returns>
+    /// <param name="entity">Entité sur laquelle accrocher</param>
+    /// <param name="prompt">Message de prompt à afficher</param>
+    /// <param name="config">Configuration d'accrochage (null = défaut global)</param>
+    /// <returns>Point sélectionné ou null si annulé</returns>
     public static SnapPoint? GetPointOnEntity(
         Entity entity,
         string prompt,
@@ -186,7 +191,7 @@ public static class DynamicSnapService
     {
         if (entity == null)
         {
-            Logger.Warning(L10n.T("dynamicsnap.noentity", "Aucune entitÃ© fournie"));
+            Logger.Warning(L10n.T("dynamicsnap.noentity", "Aucune entité fournie"));
             return null;
         }
 
@@ -195,7 +200,7 @@ public static class DynamicSnapService
     }
 
     /// <summary>
-    /// SÃ©lectionne un point sur une entitÃ© spÃ©cifiÃ©e par ObjectId
+    /// Sélectionne un point sur une entité spécifiée par ObjectId
     /// </summary>
     public static SnapPoint? GetPointOnEntity(
         ObjectId entityId,
@@ -221,7 +226,7 @@ public static class DynamicSnapService
     }
 
     /// <summary>
-    /// SÃ©lectionne un point sur plusieurs entitÃ©s
+    /// Sélectionne un point sur plusieurs entités
     /// </summary>
     public static SnapPoint? GetPointOnEntities(
         IEnumerable<Entity> entities,
@@ -233,7 +238,7 @@ public static class DynamicSnapService
     }
 
     /// <summary>
-    /// SÃ©lectionne un sommet sur une polyligne (mode Vertex uniquement)
+    /// Sélectionne un sommet sur une polyligne (mode Vertex uniquement)
     /// </summary>
     public static SnapPoint? GetVertexOnPolyline(
         Polyline polyline,
@@ -244,7 +249,7 @@ public static class DynamicSnapService
     }
 
     /// <summary>
-    /// SÃ©lectionne un point quelconque sur une polyligne
+    /// Sélectionne un point quelconque sur une polyligne
     /// </summary>
     public static SnapPoint? GetPointOnPolyline(
         Polyline polyline,
@@ -259,9 +264,9 @@ public static class DynamicSnapService
     #region Session Management
 
     /// <summary>
-    /// ExÃ©cute une session de sÃ©lection interactive avec PointMonitor temps rÃ©el.
-    /// Les marqueurs d'accrochage s'affichent pendant le dÃ©placement de la souris
-    /// et le point le plus proche est automatiquement sÃ©lectionnÃ© au clic.
+    /// Exécute une session de sélection interactive avec PointMonitor temps réel.
+    /// Les marqueurs d'accrochage s'affichent pendant le déplacement de la souris
+    /// et le point le plus proche est automatiquement sélectionné au clic.
     /// </summary>
     private static SnapPoint? RunSnapSession(
         Entity[] entities,
@@ -273,7 +278,7 @@ public static class DynamicSnapService
 
         var editor = doc.Editor;
 
-        // Sauvegarder et dÃ©sactiver OSNAP AutoCAD si demandÃ©
+        // Sauvegarder et désactiver OSNAP AutoCAD si demandé
         int savedOsmode = 0;
         if (config.DisableAutoCADOsnap)
         {
@@ -281,7 +286,7 @@ public static class DynamicSnapService
             AcadApp.SetSystemVariable("OSMODE", 0);
         }
 
-        // Calculer les paramÃ¨tres dynamiques basÃ©s sur la vue
+        // Calculer les paramètres dynamiques basés sur la vue
         double viewSize = Convert.ToDouble(AcadApp.GetSystemVariable("VIEWSIZE"));
         double tolerance = config.Tolerance > 0
             ? config.Tolerance
@@ -294,17 +299,17 @@ public static class DynamicSnapService
         sessionConfig.Tolerance = tolerance;
         sessionConfig.MarkerSize = markerSize;
 
-        // Variable capturÃ©e par le PointMonitor pour stocker le meilleur snap courant
+        // Variable capturée par le PointMonitor pour stocker le meilleur snap courant
         SnapPoint? currentBestSnap = null;
 
-        // Handler du PointMonitor : appelÃ© en temps rÃ©el pendant le dÃ©placement de la souris
+        // Handler du PointMonitor : appelé en temps réel pendant le déplacement de la souris
         void OnPointMonitor(object? sender, PointMonitorEventArgs e)
         {
             try
             {
                 var cursorPoint = e.Context.ComputedPoint;
 
-                // DÃ©tecter les snap points sur toutes les entitÃ©s
+                // Détecter les snap points sur toutes les entités
                 var snapPoints = new List<SnapPoint>();
                 foreach (var entity in entities)
                 {
@@ -315,10 +320,10 @@ public static class DynamicSnapService
 
                 if (snapPoints.Count > 0)
                 {
-                    // Stocker le meilleur candidat (triÃ© par prioritÃ© puis distance)
+                    // Stocker le meilleur candidat (trié par priorité puis distance)
                     currentBestSnap = snapPoints[0];
 
-                    // Mettre Ã  jour les marqueurs visuels en temps rÃ©el
+                    // Mettre à jour les marqueurs visuels en temps réel
                     MarkerRenderer.UpdateMarkers(snapPoints, sessionConfig);
                 }
                 else
@@ -335,10 +340,10 @@ public static class DynamicSnapService
 
         try
         {
-            // S'abonner au PointMonitor pour le suivi temps rÃ©el
+            // S'abonner au PointMonitor pour le suivi temps réel
             editor.PointMonitor += OnPointMonitor;
 
-            // Demander le point Ã  l'utilisateur (bloquant, mais le PointMonitor tourne en parallÃ¨le)
+            // Demander le point à l'utilisateur (bloquant, mais le PointMonitor tourne en parallèle)
             var ppo = new PromptPointOptions($"\n{prompt}")
             {
                 AllowNone = true
@@ -354,7 +359,7 @@ public static class DynamicSnapService
                     return currentBestSnap;
                 }
 
-                // Sinon, tenter une derniÃ¨re dÃ©tection au point cliquÃ©
+                // Sinon, tenter une dernière détection au point cliqué
                 var clickPoint = result.Value;
                 var fallbackSnaps = new List<SnapPoint>();
                 foreach (var entity in entities)
@@ -369,9 +374,9 @@ public static class DynamicSnapService
                     return fallbackSnaps[0];
                 }
 
-                // Aucun snap trouvÃ© â€” informer l'utilisateur
+                // Aucun snap trouvé — informer l'utilisateur
                 Logger.Info(L10n.T("dynamicsnap.nosnap",
-                    "Aucun point d'accrochage trouvÃ©. Cliquez plus prÃ¨s d'un point."));
+                    "Aucun point d'accrochage trouvé. Cliquez plus près d'un point."));
             }
 
             // Annulation ou aucun snap
@@ -379,7 +384,7 @@ public static class DynamicSnapService
         }
         finally
         {
-            // Toujours se dÃ©sabonner et nettoyer
+            // Toujours se désabonner et nettoyer
             editor.PointMonitor -= OnPointMonitor;
             MarkerRenderer.ClearAllMarkers();
 
@@ -396,7 +401,7 @@ public static class DynamicSnapService
     #region Utility Methods
 
     /// <summary>
-    /// Retourne la liste des points d'accrochage possibles sur une entitÃ©
+    /// Retourne la liste des points d'accrochage possibles sur une entité
     /// (sans interaction utilisateur)
     /// </summary>
     public static List<SnapPoint> GetAvailableSnapPoints(
@@ -422,7 +427,7 @@ public static class DynamicSnapService
     }
 
     /// <summary>
-    /// Calcule la tolÃ©rance dynamique basÃ©e sur la vue actuelle
+    /// Calcule la tolérance dynamique basée sur la vue actuelle
     /// </summary>
     public static double CalculateDynamicTolerance(double viewRatio = 0.02)
     {
@@ -438,7 +443,7 @@ public static class DynamicSnapService
     }
 
     /// <summary>
-    /// Calcule la taille du marqueur basÃ©e sur la vue actuelle
+    /// Calcule la taille du marqueur basée sur la vue actuelle
     /// </summary>
     public static double CalculateDynamicMarkerSize(double viewRatio = 0.015)
     {

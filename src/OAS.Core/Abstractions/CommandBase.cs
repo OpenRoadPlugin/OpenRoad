@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -18,14 +23,14 @@ using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace OpenAsphalte.Abstractions;
 
 /// <summary>
-/// Exception mÃ©tier pour signaler une erreur rÃ©cupÃ©rable dans une transaction.
-/// Utilisez cette exception pour indiquer une erreur de validation ou de logique mÃ©tier
-/// qui doit annuler la transaction et afficher un message Ã  l'utilisateur.
+/// Exception métier pour signaler une erreur récupérable dans une transaction.
+/// Utilisez cette exception pour indiquer une erreur de validation ou de logique métier
+/// qui doit annuler la transaction et afficher un message à l'utilisateur.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Cette exception est capturÃ©e par <see cref="CommandBase.ExecuteInTransaction"/>
-/// et affiche le message Ã  l'utilisateur sans stack trace.
+/// Cette exception est capturée par <see cref="CommandBase.ExecuteInTransaction"/>
+/// et affiche le message à l'utilisateur sans stack trace.
 /// </para>
 /// <example>
 /// <code>
@@ -41,15 +46,15 @@ namespace OpenAsphalte.Abstractions;
 public class TransactionException : System.Exception
 {
     /// <summary>
-    /// CrÃ©e une nouvelle exception de transaction avec un message utilisateur.
+    /// Crée une nouvelle exception de transaction avec un message utilisateur.
     /// </summary>
-    /// <param name="message">Message Ã  afficher Ã  l'utilisateur</param>
+    /// <param name="message">Message à afficher à l'utilisateur</param>
     public TransactionException(string message) : base(message) { }
 
     /// <summary>
-    /// CrÃ©e une nouvelle exception de transaction avec un message et une exception interne.
+    /// Crée une nouvelle exception de transaction avec un message et une exception interne.
     /// </summary>
-    /// <param name="message">Message Ã  afficher Ã  l'utilisateur</param>
+    /// <param name="message">Message à afficher à l'utilisateur</param>
     /// <param name="innerException">Exception d'origine</param>
     public TransactionException(string message, System.Exception innerException)
         : base(message, innerException) { }
@@ -57,11 +62,11 @@ public class TransactionException : System.Exception
 
 /// <summary>
 /// Classe de base pour toutes les commandes Open Asphalte.
-/// Fournit un accÃ¨s simplifiÃ© aux objets AutoCAD et aux services du framework.
+/// Fournit un accès simplifié aux objets AutoCAD et aux services du framework.
 /// </summary>
 /// <remarks>
 /// <para>
-/// HÃ©ritez de cette classe pour crÃ©er vos commandes :
+/// Héritez de cette classe pour créer vos commandes :
 /// <code>
 /// public class MaCommande : CommandBase
 /// {
@@ -74,7 +79,7 @@ public class TransactionException : System.Exception
 ///             // Votre code ici
 ///             ExecuteInTransaction(tr =>
 ///             {
-///                 // OpÃ©rations avec transaction
+///                 // Opérations avec transaction
 ///             });
 ///         });
 ///     }
@@ -84,7 +89,7 @@ public class TransactionException : System.Exception
 /// </remarks>
 public abstract class CommandBase
 {
-    #region PropriÃ©tÃ©s AutoCAD
+    #region Propriétés AutoCAD
 
     /// <summary>
     /// Document AutoCAD actif
@@ -97,30 +102,30 @@ public abstract class CommandBase
     protected Database? Database => Document?.Database;
 
     /// <summary>
-    /// Ã‰diteur du document actif
+    /// Éditeur du document actif
     /// </summary>
     protected Editor? Editor => Document?.Editor;
 
     /// <summary>
-    /// VÃ©rifie que le document est valide et accessible
+    /// Vérifie que le document est valide et accessible
     /// </summary>
     protected bool IsDocumentValid => Document != null && Database != null && Editor != null;
 
     #endregion
 
-    #region MÃ©thodes de Transaction
+    #region Méthodes de Transaction
 
     /// <summary>
-    /// ExÃ©cute une action dans une transaction AutoCAD.
-    /// La transaction est automatiquement commitÃ©e ou annulÃ©e en cas d'exception.
+    /// Exécute une action dans une transaction AutoCAD.
+    /// La transaction est automatiquement commitée ou annulée en cas d'exception.
     /// </summary>
-    /// <param name="action">Action Ã  exÃ©cuter avec la transaction</param>
+    /// <param name="action">Action à exécuter avec la transaction</param>
     /// <example>
     /// <code>
     /// ExecuteInTransaction(tr =>
     /// {
     ///     var btr = (BlockTableRecord)tr.GetObject(Database.CurrentSpaceId, OpenMode.ForWrite);
-    ///     // CrÃ©er des entitÃ©s...
+    ///     // Créer des entités...
     /// });
     /// </code>
     /// </example>
@@ -150,11 +155,11 @@ public abstract class CommandBase
     }
 
     /// <summary>
-    /// ExÃ©cute une action dans une transaction avec retour de valeur.
+    /// Exécute une action dans une transaction avec retour de valeur.
     /// </summary>
     /// <typeparam name="TRetval">Type de retour</typeparam>
-    /// <param name="action">Fonction Ã  exÃ©cuter</param>
-    /// <returns>RÃ©sultat de la fonction ou default(TRetval) si erreur</returns>
+    /// <param name="action">Fonction à exécuter</param>
+    /// <returns>Résultat de la fonction ou default(TRetval) si erreur</returns>
     protected TRetval? ExecuteInTransaction<TRetval>(Func<Transaction, TRetval> action)
     {
         if (Database == null)
@@ -182,12 +187,12 @@ public abstract class CommandBase
     }
 
     /// <summary>
-    /// Tente d'exÃ©cuter une action dans une transaction sans propager les exceptions.
-    /// Utile pour les opÃ©rations optionnelles ou rÃ©cupÃ©rables.
+    /// Tente d'exécuter une action dans une transaction sans propager les exceptions.
+    /// Utile pour les opérations optionnelles ou récupérables.
     /// </summary>
-    /// <param name="action">Action Ã  exÃ©cuter</param>
-    /// <param name="errorMessage">Message d'erreur reÃ§u si Ã©chec (null si succÃ¨s)</param>
-    /// <returns>True si succÃ¨s, False si Ã©chec</returns>
+    /// <param name="action">Action à exécuter</param>
+    /// <param name="errorMessage">Message d'erreur reçu si échec (null si succès)</param>
+    /// <returns>True si succès, False si échec</returns>
     protected bool TryExecuteInTransaction(Action<Transaction> action, out string? errorMessage)
     {
         errorMessage = null;
@@ -220,15 +225,15 @@ public abstract class CommandBase
 
     #endregion
 
-    #region ExÃ©cution SÃ©curisÃ©e
+    #region Exécution Sécurisée
 
     /// <summary>
-    /// ExÃ©cute une commande de maniÃ¨re sÃ©curisÃ©e avec gestion automatique des erreurs.
-    /// GÃ¨re les annulations utilisateur et les exceptions.
+    /// Exécute une commande de manière sécurisée avec gestion automatique des erreurs.
+    /// Gère les annulations utilisateur et les exceptions.
     /// </summary>
-    /// <param name="action">Action Ã  exÃ©cuter</param>
-    /// <param name="successKey">ClÃ© de traduction pour le message de succÃ¨s (optionnel)</param>
-    /// <param name="errorKey">ClÃ© de traduction pour le message d'erreur (optionnel)</param>
+    /// <param name="action">Action à exécuter</param>
+    /// <param name="successKey">Clé de traduction pour le message de succès (optionnel)</param>
+    /// <param name="errorKey">Clé de traduction pour le message d'erreur (optionnel)</param>
     protected void ExecuteSafe(Action action, string? successKey = null, string? errorKey = null)
     {
         if (!IsDocumentValid)
@@ -248,11 +253,11 @@ public abstract class CommandBase
         }
         catch (System.OperationCanceledException)
         {
-            Logger.Info(Translate("cmd.cancelled", "Commande annulÃ©e"));
+            Logger.Info(Translate("cmd.cancelled", "Commande annulée"));
         }
         catch (Autodesk.AutoCAD.Runtime.Exception ex) when (ex.ErrorStatus == Autodesk.AutoCAD.Runtime.ErrorStatus.UserBreak)
         {
-            Logger.Info(Translate("cmd.cancelled", "Commande annulÃ©e"));
+            Logger.Info(Translate("cmd.cancelled", "Commande annulée"));
         }
         catch (System.Exception ex)
         {
@@ -273,18 +278,18 @@ public abstract class CommandBase
     /// <summary>
     /// Affiche un message dans la ligne de commande AutoCAD
     /// </summary>
-    /// <param name="message">Message Ã  afficher</param>
+    /// <param name="message">Message à afficher</param>
     protected void WriteMessage(string message)
     {
         Editor?.WriteMessage($"\n{message}");
     }
 
     /// <summary>
-    /// Traduction interne avec fallback si la clÃ© est introuvable.
+    /// Traduction interne avec fallback si la clé est introuvable.
     /// </summary>
-    /// <param name="key">ClÃ© de traduction</param>
-    /// <param name="defaultValue">Valeur par dÃ©faut si clÃ© non trouvÃ©e</param>
-    /// <returns>Texte traduit ou valeur par dÃ©faut</returns>
+    /// <param name="key">Clé de traduction</param>
+    /// <param name="defaultValue">Valeur par défaut si clé non trouvée</param>
+    /// <returns>Texte traduit ou valeur par défaut</returns>
     private static string Translate(string key, string? defaultValue = null)
     {
         var value = global::OpenAsphalte.Localization.Localization.T(key);
@@ -297,10 +302,10 @@ public abstract class CommandBase
     }
 
     /// <summary>
-    /// Raccourci pour la traduction via le systÃ¨me de localisation
+    /// Raccourci pour la traduction via le système de localisation
     /// </summary>
-    /// <param name="key">ClÃ© de traduction</param>
-    /// <param name="defaultValue">Valeur par dÃ©faut si clÃ© non trouvÃ©e</param>
+    /// <param name="key">Clé de traduction</param>
+    /// <param name="defaultValue">Valeur par défaut si clé non trouvée</param>
     /// <returns>Texte traduit</returns>
     protected static string T(string key, string? defaultValue = null)
     {
@@ -308,11 +313,11 @@ public abstract class CommandBase
     }
 
     /// <summary>
-    /// Raccourci pour la traduction avec paramÃ¨tres formatÃ©s
+    /// Raccourci pour la traduction avec paramètres formatés
     /// </summary>
-    /// <param name="key">ClÃ© de traduction</param>
+    /// <param name="key">Clé de traduction</param>
     /// <param name="args">Arguments de formatage</param>
-    /// <returns>Texte traduit et formatÃ©</returns>
+    /// <returns>Texte traduit et formaté</returns>
     protected static string TFormat(string key, params object[] args)
     {
         return global::OpenAsphalte.Localization.Localization.TFormat(key, args);

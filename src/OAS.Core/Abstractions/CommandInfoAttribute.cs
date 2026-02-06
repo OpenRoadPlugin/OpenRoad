@@ -1,25 +1,30 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace OpenAsphalte.Abstractions;
 
 /// <summary>
-/// MÃ©tadonnÃ©es d'une commande pour l'affichage dans les menus et rubans.
-/// AppliquÃ© sur les mÃ©thodes marquÃ©es avec [CommandMethod].
+/// Métadonnées d'une commande pour l'affichage dans les menus et rubans.
+/// Appliqué sur les méthodes marquées avec [CommandMethod].
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 public class CommandInfoAttribute : Attribute
 {
     /// <summary>
-    /// Nom affichÃ© dans les menus et rubans
+    /// Nom affiché dans les menus et rubans
     /// </summary>
     public string DisplayName { get; }
     
@@ -29,37 +34,37 @@ public class CommandInfoAttribute : Attribute
     public string Description { get; set; } = "";
     
     /// <summary>
-    /// ClÃ© de traduction pour le nom (si multilingue)
+    /// Clé de traduction pour le nom (si multilingue)
     /// </summary>
     public string? DisplayNameKey { get; set; }
     
     /// <summary>
-    /// ClÃ© de traduction pour la description (si multilingue)
+    /// Clé de traduction pour la description (si multilingue)
     /// </summary>
     public string? DescriptionKey { get; set; }
     
     /// <summary>
-    /// CatÃ©gorie menu niveau 1 (ex: "Cartographie"). Si null, utilise le nom du Module.
+    /// Catégorie menu niveau 1 (ex: "Cartographie"). Si null, utilise le nom du Module.
     /// </summary>
     public string? MenuCategory { get; set; }
 
     /// <summary>
-    /// ClÃ© de traduction pour la catÃ©gorie niveau 1.
+    /// Clé de traduction pour la catégorie niveau 1.
     /// </summary>
     public string? MenuCategoryKey { get; set; }
 
     /// <summary>
-    /// Sous-catÃ©gorie menu niveau 2 (ex: "GÃ©orÃ©fÃ©rencement").
+    /// Sous-catégorie menu niveau 2 (ex: "Géoréférencement").
     /// </summary>
     public string? MenuSubCategory { get; set; }
 
     /// <summary>
-    /// ClÃ© de traduction pour la sous-catÃ©gorie niveau 2.
+    /// Clé de traduction pour la sous-catégorie niveau 2.
     /// </summary>
     public string? MenuSubCategoryKey { get; set; }
     
     /// <summary>
-    /// Chemin de l'icÃ´ne (16x16 pour menu, 32x32 pour ruban)
+    /// Chemin de l'icône (16x16 pour menu, 32x32 pour ruban)
     /// Format: "pack://application:,,,/Assembly;component/Resources/icon.png"
     /// </summary>
     public string? IconPath { get; set; }
@@ -80,19 +85,19 @@ public class CommandInfoAttribute : Attribute
     public string? Group { get; set; }
     
     /// <summary>
-    /// Indique si la commande doit apparaÃ®tre dans le menu
+    /// Indique si la commande doit apparaître dans le menu
     /// </summary>
     public bool ShowInMenu { get; set; } = true;
     
     /// <summary>
-    /// Indique si la commande doit apparaÃ®tre dans le ruban
+    /// Indique si la commande doit apparaître dans le ruban
     /// </summary>
     public bool ShowInRibbon { get; set; } = true;
 
     /// <summary>
-    /// CrÃ©e une nouvelle instance de CommandInfoAttribute
+    /// Crée une nouvelle instance de CommandInfoAttribute
     /// </summary>
-    /// <param name="displayName">Nom affichÃ© de la commande</param>
+    /// <param name="displayName">Nom affiché de la commande</param>
     public CommandInfoAttribute(string displayName)
     {
         DisplayName = displayName;
@@ -110,7 +115,7 @@ public enum CommandSize
     Standard,
     
     /// <summary>
-    /// Grand bouton avec icÃ´ne 32x32
+    /// Grand bouton avec icône 32x32
     /// </summary>
     Large
 }

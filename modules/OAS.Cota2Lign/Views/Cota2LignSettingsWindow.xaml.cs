@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Globalization;
 using System.Windows;
@@ -18,7 +23,7 @@ using L10n = OpenAsphalte.Localization.Localization;
 namespace OpenAsphalte.Modules.Cota2Lign.Views;
 
 /// <summary>
-/// FenÃªtre de paramÃ©trage du module Cotation entre deux lignes.
+/// Fenêtre de paramétrage du module Cotation entre deux lignes.
 /// Permet de configurer l'interdistance, le calque cible, etc.
 /// </summary>
 public partial class Cota2LignSettingsWindow : Window
@@ -33,9 +38,9 @@ public partial class Cota2LignSettingsWindow : Window
     #region Constructor
 
     /// <summary>
-    /// Initialise la fenÃªtre avec les paramÃ¨tres actuels
+    /// Initialise la fenêtre avec les paramètres actuels
     /// </summary>
-    /// <param name="settings">ParamÃ¨tres Ã  Ã©diter</param>
+    /// <param name="settings">Paramètres à éditer</param>
     public Cota2LignSettingsWindow(Cota2LignSettings settings)
     {
         InitializeComponent();
@@ -46,10 +51,10 @@ public partial class Cota2LignSettingsWindow : Window
         // Appliquer les traductions
         ApplyTranslations();
 
-        // Charger les valeurs dans les contrÃ´les
+        // Charger les valeurs dans les contrôles
         LoadSettingsToUI();
 
-        // Configurer l'Ã©tat du contrÃ´le OAS Snap
+        // Configurer l'état du contrôle OAS Snap
         ConfigureOasSnapControls();
     }
 
@@ -58,43 +63,43 @@ public partial class Cota2LignSettingsWindow : Window
     #region Private Methods
 
     /// <summary>
-    /// Applique les traductions aux Ã©lÃ©ments de l'interface
+    /// Applique les traductions aux éléments de l'interface
     /// </summary>
     private void ApplyTranslations()
     {
-        Title = L10n.T("cota2lign.settings.title", "ParamÃ¨tres - Cotation entre deux lignes");
+        Title = L10n.T("cota2lign.settings.title", "Paramètres - Cotation entre deux lignes");
 
         // Labels
-        TitleLabel.Text = L10n.T("cota2lign.settings.header", "ParamÃ¨tres de cotation");
+        TitleLabel.Text = L10n.T("cota2lign.settings.header", "Paramètres de cotation");
         InterdistanceLabel.Text = L10n.T("cota2lign.settings.interdist", "Interdistance (m) :");
-        OffsetLabel.Text = L10n.T("cota2lign.settings.offset", "DÃ©calage cotation (m) :");
+        OffsetLabel.Text = L10n.T("cota2lign.settings.offset", "Décalage cotation (m) :");
         LayerLabel.Text = L10n.T("cota2lign.settings.layer", "Calque de destination :");
 
         ApplyButton.Content = L10n.T("cota2lign.settings.apply", "Appliquer");
         CancelButton.Content = L10n.T("cota2lign.settings.cancel", "Annuler");
-        ResetButton.Content = L10n.T("cota2lign.settings.reset", "RÃ©initialiser");
+        ResetButton.Content = L10n.T("cota2lign.settings.reset", "Réinitialiser");
 
         VerticesCheckBox.Content = L10n.T("cota2lign.settings.vertices", "Coter aux sommets de la polyligne");
-        ReverseSideCheckBox.Content = L10n.T("cota2lign.settings.reverse", "Inverser le cÃ´tÃ© de dÃ©calage");
+        ReverseSideCheckBox.Content = L10n.T("cota2lign.settings.reverse", "Inverser le côté de décalage");
 
         // Traductions pour l'accrochage OAS
         UseOasSnapCheckBox.Content = L10n.T("cota2lign.settings.useoassnap", "Utiliser l'accrochage OAS");
 
         // Tooltips
-        InterdistanceLabel.ToolTip = L10n.T("cota2lign.settings.interdist.tooltip", "Distance entre chaque cotation (0 pour dÃ©sactiver)");
+        InterdistanceLabel.ToolTip = L10n.T("cota2lign.settings.interdist.tooltip", "Distance entre chaque cotation (0 pour désactiver)");
         InterdistanceTextBox.ToolTip = InterdistanceLabel.ToolTip;
-        OffsetLabel.ToolTip = L10n.T("cota2lign.settings.offset.tooltip", "Distance de dÃ©calage du texte de cotation");
+        OffsetLabel.ToolTip = L10n.T("cota2lign.settings.offset.tooltip", "Distance de décalage du texte de cotation");
         OffsetTextBox.ToolTip = OffsetLabel.ToolTip;
-        LayerLabel.ToolTip = L10n.T("cota2lign.settings.layer.tooltip", "Calque sur lequel crÃ©er les cotations (vide = calque courant)");
+        LayerLabel.ToolTip = L10n.T("cota2lign.settings.layer.tooltip", "Calque sur lequel créer les cotations (vide = calque courant)");
         LayerTextBox.ToolTip = LayerLabel.ToolTip;
-        VerticesCheckBox.ToolTip = L10n.T("cota2lign.settings.vertices.tooltip", "Ajouter une cotation Ã  chaque sommet de la polyligne");
-        ReverseSideCheckBox.ToolTip = L10n.T("cota2lign.settings.reverse.tooltip", "Place les cotations de l'autre cÃ´tÃ© de la polyligne");
-        UseOasSnapCheckBox.ToolTip = L10n.T("cota2lign.settings.useoassnap.tooltip", "Active l'accrochage intelligent OAS (nÃ©cessite le module DynamicSnap)");
-        ResetButton.ToolTip = L10n.T("cota2lign.settings.reset.tooltip", "RÃ©tablir les valeurs par dÃ©faut");
+        VerticesCheckBox.ToolTip = L10n.T("cota2lign.settings.vertices.tooltip", "Ajouter une cotation à chaque sommet de la polyligne");
+        ReverseSideCheckBox.ToolTip = L10n.T("cota2lign.settings.reverse.tooltip", "Place les cotations de l'autre côté de la polyligne");
+        UseOasSnapCheckBox.ToolTip = L10n.T("cota2lign.settings.useoassnap.tooltip", "Active l'accrochage intelligent OAS (nécessite le module DynamicSnap)");
+        ResetButton.ToolTip = L10n.T("cota2lign.settings.reset.tooltip", "Rétablir les valeurs par défaut");
     }
 
     /// <summary>
-    /// Charge les paramÃ¨tres dans l'interface utilisateur
+    /// Charge les paramètres dans l'interface utilisateur
     /// </summary>
     private void LoadSettingsToUI()
     {
@@ -115,22 +120,22 @@ public partial class Cota2LignSettingsWindow : Window
     }
 
     /// <summary>
-    /// Configure l'Ã©tat du contrÃ´le d'accrochage OAS selon la disponibilitÃ© du module
+    /// Configure l'état du contrôle d'accrochage OAS selon la disponibilité du module
     /// </summary>
     private void ConfigureOasSnapControls()
     {
         if (!_isDynamicSnapAvailable)
         {
-            // Module non installÃ© : griser le checkbox
+            // Module non installé : griser le checkbox
             UseOasSnapCheckBox.IsEnabled = false;
             UseOasSnapCheckBox.IsChecked = false;
             UseOasSnapCheckBox.ToolTip = L10n.T("cota2lign.settings.oassnap.unavailable",
-                "Module DynamicSnap non installÃ© - fonctionnalitÃ© dÃ©sactivÃ©e");
+                "Module DynamicSnap non installé - fonctionnalité désactivée");
         }
     }
 
     /// <summary>
-    /// VÃ©rifie si le module DynamicSnap est disponible
+    /// Vérifie si le module DynamicSnap est disponible
     /// </summary>
     private static bool CheckDynamicSnapAvailable()
     {
@@ -146,7 +151,7 @@ public partial class Cota2LignSettingsWindow : Window
     }
 
     /// <summary>
-    /// Lit les valeurs de l'interface et les applique aux paramÃ¨tres
+    /// Lit les valeurs de l'interface et les applique aux paramètres
     /// </summary>
     /// <returns>True si les valeurs sont valides</returns>
     private bool ApplyUIToSettings()
@@ -159,7 +164,7 @@ public partial class Cota2LignSettingsWindow : Window
         else
         {
             MessageBox.Show(
-                L10n.T("cota2lign.validation.invalidInterdist", "Veuillez saisir une valeur numÃ©rique valide pour l'interdistance."),
+                L10n.T("cota2lign.validation.invalidInterdist", "Veuillez saisir une valeur numérique valide pour l'interdistance."),
                 L10n.T("cota2lign.validation.error", "Erreur de validation"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
@@ -167,7 +172,7 @@ public partial class Cota2LignSettingsWindow : Window
             return false;
         }
 
-        // Valider et appliquer le dÃ©calage
+        // Valider et appliquer le décalage
         if (double.TryParse(OffsetTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out double offset))
         {
             _settings.DimensionOffset = offset;
@@ -175,7 +180,7 @@ public partial class Cota2LignSettingsWindow : Window
         else
         {
             MessageBox.Show(
-                L10n.T("cota2lign.validation.invalidOffset", "Veuillez saisir une valeur numÃ©rique valide pour le dÃ©calage."),
+                L10n.T("cota2lign.validation.invalidOffset", "Veuillez saisir une valeur numérique valide pour le décalage."),
                 L10n.T("cota2lign.validation.error", "Erreur de validation"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
@@ -183,7 +188,7 @@ public partial class Cota2LignSettingsWindow : Window
             return false;
         }
 
-        // Appliquer le calque (peut Ãªtre vide)
+        // Appliquer le calque (peut être vide)
         _settings.TargetLayer = string.IsNullOrWhiteSpace(LayerTextBox.Text)
             ? null
             : LayerTextBox.Text.Trim();
@@ -192,7 +197,7 @@ public partial class Cota2LignSettingsWindow : Window
         _settings.DimensionAtVertices = VerticesCheckBox.IsChecked ?? false;
         _settings.ReverseSide = ReverseSideCheckBox.IsChecked ?? false;
 
-        // Appliquer les paramÃ¨tres d'accrochage OAS
+        // Appliquer les paramètres d'accrochage OAS
         _settings.UseOasSnap = UseOasSnapCheckBox.IsChecked ?? false;
 
         return true;
@@ -203,7 +208,7 @@ public partial class Cota2LignSettingsWindow : Window
     #region Event Handlers
 
     /// <summary>
-    /// Applique les paramÃ¨tres et ferme la fenÃªtre
+    /// Applique les paramètres et ferme la fenêtre
     /// </summary>
     private void ApplyButton_Click(object sender, RoutedEventArgs e)
     {
@@ -215,7 +220,7 @@ public partial class Cota2LignSettingsWindow : Window
     }
 
     /// <summary>
-    /// Annule et ferme la fenÃªtre
+    /// Annule et ferme la fenêtre
     /// </summary>
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
@@ -224,7 +229,7 @@ public partial class Cota2LignSettingsWindow : Window
     }
 
     /// <summary>
-    /// RÃ©initialise les paramÃ¨tres aux valeurs par dÃ©faut
+    /// Réinitialise les paramètres aux valeurs par défaut
     /// </summary>
     private void ResetButton_Click(object sender, RoutedEventArgs e)
     {

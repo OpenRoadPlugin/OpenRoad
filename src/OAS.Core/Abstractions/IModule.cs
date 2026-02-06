@@ -1,26 +1,31 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace OpenAsphalte.Abstractions;
 
 /// <summary>
 /// Interface pour tous les modules Open Asphalte.
-/// Un module reprÃ©sente une extension fonctionnelle du plugin.
+/// Un module représente une extension fonctionnelle du plugin.
 /// </summary>
 /// <remarks>
-/// Pour crÃ©er un nouveau module :
-/// 1. CrÃ©er une classe qui hÃ©rite de <see cref="ModuleBase"/>
-/// 2. ImplÃ©menter les propriÃ©tÃ©s requises (Id, Name, Description)
+/// Pour créer un nouveau module :
+/// 1. Créer une classe qui hérite de <see cref="ModuleBase"/>
+/// 2. Implémenter les propriétés requises (Id, Name, Description)
 /// 3. Ajouter les commandes avec <see cref="CommandInfoAttribute"/>
-/// 4. Compiler en DLL sÃ©parÃ©e et placer dans le dossier Modules/
+/// 4. Compiler en DLL séparée et placer dans le dossier Modules/
 /// </remarks>
 public interface IModule : IDisposable
 {
@@ -33,12 +38,12 @@ public interface IModule : IDisposable
     string Id { get; }
 
     /// <summary>
-    /// Nom affichÃ© du module dans les menus et rubans
+    /// Nom affiché du module dans les menus et rubans
     /// </summary>
     string Name { get; }
 
     /// <summary>
-    /// Description complÃ¨te du module
+    /// Description complète du module
     /// </summary>
     string Description { get; }
 
@@ -58,29 +63,29 @@ public interface IModule : IDisposable
 
     /// <summary>
     /// Ordre d'affichage dans les menus et rubans (plus petit = plus haut)
-    /// Modules systÃ¨me : 900+
+    /// Modules système : 900+
     /// Modules utilisateur : 1-899
     /// </summary>
     int Order { get; }
 
     /// <summary>
-    /// Chemin de l'icÃ´ne du module (32x32 pour ruban)
+    /// Chemin de l'icône du module (32x32 pour ruban)
     /// Format: "pack://application:,,,/Assembly;component/Resources/icon.png"
     /// </summary>
     string? IconPath { get; }
 
     /// <summary>
-    /// ClÃ© de traduction pour le nom du module
+    /// Clé de traduction pour le nom du module
     /// </summary>
     string? NameKey { get; }
 
     #endregion
 
-    #region DÃ©pendances
+    #region Dépendances
 
     /// <summary>
     /// Liste des IDs de modules requis pour ce module
-    /// Le module ne sera pas chargÃ© si une dÃ©pendance est manquante
+    /// Le module ne sera pas chargé si une dépendance est manquante
     /// </summary>
     IReadOnlyList<string> Dependencies { get; }
 
@@ -90,13 +95,13 @@ public interface IModule : IDisposable
     string MinCoreVersion { get; }
 
     /// <summary>
-    /// Version maximale du Core supportÃ©e (format semver)
+    /// Version maximale du Core supportée (format semver)
     /// Null si aucune limite haute (compatible avec toutes les versions futures)
     /// </summary>
     string? MaxCoreVersion { get; }
 
     /// <summary>
-    /// Liste des contributeurs ayant participÃ© au dÃ©veloppement du module.
+    /// Liste des contributeurs ayant participé au développement du module.
     /// </summary>
     IEnumerable<Contributor> Contributors { get; }
 
@@ -106,19 +111,19 @@ public interface IModule : IDisposable
     #region Cycle de vie
 
     /// <summary>
-    /// AppelÃ© lors du chargement du module
+    /// Appelé lors du chargement du module
     /// Permet d'initialiser les ressources
     /// </summary>
     void Initialize();
 
     /// <summary>
-    /// AppelÃ© lors de la fermeture du plugin
-    /// Permet de libÃ©rer les ressources
+    /// Appelé lors de la fermeture du plugin
+    /// Permet de libérer les ressources
     /// </summary>
     void Shutdown();
 
     /// <summary>
-    /// Indique si le module est correctement initialisÃ©
+    /// Indique si le module est correctement initialisé
     /// </summary>
     bool IsInitialized { get; }
 
@@ -132,7 +137,7 @@ public interface IModule : IDisposable
     IEnumerable<Type> GetCommandTypes();
 
     /// <summary>
-    /// Retourne les traductions spÃ©cifiques au module
+    /// Retourne les traductions spécifiques au module
     /// Structure: { "fr": { "key": "value" }, "en": { "key": "value" } }
     /// </summary>
     IDictionary<string, IDictionary<string, string>> GetTranslations();

@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Runtime;
 using OpenAsphalte.Abstractions;
@@ -19,14 +24,14 @@ using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace OpenAsphalte.Modules.DynamicSnap.Commands;
 
 /// <summary>
-/// Commande pour ouvrir la fenÃªtre de paramÃ¨tres de l'accrochage dynamique OAS.
+/// Commande pour ouvrir la fenêtre de paramètres de l'accrochage dynamique OAS.
 /// Accessible via le menu Open Asphalte > Dessin ou le ruban.
 /// </summary>
 public class DynamicSnapSettingsCommand : CommandBase
 {
     [CommandMethod("OAS_SNAP_SETTINGS")]
     [CommandInfo("Accrochage OAS",
-        Description = "Configure les paramÃ¨tres de l'accrochage dynamique OAS",
+        Description = "Configure les paramètres de l'accrochage dynamique OAS",
         DisplayNameKey = "dynamicsnap.cmd.title",
         DescriptionKey = "dynamicsnap.cmd.desc",
         MenuCategory = "Dessin",
@@ -45,7 +50,7 @@ public class DynamicSnapSettingsCommand : CommandBase
 
             if (result == true)
             {
-                // Les paramÃ¨tres ont Ã©tÃ© sauvegardÃ©s par la fenÃªtre
+                // Les paramètres ont été sauvegardés par la fenêtre
                 Logger.Info(T("dynamicsnap.settings.saved"));
             }
         });

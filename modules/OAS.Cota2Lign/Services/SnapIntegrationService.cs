@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
@@ -20,7 +25,7 @@ namespace OpenAsphalte.Modules.Cota2Lign.Services;
 
 /// <summary>
 /// Service d'accrochage intelligent pour le module Cota2Lign.
-/// Utilise le module DynamicSnap (via SnapHelper) si disponible et activÃ©,
+/// Utilise le module DynamicSnap (via SnapHelper) si disponible et activé,
 /// sinon fallback vers OSNAP AutoCAD.
 /// </summary>
 public static class SnapIntegrationService
@@ -29,7 +34,7 @@ public static class SnapIntegrationService
     private static bool _checkedOnce = false;
 
     /// <summary>
-    /// VÃ©rifie si le module DynamicSnap est disponible
+    /// Vérifie si le module DynamicSnap est disponible
     /// </summary>
     public static bool IsDynamicSnapAvailable
     {
@@ -45,7 +50,7 @@ public static class SnapIntegrationService
     }
 
     /// <summary>
-    /// Force une revÃ©rification de la disponibilitÃ©
+    /// Force une revérification de la disponibilité
     /// </summary>
     public static void RefreshAvailability()
     {
@@ -54,7 +59,7 @@ public static class SnapIntegrationService
     }
 
     /// <summary>
-    /// VÃ©rifie si le module DynamicSnap est chargÃ©
+    /// Vérifie si le module DynamicSnap est chargé
     /// </summary>
     private static void CheckDynamicSnapAvailability()
     {
@@ -65,12 +70,12 @@ public static class SnapIntegrationService
             if (_isDynamicSnapAvailable == true)
             {
                 Logger.Debug(L10n.T("cota2lign.snap.dynamicsnap",
-                    "[Cota2Lign] Module DynamicSnap dÃ©tectÃ© - accrochage intelligent disponible"));
+                    "[Cota2Lign] Module DynamicSnap détecté - accrochage intelligent disponible"));
             }
             else
             {
                 Logger.Debug(L10n.T("cota2lign.snap.fallback",
-                    "[Cota2Lign] Module DynamicSnap non disponible - accrochage AutoCAD utilisÃ©"));
+                    "[Cota2Lign] Module DynamicSnap non disponible - accrochage AutoCAD utilisé"));
             }
         }
         catch (Exception ex)
@@ -81,16 +86,16 @@ public static class SnapIntegrationService
     }
 
     /// <summary>
-    /// SÃ©lectionne un point sur une polyligne avec l'accrochage configurÃ©.
-    /// Utilise DynamicSnap (paramÃ¨tres globaux) si disponible et activÃ©,
+    /// Sélectionne un point sur une polyligne avec l'accrochage configuré.
+    /// Utilise DynamicSnap (paramètres globaux) si disponible et activé,
     /// sinon OSNAP AutoCAD.
     /// </summary>
     /// <param name="polylineId">ObjectId de la polyligne</param>
     /// <param name="prompt">Message de prompt</param>
-    /// <param name="editor">Ã‰diteur AutoCAD</param>
+    /// <param name="editor">Éditeur AutoCAD</param>
     /// <param name="database">Database AutoCAD</param>
-    /// <param name="settings">ParamÃ¨tres du module (optionnel)</param>
-    /// <returns>Point projetÃ© sur la polyligne ou null si annulÃ©</returns>
+    /// <param name="settings">Paramètres du module (optionnel)</param>
+    /// <returns>Point projeté sur la polyligne ou null si annulé</returns>
     public static Point3d? GetPointOnPolyline(
         ObjectId polylineId,
         string prompt,
@@ -98,7 +103,7 @@ public static class SnapIntegrationService
         Database database,
         Cota2LignSettings? settings = null)
     {
-        // VÃ©rifier si on doit utiliser l'accrochage OAS
+        // Vérifier si on doit utiliser l'accrochage OAS
         bool useOasSnap = settings?.UseOasSnap == true && IsDynamicSnapAvailable;
 
         if (useOasSnap)
@@ -108,8 +113,8 @@ public static class SnapIntegrationService
             {
                 return result;
             }
-            // Si DynamicSnap Ã©choue, fallback vers AutoCAD
-            Logger.Debug("[Cota2Lign] DynamicSnap retournÃ© null, fallback vers OSNAP");
+            // Si DynamicSnap échoue, fallback vers AutoCAD
+            Logger.Debug("[Cota2Lign] DynamicSnap retourné null, fallback vers OSNAP");
         }
 
         // Utiliser l'accrochage AutoCAD classique
@@ -117,8 +122,8 @@ public static class SnapIntegrationService
     }
 
     /// <summary>
-    /// SÃ©lection avec le module DynamicSnap via SnapHelper (appel direct).
-    /// Les modes d'accrochage utilisÃ©s sont ceux configurÃ©s globalement (config.json).
+    /// Sélection avec le module DynamicSnap via SnapHelper (appel direct).
+    /// Les modes d'accrochage utilisés sont ceux configurés globalement (config.json).
     /// </summary>
     private static Point3d? GetPointWithDynamicSnap(
         ObjectId polylineId,
@@ -143,12 +148,12 @@ public static class SnapIntegrationService
                 return null;
             }
 
-            // Appel direct Ã  SnapHelper (modes = null â†’ paramÃ¨tres globaux config.json)
+            // Appel direct à SnapHelper (modes = null ? paramètres globaux config.json)
             var result = SnapHelper.GetPointOnPolylineOrFallback(polyline, prompt, editor);
 
             if (result.HasValue)
             {
-                // Projeter le rÃ©sultat sur la polyligne pour garantir la prÃ©cision
+                // Projeter le résultat sur la polyligne pour garantir la précision
                 var projected = polyline.GetClosestPointTo(result.Value, false);
                 tr.Commit();
                 return projected;
@@ -165,7 +170,7 @@ public static class SnapIntegrationService
     }
 
     /// <summary>
-    /// SÃ©lection avec l'accrochage AutoCAD classique (OSNAP)
+    /// Sélection avec l'accrochage AutoCAD classique (OSNAP)
     /// </summary>
     private static Point3d? GetPointWithAutoCADSnap(
         ObjectId polylineId,
@@ -190,7 +195,7 @@ public static class SnapIntegrationService
     }
 
     /// <summary>
-    /// Projette un point sur une polyligne de maniÃ¨re sÃ©curisÃ©e
+    /// Projette un point sur une polyligne de manière sécurisée
     /// </summary>
     private static Point3d? ProjectPointOnPolyline(
         ObjectId polylineId,

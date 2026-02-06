@@ -1,21 +1,26 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using L10n = OpenAsphalte.Localization.Localization;
 
 namespace OpenAsphalte.Modules.DynamicSnap.Models;
 
 /// <summary>
-/// Modes d'accrochage disponibles pour le système OAS Dynamic Snap.
-/// Peut être combiné avec l'opérateur | (flags).
+/// Modes d'accrochage disponibles pour le syst�me OAS Dynamic Snap.
+/// Peut �tre combin� avec l'op�rateur | (flags).
 /// </summary>
 [Flags]
 public enum SnapMode
@@ -26,12 +31,12 @@ public enum SnapMode
     None = 0,
 
     /// <summary>
-    /// Accrochage aux sommets (extrémités des segments)
+    /// Accrochage aux sommets (extr�mit�s des segments)
     /// </summary>
     Vertex = 1 << 0,
 
     /// <summary>
-    /// Accrochage aux extrémités de l'entité
+    /// Accrochage aux extr�mit�s de l'entit�
     /// </summary>
     Endpoint = 1 << 1,
 
@@ -41,7 +46,7 @@ public enum SnapMode
     Midpoint = 1 << 2,
 
     /// <summary>
-    /// Accrochage au point le plus proche sur l'entité
+    /// Accrochage au point le plus proche sur l'entit�
     /// </summary>
     Nearest = 1 << 3,
 
@@ -66,7 +71,7 @@ public enum SnapMode
     Tangent = 1 << 7,
 
     /// <summary>
-    /// Accrochage aux quadrants (0°, 90°, 180°, 270°)
+    /// Accrochage aux quadrants (0�, 90�, 180�, 270�)
     /// </summary>
     Quadrant = 1 << 8,
 
@@ -76,21 +81,21 @@ public enum SnapMode
     Insertion = 1 << 9,
 
     /// <summary>
-    /// Accrochage aux nœuds (objets Point)
+    /// Accrochage aux n�uds (objets Point)
     /// </summary>
     Node = 1 << 10,
 
     /// <summary>
-    /// Accrochage parallèle
+    /// Accrochage parall�le
     /// </summary>
     Parallel = 1 << 11,
 
-    // ═══════════════════════════════════════════════════════════
-    // COMBINAISONS PRÉDÉFINIES
-    // ═══════════════════════════════════════════════════════════
+    // -----------------------------------------------------------
+    // COMBINAISONS PR�D�FINIES
+    // -----------------------------------------------------------
 
     /// <summary>
-    /// Accrochage aux points sur polyligne (sommets + extrémités)
+    /// Accrochage aux points sur polyligne (sommets + extr�mit�s)
     /// </summary>
     PolylinePoints = Vertex | Endpoint,
 
@@ -105,7 +110,7 @@ public enum SnapMode
     CircleArc = Center | Quadrant | Nearest,
 
     /// <summary>
-    /// Accrochage géométrique de base
+    /// Accrochage g�om�trique de base
     /// </summary>
     Basic = Vertex | Endpoint | Midpoint | Center,
 
@@ -123,7 +128,7 @@ public enum SnapMode
 public static class SnapModeExtensions
 {
     /// <summary>
-    /// Vérifie si un mode spécifique est activé
+    /// V�rifie si un mode sp�cifique est activ�
     /// </summary>
     public static bool HasMode(this SnapMode mode, SnapMode flag)
     {
@@ -131,14 +136,14 @@ public static class SnapModeExtensions
     }
 
     /// <summary>
-    /// Retourne le nom localisé du mode
+    /// Retourne le nom localis� du mode
     /// </summary>
     public static string GetDisplayName(this SnapMode mode)
     {
         return mode switch
         {
             SnapMode.Vertex => L10n.T("dynamicsnap.mode.vertex", "Sommet"),
-            SnapMode.Endpoint => L10n.T("dynamicsnap.mode.endpoint", "Extrémité"),
+            SnapMode.Endpoint => L10n.T("dynamicsnap.mode.endpoint", "Extr�mit�"),
             SnapMode.Midpoint => L10n.T("dynamicsnap.mode.midpoint", "Milieu"),
             SnapMode.Nearest => L10n.T("dynamicsnap.mode.nearest", "Proche"),
             SnapMode.Center => L10n.T("dynamicsnap.mode.center", "Centre"),
@@ -147,8 +152,8 @@ public static class SnapModeExtensions
             SnapMode.Tangent => L10n.T("dynamicsnap.mode.tangent", "Tangent"),
             SnapMode.Quadrant => L10n.T("dynamicsnap.mode.quadrant", "Quadrant"),
             SnapMode.Insertion => L10n.T("dynamicsnap.mode.insertion", "Insertion"),
-            SnapMode.Node => L10n.T("dynamicsnap.mode.node", "Nœud"),
-            SnapMode.Parallel => L10n.T("dynamicsnap.mode.parallel", "Parallèle"),
+            SnapMode.Node => L10n.T("dynamicsnap.mode.node", "N�ud"),
+            SnapMode.Parallel => L10n.T("dynamicsnap.mode.parallel", "Parall�le"),
             _ => mode.ToString()
         };
     }

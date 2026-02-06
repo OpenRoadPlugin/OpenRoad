@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -20,9 +25,9 @@ using L10n = OpenAsphalte.Localization.Localization;
 namespace OpenAsphalte.Modules.PrezOrganizer.Views;
 
 /// <summary>
-/// BoÃ®te de dialogue unifiÃ©e pour le renommage des prÃ©sentations.
-/// Combine les fonctionnalitÃ©s de prÃ©fixe/suffixe et de pattern avec variables.
-/// Variables supportÃ©es : {N}, {N:00}, {ORIG}, {DATE}.
+/// Boîte de dialogue unifiée pour le renommage des présentations.
+/// Combine les fonctionnalités de préfixe/suffixe et de pattern avec variables.
+/// Variables supportées : {N}, {N:00}, {ORIG}, {DATE}.
 /// </summary>
 public partial class RenameToolDialog : Window
 {
@@ -31,15 +36,15 @@ public partial class RenameToolDialog : Window
     private readonly Dictionary<LayoutItem, string> _pendingChanges = new();
 
     /// <summary>
-    /// Indique si des modifications ont Ã©tÃ© faites et confirmÃ©es.
+    /// Indique si des modifications ont été faites et confirmées.
     /// </summary>
     public bool HasChanges => _pendingChanges.Count > 0;
 
     /// <summary>
-    /// CrÃ©e le dialogue de renommage.
+    /// Crée le dialogue de renommage.
     /// </summary>
-    /// <param name="allItems">Toutes les prÃ©sentations</param>
-    /// <param name="selectedItems">PrÃ©sentations sÃ©lectionnÃ©es</param>
+    /// <param name="allItems">Toutes les présentations</param>
+    /// <param name="selectedItems">Présentations sélectionnées</param>
     public RenameToolDialog(List<LayoutItem> allItems, List<LayoutItem> selectedItems)
     {
         InitializeComponent();
@@ -47,11 +52,11 @@ public partial class RenameToolDialog : Window
         _allItems = allItems;
         _selectedItems = selectedItems;
 
-        // Restaurer la taille/position de la fenÃªtre
+        // Restaurer la taille/position de la fenêtre
         WindowStateHelper.RestoreState(this, "prezorganizer.renametool", 520, 550);
         Closing += (s, e) => WindowStateHelper.SaveState(this, "prezorganizer.renametool");
 
-        // Si aucune sÃ©lection, forcer "Toutes"
+        // Si aucune sélection, forcer "Toutes"
         if (_selectedItems.Count == 0)
         {
             ScopeAll.IsChecked = true;
@@ -122,7 +127,7 @@ public partial class RenameToolDialog : Window
         PreviewListView.Items.Clear();
         _pendingChanges.Clear();
 
-        // DÃ©terminer les items cibles
+        // Déterminer les items cibles
         var targets = (ScopeAll.IsChecked == true)
             ? _allItems.Where(i => !i.IsMarkedForDeletion).ToList()
             : _selectedItems.Where(i => !i.IsMarkedForDeletion).ToList();
@@ -172,7 +177,7 @@ public partial class RenameToolDialog : Window
                 return;
             }
 
-            // Parser les paramÃ¨tres numÃ©riques
+            // Parser les paramètres numériques
             if (!int.TryParse(StartNumTextBox.Text, out int startNum))
                 startNum = 1;
             if (!int.TryParse(IncrementTextBox.Text, out int increment) || increment == 0)
@@ -203,19 +208,19 @@ public partial class RenameToolDialog : Window
     }
 
     /// <summary>
-    /// Applique le pattern de renommage Ã  un nom.
+    /// Applique le pattern de renommage à un nom.
     /// </summary>
     private static string ApplyPattern(string pattern, string originalName, int number)
     {
         string result = pattern;
 
-        // {ORIG} â†’ nom actuel
+        // {ORIG} ? nom actuel
         result = result.Replace("{ORIG}", originalName, StringComparison.OrdinalIgnoreCase);
 
-        // {DATE} â†’ date courte
+        // {DATE} ? date courte
         result = result.Replace("{DATE}", DateTime.Now.ToString("yyyy-MM-dd"), StringComparison.OrdinalIgnoreCase);
 
-        // {N:format} â†’ numÃ©ro formatÃ© (ex: {N:000} â†’ 001, 002...)
+        // {N:format} ? numéro formaté (ex: {N:000} ? 001, 002...)
         result = Regex.Replace(result, @"\{N:([^}]+)\}", m =>
         {
             string format = m.Groups[1].Value;
@@ -229,7 +234,7 @@ public partial class RenameToolDialog : Window
             }
         }, RegexOptions.IgnoreCase);
 
-        // {N} â†’ numÃ©ro simple
+        // {N} ? numéro simple
         result = result.Replace("{N}", number.ToString(), StringComparison.OrdinalIgnoreCase);
 
         return result;
@@ -251,7 +256,7 @@ public partial class RenameToolDialog : Window
             if (!isValid)
             {
                 MessageBox.Show(
-                    $"{T("prezorganizer.renameTool.error.invalid")}\n\n{item.CurrentName} â†’ {newName}\n\n{T(error!)}",
+                    $"{T("prezorganizer.renameTool.error.invalid")}\n\n{item.CurrentName} ? {newName}\n\n{T(error!)}",
                     T("prezorganizer.renameTool.title"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);

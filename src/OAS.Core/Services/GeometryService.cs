@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -15,28 +20,28 @@ using Autodesk.AutoCAD.DatabaseServices;
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// Service de calculs gÃ©omÃ©triques pour AutoCAD.
-/// Fournit des mÃ©thodes utilitaires pour les opÃ©rations gÃ©omÃ©triques courantes,
+/// Service de calculs géométriques pour AutoCAD.
+/// Fournit des méthodes utilitaires pour les opérations géométriques courantes,
 /// la voirie, l'assainissement et les calculs de cubature.
 /// </summary>
 /// <remarks>
-/// Ce service est dÃ©coupÃ© en partial classes thÃ©matiques :
+/// Ce service est découpé en partial classes thématiques :
 /// GeometryService.cs, .Intersections.cs, .Voirie.cs, .Hydraulics.cs, .Earthwork.cs
 /// </remarks>
 public static partial class GeometryService
 {
     #region Constantes
 
-    /// <summary>TolÃ©rance par dÃ©faut pour les comparaisons de doubles</summary>
+    /// <summary>Tolérance par défaut pour les comparaisons de doubles</summary>
     public const double Tolerance = 1e-10;
 
-    /// <summary>AccÃ©lÃ©ration gravitationnelle (m/sÂ²)</summary>
+    /// <summary>Accélération gravitationnelle (m/s²)</summary>
     public const double Gravity = 9.81;
 
-    /// <summary>Pi / 180 pour conversion degrÃ©s â†’ radians</summary>
+    /// <summary>Pi / 180 pour conversion degrés ? radians</summary>
     public const double DegToRad = Math.PI / 180.0;
 
-    /// <summary>180 / Pi pour conversion radians â†’ degrÃ©s</summary>
+    /// <summary>180 / Pi pour conversion radians ? degrés</summary>
     public const double RadToDeg = 180.0 / Math.PI;
 
     #endregion
@@ -47,12 +52,12 @@ public static partial class GeometryService
     /// Calcule la distance euclidienne entre deux points 3D.
     /// </summary>
     /// <param name="p1">Premier point</param>
-    /// <param name="p2">DeuxiÃ¨me point</param>
+    /// <param name="p2">Deuxième point</param>
     /// <returns>Distance entre les deux points (toujours positive)</returns>
     /// <example>
     /// <code>
     /// var distance = GeometryService.Distance(new Point3d(0, 0, 0), new Point3d(3, 4, 0));
-    /// // RÃ©sultat: 5.0
+    /// // Résultat: 5.0
     /// </code>
     /// </example>
     public static double Distance(Point3d p1, Point3d p2)
@@ -71,27 +76,27 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Calcule la distance horizontale (projetÃ©e) entre deux points.
-    /// Alias de Distance2D pour clartÃ© dans les contextes de topographie.
+    /// Calcule la distance horizontale (projetée) entre deux points.
+    /// Alias de Distance2D pour clarté dans les contextes de topographie.
     /// </summary>
     public static double HorizontalDistance(Point3d p1, Point3d p2) => Distance2D(p1, p2);
 
     /// <summary>
-    /// Calcule la diffÃ©rence d'altitude entre deux points.
+    /// Calcule la différence d'altitude entre deux points.
     /// </summary>
-    /// <returns>DiffÃ©rence positive si p2 est plus haut que p1</returns>
+    /// <returns>Différence positive si p2 est plus haut que p1</returns>
     public static double DeltaZ(Point3d p1, Point3d p2) => p2.Z - p1.Z;
 
     /// <summary>
-    /// Calcule l'angle formÃ© par le vecteur allant de <paramref name="from"/> vers <paramref name="to"/>.
-    /// L'angle est mesurÃ© dans le sens trigonomÃ©trique depuis l'axe X positif.
+    /// Calcule l'angle formé par le vecteur allant de <paramref name="from"/> vers <paramref name="to"/>.
+    /// L'angle est mesuré dans le sens trigonométrique depuis l'axe X positif.
     /// </summary>
     /// <param name="from">Point d'origine du vecteur</param>
     /// <param name="to">Point de destination du vecteur</param>
-    /// <returns>Angle en radians dans l'intervalle [-Ï€, Ï€]</returns>
+    /// <returns>Angle en radians dans l'intervalle [-p, p]</returns>
     /// <remarks>
-    /// Utilise <see cref="Math.Atan2"/> pour gÃ©rer correctement tous les quadrants.
-    /// Pour un rÃ©sultat en degrÃ©s, utilisez <see cref="AngleBetweenDegrees"/>.
+    /// Utilise <see cref="Math.Atan2"/> pour gérer correctement tous les quadrants.
+    /// Pour un résultat en degrés, utilisez <see cref="AngleBetweenDegrees"/>.
     /// </remarks>
     public static double AngleBetween(Point3d from, Point3d to)
     {
@@ -99,7 +104,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Calcule l'angle entre deux points (en degrÃ©s)
+    /// Calcule l'angle entre deux points (en degrés)
     /// </summary>
     public static double AngleBetweenDegrees(Point3d from, Point3d to)
     {
@@ -107,14 +112,14 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Normalise un angle en radians dans l'intervalle [0, 2Ï€].
+    /// Normalise un angle en radians dans l'intervalle [0, 2p].
     /// </summary>
-    /// <param name="angle">Angle Ã  normaliser (peut Ãªtre nÃ©gatif ou > 2Ï€)</param>
-    /// <returns>Angle normalisÃ© dans [0, 2Ï€]</returns>
+    /// <param name="angle">Angle à normaliser (peut être négatif ou > 2p)</param>
+    /// <returns>Angle normalisé dans [0, 2p]</returns>
     /// <example>
     /// <code>
     /// var normalized = GeometryService.NormalizeAngle(-Math.PI / 2);
-    /// // RÃ©sultat: 3Ï€/2 (environ 4.712)
+    /// // Résultat: 3p/2 (environ 4.712)
     /// </code>
     /// </example>
     public static double NormalizeAngle(double angle)
@@ -125,7 +130,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Normalise un angle en degrÃ©s dans l'intervalle [0, 360].
+    /// Normalise un angle en degrés dans l'intervalle [0, 360].
     /// </summary>
     public static double NormalizeAngleDegrees(double angleDegrees)
     {
@@ -137,7 +142,7 @@ public static partial class GeometryService
     /// <summary>
     /// Calcule l'angle entre deux vecteurs.
     /// </summary>
-    /// <returns>Angle en radians [0, Ï€]</returns>
+    /// <returns>Angle en radians [0, p]</returns>
     public static double AngleBetweenVectors(Vector3d v1, Vector3d v2)
     {
         double dot = v1.DotProduct(v2);
@@ -148,7 +153,7 @@ public static partial class GeometryService
 
     /// <summary>
     /// Calcule le gisement (bearing) d'un vecteur par rapport au Nord (axe Y+).
-    /// Le gisement est mesurÃ© dans le sens horaire depuis le Nord.
+    /// Le gisement est mesuré dans le sens horaire depuis le Nord.
     /// </summary>
     /// <returns>Gisement en grades [0, 400]</returns>
     public static double Bearing(Point3d from, Point3d to)
@@ -160,7 +165,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Convertit un gisement (grades) en angle trigonomÃ©trique (radians).
+    /// Convertit un gisement (grades) en angle trigonométrique (radians).
     /// </summary>
     public static double BearingToAngle(double bearingGrades)
     {
@@ -172,7 +177,7 @@ public static partial class GeometryService
     #region Points
 
     /// <summary>
-    /// Calcule un point dÃ©calÃ© Ã  partir d'un point et d'un angle
+    /// Calcule un point décalé à partir d'un point et d'un angle
     /// </summary>
     public static Point3d OffsetPoint(Point3d point, double angle, double distance)
     {
@@ -184,12 +189,12 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Calcule un point dÃ©calÃ© perpendiculairement
+    /// Calcule un point décalé perpendiculairement
     /// </summary>
-    /// <param name="point">Point de dÃ©part</param>
+    /// <param name="point">Point de départ</param>
     /// <param name="angle">Angle de la direction principale</param>
-    /// <param name="distance">Distance de dÃ©calage</param>
-    /// <param name="leftSide">True pour dÃ©caler Ã  gauche, false Ã  droite</param>
+    /// <param name="distance">Distance de décalage</param>
+    /// <param name="leftSide">True pour décaler à gauche, false à droite</param>
     public static Point3d PerpendicularOffset(Point3d point, double angle, double distance, bool leftSide)
     {
         double perpAngle = leftSide ? angle + Math.PI / 2 : angle - Math.PI / 2;
@@ -209,11 +214,11 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Interpole linÃ©airement entre deux points
+    /// Interpole linéairement entre deux points
     /// </summary>
-    /// <param name="p1">Point de dÃ©part</param>
-    /// <param name="p2">Point d'arrivÃ©e</param>
-    /// <param name="t">ParamÃ¨tre d'interpolation (0 = p1, 1 = p2)</param>
+    /// <param name="p1">Point de départ</param>
+    /// <param name="p2">Point d'arrivée</param>
+    /// <param name="t">Paramètre d'interpolation (0 = p1, 1 = p2)</param>
     public static Point3d Lerp(Point3d p1, Point3d p2, double t)
     {
         return new Point3d(
@@ -224,12 +229,12 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Projette un point sur une droite dÃ©finie par deux points.
+    /// Projette un point sur une droite définie par deux points.
     /// </summary>
-    /// <param name="point">Point Ã  projeter</param>
-    /// <param name="lineStart">DÃ©but de la ligne</param>
+    /// <param name="point">Point à projeter</param>
+    /// <param name="lineStart">Début de la ligne</param>
     /// <param name="lineEnd">Fin de la ligne</param>
-    /// <returns>Point projetÃ© sur la droite (peut Ãªtre en dehors du segment)</returns>
+    /// <returns>Point projeté sur la droite (peut être en dehors du segment)</returns>
     public static Point3d ProjectPointOnLine(Point3d point, Point3d lineStart, Point3d lineEnd)
     {
         Vector3d lineDir = lineEnd - lineStart;
@@ -243,7 +248,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Projette un point sur un segment (rÃ©sultat contraint au segment).
+    /// Projette un point sur un segment (résultat contraint au segment).
     /// </summary>
     public static Point3d ProjectPointOnSegment(Point3d point, Point3d segStart, Point3d segEnd)
     {
@@ -258,7 +263,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Calcule la distance d'un point Ã  une droite.
+    /// Calcule la distance d'un point à une droite.
     /// </summary>
     public static double DistancePointToLine(Point3d point, Point3d lineStart, Point3d lineEnd)
     {
@@ -267,7 +272,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Calcule la distance d'un point Ã  un segment.
+    /// Calcule la distance d'un point à un segment.
     /// </summary>
     public static double DistancePointToSegment(Point3d point, Point3d segStart, Point3d segEnd)
     {
@@ -278,9 +283,9 @@ public static partial class GeometryService
     /// <summary>
     /// Fait pivoter un point autour d'un centre.
     /// </summary>
-    /// <param name="point">Point Ã  pivoter</param>
+    /// <param name="point">Point à pivoter</param>
     /// <param name="center">Centre de rotation</param>
-    /// <param name="angle">Angle de rotation en radians (sens trigonomÃ©trique)</param>
+    /// <param name="angle">Angle de rotation en radians (sens trigonométrique)</param>
     public static Point3d RotatePoint(Point3d point, Point3d center, double angle)
     {
         double cos = Math.Cos(angle);
@@ -337,7 +342,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Obtient un point sur la polyligne Ã  une distance donnÃ©e du dÃ©part
+    /// Obtient un point sur la polyligne à une distance donnée du départ
     /// </summary>
     public static Point3d GetPointAtDistance(Polyline polyline, double distance)
     {
@@ -346,7 +351,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Obtient l'angle tangent Ã  un point sur la polyligne
+    /// Obtient l'angle tangent à un point sur la polyligne
     /// </summary>
     public static double GetTangentAngle(Polyline polyline, double distance)
     {
@@ -358,12 +363,12 @@ public static partial class GeometryService
 
     #endregion
 
-    #region Tests GÃ©omÃ©triques
+    #region Tests Géométriques
 
     /// <summary>
-    /// DÃ©termine de quel cÃ´tÃ© d'une ligne se trouve un point
+    /// Détermine de quel côté d'une ligne se trouve un point
     /// </summary>
-    /// <returns>True si le point est Ã  gauche de la ligne</returns>
+    /// <returns>True si le point est à gauche de la ligne</returns>
     public static bool IsPointOnLeftSide(Point3d lineStart, Point3d lineEnd, Point3d point)
     {
         double cross = (lineEnd.X - lineStart.X) * (point.Y - lineStart.Y) -
@@ -372,16 +377,16 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// VÃ©rifie si un point est Ã  l'intÃ©rieur d'un polygone.
+    /// Vérifie si un point est à l'intérieur d'un polygone.
     /// Utilise l'algorithme de ray-casting (trace un rayon horizontal vers la droite).
     /// </summary>
-    /// <param name="point">Point Ã  tester</param>
+    /// <param name="point">Point à tester</param>
     /// <param name="polygon">Liste des sommets du polygone</param>
-    /// <returns>True si le point est Ã  l'intÃ©rieur du polygone</returns>
+    /// <returns>True si le point est à l'intérieur du polygone</returns>
     /// <remarks>
-    /// Les segments horizontaux (mÃªme coordonnÃ©e Y aux deux extrÃ©mitÃ©s) sont ignorÃ©s
-    /// car un rayon horizontal ne peut pas les intersecter de maniÃ¨re non-dÃ©gÃ©nÃ©rÃ©e.
-    /// Cela Ã©vite Ã©galement les divisions par zÃ©ro.
+    /// Les segments horizontaux (même coordonnée Y aux deux extrémités) sont ignorés
+    /// car un rayon horizontal ne peut pas les intersecter de manière non-dégénérée.
+    /// Cela évite également les divisions par zéro.
     /// </remarks>
     public static bool IsPointInPolygon(Point3d point, IList<Point3d> polygon)
     {
@@ -396,7 +401,7 @@ public static partial class GeometryService
             double yj = polygon[j].Y;
 
             // Ignorer les segments horizontaux (dy == 0)
-            // Un rayon horizontal ne peut pas les traverser de maniÃ¨re significative
+            // Un rayon horizontal ne peut pas les traverser de manière significative
             double dy = yj - yi;
             if (Math.Abs(dy) < 1e-10)
             {
@@ -404,7 +409,7 @@ public static partial class GeometryService
                 continue;
             }
 
-            // VÃ©rifier si le rayon horizontal depuis le point traverse ce segment
+            // Vérifier si le rayon horizontal depuis le point traverse ce segment
             if ((yi < point.Y && yj >= point.Y) || (yj < point.Y && yi >= point.Y))
             {
                 // Calculer l'abscisse de l'intersection du rayon avec le segment
@@ -425,7 +430,7 @@ public static partial class GeometryService
 
     #endregion
 
-    #region Aires et PÃ©rimÃ¨tres
+    #region Aires et Périmètres
 
     /// <summary>
     /// Calcule l'aire d'un polygone (formule du lacet/shoelace)
@@ -445,7 +450,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Calcule le pÃ©rimÃ¨tre d'un polygone
+    /// Calcule le périmètre d'un polygone
     /// </summary>
     public static double CalculatePolygonPerimeter(IList<Point3d> points)
     {
@@ -461,7 +466,7 @@ public static partial class GeometryService
     }
 
     /// <summary>
-    /// Calcule le centroÃ¯de d'un polygone
+    /// Calcule le centroïde d'un polygone
     /// </summary>
     public static Point3d CalculateCentroid(IList<Point3d> points)
     {
@@ -484,7 +489,7 @@ public static partial class GeometryService
         area /= 2;
         if (Math.Abs(area) < 1e-10)
         {
-            // DÃ©gÃ©nÃ©rÃ©, retourner moyenne simple
+            // Dégénéré, retourner moyenne simple
             return new Point3d(
                 points.Average(p => p.X),
                 points.Average(p => p.Y),

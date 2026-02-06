@@ -526,7 +526,7 @@
         </member>
         <member name="M:OpenAsphalte.Commands.AboutWindow.OnCloseClick(System.Object,System.Windows.RoutedEventArgs)">
             <summary>
-            Ferme la fen�tre
+            Ferme la fen?tre
             </summary>
         </member>
         <member name="M:OpenAsphalte.Commands.AboutWindow.InitializeComponent">
@@ -1433,8 +1433,8 @@
         </member>
         <member name="T:OpenAsphalte.Plugin">
             <summary>
-            Point d'entrée principal du plugin Open Asphalte pour AutoCAD.
-            Gère le cycle de vie de l'application et la découverte automatique des modules.
+            Point d'entr�e principal du plugin Open Asphalte pour AutoCAD.
+            G�re le cycle de vie de l'application et la d�couverte automatique des modules.
             </summary>
             <remarks>
             <para>
@@ -1452,7 +1452,7 @@
         </member>
         <member name="P:OpenAsphalte.Plugin.Version">
             <summary>
-            Version du coeur Open Asphalte (chargée depuis version.json)
+            Version du coeur Open Asphalte (charg�e depuis version.json)
             </summary>
         </member>
         <member name="P:OpenAsphalte.Plugin.AppName">
@@ -1467,17 +1467,17 @@
         </member>
         <member name="M:OpenAsphalte.Plugin.LoadVersionFromJson">
             <summary>
-            Charge la version depuis version.json de manière thread-safe
+            Charge la version depuis version.json de mani�re thread-safe
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.Initialize">
             <summary>
-            Appelé au chargement du plugin par AutoCAD
+            Appel� au chargement du plugin par AutoCAD
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.EnableDiagnostics">
             <summary>
-            Active le journal fichier et capture les exceptions non gérées.
+            Active le journal fichier et capture les exceptions non g�r�es.
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.ShowWelcomeMessage">
@@ -1492,13 +1492,13 @@
         </member>
         <member name="M:OpenAsphalte.Plugin.CheckFirstRunNoModules">
             <summary>
-            Vérifie si c'est le premier démarrage sans modules et propose d'ouvrir le gestionnaire
+            V�rifie si c'est le premier d�marrage sans modules et propose d'ouvrir le gestionnaire
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.CheckForUpdatesOnStartupAsync">
             <summary>
-            Vérifie les mises à jour au démarrage de manière asynchrone.
-            Cette méthode est non-bloquante et s'exécute en arrière-plan.
+            V�rifie les mises � jour au d�marrage de mani�re asynchrone.
+            Cette m�thode est non-bloquante et s'ex�cute en arri�re-plan.
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.OnLanguageChanged(System.String,System.String)">
@@ -1736,10 +1736,10 @@
             <summary>Accélération gravitationnelle (m/s²)</summary>
         </member>
         <member name="F:OpenAsphalte.Services.GeometryService.DegToRad">
-            <summary>Pi / 180 pour conversion degrés → radians</summary>
+            <summary>Pi / 180 pour conversion degrés ? radians</summary>
         </member>
         <member name="F:OpenAsphalte.Services.GeometryService.RadToDeg">
-            <summary>180 / Pi pour conversion radians → degrés</summary>
+            <summary>180 / Pi pour conversion radians ? degrés</summary>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.Distance(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
             <summary>
@@ -1779,7 +1779,7 @@
             </summary>
             <param name="from">Point d'origine du vecteur</param>
             <param name="to">Point de destination du vecteur</param>
-            <returns>Angle en radians dans l'intervalle [-π, π]</returns>
+            <returns>Angle en radians dans l'intervalle [-p, p]</returns>
             <remarks>
             Utilise <see cref="M:System.Math.Atan2(System.Double,System.Double)"/> pour gérer correctement tous les quadrants.
             Pour un résultat en degrés, utilisez <see cref="M:OpenAsphalte.Services.GeometryService.AngleBetweenDegrees(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)"/>.
@@ -1792,14 +1792,14 @@
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.NormalizeAngle(System.Double)">
             <summary>
-            Normalise un angle en radians dans l'intervalle [0, 2π].
+            Normalise un angle en radians dans l'intervalle [0, 2p].
             </summary>
-            <param name="angle">Angle à normaliser (peut être négatif ou > 2π)</param>
-            <returns>Angle normalisé dans [0, 2π]</returns>
+            <param name="angle">Angle à normaliser (peut être négatif ou > 2p)</param>
+            <returns>Angle normalisé dans [0, 2p]</returns>
             <example>
             <code>
             var normalized = GeometryService.NormalizeAngle(-Math.PI / 2);
-            // Résultat: 3π/2 (environ 4.712)
+            // Résultat: 3p/2 (environ 4.712)
             </code>
             </example>
         </member>
@@ -1812,7 +1812,7 @@
             <summary>
             Calcule l'angle entre deux vecteurs.
             </summary>
-            <returns>Angle en radians [0, π]</returns>
+            <returns>Angle en radians [0, p]</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.Bearing(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
             <summary>

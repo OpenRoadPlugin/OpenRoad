@@ -1,13 +1,18 @@
-Ôªø// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Concurrent;
 using OpenAsphalte.Configuration;
@@ -15,17 +20,17 @@ using OpenAsphalte.Configuration;
 namespace OpenAsphalte.Localization;
 
 /// <summary>
-/// Syst√®me de traduction multilingue pour Open Asphalte.
+/// SystËme de traduction multilingue pour Open Asphalte.
 /// Supporte les traductions par module avec fallback automatique.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Le Syst√®me de localisation supporte FR, EN et ES.
+/// Le SystËme de localisation supporte FR, EN et ES.
 /// Les modules peuvent enregistrer leurs propres traductions via <see cref="RegisterTranslations"/>.
 /// </para>
 /// <para>
-/// Lorsque la langue change, l'√©v√©nement <see cref="OnLanguageChanged"/> est d√©clench√©,
-/// permettant √† l'UI et aux modules de se Mettre √† jour.
+/// Lorsque la langue change, l'ÈvÈnement <see cref="OnLanguageChanged"/> est dÈclenchÈ,
+/// permettant ‡ l'UI et aux modules de se Mettre ‡ jour.
 /// </para>
 /// </remarks>
 public static class Localization
@@ -36,7 +41,7 @@ public static class Localization
     private static readonly object _languageLock = new();
 
     /// <summary>
-    /// Pr√©fixes des cl√©s syst√®me prot√©g√©es (ne peuvent pas √™tre √©cras√©es par les modules)
+    /// PrÈfixes des clÈs systËme protÈgÈes (ne peuvent pas Ítre ÈcrasÈes par les modules)
     /// </summary>
     private static readonly string[] _systemKeyPrefixes =
     {
@@ -46,21 +51,21 @@ public static class Localization
     };
 
     /// <summary>
-    /// √©v√©nement d√©clench√© lorsque la langue change.
-    /// Les modules peuvent s'y abonner pour Mettre √† jour leur UI.
+    /// ÈvÈnement dÈclenchÈ lorsque la langue change.
+    /// Les modules peuvent s'y abonner pour Mettre ‡ jour leur UI.
     /// </summary>
     /// <example>
     /// <code>
     /// Localization.OnLanguageChanged += (oldLang, newLang) =>
     /// {
-    ///     // Mettre √† jour l'interface utilisateur
+    ///     // Mettre ‡ jour l'interface utilisateur
     /// };
     /// </code>
     /// </example>
     public static event Action<string, string>? OnLanguageChanged;
 
     /// <summary>
-    /// Langues support√©es
+    /// Langues supportÈes
     /// </summary>
     public static IReadOnlyList<string> SupportedLanguages => _supportedLanguages;
 
@@ -83,13 +88,13 @@ public static class Localization
     /// </summary>
     public static IReadOnlyDictionary<string, string> LanguageNames => new Dictionary<string, string>
     {
-        ["fr"] = "Fran√ßais",
+        ["fr"] = "FranÁais",
         ["en"] = "English",
-        ["es"] = "Espa√±ol"
+        ["es"] = "EspaÒol"
     };
 
     /// <summary>
-    /// Nettoie les abonn√©s aux √©v√©nements (appel√© lors de la fermeture)
+    /// Nettoie les abonnÈs aux ÈvÈnements (appelÈ lors de la fermeture)
     /// </summary>
     public static void ClearEventSubscribers()
     {
@@ -104,71 +109,71 @@ public static class Localization
         // Synchroniser avec la configuration
         _currentLanguage = Configuration.Configuration.Language;
 
-        // === Fran√ßais ===
+        // === FranÁais ===
         RegisterTranslations("fr", new Dictionary<string, string>
         {
             // Application
             ["app.name"] = "Open Asphalte",
-            ["app.loaded"] = "Plugin charg√©",
+            ["app.loaded"] = "Plugin chargÈ",
             ["app.version"] = "Version",
             ["app.welcome"] = "Bienvenue dans Open Asphalte",
 
-            // Commandes g√©n√©rales
-            ["cmd.cancelled"] = "Commande annul√©e",
+            // Commandes gÈnÈrales
+            ["cmd.cancelled"] = "Commande annulÈe",
             ["cmd.error"] = "Erreur",
-            ["cmd.success"] = "Op√©ration r√©ussie",
+            ["cmd.success"] = "OpÈration rÈussie",
 
             // Erreurs
             ["error.noDocument"] = "Aucun document actif",
-            ["error.invalidSelection"] = "S√©lection invalide",
-            ["error.moduleNotFound"] = "Module non trouv√©",
+            ["error.invalidSelection"] = "SÈlection invalide",
+            ["error.moduleNotFound"] = "Module non trouvÈ",
 
-            // S√©lection
-            ["select.point"] = "S√©lectionnez un point",
-            ["select.object"] = "S√©lectionnez un objet",
-            ["select.polyline"] = "S√©lectionnez une polyligne",
-            ["select.line"] = "S√©lectionnez une ligne",
+            // SÈlection
+            ["select.point"] = "SÈlectionnez un point",
+            ["select.object"] = "SÈlectionnez un objet",
+            ["select.polyline"] = "SÈlectionnez une polyligne",
+            ["select.line"] = "SÈlectionnez une ligne",
 
-            // Syst√®me
-            ["system.name"] = "Syst√®me",
+            // SystËme
+            ["system.name"] = "SystËme",
             ["system.help"] = "Aide",
             ["system.help.desc"] = "Affiche la liste des commandes disponibles",
             ["system.version"] = "Version",
             ["system.version.desc"] = "Affiche les informations de version",
-            ["system.settings"] = "Param√®tres",
-            ["system.settings.desc"] = "Ouvre la fen√™tre des Param√®tres",
+            ["system.settings"] = "ParamËtres",
+            ["system.settings.desc"] = "Ouvre la fenÍtre des ParamËtres",
             ["system.reload"] = "Recharger",
             ["system.reload.desc"] = "Recharge la configuration",
-            ["system.update"] = "Mise √† jour",
-            ["system.update.desc"] = "V√©rifie les mises √† jour disponibles",
+            ["system.update"] = "Mise ‡ jour",
+            ["system.update.desc"] = "VÈrifie les mises ‡ jour disponibles",
             ["system.modules"] = "Modules",
             ["system.modules.desc"] = "Ouvre le gestionnaire de modules",
-            ["system.reload.success"] = "Configuration recharg√©e",
+            ["system.reload.success"] = "Configuration rechargÈe",
             ["system.help.title"] = "OPEN ASPHALTE - AIDE",
-            ["system.help.section.system"] = "COMMANDES Syst√®me",
+            ["system.help.section.system"] = "COMMANDES SystËme",
             ["system.help.section.module"] = "MODULE",
             ["system.version.header"] = "OPEN ASPHALTE v{0}",
             ["system.version.subtitle"] = "Plugin modulaire pour AutoCAD",
-            ["system.version.modules"] = "Modules charg√©s: {0}",
+            ["system.version.modules"] = "Modules chargÈs: {0}",
             ["system.version.commands"] = "Commandes disponibles: {0}",
             ["system.version.language"] = "Langue: {0}",
             ["system.version.devmode"] = "Mode dev: {0}",
-            ["system.update.checking"] = "V√©rification des mises √† jour...",
+            ["system.update.checking"] = "VÈrification des mises ‡ jour...",
             ["system.update.current"] = "Version actuelle: {0}",
             ["system.update.opening"] = "Ouverture de la page des releases...",
             ["system.update.url"] = "URL: {0}",
             ["system.update.openError"] = "Impossible d'ouvrir le navigateur: {0}",
 
-            // V√©rification des mises √† jour au d√©marrage
-            ["update.available"] = "Mise √† jour v{0} disponible !",
-            ["update.incompatibleAutoCAD"] = "La version {0} n√©cessite AutoCAD {1}+ (vous avez {2})",
-            ["update.notification.title"] = "Mise √† jour disponible",
-            ["update.notification.message"] = "Une nouvelle version d'Open Asphalte est disponible !\n\nVersion actuelle: {1}\nNouvelle version: {0}\n\nVoulez-vous ouvrir la page de t√©l√©chargement ?",
-            ["update.checking.startup"] = "V√©rification des mises √† jour...",
+            // VÈrification des mises ‡ jour au dÈmarrage
+            ["update.available"] = "Mise ‡ jour v{0} disponible !",
+            ["update.incompatibleAutoCAD"] = "La version {0} nÈcessite AutoCAD {1}+ (vous avez {2})",
+            ["update.notification.title"] = "Mise ‡ jour disponible",
+            ["update.notification.message"] = "Une nouvelle version d'Open Asphalte est disponible !\n\nVersion actuelle: {1}\nNouvelle version: {0}\n\nVoulez-vous ouvrir la page de tÈlÈchargement ?",
+            ["update.checking.startup"] = "VÈrification des mises ‡ jour...",
 
             // Module Manager
             ["modules.manager.title"] = "Gestionnaire de Modules",
-            ["modules.manager.subtitle"] = "Installez et g√©rez les modules Open Asphalte depuis le catalogue officiel.",
+            ["modules.manager.subtitle"] = "Installez et gÈrez les modules Open Asphalte depuis le catalogue officiel.",
             ["modules.manager.refresh"] = "Actualiser",
             ["modules.manager.filter"] = "Filtrer:",
             ["modules.manager.empty"] = "Cliquez sur Actualiser pour charger le catalogue",
@@ -176,173 +181,173 @@ public static class Localization
             ["modules.manager.noManifest"] = "Catalogue vide ou inaccessible",
             ["modules.manager.noMatch"] = "Aucun module ne correspond au filtre",
             ["modules.manager.error"] = "Erreur de chargement",
-            ["modules.manager.status"] = "{0} module(s) disponible(s), {1} install√©(s), {2} mise(s) √† jour",
+            ["modules.manager.status"] = "{0} module(s) disponible(s), {1} installÈ(s), {2} mise(s) ‡ jour",
             ["modules.manager.folder"] = "Dossier modules",
             ["modules.manager.folderNotFound"] = "Le dossier des modules n'existe pas encore.",
-            ["modules.manager.downloading"] = "T√©l√©chargement...",
+            ["modules.manager.downloading"] = "TÈlÈchargement...",
             ["modules.manager.installing"] = "Installation de {0}...",
-            ["modules.manager.installed"] = "Module {0} install√© avec succ√®s",
-            ["modules.manager.installSuccess"] = "Installation r√©ussie",
-            ["modules.manager.restartRequired"] = "Le module {0} a √©t√© install√©.\n\nRed√©marrez AutoCAD pour l'activer.",
+            ["modules.manager.installed"] = "Module {0} installÈ avec succËs",
+            ["modules.manager.installSuccess"] = "Installation rÈussie",
+            ["modules.manager.restartRequired"] = "Le module {0} a ÈtÈ installÈ.\n\nRedÈmarrez AutoCAD pour l'activer.",
             ["modules.manager.installError"] = "Erreur lors de l'installation: {0}",
-            ["modules.manager.retry"] = "R√©essayer",
+            ["modules.manager.retry"] = "RÈessayer",
             ["modules.manager.openError"] = "Erreur ouverture gestionnaire: {0}",
-            ["modules.manager.dependencies.title"] = "D√©pendances requises",
-            ["modules.manager.dependencies.confirm"] = "Le module \"{0}\" n√©cessite {2} d√©pendance(s) :\n\n‚Ä¢ {1}\n\nVoulez-vous les installer maintenant ?",
-            ["modules.manager.dependencies.message"] = "Le module \"{0}\" n√©cessite les modules suivants pour fonctionner :\n\n{1}\n\nVoulez-vous installer ces modules maintenant ?",
-            ["modules.manager.dependencies.single"] = "Le module \"{0}\" n√©cessite le module \"{1}\" pour fonctionner.\n\nVoulez-vous l'installer maintenant ?",
-            ["modules.manager.dependencies.installing"] = "Installation des d√©pendances...",
-            ["modules.manager.dependencies.success"] = "Modules install√©s avec succ√®s: {0}",
-            ["modules.manager.dependencies.notFound"] = "D√©pendance introuvable dans le catalogue: {0}",
-            ["modules.manager.restartRequired.multiple"] = "Les modules suivants ont √©t√© install√©s :\n{0}\n\nRed√©marrez AutoCAD pour les activer.",
-            ["modules.manager.category.installAll"] = "Installer la cat√©gorie",
+            ["modules.manager.dependencies.title"] = "DÈpendances requises",
+            ["modules.manager.dependencies.confirm"] = "Le module \"{0}\" nÈcessite {2} dÈpendance(s) :\n\nï {1}\n\nVoulez-vous les installer maintenant ?",
+            ["modules.manager.dependencies.message"] = "Le module \"{0}\" nÈcessite les modules suivants pour fonctionner :\n\n{1}\n\nVoulez-vous installer ces modules maintenant ?",
+            ["modules.manager.dependencies.single"] = "Le module \"{0}\" nÈcessite le module \"{1}\" pour fonctionner.\n\nVoulez-vous l'installer maintenant ?",
+            ["modules.manager.dependencies.installing"] = "Installation des dÈpendances...",
+            ["modules.manager.dependencies.success"] = "Modules installÈs avec succËs: {0}",
+            ["modules.manager.dependencies.notFound"] = "DÈpendance introuvable dans le catalogue: {0}",
+            ["modules.manager.restartRequired.multiple"] = "Les modules suivants ont ÈtÈ installÈs :\n{0}\n\nRedÈmarrez AutoCAD pour les activer.",
+            ["modules.manager.category.installAll"] = "Installer la catÈgorie",
             ["modules.manager.category.installCount"] = "Installer tout ({0})",
-            ["modules.manager.category.confirmInstall"] = "Voulez-vous installer les {0} module(s) de la cat√©gorie \"{1}\" ?\n\n‚Ä¢ {2}",
-            ["modules.manager.category.allInstalled"] = "Tous les modules de cette cat√©gorie sont d√©j√† install√©s.",
-            ["modules.manager.category.installed"] = "{0} module(s) install√©(s) depuis la cat√©gorie {1}",
+            ["modules.manager.category.confirmInstall"] = "Voulez-vous installer les {0} module(s) de la catÈgorie \"{1}\" ?\n\nï {2}",
+            ["modules.manager.category.allInstalled"] = "Tous les modules de cette catÈgorie sont dÈj‡ installÈs.",
+            ["modules.manager.category.installed"] = "{0} module(s) installÈ(s) depuis la catÈgorie {1}",
             ["modules.requires"] = "Requiert",
             ["modules.filter.all"] = "Tous",
-            ["modules.filter.installed"] = "Install√©s",
+            ["modules.filter.installed"] = "InstallÈs",
             ["modules.filter.available"] = "Disponibles",
-            ["modules.filter.updates"] = "Mises √† jour",
+            ["modules.filter.updates"] = "Mises ‡ jour",
             ["modules.action.install"] = "Installer",
-            ["modules.action.update"] = "Mettre √† jour",
-            ["modules.action.installed"] = "Install√©",
+            ["modules.action.update"] = "Mettre ‡ jour",
+            ["modules.action.installed"] = "InstallÈ",
             ["modules.local.description"] = "Module local depuis {0}",
 
             // Update errors
-            ["update.error.notFound"] = "Catalogue de modules introuvable (404). V√©rifiez votre connexion ou r√©essayez plus tard.",
-            ["update.error.forbidden"] = "Acc√®s au catalogue refus√© (403).",
-            ["update.error.noInternet"] = "Impossible de contacter le serveur. V√©rifiez votre connexion Internet.",
-            ["update.error.http"] = "Erreur r√©seau: {0}",
-            ["update.error.timeout"] = "D√©lai d'attente d√©pass√©. Le serveur ne r√©pond pas.",
-            ["update.moduleInstalled"] = "Module {0} install√©",
+            ["update.error.notFound"] = "Catalogue de modules introuvable (404). VÈrifiez votre connexion ou rÈessayez plus tard.",
+            ["update.error.forbidden"] = "AccËs au catalogue refusÈ (403).",
+            ["update.error.noInternet"] = "Impossible de contacter le serveur. VÈrifiez votre connexion Internet.",
+            ["update.error.http"] = "Erreur rÈseau: {0}",
+            ["update.error.timeout"] = "DÈlai d'attente dÈpassÈ. Le serveur ne rÈpond pas.",
+            ["update.moduleInstalled"] = "Module {0} installÈ",
 
             // First run
             ["firstrun.noModules.title"] = "Bienvenue dans Open Asphalte !",
-            ["firstrun.noModules.message"] = "Aucun module n'est install√©.\n\nVoulez-vous ouvrir le Gestionnaire de Modules pour installer des extensions ?",
+            ["firstrun.noModules.message"] = "Aucun module n'est installÈ.\n\nVoulez-vous ouvrir le Gestionnaire de Modules pour installer des extensions ?",
 
             // About window
-            ["about.title"] = "√Ä propos",
+            ["about.title"] = "¿ propos",
             ["about.subtitle"] = "Plugin modulaire pour AutoCAD",
             ["about.version"] = "Version",
             ["about.buildDate"] = "Date de build",
             ["about.channel"] = "Canal",
             ["about.framework"] = "Framework",
-            ["about.modules"] = "Modules charg√©s",
+            ["about.modules"] = "Modules chargÈs",
             ["about.commands"] = "Commandes",
-            ["about.license"] = "Ce logiciel est distribu√© sous licence Apache 2.0.\nCode source disponible sur GitHub.",
-            ["about.checkUpdate"] = "V√©rifier les mises √† jour",
+            ["about.license"] = "Ce logiciel est distribuÈ sous licence GNU GPL v3.\nCode source disponible sur GitHub.",
+            ["about.checkUpdate"] = "VÈrifier les mises ‡ jour",
             ["about.close"] = "Fermer",
-            ["about.invalidUrl"] = "L'URL de mise √† jour est invalide ou non s√©curis√©e.",
-            ["about.alphaWarning"] = "‚ö† VERSION ALPHA - Pour tests uniquement",
-            ["about.betaWarning"] = "‚ö† VERSION BETA - Peut contenir des bugs",
+            ["about.invalidUrl"] = "L'URL de mise ‡ jour est invalide ou non sÈcurisÈe.",
+            ["about.alphaWarning"] = "? VERSION ALPHA - Pour tests uniquement",
+            ["about.betaWarning"] = "? VERSION BETA - Peut contenir des bugs",
             ["about.reportBug"] = "Signaler un bug",
             ["about.reportBug.opening"] = "Ouverture de la page des issues GitHub...",
             ["about.reportBug.error"] = "Impossible d'ouvrir la page des issues : {0}",
 
             // Settings window
-            ["settings.title"] = "Param√®tres Open Asphalte",
+            ["settings.title"] = "ParamËtres Open Asphalte",
             ["settings.language"] = "Langue",
-            ["settings.devmode"] = "Mode d√©veloppeur (logs d√©taill√©s)",
-            ["settings.checkupdates"] = "V√©rifier les mises √† jour au d√©marrage",
+            ["settings.devmode"] = "Mode dÈveloppeur (logs dÈtaillÈs)",
+            ["settings.checkupdates"] = "VÈrifier les mises ‡ jour au dÈmarrage",
             ["settings.save"] = "Enregistrer",
             ["settings.cancel"] = "Annuler",
-            ["settings.languageChanged"] = "Langue modifi√©e. L'interface a √©t√© mise √† jour.",
-            ["settings.info"] = "Version {0} ‚Ä¢ {1} module(s) ‚Ä¢ {2} commande(s)\nConfiguration: {3}",
+            ["settings.languageChanged"] = "Langue modifiÈe. L'interface a ÈtÈ mise ‡ jour.",
+            ["settings.info"] = "Version {0} ï {1} module(s) ï {2} commande(s)\nConfiguration: {3}",
             ["settings.saveError"] = "Erreur lors de la sauvegarde: {0}",
-            ["settings.openError"] = "Erreur ouverture Param√®tres: {0}",
-            ["settings.modules.status"] = "{0}/{1} modules install√©s",
-            ["settings.modules.installSelected"] = "Installer la s√©lection",
-            ["settings.modules.selectedCount"] = "{0} module(s) s√©lectionn√©(s)",
-            ["settings.modules.dependenciesRequired"] = "Les modules suivants seront √©galement install√©s (d√©pendances requises) :\n\n‚Ä¢ {0}\n\nContinuer ?",
-            ["settings.modules.confirmInstall"] = "Installer {0} module(s) ?\n\n‚Ä¢ {1}",
+            ["settings.openError"] = "Erreur ouverture ParamËtres: {0}",
+            ["settings.modules.status"] = "{0}/{1} modules installÈs",
+            ["settings.modules.installSelected"] = "Installer la sÈlection",
+            ["settings.modules.selectedCount"] = "{0} module(s) sÈlectionnÈ(s)",
+            ["settings.modules.dependenciesRequired"] = "Les modules suivants seront Ègalement installÈs (dÈpendances requises) :\n\nï {0}\n\nContinuer ?",
+            ["settings.modules.confirmInstall"] = "Installer {0} module(s) ?\n\nï {1}",
             ["settings.modules.installTitle"] = "Installation",
-            ["settings.modules.installed"] = "{0} module(s) install√©(s)",
+            ["settings.modules.installed"] = "{0} module(s) installÈ(s)",
 
             // Modules
-            ["modules.loaded"] = "{0} module(s) charg√©(s)",
+            ["modules.loaded"] = "{0} module(s) chargÈ(s)",
             ["modules.commands"] = "{0} commande(s) disponible(s)",
 
             // Common
             ["common.yes"] = "Oui",
             ["common.no"] = "Non",
-            ["common.success"] = "Succ√®s",
+            ["common.success"] = "SuccËs",
             ["common.error"] = "Erreur",
 
             // Configuration
-            ["config.empty"] = "Fichier config vide, nouvelle configuration cr√©√©e",
-            ["config.loaded"] = "Configuration charg√©e depuis {0}",
-            ["config.created"] = "Nouvelle configuration cr√©√©e",
-            ["config.corrupt"] = "Fichier config corrompu, r√©initialisation: {0}",
+            ["config.empty"] = "Fichier config vide, nouvelle configuration crÈÈe",
+            ["config.loaded"] = "Configuration chargÈe depuis {0}",
+            ["config.created"] = "Nouvelle configuration crÈÈe",
+            ["config.corrupt"] = "Fichier config corrompu, rÈinitialisation: {0}",
             ["config.loadError"] = "Erreur chargement config: {0}",
-            ["config.saved"] = "Configuration sauvegard√©e",
+            ["config.saved"] = "Configuration sauvegardÈe",
             ["config.saveError"] = "Erreur sauvegarde config: {0}",
-            ["config.reloaded"] = "Configuration recharg√©e",
+            ["config.reloaded"] = "Configuration rechargÈe",
             ["config.migrating"] = "Migration de la configuration v{0} vers v{1}...",
-            ["config.migrated"] = "Configuration migr√©e avec succ√®s",
+            ["config.migrated"] = "Configuration migrÈe avec succËs",
 
             // Modules discovery
             ["module.searchPath"] = "Recherche des modules dans: {0}",
-            ["module.folderCreated"] = "Dossier Modules cr√©√©",
-            ["module.dllFound"] = "{0} fichier(s) DLL trouv√©(s)",
-            ["module.dllFoundInPath"] = "{0} fichier(s) DLL trouv√©(s) dans {1}",
+            ["module.folderCreated"] = "Dossier Modules crÈÈ",
+            ["module.dllFound"] = "{0} fichier(s) DLL trouvÈ(s)",
+            ["module.dllFoundInPath"] = "{0} fichier(s) DLL trouvÈ(s) dans {1}",
             ["module.loadOutside"] = "Tentative de chargement d'une DLL hors du dossier Modules: {0}",
             ["module.dllMissing"] = "Fichier DLL introuvable: {0}",
             ["module.loading"] = "Chargement: {0}",
-            ["module.noneFound"] = "Aucun module trouv√© dans {0}",
-            ["module.duplicate"] = "Module '{0}' d√©j√† charg√©, ignor√©",
-            ["module.loaded"] = "Module '{0}' v{1} charg√© ({2} commandes)",
+            ["module.noneFound"] = "Aucun module trouvÈ dans {0}",
+            ["module.duplicate"] = "Module '{0}' dÈj‡ chargÈ, ignorÈ",
+            ["module.loaded"] = "Module '{0}' v{1} chargÈ ({2} commandes)",
             ["module.instanceError"] = "Erreur instanciation module {0}: {1}",
             ["module.dllError"] = "Erreur chargement DLL {0}: {1}",
-            ["module.depMissing"] = "Module '{0}' d√©sactiv√©: d√©pendance manquante '{1}'",
-            ["module.coreVersionUnknown"] = "Module '{0}': version Core non v√©rifiable (min='{1}', core='{2}')",
-            ["module.coreVersionIncompatible"] = "Module '{0}' d√©sactiv√©: version Core requise {1}, version actuelle {2}",
-            ["module.coreVersionTooNew"] = "Module '{0}' d√©sactiv√©: version Core maximale {1}, version actuelle {2}",
-            ["modules.compatibility.coreTooOld"] = "N√©cessite Core {0}+",
+            ["module.depMissing"] = "Module '{0}' dÈsactivÈ: dÈpendance manquante '{1}'",
+            ["module.coreVersionUnknown"] = "Module '{0}': version Core non vÈrifiable (min='{1}', core='{2}')",
+            ["module.coreVersionIncompatible"] = "Module '{0}' dÈsactivÈ: version Core requise {1}, version actuelle {2}",
+            ["module.coreVersionTooNew"] = "Module '{0}' dÈsactivÈ: version Core maximale {1}, version actuelle {2}",
+            ["modules.compatibility.coreTooOld"] = "NÈcessite Core {0}+",
             ["modules.compatibility.coreTooNew"] = "Incompatible Core > {0}",
             ["modules.compatibility.olderAvailable"] = "Version {0} compatible disponible",
             ["modules.install.alternative"] = "Installer v{0}",
-            ["module.migrated"] = "Module migr√©: {0} ‚Üí {1}",
-            ["module.summary"] = "{0} module(s) charg√©(s), {1} commande(s) disponible(s)",
-            ["module.initialized"] = "Module '{0}' initialis√©",
+            ["module.migrated"] = "Module migrÈ: {0} ? {1}",
+            ["module.summary"] = "{0} module(s) chargÈ(s), {1} commande(s) disponible(s)",
+            ["module.initialized"] = "Module '{0}' initialisÈ",
             ["module.initError"] = "Erreur initialisation module '{0}': {1}",
-            ["module.shutdown"] = "Module '{0}' ferm√©",
+            ["module.shutdown"] = "Module '{0}' fermÈ",
             ["module.shutdownError"] = "Erreur fermeture module '{0}': {1}",
-            ["module.pathAdded"] = "Chemin modules ajout√©: {0}",
-            ["module.pathAddedTooLate"] = "Impossible d'ajouter un chemin apr√®s l'initialisation",
+            ["module.pathAdded"] = "Chemin modules ajoutÈ: {0}",
+            ["module.pathAddedTooLate"] = "Impossible d'ajouter un chemin aprËs l'initialisation",
             ["module.pathNotFound"] = "Chemin modules introuvable: {0}",
-            ["module.unsigned"] = "‚ö†Ô∏è Module non sign√©: {0} (non v√©rifi√©)",
-            ["module.signed"] = "‚úì Module sign√©: {0}",
-            ["module.unsignedBlocked"] = "Module non sign√© bloqu√©: {0} (d√©sactivez 'allowUnsignedModules' pour autoriser)",
+            ["module.unsigned"] = "?? Module non signÈ: {0} (non vÈrifiÈ)",
+            ["module.signed"] = "? Module signÈ: {0}",
+            ["module.unsignedBlocked"] = "Module non signÈ bloquÈ: {0} (dÈsactivez 'allowUnsignedModules' pour autoriser)",
 
             // UI
-            ["ui.menu.created"] = "Menu Open Asphalte cr√©√©",
-            ["ui.menu.createError"] = "Erreur cr√©ation menu: {0}",
+            ["ui.menu.created"] = "Menu Open Asphalte crÈÈ",
+            ["ui.menu.createError"] = "Erreur crÈation menu: {0}",
             ["ui.ribbon.notAvailable"] = "Ruban AutoCAD non disponible",
-            ["ui.ribbon.created"] = "Ruban Open Asphalte cr√©√©",
-            ["ui.ribbon.updated"] = "Ruban mis √† jour (incr√©mental)",
-            ["ui.ribbon.createError"] = "Erreur cr√©ation ruban: {0}",
-            ["ui.ribbon.panelError"] = "Erreur cr√©ation panneau {0}: {1}",
+            ["ui.ribbon.created"] = "Ruban Open Asphalte crÈÈ",
+            ["ui.ribbon.updated"] = "Ruban mis ‡ jour (incrÈmental)",
+            ["ui.ribbon.createError"] = "Erreur crÈation ruban: {0}",
+            ["ui.ribbon.panelError"] = "Erreur crÈation panneau {0}: {1}",
 
             // Plugin lifecycle
-            ["plugin.updateCheckDisabled"] = "V√©rification des mises √† jour d√©sactiv√©e pour la v1 (pas de serveur)",
+            ["plugin.updateCheckDisabled"] = "VÈrification des mises ‡ jour dÈsactivÈe pour la v1 (pas de serveur)",
             ["plugin.initError"] = "Erreur initialisation Open Asphalte: {0}",
-            ["plugin.uiCreated"] = "Interface Open Asphalte cr√©√©e",
-            ["plugin.uiCreateError"] = "Erreur cr√©ation interface: {0}",
+            ["plugin.uiCreated"] = "Interface Open Asphalte crÈÈe",
+            ["plugin.uiCreateError"] = "Erreur crÈation interface: {0}",
             ["plugin.languageChange"] = "Changement de langue: {0} -> {1}",
-            ["plugin.uiUpdated"] = "Interface mise √† jour ({0})",
-            ["plugin.uiUpdateError"] = "Erreur mise √† jour interface: {0}",
-            ["plugin.shutdownClean"] = "Open Asphalte ferm√© proprement",
+            ["plugin.uiUpdated"] = "Interface mise ‡ jour ({0})",
+            ["plugin.uiUpdateError"] = "Erreur mise ‡ jour interface: {0}",
+            ["plugin.shutdownClean"] = "Open Asphalte fermÈ proprement",
 
             // Welcome
             ["welcome.title"] = "OPEN ASPHALTE v{0}",
             ["welcome.subtitle"] = "Plugin modulaire pour AutoCAD",
-            ["welcome.modulesLoaded"] = "Modules charg√©s: {0}",
-            ["welcome.noModules"] = "Aucun module charg√©",
+            ["welcome.modulesLoaded"] = "Modules chargÈs: {0}",
+            ["welcome.noModules"] = "Aucun module chargÈ",
             ["welcome.dropModules"] = "Placez vos modules (.dll) dans le dossier Modules/",
             ["welcome.commandsAvailable"] = "{0} commande(s) disponible(s)",
-            ["welcome.helpHint"] = "Tapez OAS_HELP pour la liste compl√®te",
+            ["welcome.helpHint"] = "Tapez OAS_HELP pour la liste complËte",
 
             // Logs
             ["log.stack"] = "Stack: {0}",
@@ -356,20 +361,20 @@ public static class Localization
             ["error.noDatabase"] = "Database non disponible",
 
             // Credits window
-            ["core.credits.title"] = "Cr√©dits",
-            ["core.credits.tab.core"] = "√âquipe Core",
+            ["core.credits.title"] = "CrÈdits",
+            ["core.credits.tab.core"] = "…quipe Core",
             ["core.credits.tab.modules"] = "Modules",
-            ["core.credits.modules.list"] = "Modules install√©s",
+            ["core.credits.modules.list"] = "Modules installÈs",
             ["core.credits.author"] = "Auteur",
             ["core.credits.contributors"] = "Contributeurs",
-            ["about.credits"] = "Cr√©dits",
+            ["about.credits"] = "CrÈdits",
             ["core.close"] = "Fermer",
 
             // Settings tabs
-            ["settings.tab.general"] = "G√©n√©ral",
+            ["settings.tab.general"] = "GÈnÈral",
             ["settings.tab.modules"] = "Modules",
-            ["settings.modules.check"] = "V√©rifier les mises √† jour",
-            ["settings.modules.checking"] = "V√©rification en cours...",
+            ["settings.modules.check"] = "VÈrifier les mises ‡ jour",
+            ["settings.modules.checking"] = "VÈrification en cours...",
             ["settings.modules.coreAvailable"] = "Une nouvelle version du Core est disponible",
             ["settings.modules.coreUpdateMsg"] = "Version {0} disponible (actuelle: {1})",
         }, isSystemRegistration: true);
@@ -458,7 +463,7 @@ public static class Localization
             ["modules.manager.retry"] = "Retry",
             ["modules.manager.openError"] = "Error opening manager: {0}",
             ["modules.manager.dependencies.title"] = "Required Dependencies",
-            ["modules.manager.dependencies.confirm"] = "The module \"{0}\" requires {2} dependency(ies):\n\n‚Ä¢ {1}\n\nDo you want to install them now?",
+            ["modules.manager.dependencies.confirm"] = "The module \"{0}\" requires {2} dependency(ies):\n\nï {1}\n\nDo you want to install them now?",
             ["modules.manager.dependencies.message"] = "The module \"{0}\" requires the following modules to work:\n\n{1}\n\nDo you want to install these modules now?",
             ["modules.manager.dependencies.single"] = "The module \"{0}\" requires the module \"{1}\" to work.\n\nDo you want to install it now?",
             ["modules.manager.dependencies.installing"] = "Installing dependencies...",
@@ -467,7 +472,7 @@ public static class Localization
             ["modules.manager.restartRequired.multiple"] = "The following modules have been installed:\n{0}\n\nRestart AutoCAD to activate them.",
             ["modules.manager.category.installAll"] = "Install category",
             ["modules.manager.category.installCount"] = "Install all ({0})",
-            ["modules.manager.category.confirmInstall"] = "Do you want to install the {0} module(s) from the \"{1}\" category?\n\n‚Ä¢ {2}",
+            ["modules.manager.category.confirmInstall"] = "Do you want to install the {0} module(s) from the \"{1}\" category?\n\nï {2}",
             ["modules.manager.category.allInstalled"] = "All modules in this category are already installed.",
             ["modules.manager.category.installed"] = "{0} module(s) installed from category {1}",
             ["modules.requires"] = "Requires",
@@ -501,12 +506,12 @@ public static class Localization
             ["about.framework"] = "Framework",
             ["about.modules"] = "Loaded modules",
             ["about.commands"] = "Commands",
-            ["about.license"] = "This software is distributed under the Apache 2.0 license.\nSource code available on GitHub.",
+            ["about.license"] = "This software is distributed under the GNU GPL v3 license.\nSource code available on GitHub.",
             ["about.checkUpdate"] = "Check for updates",
             ["about.close"] = "Close",
             ["about.invalidUrl"] = "The update URL is invalid or insecure.",
-            ["about.alphaWarning"] = "‚ö† ALPHA VERSION - For testing only",
-            ["about.betaWarning"] = "‚ö† BETA VERSION - May contain bugs",
+            ["about.alphaWarning"] = "? ALPHA VERSION - For testing only",
+            ["about.betaWarning"] = "? BETA VERSION - May contain bugs",
             ["about.reportBug"] = "Report a bug",
             ["about.reportBug.opening"] = "Opening GitHub issues page...",
             ["about.reportBug.error"] = "Unable to open issues page: {0}",
@@ -519,14 +524,14 @@ public static class Localization
             ["settings.save"] = "Save",
             ["settings.cancel"] = "Cancel",
             ["settings.languageChanged"] = "Language changed. Interface has been updated.",
-            ["settings.info"] = "Version {0} ‚Ä¢ {1} module(s) ‚Ä¢ {2} command(s)\nConfiguration: {3}",
+            ["settings.info"] = "Version {0} ï {1} module(s) ï {2} command(s)\nConfiguration: {3}",
             ["settings.saveError"] = "Error while saving: {0}",
             ["settings.openError"] = "Error opening settings: {0}",
             ["settings.modules.status"] = "{0}/{1} modules installed",
             ["settings.modules.installSelected"] = "Install selection",
             ["settings.modules.selectedCount"] = "{0} module(s) selected",
-            ["settings.modules.dependenciesRequired"] = "The following modules will also be installed (required dependencies):\n\n‚Ä¢ {0}\n\nContinue?",
-            ["settings.modules.confirmInstall"] = "Install {0} module(s)?\n\n‚Ä¢ {1}",
+            ["settings.modules.dependenciesRequired"] = "The following modules will also be installed (required dependencies):\n\nï {0}\n\nContinue?",
+            ["settings.modules.confirmInstall"] = "Install {0} module(s)?\n\nï {1}",
             ["settings.modules.installTitle"] = "Installation",
             ["settings.modules.installed"] = "{0} module(s) installed",
 
@@ -573,7 +578,7 @@ public static class Localization
             ["modules.compatibility.coreTooNew"] = "Incompatible with Core > {0}",
             ["modules.compatibility.olderAvailable"] = "Compatible version {0} available",
             ["modules.install.alternative"] = "Install v{0}",
-            ["module.migrated"] = "Module migrated: {0} ‚Üí {1}",
+            ["module.migrated"] = "Module migrated: {0} ? {1}",
             ["module.summary"] = "{0} module(s) loaded, {1} command(s) available",
             ["module.initialized"] = "Module '{0}' initialized",
             ["module.initError"] = "Error initializing module '{0}': {1}",
@@ -582,8 +587,8 @@ public static class Localization
             ["module.pathAdded"] = "Modules path added: {0}",
             ["module.pathAddedTooLate"] = "Cannot add path after initialization",
             ["module.pathNotFound"] = "Modules path not found: {0}",
-            ["module.unsigned"] = "‚ö†Ô∏è Unsigned module: {0} (not verified)",
-            ["module.signed"] = "‚úì Signed module: {0}",
+            ["module.unsigned"] = "?? Unsigned module: {0} (not verified)",
+            ["module.signed"] = "? Signed module: {0}",
             ["module.unsignedBlocked"] = "Unsigned module blocked: {0} (set 'allowUnsignedModules' to allow)",
 
             // UI
@@ -644,102 +649,102 @@ public static class Localization
             ["settings.modules.coreUpdateMsg"] = "Version {0} available (current: {1})",
         }, isSystemRegistration: true);
 
-        // === Espa√±ol ===
+        // === EspaÒol ===
         RegisterTranslations("es", new Dictionary<string, string>
         {
-            // Aplicaci√≥n
+            // AplicaciÛn
             ["app.name"] = "Open Asphalte",
             ["app.loaded"] = "Plugin cargado",
-            ["app.version"] = "Versi√≥n",
+            ["app.version"] = "VersiÛn",
             ["app.welcome"] = "Bienvenido a Open Asphalte",
 
             // Comandos
             ["cmd.cancelled"] = "Comando cancelado",
             ["cmd.error"] = "Error",
-            ["cmd.success"] = "Operaci√≥n exitosa",
+            ["cmd.success"] = "OperaciÛn exitosa",
 
             // Errores
             ["error.noDocument"] = "No hay documento activo",
-            ["error.invalidSelection"] = "Selecci√≥n inv√°lida",
-            ["error.moduleNotFound"] = "m√≥dulo no encontrado",
+            ["error.invalidSelection"] = "SelecciÛn inv·lida",
+            ["error.moduleNotFound"] = "mÛdulo no encontrado",
 
-            // Selecci√≥n
+            // SelecciÛn
             ["select.point"] = "Seleccione un punto",
             ["select.object"] = "Seleccione un objeto",
-            ["select.polyline"] = "Seleccione una polil√≠nea",
-            ["select.line"] = "Seleccione una l√≠nea",
+            ["select.polyline"] = "Seleccione una polilÌnea",
+            ["select.line"] = "Seleccione una lÌnea",
 
             // Sistema
             ["system.name"] = "Sistema",
             ["system.help"] = "Ayuda",
             ["system.help.desc"] = "Muestra la lista de comandos disponibles",
-            ["system.version"] = "Versi√≥n",
-            ["system.version.desc"] = "Muestra informaci√≥n de Versi√≥n",
-            ["system.settings"] = "Configuraci√≥n",
-            ["system.settings.desc"] = "Abre la ventana de Configuraci√≥n",
+            ["system.version"] = "VersiÛn",
+            ["system.version.desc"] = "Muestra informaciÛn de VersiÛn",
+            ["system.settings"] = "ConfiguraciÛn",
+            ["system.settings.desc"] = "Abre la ventana de ConfiguraciÛn",
             ["system.reload"] = "Recargar",
-            ["system.reload.desc"] = "Recarga la Configuraci√≥n",
+            ["system.reload.desc"] = "Recarga la ConfiguraciÛn",
             ["system.update"] = "Actualizar",
             ["system.update.desc"] = "Busca actualizaciones disponibles",
-            ["system.modules"] = "M√≥dulos",
-            ["system.modules.desc"] = "Abre el gestor de m√≥dulos",
-            ["system.reload.success"] = "Configuraci√≥n recargada",
+            ["system.modules"] = "MÛdulos",
+            ["system.modules.desc"] = "Abre el gestor de mÛdulos",
+            ["system.reload.success"] = "ConfiguraciÛn recargada",
             ["system.help.title"] = "OPEN ASPHALTE - AYUDA",
             ["system.help.section.system"] = "COMANDOS DEL SISTEMA",
-            ["system.help.section.module"] = "m√≥dulo",
+            ["system.help.section.module"] = "mÛdulo",
             ["system.version.header"] = "OPEN ASPHALTE v{0}",
             ["system.version.subtitle"] = "Plugin modular para AutoCAD",
-            ["system.version.modules"] = "m√≥dulos cargados: {0}",
+            ["system.version.modules"] = "mÛdulos cargados: {0}",
             ["system.version.commands"] = "Comandos disponibles: {0}",
             ["system.version.language"] = "Idioma: {0}",
             ["system.version.devmode"] = "Modo dev: {0}",
             ["system.update.checking"] = "Buscando actualizaciones...",
-            ["system.update.current"] = "Versi√≥n actual: {0}",
-            ["system.update.opening"] = "Abriendo la p√°gina de releases...",
+            ["system.update.current"] = "VersiÛn actual: {0}",
+            ["system.update.opening"] = "Abriendo la p·gina de releases...",
             ["system.update.url"] = "URL: {0}",
             ["system.update.openError"] = "No se puede abrir el navegador: {0}",
 
-            // Verificaci√≥n de actualizaciones al inicio
-            ["update.available"] = "¬°Actualizaci√≥n v{0} disponible!",
-            ["update.incompatibleAutoCAD"] = "La versi√≥n {0} requiere AutoCAD {1}+ (tienes {2})",
-            ["update.notification.title"] = "Actualizaci√≥n disponible",
-            ["update.notification.message"] = "¬°Una nueva versi√≥n de Open Asphalte est√° disponible!\n\nVersi√≥n actual: {1}\nNueva versi√≥n: {0}\n\n¬øDesea abrir la p√°gina de descarga?",
+            // VerificaciÛn de actualizaciones al inicio
+            ["update.available"] = "°ActualizaciÛn v{0} disponible!",
+            ["update.incompatibleAutoCAD"] = "La versiÛn {0} requiere AutoCAD {1}+ (tienes {2})",
+            ["update.notification.title"] = "ActualizaciÛn disponible",
+            ["update.notification.message"] = "°Una nueva versiÛn de Open Asphalte est· disponible!\n\nVersiÛn actual: {1}\nNueva versiÛn: {0}\n\nøDesea abrir la p·gina de descarga?",
             ["update.checking.startup"] = "Buscando actualizaciones...",
 
-            // Gestor de M√≥dulos
-            ["modules.manager.title"] = "Gestor de M√≥dulos",
-            ["modules.manager.subtitle"] = "Instale y gestione los m√≥dulos de Open Asphalte desde el cat√°logo oficial.",
+            // Gestor de MÛdulos
+            ["modules.manager.title"] = "Gestor de MÛdulos",
+            ["modules.manager.subtitle"] = "Instale y gestione los mÛdulos de Open Asphalte desde el cat·logo oficial.",
             ["modules.manager.refresh"] = "Actualizar",
             ["modules.manager.filter"] = "Filtrar:",
-            ["modules.manager.empty"] = "Haga clic en Actualizar para cargar el cat√°logo",
-            ["modules.manager.loading"] = "Cargando cat√°logo...",
-            ["modules.manager.noManifest"] = "Cat√°logo vac√≠o o inaccesible",
-            ["modules.manager.noMatch"] = "Ning√∫n m√≥dulo coincide con el filtro",
+            ["modules.manager.empty"] = "Haga clic en Actualizar para cargar el cat·logo",
+            ["modules.manager.loading"] = "Cargando cat·logo...",
+            ["modules.manager.noManifest"] = "Cat·logo vacÌo o inaccesible",
+            ["modules.manager.noMatch"] = "Ning˙n mÛdulo coincide con el filtro",
             ["modules.manager.error"] = "Error de carga",
-            ["modules.manager.status"] = "{0} m√≥dulo(s) disponible(s), {1} instalado(s), {2} actualizaci√≥n(es)",
-            ["modules.manager.folder"] = "Carpeta de m√≥dulos",
-            ["modules.manager.folderNotFound"] = "La carpeta de m√≥dulos a√∫n no existe.",
+            ["modules.manager.status"] = "{0} mÛdulo(s) disponible(s), {1} instalado(s), {2} actualizaciÛn(es)",
+            ["modules.manager.folder"] = "Carpeta de mÛdulos",
+            ["modules.manager.folderNotFound"] = "La carpeta de mÛdulos a˙n no existe.",
             ["modules.manager.downloading"] = "Descargando...",
             ["modules.manager.installing"] = "Instalando {0}...",
-            ["modules.manager.installed"] = "M√≥dulo {0} instalado correctamente",
-            ["modules.manager.installSuccess"] = "Instalaci√≥n exitosa",
-            ["modules.manager.restartRequired"] = "El m√≥dulo {0} ha sido instalado.\n\nReinicie AutoCAD para activarlo.",
-            ["modules.manager.installError"] = "Error de instalaci√≥n: {0}",
+            ["modules.manager.installed"] = "MÛdulo {0} instalado correctamente",
+            ["modules.manager.installSuccess"] = "InstalaciÛn exitosa",
+            ["modules.manager.restartRequired"] = "El mÛdulo {0} ha sido instalado.\n\nReinicie AutoCAD para activarlo.",
+            ["modules.manager.installError"] = "Error de instalaciÛn: {0}",
             ["modules.manager.retry"] = "Reintentar",
             ["modules.manager.openError"] = "Error al abrir el gestor: {0}",
             ["modules.manager.dependencies.title"] = "Dependencias requeridas",
-            ["modules.manager.dependencies.confirm"] = "El m√≥dulo \"{0}\" requiere {2} dependencia(s):\n\n‚Ä¢ {1}\n\n¬øDesea instalarlas ahora?",
-            ["modules.manager.dependencies.message"] = "El m√≥dulo \"{0}\" requiere los siguientes m√≥dulos para funcionar:\n\n{1}\n\n¬øDesea instalar estos m√≥dulos ahora?",
-            ["modules.manager.dependencies.single"] = "El m√≥dulo \"{0}\" requiere el m√≥dulo \"{1}\" para funcionar.\n\n¬øDesea instalarlo ahora?",
+            ["modules.manager.dependencies.confirm"] = "El mÛdulo \"{0}\" requiere {2} dependencia(s):\n\nï {1}\n\nøDesea instalarlas ahora?",
+            ["modules.manager.dependencies.message"] = "El mÛdulo \"{0}\" requiere los siguientes mÛdulos para funcionar:\n\n{1}\n\nøDesea instalar estos mÛdulos ahora?",
+            ["modules.manager.dependencies.single"] = "El mÛdulo \"{0}\" requiere el mÛdulo \"{1}\" para funcionar.\n\nøDesea instalarlo ahora?",
             ["modules.manager.dependencies.installing"] = "Instalando dependencias...",
-            ["modules.manager.dependencies.success"] = "M√≥dulos instalados correctamente: {0}",
-            ["modules.manager.dependencies.notFound"] = "Dependencia no encontrada en el cat√°logo: {0}",
-            ["modules.manager.restartRequired.multiple"] = "Los siguientes m√≥dulos han sido instalados:\n{0}\n\nReinicie AutoCAD para activarlos.",
-            ["modules.manager.category.installAll"] = "Instalar categor√≠a",
+            ["modules.manager.dependencies.success"] = "MÛdulos instalados correctamente: {0}",
+            ["modules.manager.dependencies.notFound"] = "Dependencia no encontrada en el cat·logo: {0}",
+            ["modules.manager.restartRequired.multiple"] = "Los siguientes mÛdulos han sido instalados:\n{0}\n\nReinicie AutoCAD para activarlos.",
+            ["modules.manager.category.installAll"] = "Instalar categorÌa",
             ["modules.manager.category.installCount"] = "Instalar todo ({0})",
-            ["modules.manager.category.confirmInstall"] = "¬øDesea instalar los {0} m√≥dulo(s) de la categor√≠a \"{1}\"?\n\n‚Ä¢ {2}",
-            ["modules.manager.category.allInstalled"] = "Todos los m√≥dulos de esta categor√≠a ya est√°n instalados.",
-            ["modules.manager.category.installed"] = "{0} m√≥dulo(s) instalado(s) desde la categor√≠a {1}",
+            ["modules.manager.category.confirmInstall"] = "øDesea instalar los {0} mÛdulo(s) de la categorÌa \"{1}\"?\n\nï {2}",
+            ["modules.manager.category.allInstalled"] = "Todos los mÛdulos de esta categorÌa ya est·n instalados.",
+            ["modules.manager.category.installed"] = "{0} mÛdulo(s) instalado(s) desde la categorÌa {1}",
             ["modules.requires"] = "Requiere",
             ["modules.filter.all"] = "Todos",
             ["modules.filter.installed"] = "Instalados",
@@ -748,108 +753,108 @@ public static class Localization
             ["modules.action.install"] = "Instalar",
             ["modules.action.update"] = "Actualizar",
             ["modules.action.installed"] = "Instalado",
-            ["modules.local.description"] = "M√≥dulo local desde {0}",
+            ["modules.local.description"] = "MÛdulo local desde {0}",
 
             // Update errors
-            ["update.error.notFound"] = "Cat√°logo de m√≥dulos no encontrado (404). Verifique su conexi√≥n o int√©ntelo m√°s tarde.",
-            ["update.error.forbidden"] = "Acceso al cat√°logo denegado (403).",
-            ["update.error.noInternet"] = "No se puede contactar el servidor. Verifique su conexi√≥n a Internet.",
+            ["update.error.notFound"] = "Cat·logo de mÛdulos no encontrado (404). Verifique su conexiÛn o intÈntelo m·s tarde.",
+            ["update.error.forbidden"] = "Acceso al cat·logo denegado (403).",
+            ["update.error.noInternet"] = "No se puede contactar el servidor. Verifique su conexiÛn a Internet.",
             ["update.error.http"] = "Error de red: {0}",
             ["update.error.timeout"] = "Tiempo de espera agotado. El servidor no responde.",
-            ["update.moduleInstalled"] = "M√≥dulo {0} instalado",
+            ["update.moduleInstalled"] = "MÛdulo {0} instalado",
 
             // First run
-            ["firstrun.noModules.title"] = "¬°Bienvenido a Open Asphalte!",
-            ["firstrun.noModules.message"] = "No hay m√≥dulos instalados.\n\n¬øDesea abrir el Gestor de M√≥dulos para instalar extensiones?",
+            ["firstrun.noModules.title"] = "°Bienvenido a Open Asphalte!",
+            ["firstrun.noModules.message"] = "No hay mÛdulos instalados.\n\nøDesea abrir el Gestor de MÛdulos para instalar extensiones?",
 
             // Ventana Acerca de
             ["about.title"] = "Acerca de",
             ["about.subtitle"] = "Plugin modular para AutoCAD",
-            ["about.version"] = "Versi√≥n",
-            ["about.buildDate"] = "Fecha de compilaci√≥n",
+            ["about.version"] = "VersiÛn",
+            ["about.buildDate"] = "Fecha de compilaciÛn",
             ["about.channel"] = "Canal",
             ["about.framework"] = "Framework",
-            ["about.modules"] = "M√≥dulos cargados",
+            ["about.modules"] = "MÛdulos cargados",
             ["about.commands"] = "Comandos",
-            ["about.license"] = "Este software se distribuye bajo la licencia Apache 2.0.\nC√≥digo fuente disponible en GitHub.",
+            ["about.license"] = "Este software se distribuye bajo la licencia GNU GPL v3.\nCÛdigo fuente disponible en GitHub.",
             ["about.checkUpdate"] = "Buscar actualizaciones",
             ["about.close"] = "Cerrar",
-            ["about.invalidUrl"] = "La URL de actualizaci√≥n es inv√°lida o insegura.",
-            ["about.alphaWarning"] = "‚ö† VERSI√ìN ALPHA - Solo para pruebas",
-            ["about.betaWarning"] = "‚ö† VERSI√ìN BETA - Puede contener errores",
+            ["about.invalidUrl"] = "La URL de actualizaciÛn es inv·lida o insegura.",
+            ["about.alphaWarning"] = "? VERSI”N ALPHA - Solo para pruebas",
+            ["about.betaWarning"] = "? VERSI”N BETA - Puede contener errores",
             ["about.reportBug"] = "Reportar un error",
-            ["about.reportBug.opening"] = "Abriendo la p√°gina de issues de GitHub...",
-            ["about.reportBug.error"] = "No se puede abrir la p√°gina de issues: {0}",
+            ["about.reportBug.opening"] = "Abriendo la p·gina de issues de GitHub...",
+            ["about.reportBug.error"] = "No se puede abrir la p·gina de issues: {0}",
 
-            // Ventana de Configuraci√≥n
-            ["settings.title"] = "Configuraci√≥n Open Asphalte",
+            // Ventana de ConfiguraciÛn
+            ["settings.title"] = "ConfiguraciÛn Open Asphalte",
             ["settings.language"] = "Idioma",
             ["settings.devmode"] = "Modo desarrollador (logs detallados)",
             ["settings.checkupdates"] = "Buscar actualizaciones al iniciar",
             ["settings.save"] = "Guardar",
             ["settings.cancel"] = "Cancelar",
             ["settings.languageChanged"] = "Idioma cambiado. La interfaz ha sido actualizada.",
-            ["settings.info"] = "Versi√≥n {0} ‚Ä¢ {1} m√≥dulo(s) ‚Ä¢ {2} comando(s)\nConfiguraci√≥n: {3}",
+            ["settings.info"] = "VersiÛn {0} ï {1} mÛdulo(s) ï {2} comando(s)\nConfiguraciÛn: {3}",
             ["settings.saveError"] = "Error al guardar: {0}",
-            ["settings.openError"] = "Error al abrir Configuraci√≥n: {0}",
-            ["settings.modules.status"] = "{0}/{1} m√≥dulos instalados",
-            ["settings.modules.installSelected"] = "Instalar selecci√≥n",
-            ["settings.modules.selectedCount"] = "{0} m√≥dulo(s) seleccionado(s)",
-            ["settings.modules.dependenciesRequired"] = "Los siguientes m√≥dulos tambi√©n se instalar√°n (dependencias requeridas):\n\n‚Ä¢ {0}\n\n¬øContinuar?",
-            ["settings.modules.confirmInstall"] = "¬øInstalar {0} m√≥dulo(s)?\n\n‚Ä¢ {1}",
-            ["settings.modules.installTitle"] = "Instalaci√≥n",
-            ["settings.modules.installed"] = "{0} m√≥dulo(s) instalado(s)",
+            ["settings.openError"] = "Error al abrir ConfiguraciÛn: {0}",
+            ["settings.modules.status"] = "{0}/{1} mÛdulos instalados",
+            ["settings.modules.installSelected"] = "Instalar selecciÛn",
+            ["settings.modules.selectedCount"] = "{0} mÛdulo(s) seleccionado(s)",
+            ["settings.modules.dependenciesRequired"] = "Los siguientes mÛdulos tambiÈn se instalar·n (dependencias requeridas):\n\nï {0}\n\nøContinuar?",
+            ["settings.modules.confirmInstall"] = "øInstalar {0} mÛdulo(s)?\n\nï {1}",
+            ["settings.modules.installTitle"] = "InstalaciÛn",
+            ["settings.modules.installed"] = "{0} mÛdulo(s) instalado(s)",
 
-            // m√≥dulos
-            ["modules.loaded"] = "{0} m√≥dulo(s) cargado(s)",
+            // mÛdulos
+            ["modules.loaded"] = "{0} mÛdulo(s) cargado(s)",
             ["modules.commands"] = "{0} comando(s) disponible(s)",
 
             // Common
-            ["common.yes"] = "S√≠",
+            ["common.yes"] = "SÌ",
             ["common.no"] = "No",
-            ["common.success"] = "√âxito",
+            ["common.success"] = "…xito",
             ["common.error"] = "Error",
 
-            // Configuraci√≥n
-            ["config.empty"] = "Archivo de Configuraci√≥n vac√≠o, nueva Configuraci√≥n creada",
-            ["config.loaded"] = "Configuraci√≥n cargada desde {0}",
-            ["config.created"] = "Nueva Configuraci√≥n creada",
-            ["config.corrupt"] = "Archivo de Configuraci√≥n corrupto, reinicializaci√≥n: {0}",
-            ["config.loadError"] = "Error al cargar la Configuraci√≥n: {0}",
-            ["config.saved"] = "Configuraci√≥n guardada",
-            ["config.saveError"] = "Error al guardar la Configuraci√≥n: {0}",
-            ["config.reloaded"] = "Configuraci√≥n recargada",
+            // ConfiguraciÛn
+            ["config.empty"] = "Archivo de ConfiguraciÛn vacÌo, nueva ConfiguraciÛn creada",
+            ["config.loaded"] = "ConfiguraciÛn cargada desde {0}",
+            ["config.created"] = "Nueva ConfiguraciÛn creada",
+            ["config.corrupt"] = "Archivo de ConfiguraciÛn corrupto, reinicializaciÛn: {0}",
+            ["config.loadError"] = "Error al cargar la ConfiguraciÛn: {0}",
+            ["config.saved"] = "ConfiguraciÛn guardada",
+            ["config.saveError"] = "Error al guardar la ConfiguraciÛn: {0}",
+            ["config.reloaded"] = "ConfiguraciÛn recargada",
 
-            // Descubrimiento de m√≥dulos
-            ["module.searchPath"] = "Buscando m√≥dulos en: {0}",
+            // Descubrimiento de mÛdulos
+            ["module.searchPath"] = "Buscando mÛdulos en: {0}",
             ["module.folderCreated"] = "Carpeta Modules creada",
             ["module.dllFound"] = "{0} archivo(s) DLL encontrado(s)",
             ["module.loadOutside"] = "Intento de cargar una DLL fuera de la carpeta Modules: {0}",
             ["module.dllMissing"] = "Archivo DLL no encontrado: {0}",
             ["module.loading"] = "Cargando: {0}",
-            ["module.noneFound"] = "No se encontr√≥ ning√∫n m√≥dulo en {0}",
-            ["module.duplicate"] = "M√≥dulo '{0}' ya cargado, ignorado",
-            ["module.loaded"] = "M√≥dulo '{0}' v{1} cargado ({2} comandos)",
-            ["module.instanceError"] = "Error al instanciar el m√≥dulo {0}: {1}",
+            ["module.noneFound"] = "No se encontrÛ ning˙n mÛdulo en {0}",
+            ["module.duplicate"] = "MÛdulo '{0}' ya cargado, ignorado",
+            ["module.loaded"] = "MÛdulo '{0}' v{1} cargado ({2} comandos)",
+            ["module.instanceError"] = "Error al instanciar el mÛdulo {0}: {1}",
             ["module.dllError"] = "Error al cargar la DLL {0}: {1}",
-            ["module.depMissing"] = "M√≥dulo '{0}' desactivado: dependencia faltante '{1}'",
-            ["module.coreVersionUnknown"] = "M√≥dulo '{0}': Versi√≥n del Core no verificable (min='{1}', core='{2}')",
-            ["module.coreVersionIncompatible"] = "M√≥dulo '{0}' desactivado: Versi√≥n del Core requerida {1}, Versi√≥n actual {2}",
-            ["module.coreVersionTooNew"] = "M√≥dulo '{0}' desactivado: versi√≥n m√°xima del Core {1}, versi√≥n actual {2}",
+            ["module.depMissing"] = "MÛdulo '{0}' desactivado: dependencia faltante '{1}'",
+            ["module.coreVersionUnknown"] = "MÛdulo '{0}': VersiÛn del Core no verificable (min='{1}', core='{2}')",
+            ["module.coreVersionIncompatible"] = "MÛdulo '{0}' desactivado: VersiÛn del Core requerida {1}, VersiÛn actual {2}",
+            ["module.coreVersionTooNew"] = "MÛdulo '{0}' desactivado: versiÛn m·xima del Core {1}, versiÛn actual {2}",
             ["modules.compatibility.coreTooOld"] = "Requiere Core {0}+",
             ["modules.compatibility.coreTooNew"] = "Incompatible con Core > {0}",
-            ["modules.compatibility.olderAvailable"] = "Versi√≥n {0} compatible disponible",
+            ["modules.compatibility.olderAvailable"] = "VersiÛn {0} compatible disponible",
             ["modules.install.alternative"] = "Instalar v{0}",
-            ["module.migrated"] = "M√≥dulo migrado: {0} ‚Üí {1}",
-            ["module.summary"] = "{0} m√≥dulo(s) cargado(s), {1} comando(s) disponible(s)",
-            ["module.initialized"] = "M√≥dulo '{0}' inicializado",
-            ["module.initError"] = "Error al inicializar el m√≥dulo '{0}': {1}",
-            ["module.shutdown"] = "M√≥dulo '{0}' cerrado",
-            ["module.shutdownError"] = "Error al cerrar el m√≥dulo '{0}': {1}",
+            ["module.migrated"] = "MÛdulo migrado: {0} ? {1}",
+            ["module.summary"] = "{0} mÛdulo(s) cargado(s), {1} comando(s) disponible(s)",
+            ["module.initialized"] = "MÛdulo '{0}' inicializado",
+            ["module.initError"] = "Error al inicializar el mÛdulo '{0}': {1}",
+            ["module.shutdown"] = "MÛdulo '{0}' cerrado",
+            ["module.shutdownError"] = "Error al cerrar el mÛdulo '{0}': {1}",
 
             // UI
-            ["ui.menu.created"] = "Men√∫ Open Asphalte creado",
-            ["ui.menu.createError"] = "Error al crear el men√∫: {0}",
+            ["ui.menu.created"] = "Men˙ Open Asphalte creado",
+            ["ui.menu.createError"] = "Error al crear el men˙: {0}",
             ["ui.ribbon.notAvailable"] = "Cinta de AutoCAD no disponible",
             ["ui.ribbon.created"] = "Cinta Open Asphalte creada",
             ["ui.ribbon.updated"] = "Cinta actualizada (incremental)",
@@ -857,21 +862,21 @@ public static class Localization
             ["ui.ribbon.panelError"] = "Error al crear el panel {0}: {1}",
 
             // Ciclo de vida del plugin
-            ["plugin.updateCheckDisabled"] = "Verificaci√≥n de actualizaciones desactivada para la v1 (sin servidor)",
-            ["plugin.initError"] = "Error de inicializaci√≥n de Open Asphalte: {0}",
+            ["plugin.updateCheckDisabled"] = "VerificaciÛn de actualizaciones desactivada para la v1 (sin servidor)",
+            ["plugin.initError"] = "Error de inicializaciÛn de Open Asphalte: {0}",
             ["plugin.uiCreated"] = "Interfaz de Open Asphalte creada",
             ["plugin.uiCreateError"] = "Error al crear la interfaz: {0}",
             ["plugin.languageChange"] = "Cambio de idioma: {0} -> {1}",
             ["plugin.uiUpdated"] = "Interfaz actualizada ({0})",
             ["plugin.uiUpdateError"] = "Error al actualizar la interfaz: {0}",
-            ["plugin.shutdownClean"] = "Open Asphalte se cerr√≥ correctamente",
+            ["plugin.shutdownClean"] = "Open Asphalte se cerrÛ correctamente",
 
             // Bienvenida
             ["welcome.title"] = "OPEN ASPHALTE v{0}",
             ["welcome.subtitle"] = "Plugin modular para AutoCAD",
-            ["welcome.modulesLoaded"] = "m√≥dulos cargados: {0}",
-            ["welcome.noModules"] = "Ning√∫n m√≥dulo cargado",
-            ["welcome.dropModules"] = "Coloque sus m√≥dulos (.dll) en la carpeta Modules/",
+            ["welcome.modulesLoaded"] = "mÛdulos cargados: {0}",
+            ["welcome.noModules"] = "Ning˙n mÛdulo cargado",
+            ["welcome.dropModules"] = "Coloque sus mÛdulos (.dll) en la carpeta Modules/",
             ["welcome.commandsAvailable"] = "{0} comando(s) disponible(s)",
             ["welcome.helpHint"] = "Escriba OAS_HELP para la lista completa",
 
@@ -883,62 +888,62 @@ public static class Localization
             ["log.level.warn"] = "[ADVERTENCIA]",
             ["log.level.error"] = "[ERROR]",
 
-            // Configuraci√≥n (nuevas claves)
-            ["config.migrating"] = "Migrando configuraci√≥n de v{0} a v{1}...",
-            ["config.migrated"] = "Configuraci√≥n migrada correctamente",
+            // ConfiguraciÛn (nuevas claves)
+            ["config.migrating"] = "Migrando configuraciÛn de v{0} a v{1}...",
+            ["config.migrated"] = "ConfiguraciÛn migrada correctamente",
 
-            // M√≥dulos (nuevas claves)
+            // MÛdulos (nuevas claves)
             ["module.dllFoundInPath"] = "{0} archivo(s) DLL encontrado(s) en {1}",
-            ["module.pathAdded"] = "Ruta de m√≥dulos a√±adida: {0}",
-            ["module.pathAddedTooLate"] = "No se puede a√±adir ruta despu√©s de la inicializaci√≥n",
-            ["module.pathNotFound"] = "Ruta de m√≥dulos no encontrada: {0}",
-            ["module.unsigned"] = "‚ö†Ô∏è M√≥dulo sin firmar: {0} (no verificado)",
-            ["module.signed"] = "‚úì M√≥dulo firmado: {0}",
-            ["module.unsignedBlocked"] = "M√≥dulo sin firmar bloqueado: {0} (configure 'allowUnsignedModules' para permitir)",
+            ["module.pathAdded"] = "Ruta de mÛdulos aÒadida: {0}",
+            ["module.pathAddedTooLate"] = "No se puede aÒadir ruta despuÈs de la inicializaciÛn",
+            ["module.pathNotFound"] = "Ruta de mÛdulos no encontrada: {0}",
+            ["module.unsigned"] = "?? MÛdulo sin firmar: {0} (no verificado)",
+            ["module.signed"] = "? MÛdulo firmado: {0}",
+            ["module.unsignedBlocked"] = "MÛdulo sin firmar bloqueado: {0} (configure 'allowUnsignedModules' para permitir)",
 
             // Errores (transacciones)
             ["error.noDatabase"] = "Base de datos no disponible",
 
-            // Ventana de cr√©ditos
-            ["core.credits.title"] = "Cr√©ditos",
+            // Ventana de crÈditos
+            ["core.credits.title"] = "CrÈditos",
             ["core.credits.tab.core"] = "Equipo Core",
-            ["core.credits.tab.modules"] = "M√≥dulos",
-            ["core.credits.modules.list"] = "M√≥dulos instalados",
+            ["core.credits.tab.modules"] = "MÛdulos",
+            ["core.credits.modules.list"] = "MÛdulos instalados",
             ["core.credits.author"] = "Autor",
             ["core.credits.contributors"] = "Colaboradores",
-            ["about.credits"] = "Cr√©ditos",
+            ["about.credits"] = "CrÈditos",
             ["core.close"] = "Cerrar",
 
-            // Pesta√±as de configuraci√≥n
+            // PestaÒas de configuraciÛn
             ["settings.tab.general"] = "General",
-            ["settings.tab.modules"] = "M√≥dulos",
+            ["settings.tab.modules"] = "MÛdulos",
             ["settings.modules.check"] = "Buscar actualizaciones",
             ["settings.modules.checking"] = "Verificando...",
-            ["settings.modules.coreAvailable"] = "Una nueva versi√≥n del Core est√° disponible",
-            ["settings.modules.coreUpdateMsg"] = "Versi√≥n {0} disponible (actual: {1})",
+            ["settings.modules.coreAvailable"] = "Una nueva versiÛn del Core est· disponible",
+            ["settings.modules.coreUpdateMsg"] = "VersiÛn {0} disponible (actual: {1})",
         }, isSystemRegistration: true);
     }
 
     /// <summary>
     /// Enregistre des traductions pour une langue.
-    /// Les cl√©s syst√®me (pr√©fixes: app., cmd., error., etc.) ne peuvent pas √™tre √©cras√©es par les modules.
+    /// Les clÈs systËme (prÈfixes: app., cmd., error., etc.) ne peuvent pas Ítre ÈcrasÈes par les modules.
     /// </summary>
     /// <param name="language">Code langue (fr, en, es)</param>
     /// <param name="translations">Dictionnaire de traductions</param>
-    /// <param name="isSystemRegistration">True si c'est l'initialisation syst√®me (autorise toutes les cl√©s)</param>
+    /// <param name="isSystemRegistration">True si c'est l'initialisation systËme (autorise toutes les clÈs)</param>
     public static void RegisterTranslations(string language, IDictionary<string, string> translations, bool isSystemRegistration = false)
     {
         var langDict = _translations.GetOrAdd(language, _ => new ConcurrentDictionary<string, string>());
 
         foreach (var (key, value) in translations)
         {
-            // Prot√©ger les cl√©s syst√®me contre l'√©crasement par les modules
+            // ProtÈger les clÈs systËme contre l'Ècrasement par les modules
             if (!isSystemRegistration && IsSystemKey(key))
             {
-                // V√©rifier si la cl√© existe d√©j√† (protection contre √©crasement)
+                // VÈrifier si la clÈ existe dÈj‡ (protection contre Ècrasement)
                 if (langDict.ContainsKey(key))
                 {
-                    Logging.Logger.Warning($"Tentative d'√©crasement de cl√© syst√®me bloqu√©e: {key}");
+                    Logging.Logger.Warning($"Tentative d'Ècrasement de clÈ systËme bloquÈe: {key}");
                     continue;
                 }
             }
@@ -947,7 +952,7 @@ public static class Localization
     }
 
     /// <summary>
-    /// V√©rifie si une cl√© est une cl√© syst√®me prot√©g√©e
+    /// VÈrifie si une clÈ est une clÈ systËme protÈgÈe
     /// </summary>
     private static bool IsSystemKey(string key)
     {
@@ -955,10 +960,10 @@ public static class Localization
     }
 
     /// <summary>
-    /// Traduit une cl√© dans la langue active
+    /// Traduit une clÈ dans la langue active
     /// </summary>
-    /// <param name="key">cl√© de traduction</param>
-    /// <param name="defaultValue">Valeur par d√©faut si non trouv√©e</param>
+    /// <param name="key">clÈ de traduction</param>
+    /// <param name="defaultValue">Valeur par dÈfaut si non trouvÈe</param>
     /// <returns>Texte traduit</returns>
     public static string T(string key, string? defaultValue = null)
     {
@@ -973,7 +978,7 @@ public static class Localization
             }
         }
 
-        // Fallback vers Fran√ßais
+        // Fallback vers FranÁais
         if (lang != "fr" && _translations.TryGetValue("fr", out var frDict))
         {
             if (frDict.TryGetValue(key, out var frValue))
@@ -986,13 +991,13 @@ public static class Localization
     }
 
     /// <summary>
-    /// Traduit avec des param√®tres format√©s et un fallback.
-    /// Utilise le fallback si la cl√© n'existe pas, puis formate avec les arguments.
+    /// Traduit avec des paramËtres formatÈs et un fallback.
+    /// Utilise le fallback si la clÈ n'existe pas, puis formate avec les arguments.
     /// </summary>
-    /// <param name="key">Cl√© de traduction</param>
-    /// <param name="fallback">Texte par d√©faut si la cl√© n'existe pas (doit contenir {0}, {1}... pour le formatage)</param>
+    /// <param name="key">ClÈ de traduction</param>
+    /// <param name="fallback">Texte par dÈfaut si la clÈ n'existe pas (doit contenir {0}, {1}... pour le formatage)</param>
     /// <param name="args">Arguments de formatage</param>
-    /// <returns>Texte traduit et format√©</returns>
+    /// <returns>Texte traduit et formatÈ</returns>
     public static string TFormat(string key, string fallback, params object[] args)
     {
         var template = T(key, fallback);
@@ -1007,18 +1012,18 @@ public static class Localization
         }
         catch (FormatException)
         {
-            // Si le format √©choue, retourner le template tel quel
+            // Si le format Èchoue, retourner le template tel quel
             return template;
         }
     }
 
     /// <summary>
-    /// Traduit avec des Param√®tres format√©s (sans fallback).
-    /// Note: Pr√©f√©rez TFormat(key, fallback, args) pour plus de robustesse.
+    /// Traduit avec des ParamËtres formatÈs (sans fallback).
+    /// Note: PrÈfÈrez TFormat(key, fallback, args) pour plus de robustesse.
     /// </summary>
-    /// <param name="key">cl√© de traduction</param>
-    /// <param name="args">Arguments de formatage (au moins 1 √©l√©ment requis)</param>
-    /// <returns>Texte traduit et format√©</returns>
+    /// <param name="key">clÈ de traduction</param>
+    /// <param name="args">Arguments de formatage (au moins 1 ÈlÈment requis)</param>
+    /// <returns>Texte traduit et formatÈ</returns>
     public static string TFormat(string key, params object[] args)
     {
         if (args == null || args.Length == 0)
@@ -1033,20 +1038,20 @@ public static class Localization
         }
         catch (FormatException)
         {
-            // Si le format √©choue, retourner le template tel quel
+            // Si le format Èchoue, retourner le template tel quel
             return template;
         }
     }
 
     /// <summary>
-    /// Change la langue active et notifie les abonn√©s.
+    /// Change la langue active et notifie les abonnÈs.
     /// </summary>
     /// <param name="language">Code langue (fr, en, es)</param>
     /// <param name="saveToConfig">Si true, sauvegarde dans la configuration</param>
-    /// <returns>True si la langue a chang√©, false sinon</returns>
+    /// <returns>True si la langue a changÈ, false sinon</returns>
     /// <remarks>
-    /// Cette m√©thode d√©clenche l'√©v√©nement <see cref="OnLanguageChanged"/> si la langue change,
-    /// permettant √† l'UI de se reconstruire automatiquement.
+    /// Cette mÈthode dÈclenche l'ÈvÈnement <see cref="OnLanguageChanged"/> si la langue change,
+    /// permettant ‡ l'UI de se reconstruire automatiquement.
     /// </remarks>
     public static bool SetLanguage(string language, bool saveToConfig = true)
     {
@@ -1065,14 +1070,14 @@ public static class Localization
             var oldLanguage = _currentLanguage;
             _currentLanguage = language;
 
-            // Sauvegarder dans la configuration si demand√©
+            // Sauvegarder dans la configuration si demandÈ
             if (saveToConfig)
             {
                 Configuration.Configuration.Set("language", language);
                 Configuration.Configuration.Save();
             }
 
-            // D√©clencher l'√©v√©nement de changement de langue
+            // DÈclencher l'ÈvÈnement de changement de langue
             OnLanguageChanged?.Invoke(oldLanguage, language);
         }
 
@@ -1080,20 +1085,20 @@ public static class Localization
     }
 
     /// <summary>
-    /// V√©rifie si une langue est support√©e
+    /// VÈrifie si une langue est supportÈe
     /// </summary>
-    /// <param name="language">Code langue √† v√©rifier</param>
-    /// <returns>True si la langue est support√©e</returns>
+    /// <param name="language">Code langue ‡ vÈrifier</param>
+    /// <returns>True si la langue est supportÈe</returns>
     public static bool IsLanguageSupported(string language)
     {
         return _supportedLanguages.Contains(language);
     }
 
     /// <summary>
-    /// Obtient toutes les cl√©s de traduction enregistr√©es pour une langue
+    /// Obtient toutes les clÈs de traduction enregistrÈes pour une langue
     /// </summary>
     /// <param name="language">Code langue (optionnel, utilise la langue courante si null)</param>
-    /// <returns>Liste des cl√©s de traduction</returns>
+    /// <returns>Liste des clÈs de traduction</returns>
     public static IReadOnlyCollection<string> GetAllKeys(string? language = null)
     {
         var lang = language ?? _currentLanguage;
