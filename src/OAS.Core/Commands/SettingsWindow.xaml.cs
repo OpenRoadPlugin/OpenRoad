@@ -22,6 +22,7 @@ using OpenAsphalte.Discovery;
 using OpenAsphalte.Localization;
 using OpenAsphalte.Logging;
 using OpenAsphalte.Services;
+using OpenAsphalte.UI;
 using L10n = OpenAsphalte.Localization.Localization;
 
 namespace OpenAsphalte.Commands;
@@ -37,6 +38,11 @@ public partial class SettingsWindow : Window
     public SettingsWindow()
     {
         InitializeComponent();
+
+        // Restaurer la taille et la position
+        WindowStateHelper.RestoreState(this, "SettingsWindow", 900, 600);
+        Closing += (s, e) => WindowStateHelper.SaveState(this, "SettingsWindow");
+
         lstModules.ItemsSource = _moduleList;
         LoadSettings();
         UpdateLocalizedText();
@@ -247,16 +253,18 @@ public partial class SettingsWindow : Window
 
                 foreach (var moduleDef in sortedModules)
                 {
-                    var isInstalled = ModuleDiscovery.Modules.Any(m => m.Id.Equals(moduleDef.Id, StringComparison.OrdinalIgnoreCase));
+                    var installedModule = ModuleDiscovery.Modules.FirstOrDefault(m => m.Id.Equals(moduleDef.Id, StringComparison.OrdinalIgnoreCase));
+                    var isInstalled = installedModule != null;
                     var updateInfo = result.Updates.FirstOrDefault(u => u.ModuleId == moduleDef.Id);
 
-                    var installedVersion = ModuleDiscovery.Modules
-                        .FirstOrDefault(m => m.Id.Equals(moduleDef.Id, StringComparison.OrdinalIgnoreCase))?.Version ?? "-";
+                    var installedVersion = installedModule?.Version ?? "-";
+                    // Utiliser le nom du module installé (vrai nom) si disponible, sinon celui du manifest
+                    var displayName = installedModule?.Name ?? moduleDef.Name;
 
                     var item = new ModuleItemViewModel
                     {
                         Definition = moduleDef,
-                        Name = moduleDef.Name,
+                        Name = displayName,
                         Description = moduleDef.Description,
                         VersionDisplay = isInstalled ? $"{installedVersion} -> {moduleDef.Version}" : moduleDef.Version,
                         StatusIcon = isInstalled ? (updateInfo != null ? "!" : "✓") : "+",

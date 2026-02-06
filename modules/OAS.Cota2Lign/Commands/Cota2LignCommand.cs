@@ -18,6 +18,7 @@ using OpenAsphalte.Logging;
 using OpenAsphalte.Services;
 using OpenAsphalte.Modules.Cota2Lign.Services;
 using OpenAsphalte.Modules.Cota2Lign.Views;
+using OpenAsphalte.Modules.DynamicSnap.Services;
 
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
@@ -91,7 +92,8 @@ public class Cota2LignCommand : CommandBase
                 }
 
                 var polyline2Id = pl2Result.Value;
-
+                // Mettre les deux polylignes en surbrillance (style Primary uniforme)
+                HighlightHelper.HighlightEntities(polyline1Id, polyline2Id);
                 // ═══════════════════════════════════════════════════════
                 // SÉLECTION POINTS DÉPART/ARRIVÉE
                 // ═══════════════════════════════════════════════════════
@@ -100,6 +102,9 @@ public class Cota2LignCommand : CommandBase
                 {
                     AcadApp.SetSystemVariable("OSMODE", 0);
                 }
+
+                // Mettre la polyligne maîtresse en évidence pour la sélection des points
+                HighlightHelper.SetPrimaryEntity(polyline1Id);
 
                 var startPoint = GetPointOnPolyline(T("cota2lign.select.start"), polyline1Id, settings);
                 if (startPoint == null)
@@ -179,6 +184,9 @@ public class Cota2LignCommand : CommandBase
             {
                 // Toujours restaurer l'OSMODE utilisateur
                 AcadApp.SetSystemVariable("OSMODE", originalOsmode);
+
+                // Toujours nettoyer la surbrillance
+                HighlightHelper.ClearHighlight();
             }
         });
     }

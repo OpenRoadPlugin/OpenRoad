@@ -710,10 +710,11 @@ public static class ModuleDiscovery
     {
         foreach (var descriptor in _loadedModules)
         {
-            if (!IsCoreVersionCompatible(descriptor))
+            var compatResult = CheckCoreVersionCompatibility(descriptor);
+            if (!compatResult.IsCompatible)
             {
                 descriptor.DependenciesSatisfied = false;
-                descriptor.MissingDependencies.Add($"core>={descriptor.Module.MinCoreVersion}");
+                descriptor.MissingDependencies.Add(compatResult.Reason!);
                 continue;
             }
 
@@ -730,26 +731,51 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
-    /// Vérifie la compatibilité de version minimale du Core pour un module
+    /// Résultat de la vérification de compatibilité Core
     /// </summary>
-    private static bool IsCoreVersionCompatible(ModuleDescriptor descriptor)
+    private record CoreCompatibilityResult(bool IsCompatible, string? Reason);
+
+    /// <summary>
+    /// Vérifie la compatibilité de version du Core pour un module (min et max)
+    /// </summary>
+    private static CoreCompatibilityResult CheckCoreVersionCompatibility(ModuleDescriptor descriptor)
     {
-        var minVersion = ParseVersion(descriptor.Module.MinCoreVersion);
         var coreVersion = ParseVersion(Plugin.Version);
 
+        // Vérifier MinCoreVersion
+        var minVersion = ParseVersion(descriptor.Module.MinCoreVersion);
         if (minVersion == null || coreVersion == null)
         {
             Logger.Warning(L10n.TFormat("module.coreVersionUnknown", descriptor.Module.Name, descriptor.Module.MinCoreVersion, Plugin.Version));
-            return true;
+            return new CoreCompatibilityResult(true, null);
         }
 
         if (coreVersion < minVersion)
         {
             Logger.Warning(L10n.TFormat("module.coreVersionIncompatible", descriptor.Module.Name, descriptor.Module.MinCoreVersion, Plugin.Version));
-            return false;
+            return new CoreCompatibilityResult(false, $"core>={descriptor.Module.MinCoreVersion}");
         }
 
-        return true;
+        // Vérifier MaxCoreVersion (si définie)
+        if (!string.IsNullOrEmpty(descriptor.Module.MaxCoreVersion))
+        {
+            var maxVersion = ParseVersion(descriptor.Module.MaxCoreVersion);
+            if (maxVersion != null && coreVersion > maxVersion)
+            {
+                Logger.Warning(L10n.TFormat("module.coreVersionTooNew", descriptor.Module.Name, descriptor.Module.MaxCoreVersion, Plugin.Version));
+                return new CoreCompatibilityResult(false, $"core<={descriptor.Module.MaxCoreVersion}");
+            }
+        }
+
+        return new CoreCompatibilityResult(true, null);
+    }
+
+    /// <summary>
+    /// Vérifie la compatibilité de version minimale du Core pour un module
+    /// </summary>
+    private static bool IsCoreVersionCompatible(ModuleDescriptor descriptor)
+    {
+        return CheckCoreVersionCompatibility(descriptor).IsCompatible;
     }
 
     /// <summary>

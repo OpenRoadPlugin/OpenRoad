@@ -79,6 +79,9 @@ public abstract class ModuleBase : IModule
     public virtual string MinCoreVersion => "1.0.0";
 
     /// <inheritdoc />
+    public virtual string? MaxCoreVersion => null;
+
+    /// <inheritdoc />
     public virtual IEnumerable<Contributor> Contributors => Enumerable.Empty<Contributor>();
 
     /// <inheritdoc />

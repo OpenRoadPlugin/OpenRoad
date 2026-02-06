@@ -13,6 +13,10 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   - Détection automatique si la fenêtre est hors écran → recentrage
   - `GetRecommendedHeight()` retourne 95% de la zone de travail (respecte barre des tâches)
   - Réutilisable par tous les modules
+- **Fenêtre Paramètres (`OAS_SETTINGS`)** :
+  - Fenêtre agrandie (900x600) et redimensionnable
+  - Mémorisation de la taille et position via `WindowStateHelper`
+  - Affichage du "Vrai Nom" des modules installés (depuis la DLL) au lieu de l'ID du catalogue
 
 ### Sécurité
 - **Isolation des modules personnalisés** : Les modules provenant d'une source personnalisée (dossier local ou URL) ne sont plus chargés directement depuis leur emplacement distant

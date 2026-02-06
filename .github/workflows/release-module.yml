@@ -1,0 +1,123 @@
+# Publication automatique des modules
+# Déclenché par tags : module-{id}-v{version}
+# Exemple: module-georeferencement-v0.0.2
+
+name: Release Module
+
+on:
+  push:
+    tags:
+      - 'module-*-v*.*.*'
+
+jobs:
+  release-module:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Extraire informations du tag
+      id: parse_tag
+      run: |
+        $tag = "${{ github.ref_name }}"
+        # Format: module-{id}-v{version}
+        if ($tag -match '^module-(.+)-v(\d+\.\d+\.\d+)$') {
+          $moduleId = $Matches[1]
+          $version = $Matches[2]
+          echo "MODULE_ID=$moduleId" >> $env:GITHUB_OUTPUT
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "Parsed: Module=$moduleId, Version=$version"
+        } else {
+          Write-Error "Tag format invalide: $tag (attendu: module-{id}-v{x.y.z})"
+          exit 1
+        }
+      shell: pwsh
+
+    - name: Trouver la DLL du module
+      id: find_dll
+      run: |
+        $moduleId = "${{ steps.parse_tag.outputs.MODULE_ID }}"
+        $dllPattern = "OAS.*$moduleId*.dll"
+        $dll = Get-ChildItem -Path "bin/Modules" -Filter $dllPattern -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+
+        if ($dll) {
+          echo "DLL_PATH=$($dll.FullName)" >> $env:GITHUB_OUTPUT
+          echo "DLL_NAME=$($dll.Name)" >> $env:GITHUB_OUTPUT
+          echo "Found DLL: $($dll.FullName)"
+        } else {
+          Write-Error "DLL non trouvée pour le module: $moduleId"
+          Get-ChildItem -Path "bin/Modules" -Filter "*.dll" -ErrorAction SilentlyContinue
+          exit 1
+        }
+      shell: pwsh
+
+    - name: Mettre à jour marketplace.json
+      run: |
+        $moduleId = "${{ steps.parse_tag.outputs.MODULE_ID }}"
+        $version = "${{ steps.parse_tag.outputs.VERSION }}"
+        $dllName = "${{ steps.find_dll.outputs.DLL_NAME }}"
+
+        $jsonPath = "docs/marketplace.json"
+        $manifest = Get-Content $jsonPath -Raw | ConvertFrom-Json
+
+        # Trouver le module
+        $module = $manifest.modules | Where-Object { $_.id -eq $moduleId }
+
+        if ($module) {
+          # Ajouter la version actuelle à l'historique si versions existe
+          if (-not $module.versions) {
+            $module | Add-Member -NotePropertyName "versions" -NotePropertyValue @() -Force
+          }
+
+          # Sauvegarder l'ancienne version dans l'historique
+          $oldVersion = [PSCustomObject]@{
+            version = $module.version
+            minCoreVersion = $module.minCoreVersion
+            maxCoreVersion = $module.maxCoreVersion
+            downloadUrl = $module.downloadUrl
+          }
+          $module.versions = @($oldVersion) + $module.versions
+
+          # Mettre à jour la version principale
+          $module.version = $version
+          $module.downloadUrl = "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/$dllName"
+
+          # Sauvegarder
+          $manifest | ConvertTo-Json -Depth 10 | Set-Content $jsonPath -Encoding UTF8
+          echo "marketplace.json mis à jour pour $moduleId v$version"
+        } else {
+          Write-Warning "Module $moduleId non trouvé dans marketplace.json"
+        }
+      shell: pwsh
+
+    - name: Commit et push marketplace.json
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add docs/marketplace.json
+        git commit -m "chore: update marketplace.json for ${{ steps.parse_tag.outputs.MODULE_ID }} v${{ steps.parse_tag.outputs.VERSION }}" || echo "No changes to commit"
+        git push origin HEAD:main
+      shell: bash
+
+    - name: Créer release module
+      uses: softprops/action-gh-release@v1
+      with:
+        name: "Module ${{ steps.parse_tag.outputs.MODULE_ID }} v${{ steps.parse_tag.outputs.VERSION }}"
+        body: |
+          ## Module ${{ steps.parse_tag.outputs.MODULE_ID }} v${{ steps.parse_tag.outputs.VERSION }}
+
+          ### Installation
+
+          1. Via le gestionnaire de modules (`OAS_MODULES`)
+          2. Ou téléchargez la DLL et placez-la dans le dossier `Modules/`
+
+          ### Notes
+
+          Consultez le CHANGELOG pour les détails des modifications.
+        files: |
+          ${{ steps.find_dll.outputs.DLL_PATH }}

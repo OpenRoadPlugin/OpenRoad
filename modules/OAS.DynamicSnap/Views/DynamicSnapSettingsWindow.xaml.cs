@@ -64,6 +64,7 @@ public partial class DynamicSnapSettingsWindow : Window
 
         PopulateOneColorCombo(MarkerColorCombo, colors);
         PopulateOneColorCombo(ActiveColorCombo, colors);
+        PopulateOneColorCombo(HighlightColorCombo, colors);
     }
 
     /// <summary>
@@ -147,6 +148,17 @@ public partial class DynamicSnapSettingsWindow : Window
         ToleranceSlider.ToolTip = L10n.T("dynamicsnap.settings.tolerance.tooltip");
         MarkerSizeSlider.ToolTip = L10n.T("dynamicsnap.settings.markersize.tooltip");
 
+        // Traductions surbrillance
+        HighlightHeader.Text = L10n.T("dynamicsnap.highlight.header", "Surbrillance des entités");
+        HighlightEnabledCheckBox.Content = L10n.T("dynamicsnap.highlight.enabled", "Activer la surbrillance");
+        HighlightEnabledCheckBox.ToolTip = L10n.T("dynamicsnap.highlight.enabled.tooltip");
+        HighlightColorLabel.Text = L10n.T("dynamicsnap.highlight.color", "Couleur surbrillance :");
+        HighlightColorCombo.ToolTip = L10n.T("dynamicsnap.highlight.color.tooltip");
+        HighlightPrimaryWeightLabel.Text = L10n.T("dynamicsnap.highlight.primaryweight", "Épaisseur principale :");
+        HighlightPrimaryWeightSlider.ToolTip = L10n.T("dynamicsnap.highlight.primaryweight.tooltip");
+        HighlightSecondaryWeightLabel.Text = L10n.T("dynamicsnap.highlight.secondaryweight", "Épaisseur secondaire :");
+        HighlightSecondaryWeightSlider.ToolTip = L10n.T("dynamicsnap.highlight.secondaryweight.tooltip");
+
         ApplyButton.Content = L10n.T("dynamicsnap.settings.apply", "Appliquer");
         CancelButton.Content = L10n.T("dynamicsnap.settings.cancel", "Annuler");
         ResetButton.Content = L10n.T("dynamicsnap.settings.reset", "Réinitialiser");
@@ -182,6 +194,16 @@ public partial class DynamicSnapSettingsWindow : Window
         MarkerSizeSlider.Value = config.MarkerViewRatio;
         UpdateToleranceLabel();
         UpdateMarkerSizeLabel();
+
+        // Charger paramètres surbrillance
+        var hlConfig = DynamicSnapService.HighlightConfiguration;
+        HighlightEnabledCheckBox.IsChecked = hlConfig.Enabled;
+        SelectComboByTag(HighlightColorCombo, hlConfig.HighlightColor);
+        HighlightPrimaryWeightSlider.Value = LineWeightValueToSlider(hlConfig.PrimaryLineWeight);
+        HighlightSecondaryWeightSlider.Value = LineWeightValueToSlider(hlConfig.SecondaryLineWeight);
+        UpdateHighlightPrimaryWeightLabel();
+        UpdateHighlightSecondaryWeightLabel();
+        UpdateHighlightControlsEnabled();
     }
 
     /// <summary>
@@ -269,6 +291,15 @@ public partial class DynamicSnapSettingsWindow : Window
         config.MarkerViewRatio = MarkerSizeSlider.Value;
 
         DynamicSnapService.DefaultConfiguration = config;
+
+        // Appliquer paramètres surbrillance
+        var hlConfig = DynamicSnapService.HighlightConfiguration;
+        hlConfig.Enabled = HighlightEnabledCheckBox.IsChecked == true;
+        hlConfig.HighlightColor = GetComboTag(HighlightColorCombo, 4);
+        hlConfig.PrimaryLineWeight = SliderToLineWeightValue((int)HighlightPrimaryWeightSlider.Value);
+        hlConfig.SecondaryLineWeight = SliderToLineWeightValue((int)HighlightSecondaryWeightSlider.Value);
+        DynamicSnapService.HighlightConfiguration = hlConfig;
+
         DynamicSnapService.SaveSettings();
     }
 
@@ -278,6 +309,7 @@ public partial class DynamicSnapSettingsWindow : Window
     private void ResetToDefaults()
     {
         DynamicSnapService.DefaultConfiguration = new SnapConfiguration();
+        DynamicSnapService.HighlightConfiguration = new HighlightConfiguration();
         LoadSettingsToUI();
     }
 
@@ -295,6 +327,34 @@ public partial class DynamicSnapSettingsWindow : Window
     {
         int lw = SliderToLineWeightValue((int)LineWeightSlider.Value);
         LineWeightValue.Text = $"{lw / 100.0:F2} mm";
+    }
+
+    private void UpdateHighlightPrimaryWeightLabel()
+    {
+        int lw = SliderToLineWeightValue((int)HighlightPrimaryWeightSlider.Value);
+        HighlightPrimaryWeightValue.Text = $"{lw / 100.0:F2} mm";
+    }
+
+    private void UpdateHighlightSecondaryWeightLabel()
+    {
+        int lw = SliderToLineWeightValue((int)HighlightSecondaryWeightSlider.Value);
+        HighlightSecondaryWeightValue.Text = $"{lw / 100.0:F2} mm";
+    }
+
+    /// <summary>
+    /// Active/désactive les contrôles de surbrillance selon l'état de la checkbox
+    /// </summary>
+    private void UpdateHighlightControlsEnabled()
+    {
+        bool enabled = HighlightEnabledCheckBox.IsChecked == true;
+        HighlightColorGrid.IsEnabled = enabled;
+        HighlightPrimaryWeightGrid.IsEnabled = enabled;
+        HighlightSecondaryWeightGrid.IsEnabled = enabled;
+
+        // Opacité visuelle pour les contrôles désactivés
+        HighlightColorGrid.Opacity = enabled ? 1.0 : 0.5;
+        HighlightPrimaryWeightGrid.Opacity = enabled ? 1.0 : 0.5;
+        HighlightSecondaryWeightGrid.Opacity = enabled ? 1.0 : 0.5;
     }
 
     #endregion
@@ -335,6 +395,23 @@ public partial class DynamicSnapSettingsWindow : Window
     {
         if (LineWeightValue != null)
             UpdateLineWeightLabel();
+    }
+
+    private void HighlightEnabledCheckBox_Changed(object sender, RoutedEventArgs e)
+    {
+        UpdateHighlightControlsEnabled();
+    }
+
+    private void HighlightPrimaryWeightSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (HighlightPrimaryWeightValue != null)
+            UpdateHighlightPrimaryWeightLabel();
+    }
+
+    private void HighlightSecondaryWeightSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (HighlightSecondaryWeightValue != null)
+            UpdateHighlightSecondaryWeightLabel();
     }
 
     #endregion

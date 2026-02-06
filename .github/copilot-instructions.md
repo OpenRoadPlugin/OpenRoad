@@ -264,6 +264,7 @@ public class MonModuleModule : ModuleBase
     public override string? IconPath => null;           // pack://...
     public override IReadOnlyList<string> Dependencies => Array.Empty<string>();
     public override string MinCoreVersion => "1.0.0";
+    public override string? MaxCoreVersion => null;   // null = pas de limite haute
     
     // ═══════════════════════════════════════════════════════════
     // COMMANDES DU MODULE
@@ -445,6 +446,7 @@ public abstract class ModuleBase : IModule
     public virtual string? NameKey => null;                       // Clé traduction nom
     public virtual IReadOnlyList<string> Dependencies => [];      // Modules requis
     public virtual string MinCoreVersion => "1.0.0";              // Version Core min
+    public virtual string? MaxCoreVersion => null;                // Version Core max (null = illimité)
     public bool IsInitialized { get; }                            // État init
     
     // ═══════════════════════════════════════════════════════════
@@ -863,7 +865,7 @@ refactor: [description]        # Refactoring
 │  ─────────────────────────────────────────────────────────────  │
 │  Id, Name, Description, Version, Author                         │
 │  Order, IconPath, NameKey, Dependencies, MinCoreVersion         │
-│  Initialize(), Shutdown(), Dispose()                            │
+│  MaxCoreVersion, Initialize(), Shutdown(), Dispose()            │
 │  GetCommandTypes(), GetTranslations()                           │
 └─────────────────────────────────────────────────────────────────┘
                               ▲

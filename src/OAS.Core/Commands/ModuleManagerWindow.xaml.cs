@@ -24,8 +24,24 @@ using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using Button = System.Windows.Controls.Button;
 using Color = System.Windows.Media.Color;
+using System.Reflection;
 
 namespace OpenAsphalte.Commands;
+
+/// <summary>
+/// Statut de compatibilité d'un module avec le Core installé
+/// </summary>
+public enum ModuleCompatibilityStatus
+{
+    /// <summary>Module compatible avec le Core actuel</summary>
+    Compatible,
+    /// <summary>Core trop ancien pour ce module</summary>
+    CoreTooOld,
+    /// <summary>Core trop récent pour ce module</summary>
+    CoreTooNew,
+    /// <summary>Module incompatible mais une version antérieure est compatible</summary>
+    OlderVersionAvailable
+}
 
 /// <summary>
 /// Fenêtre de gestion des modules Open Asphalte.
@@ -106,6 +122,8 @@ public partial class ModuleManagerWindow : Window
             }
 
             // Construire la liste des modules
+            var coreVersion = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 0);
+
             foreach (var moduleDef in _manifest.Modules)
             {
                 var installedModule = ModuleDiscovery.Modules
@@ -128,6 +146,12 @@ public partial class ModuleManagerWindow : Window
                     IsInstalled = isInstalled,
                     HasUpdate = hasUpdate,
                 };
+
+                // Vérifier la compatibilité
+                var (status, reason, alternative) = CheckModuleCompatibility(moduleDef, coreVersion);
+                vm.CompatibilityStatus = status;
+                vm.CompatibilityReason = reason;
+                vm.AlternativeVersion = alternative;
 
                 vm.UpdateDisplay();
                 _allModules.Add(vm);
@@ -592,6 +616,139 @@ public partial class ModuleManagerWindow : Window
         }
     }
 
+    /// <summary>
+    /// Vérifie la compatibilité d'un module avec le Core actuel
+    /// </summary>
+    private (ModuleCompatibilityStatus status, string reason, ModuleVersionInfo? alternative)
+        CheckModuleCompatibility(ModuleDefinition moduleDef, Version coreVersion)
+    {
+        // Vérifier la version principale
+        bool isLatestCompatible = IsVersionCompatible(moduleDef.MinCoreVersion, moduleDef.MaxCoreVersion, coreVersion);
+
+        if (isLatestCompatible)
+        {
+            return (ModuleCompatibilityStatus.Compatible, "", null);
+        }
+
+        // La version principale n'est pas compatible - chercher une alternative
+        ModuleVersionInfo? alternativeVersion = null;
+
+        if (moduleDef.PreviousVersions != null && moduleDef.PreviousVersions.Count > 0)
+        {
+            alternativeVersion = moduleDef.PreviousVersions
+                .Where(v => IsVersionCompatible(v.MinCoreVersion, v.MaxCoreVersion, coreVersion))
+                .OrderByDescending(v =>
+                {
+                    Version.TryParse(v.Version, out var ver);
+                    return ver;
+                })
+                .FirstOrDefault();
+        }
+
+        // Déterminer le type d'incompatibilité
+        ModuleCompatibilityStatus status;
+        string reason;
+
+        if (Version.TryParse(moduleDef.MinCoreVersion, out var minCore) && coreVersion < minCore)
+        {
+            status = alternativeVersion != null ? ModuleCompatibilityStatus.OlderVersionAvailable : ModuleCompatibilityStatus.CoreTooOld;
+            reason = L10n.TFormat("modules.compatibility.coreTooOld", "Nécessite Core {0}+", moduleDef.MinCoreVersion);
+        }
+        else if (!string.IsNullOrEmpty(moduleDef.MaxCoreVersion) &&
+                 Version.TryParse(moduleDef.MaxCoreVersion, out var maxCore) && coreVersion > maxCore)
+        {
+            status = alternativeVersion != null ? ModuleCompatibilityStatus.OlderVersionAvailable : ModuleCompatibilityStatus.CoreTooNew;
+            reason = L10n.TFormat("modules.compatibility.coreTooNew", "Incompatible Core > {0}", moduleDef.MaxCoreVersion);
+        }
+        else
+        {
+            status = ModuleCompatibilityStatus.Compatible;
+            reason = "";
+        }
+
+        return (status, reason, alternativeVersion);
+    }
+
+    private bool IsVersionCompatible(string? minCoreVersion, string? maxCoreVersion, Version coreVersion)
+    {
+        // Vérifier MinCoreVersion
+        if (!string.IsNullOrEmpty(minCoreVersion) && Version.TryParse(minCoreVersion, out var minCore))
+        {
+            if (coreVersion < minCore) return false;
+        }
+
+        // Vérifier MaxCoreVersion
+        if (!string.IsNullOrEmpty(maxCoreVersion) && Version.TryParse(maxCoreVersion, out var maxCore))
+        {
+            if (coreVersion > maxCore) return false;
+        }
+
+        return true;
+    }
+
+    private async void OnInstallAlternativeClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn || btn.Tag is not ModuleViewModel module)
+            return;
+
+        if (module.AlternativeVersion == null)
+            return;
+
+        try
+        {
+            btn.IsEnabled = false;
+
+            // Créer une copie de la définition avec la version alternative
+            var altDef = new ModuleDefinition
+            {
+                Id = module.Definition.Id,
+                Name = module.Definition.Name,
+                Description = module.Definition.Description,
+                Author = module.Definition.Author,
+                Version = module.AlternativeVersion.Version,
+                MinCoreVersion = module.AlternativeVersion.MinCoreVersion,
+                MaxCoreVersion = module.AlternativeVersion.MaxCoreVersion,
+                DownloadUrl = module.AlternativeVersion.DownloadUrl,
+                Dependencies = module.Definition.Dependencies,
+                IsCustomSource = module.Definition.IsCustomSource
+            };
+
+            SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0} v{1}...", module.Name, altDef.Version));
+            await UpdateService.InstallModuleAsync(altDef);
+
+            // Succès
+            module.IsInstalled = true;
+            module.LocalVersion = altDef.Version;
+            module.CompatibilityStatus = ModuleCompatibilityStatus.Compatible;
+            module.UpdateDisplay();
+
+            ApplyFilter();
+
+            Logger.Success(L10n.TFormat("modules.manager.installed", "Module {0} v{1} installé avec succès", module.Name, altDef.Version));
+
+            MessageBox.Show(
+                L10n.TFormat("modules.manager.restartRequired",
+                    "Le module {0} v{1} a été installé.\n\nRedémarrez AutoCAD pour l'activer.", module.Name, altDef.Version),
+                L10n.T("modules.manager.installSuccess", "Installation réussie"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Alternative install error: {ex}");
+            MessageBox.Show(
+                L10n.TFormat("modules.manager.installError", "Erreur lors de l'installation: {0}", ex.Message),
+                L10n.T("cmd.error", "Erreur"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            btn.IsEnabled = true;
+            SetLoadingState(false);
+        }
+    }
+
     private void OnCloseClick(object sender, RoutedEventArgs e)
     {
         Close();
@@ -648,6 +805,13 @@ public class ModuleViewModel
     public bool IsInstalled { get; set; }
     public bool HasUpdate { get; set; }
 
+    // Compatibilité
+    public ModuleCompatibilityStatus CompatibilityStatus { get; set; } = ModuleCompatibilityStatus.Compatible;
+    public string CompatibilityReason { get; set; } = "";
+    public ModuleVersionInfo? AlternativeVersion { get; set; }
+    public bool IsCompatible => CompatibilityStatus == ModuleCompatibilityStatus.Compatible;
+    public bool HasAlternative => AlternativeVersion != null;
+
     // Propriétés calculées pour l'affichage
     public string VersionDisplay { get; set; } = "";
     public string StatusIcon { get; set; } = "";
@@ -661,11 +825,45 @@ public class ModuleViewModel
     public string DependenciesText { get; set; } = "";
     public Visibility HasDependenciesVisibility { get; set; } = Visibility.Collapsed;
 
+    // Compatibilité UI
+    public Visibility CompatibilityWarningVisibility { get; set; } = Visibility.Collapsed;
+    public Visibility AlternativeButtonVisibility { get; set; } = Visibility.Collapsed;
+    public string AlternativeButtonText { get; set; } = "";
+    public double ModuleOpacity { get; set; } = 1.0;
+
     /// <summary>
     /// Met à jour les propriétés d'affichage selon l'état
     /// </summary>
     public void UpdateDisplay()
     {
+        // Gestion de la compatibilité
+        if (!IsCompatible)
+        {
+            ModuleOpacity = 0.6;
+            CompatibilityWarningVisibility = Visibility.Visible;
+
+            if (HasAlternative)
+            {
+                AlternativeButtonVisibility = Visibility.Visible;
+                AlternativeButtonText = L10n.TFormat("modules.install.alternative", "Installer v{0}", AlternativeVersion!.Version);
+            }
+
+            // Version display avec avertissement
+            VersionDisplay = $"v{RemoteVersion} ⚠️";
+            StatusIcon = "⚠";
+            StatusBackground = CreateFrozenBrush(158, 158, 158); // Gris
+            ActionText = CompatibilityReason;
+            CanPerformAction = false;
+            ActionBackground = CreateFrozenBrush(200, 200, 200);
+            ActionForeground = Brushes.Gray;
+            return;
+        }
+
+        // Reset si compatible
+        ModuleOpacity = 1.0;
+        CompatibilityWarningVisibility = Visibility.Collapsed;
+        AlternativeButtonVisibility = Visibility.Collapsed;
+
         // Afficher les dépendances
         if (Definition.Dependencies != null && Definition.Dependencies.Count > 0)
         {

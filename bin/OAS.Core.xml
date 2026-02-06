@@ -352,6 +352,12 @@
             Version minimale du Core requise (format semver)
             </summary>
         </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.MaxCoreVersion">
+            <summary>
+            Version maximale du Core supportée (format semver)
+            Null si aucune limite haute (compatible avec toutes les versions futures)
+            </summary>
+        </member>
         <member name="P:OpenAsphalte.Abstractions.IModule.Contributors">
             <summary>
             Liste des contributeurs ayant participé au développement du module.
@@ -441,6 +447,9 @@
             <inheritdoc />
         </member>
         <member name="P:OpenAsphalte.Abstractions.ModuleBase.MinCoreVersion">
+            <inheritdoc />
+        </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.MaxCoreVersion">
             <inheritdoc />
         </member>
         <member name="P:OpenAsphalte.Abstractions.ModuleBase.Contributors">
@@ -550,6 +559,23 @@
             Translated name using NameKey if available, otherwise falls back to Name
             </summary>
         </member>
+        <member name="T:OpenAsphalte.Commands.ModuleCompatibilityStatus">
+            <summary>
+            Statut de compatibilité d'un module avec le Core installé
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Commands.ModuleCompatibilityStatus.Compatible">
+            <summary>Module compatible avec le Core actuel</summary>
+        </member>
+        <member name="F:OpenAsphalte.Commands.ModuleCompatibilityStatus.CoreTooOld">
+            <summary>Core trop ancien pour ce module</summary>
+        </member>
+        <member name="F:OpenAsphalte.Commands.ModuleCompatibilityStatus.CoreTooNew">
+            <summary>Core trop récent pour ce module</summary>
+        </member>
+        <member name="F:OpenAsphalte.Commands.ModuleCompatibilityStatus.OlderVersionAvailable">
+            <summary>Module incompatible mais une version antérieure est compatible</summary>
+        </member>
         <member name="T:OpenAsphalte.Commands.ModuleManagerWindow">
             <summary>
             Fenêtre de gestion des modules Open Asphalte.
@@ -612,6 +638,11 @@
         <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.OnInstallCategoryClick(System.Object,System.Windows.RoutedEventArgs)">
             <summary>
             Installe tous les modules d'une catégorie
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.CheckModuleCompatibility(OpenAsphalte.Services.ModuleDefinition,System.Version)">
+            <summary>
+            Vérifie la compatibilité d'un module avec le Core actuel
             </summary>
         </member>
         <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.InitializeComponent">
@@ -1119,6 +1150,21 @@
         <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.ResolveDependencies">
             <summary>
             Resout les dependances entre modules
+            </summary>
+        </member>
+        <member name="T:OpenAsphalte.Discovery.ModuleDiscovery.CoreCompatibilityResult">
+            <summary>
+            Résultat de la vérification de compatibilité Core
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.CoreCompatibilityResult.#ctor(System.Boolean,System.String)">
+            <summary>
+            Résultat de la vérification de compatibilité Core
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.CheckCoreVersionCompatibility(OpenAsphalte.Discovery.ModuleDescriptor)">
+            <summary>
+            Vérifie la compatibilité de version du Core pour un module (min et max)
             </summary>
         </member>
         <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.IsCoreVersionCompatible(OpenAsphalte.Discovery.ModuleDescriptor)">

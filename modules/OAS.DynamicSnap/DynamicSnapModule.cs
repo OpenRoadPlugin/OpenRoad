@@ -59,7 +59,7 @@ public class DynamicSnapModule : ModuleBase
     /// Description du module
     /// </summary>
     public override string Description =>
-        "Système d'accrochage objet intelligent avec marqueurs visuels pour les modules Open Asphalte";
+        "Système d'accrochage objet intelligent avec marqueurs visuels et surbrillance d'entités pour les modules Open Asphalte";
 
     /// <summary>
     /// Contributeurs du module
@@ -73,7 +73,7 @@ public class DynamicSnapModule : ModuleBase
     /// <summary>
     /// Version du module
     /// </summary>
-    public override string Version => "0.0.1";
+    public override string Version => "0.0.2";
 
     /// <summary>
     /// Auteur du module
@@ -218,6 +218,17 @@ public class DynamicSnapModule : ModuleBase
                 ["dynamicsnap.settings.reset.tooltip"] = "Réinitialiser tous les paramètres aux valeurs par défaut",
                 ["dynamicsnap.settings.saved"] = "Paramètres d'accrochage sauvegardés",
 
+                // Surbrillance des entités
+                ["dynamicsnap.highlight.header"] = "Surbrillance des entités",
+                ["dynamicsnap.highlight.enabled"] = "Activer la surbrillance",
+                ["dynamicsnap.highlight.enabled.tooltip"] = "Met en surbrillance les entités sélectionnées pendant les commandes OAS",
+                ["dynamicsnap.highlight.color"] = "Couleur surbrillance :",
+                ["dynamicsnap.highlight.color.tooltip"] = "Couleur utilisée pour la surbrillance des entités sélectionnées",
+                ["dynamicsnap.highlight.primaryweight"] = "Épaisseur principale :",
+                ["dynamicsnap.highlight.primaryweight.tooltip"] = "Épaisseur de trait de l'entité active (trait continu)",
+                ["dynamicsnap.highlight.secondaryweight"] = "Épaisseur secondaire :",
+                ["dynamicsnap.highlight.secondaryweight.tooltip"] = "Épaisseur de trait des entités en arrière-plan (trait pointillé)",
+
                 // Couleurs
                 ["dynamicsnap.color.rouge"] = "Rouge",
                 ["dynamicsnap.color.jaune"] = "Jaune",
@@ -297,6 +308,17 @@ public class DynamicSnapModule : ModuleBase
                 ["dynamicsnap.settings.reset.tooltip"] = "Reset all settings to default values",
                 ["dynamicsnap.settings.saved"] = "Snap settings saved",
 
+                // Entity highlighting
+                ["dynamicsnap.highlight.header"] = "Entity highlighting",
+                ["dynamicsnap.highlight.enabled"] = "Enable highlighting",
+                ["dynamicsnap.highlight.enabled.tooltip"] = "Highlights selected entities during OAS commands",
+                ["dynamicsnap.highlight.color"] = "Highlight color:",
+                ["dynamicsnap.highlight.color.tooltip"] = "Color used to highlight selected entities",
+                ["dynamicsnap.highlight.primaryweight"] = "Primary weight:",
+                ["dynamicsnap.highlight.primaryweight.tooltip"] = "Line weight of the active entity (solid line)",
+                ["dynamicsnap.highlight.secondaryweight"] = "Secondary weight:",
+                ["dynamicsnap.highlight.secondaryweight.tooltip"] = "Line weight of background entities (dashed line)",
+
                 // Colors
                 ["dynamicsnap.color.rouge"] = "Red",
                 ["dynamicsnap.color.jaune"] = "Yellow",
@@ -375,6 +397,17 @@ public class DynamicSnapModule : ModuleBase
                 ["dynamicsnap.settings.reset"] = "Restablecer",
                 ["dynamicsnap.settings.reset.tooltip"] = "Restablecer todos los parámetros a los valores predeterminados",
                 ["dynamicsnap.settings.saved"] = "Configuración de enganche guardada",
+
+                // Resaltado de entidades
+                ["dynamicsnap.highlight.header"] = "Resaltado de entidades",
+                ["dynamicsnap.highlight.enabled"] = "Activar resaltado",
+                ["dynamicsnap.highlight.enabled.tooltip"] = "Resalta las entidades seleccionadas durante los comandos OAS",
+                ["dynamicsnap.highlight.color"] = "Color de resaltado:",
+                ["dynamicsnap.highlight.color.tooltip"] = "Color utilizado para resaltar las entidades seleccionadas",
+                ["dynamicsnap.highlight.primaryweight"] = "Grosor principal:",
+                ["dynamicsnap.highlight.primaryweight.tooltip"] = "Grosor de línea de la entidad activa (línea continua)",
+                ["dynamicsnap.highlight.secondaryweight"] = "Grosor secundario:",
+                ["dynamicsnap.highlight.secondaryweight.tooltip"] = "Grosor de línea de las entidades de fondo (línea discontinua)",
 
                 // Colores
                 ["dynamicsnap.color.rouge"] = "Rojo",

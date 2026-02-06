@@ -367,8 +367,19 @@ public static class UpdateService
                 var bestVersion = candidates
                     .Where(v =>
                     {
-                        if (!Version.TryParse(v.MinCoreVersion, out var minCore)) return true; // Si pas specifie, on suppose compatible
-                        return minCore <= coreVersion;
+                        // Vérifier MinCoreVersion
+                        if (Version.TryParse(v.MinCoreVersion, out var minCore))
+                        {
+                            if (minCore > coreVersion) return false;
+                        }
+
+                        // Vérifier MaxCoreVersion (si définie)
+                        if (!string.IsNullOrEmpty(v.MaxCoreVersion) && Version.TryParse(v.MaxCoreVersion, out var maxCore))
+                        {
+                            if (maxCore < coreVersion) return false;
+                        }
+
+                        return true;
                     })
                     .OrderByDescending(v =>
                     {
@@ -775,6 +786,9 @@ public class ModuleDefinition
     [JsonPropertyName("minCoreVersion")]
     public string MinCoreVersion { get; set; } = "";
 
+    [JsonPropertyName("maxCoreVersion")]
+    public string? MaxCoreVersion { get; set; }
+
     [JsonPropertyName("downloadUrl")]
     public string DownloadUrl { get; set; } = "";
 
@@ -797,6 +811,9 @@ public class ModuleVersionInfo
 
     [JsonPropertyName("minCoreVersion")]
     public string MinCoreVersion { get; set; } = "";
+
+    [JsonPropertyName("maxCoreVersion")]
+    public string? MaxCoreVersion { get; set; }
 
     [JsonPropertyName("downloadUrl")]
     public string DownloadUrl { get; set; } = "";

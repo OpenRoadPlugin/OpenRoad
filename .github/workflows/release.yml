@@ -89,6 +89,30 @@ jobs:
         }
       shell: pwsh
 
+    - name: Mettre a jour marketplace.json
+      run: |
+        $version = "${{ steps.get_version.outputs.VERSION }}"
+        $jsonPath = "docs/marketplace.json"
+
+        if (Test-Path $jsonPath) {
+          $manifest = Get-Content $jsonPath -Raw | ConvertFrom-Json
+          $manifest.core.latest = $version
+          $manifest.core.downloadUrl = "https://github.com/OpenAsphaltePlugin/OpenAsphalte/releases/latest/download/OpenAsphalte_Setup_v$version.exe"
+          $manifest.core.releaseDate = (Get-Date -Format "yyyy-MM-dd")
+          $manifest | ConvertTo-Json -Depth 10 | Set-Content $jsonPath -Encoding UTF8
+          echo "marketplace.json updated with Core version $version"
+        }
+      shell: pwsh
+
+    - name: Commit marketplace.json
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add docs/marketplace.json
+        git commit -m "chore: update marketplace.json for Core v${{ steps.get_version.outputs.VERSION }}" || echo "No changes"
+        git push origin HEAD:main || echo "Push may require different branch strategy"
+      shell: bash
+
     - name: Creer la release GitHub
       uses: softprops/action-gh-release@v1
       with:

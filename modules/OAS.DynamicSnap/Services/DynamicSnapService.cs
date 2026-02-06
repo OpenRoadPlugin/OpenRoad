@@ -38,6 +38,12 @@ public static class DynamicSnapService
     private const string ConfigKeyFilledMarkers = "dynamicsnap.filledMarkers";
     private const string ConfigKeyMarkerLineWeight = "dynamicsnap.markerLineWeight";
 
+    // Clés de configuration pour la surbrillance
+    private const string ConfigKeyHighlightEnabled = "dynamicsnap.highlight.enabled";
+    private const string ConfigKeyHighlightColor = "dynamicsnap.highlight.color";
+    private const string ConfigKeyHighlightPrimaryWeight = "dynamicsnap.highlight.primaryWeight";
+    private const string ConfigKeyHighlightSecondaryWeight = "dynamicsnap.highlight.secondaryWeight";
+
     #endregion
 
     #region Fields
@@ -58,6 +64,16 @@ public static class DynamicSnapService
     /// Chargée depuis les paramètres globaux (config.json).
     /// </summary>
     public static SnapConfiguration DefaultConfiguration { get; set; } = new();
+
+    /// <summary>
+    /// Configuration de surbrillance des entités.
+    /// Chargée depuis les paramètres globaux (config.json).
+    /// </summary>
+    public static HighlightConfiguration HighlightConfiguration
+    {
+        get => EntityHighlightService.Configuration;
+        set => EntityHighlightService.Configuration = value;
+    }
 
     #endregion
 
@@ -82,6 +98,7 @@ public static class DynamicSnapService
     public static void Shutdown()
     {
         MarkerRenderer.ClearAllMarkers();
+        EntityHighlightService.ClearHighlight();
         _isInitialized = false;
         Logger.Debug(L10n.T("dynamicsnap.shutdown", "[DynamicSnap] Service arrêté"));
     }
@@ -113,6 +130,16 @@ public static class DynamicSnapService
             ConfigKeyMarkerLineWeight, 30);
 
         DefaultConfiguration = config;
+
+        // Charger la configuration de surbrillance
+        var hlConfig = new HighlightConfiguration
+        {
+            Enabled = Config.Get<bool>(ConfigKeyHighlightEnabled, true),
+            HighlightColor = (short)Config.Get<int>(ConfigKeyHighlightColor, 4), // Cyan
+            PrimaryLineWeight = Config.Get<int>(ConfigKeyHighlightPrimaryWeight, 50),
+            SecondaryLineWeight = Config.Get<int>(ConfigKeyHighlightSecondaryWeight, 20),
+        };
+        HighlightConfiguration = hlConfig;
     }
 
     /// <summary>
@@ -129,6 +156,13 @@ public static class DynamicSnapService
         Config.Set(ConfigKeyMarkerSizeRatio, config.MarkerViewRatio);
         Config.Set(ConfigKeyFilledMarkers, config.FilledMarkers);
         Config.Set(ConfigKeyMarkerLineWeight, config.MarkerLineWeight);
+
+        // Sauvegarder la configuration de surbrillance
+        var hlConfig = HighlightConfiguration;
+        Config.Set(ConfigKeyHighlightEnabled, hlConfig.Enabled);
+        Config.Set(ConfigKeyHighlightColor, (int)hlConfig.HighlightColor);
+        Config.Set(ConfigKeyHighlightPrimaryWeight, hlConfig.PrimaryLineWeight);
+        Config.Set(ConfigKeyHighlightSecondaryWeight, hlConfig.SecondaryLineWeight);
 
         Config.Save();
     }
