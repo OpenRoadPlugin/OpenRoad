@@ -55,6 +55,7 @@ ehthumbs.db
 *~
 *.cache
 msbuild.binlog
+*.binlog
 
 # ------------------------------------------------------------
 #  AutoCAD

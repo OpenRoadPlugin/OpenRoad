@@ -2585,5 +2585,68 @@
             Événement requis par ICommand (non utilisé car CanExecute retourne toujours true)
             </summary>
         </member>
+        <member name="T:OpenAsphalte.UI.WindowStateHelper">
+            <summary>
+            Helper statique pour gérer la persistance de taille et position des fenêtres.
+            Mémorise l'état entre les sessions et vérifie que la fenêtre reste visible à l'écran.
+            </summary>
+            <remarks>
+            Utilisation dans une fenêtre :
+            <code>
+            public MyWindow()
+            {
+                InitializeComponent();
+                WindowStateHelper.RestoreState(this, "mywindow", 800, 600);
+                Closing += (s, e) => WindowStateHelper.SaveState(this, "mywindow");
+            }
+            </code>
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.RestoreState(System.Windows.Window,System.String,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Restaure la taille et la position d'une fenêtre depuis la configuration.
+            Si aucune configuration n'existe ou si la fenêtre serait hors écran,
+            utilise les dimensions par défaut centrées sur l'écran.
+            </summary>
+            <param name="window">Fenêtre à configurer</param>
+            <param name="windowId">Identifiant unique pour stocker les paramètres (ex: "prezorganizer")</param>
+            <param name="defaultWidth">Largeur par défaut si aucune sauvegarde</param>
+            <param name="defaultHeight">Hauteur par défaut si aucune sauvegarde (null = 95% de la hauteur de travail)</param>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.SaveState(System.Windows.Window,System.String)">
+            <summary>
+            Sauvegarde la taille et la position actuelles d'une fenêtre dans la configuration.
+            </summary>
+            <param name="window">Fenêtre à sauvegarder</param>
+            <param name="windowId">Identifiant unique utilisé pour RestoreState</param>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.GetRecommendedHeight">
+            <summary>
+            Calcule la hauteur de fenêtre recommandée (95% de la zone de travail).
+            Utile pour définir la hauteur par défaut d'une fenêtre.
+            </summary>
+            <returns>Hauteur en pixels</returns>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.GetRecommendedWidth(System.Double)">
+            <summary>
+            Calcule la largeur de fenêtre recommandée pour un ratio donné.
+            </summary>
+            <param name="heightRatio">Ratio largeur/hauteur (ex: 0.6 pour une fenêtre plus large que haute)</param>
+            <returns>Largeur en pixels</returns>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.IsRectOnScreen(System.Windows.Rect)">
+            <summary>
+            Vérifie si un rectangle est suffisamment visible sur au moins un écran.
+            </summary>
+            <param name="rect">Rectangle à vérifier</param>
+            <returns>True si au moins MinVisiblePortion pixels sont visibles</returns>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.ResetState(System.String)">
+            <summary>
+            Réinitialise les paramètres de fenêtre sauvegardés pour un identifiant donné.
+            La prochaine ouverture utilisera les valeurs par défaut.
+            </summary>
+            <param name="windowId">Identifiant de la fenêtre</param>
+        </member>
     </members>
 </doc>

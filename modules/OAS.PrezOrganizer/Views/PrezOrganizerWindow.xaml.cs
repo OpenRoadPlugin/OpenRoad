@@ -17,6 +17,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using OpenAsphalte.Logging;
 using OpenAsphalte.Modules.PrezOrganizer.Models;
 using OpenAsphalte.Modules.PrezOrganizer.Services;
+using OpenAsphalte.UI;
 using L10n = OpenAsphalte.Localization.Localization;
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
@@ -39,7 +40,6 @@ public partial class PrezOrganizerWindow : Window
     private Point _dragStartPoint;
     private bool _isDragging;
     private string _filterText = string.Empty;
-    private bool _isImmediateMode = false;
 
     // ═══════════════════════════════════════════════════════════
     // PROPRIÉTÉS PUBLIQUES (accessibles par la commande)
@@ -67,6 +67,10 @@ public partial class PrezOrganizerWindow : Window
         _originalItems = layouts.Select(l => l.Clone()).ToList();
         _items = layouts;
 
+        // Restaurer la taille/position de la fenêtre
+        WindowStateHelper.RestoreState(this, "prezorganizer", 780);
+        Closing += (s, e) => WindowStateHelper.SaveState(this, "prezorganizer");
+
         ApplyTranslations();
         RefreshList();
         UpdateStatusBar();
@@ -83,8 +87,6 @@ public partial class PrezOrganizerWindow : Window
     {
         Title = T("prezorganizer.window.title");
         WindowHeader.Text = T("prezorganizer.window.header");
-        ImmediateCheckBox.Content = T("prezorganizer.window.immediate");
-        ImmediateCheckBox.ToolTip = T("prezorganizer.window.immediate.tooltip");
 
         // Boutons toolbar
         BtnMoveTop.ToolTip = T("prezorganizer.btn.moveTop");
@@ -98,9 +100,8 @@ public partial class PrezOrganizerWindow : Window
         BtnAdd.ToolTip = T("prezorganizer.btn.add");
         BtnDelete.ToolTip = T("prezorganizer.btn.delete");
         BtnFindReplace.ToolTip = T("prezorganizer.btn.findReplace");
-        BtnPrefixSuffix.ToolTip = T("prezorganizer.btn.prefixSuffix");
+        BtnRenameTool.ToolTip = T("prezorganizer.btn.renameTool");
         BtnCase.ToolTip = T("prezorganizer.btn.case");
-        BtnBatchRename.ToolTip = T("prezorganizer.btn.batchRename");
 
         // Menu de tri
         SortAlphaAsc.Header = T("prezorganizer.sort.alpha");
@@ -431,18 +432,6 @@ public partial class PrezOrganizerWindow : Window
 
     private static string T(string key, string? defaultValue = null) => L10n.T(key, defaultValue ?? key);
 
-    /// <summary>
-    /// Appelé après chaque modification de la liste des items.
-    /// Gère l'application immédiate si le mode est activé.
-    /// </summary>
-    private void OnItemsModified()
-    {
-        if (_isImmediateMode)
-        {
-            ApplyChangesImmediate();
-        }
-    }
-
     // ═══════════════════════════════════════════════════════════
     // EVENT HANDLERS — DÉPLACEMENT
     // ═══════════════════════════════════════════════════════════
@@ -455,7 +444,7 @@ public partial class PrezOrganizerWindow : Window
         var newIndices = LayoutService.MoveToTop(_items, indices);
         RefreshList();
         SetSelection(newIndices);
-        OnItemsModified();
+
     }
 
     private void BtnMoveUp_Click(object sender, RoutedEventArgs e)
@@ -466,7 +455,7 @@ public partial class PrezOrganizerWindow : Window
         var newIndices = LayoutService.MoveUp(_items, indices);
         RefreshList();
         SetSelection(newIndices);
-        OnItemsModified();
+
     }
 
     private void BtnMoveDown_Click(object sender, RoutedEventArgs e)
@@ -477,7 +466,7 @@ public partial class PrezOrganizerWindow : Window
         var newIndices = LayoutService.MoveDown(_items, indices);
         RefreshList();
         SetSelection(newIndices);
-        OnItemsModified();
+
     }
 
     private void BtnMoveBottom_Click(object sender, RoutedEventArgs e)
@@ -488,7 +477,7 @@ public partial class PrezOrganizerWindow : Window
         var newIndices = LayoutService.MoveToBottom(_items, indices);
         RefreshList();
         SetSelection(newIndices);
-        OnItemsModified();
+
     }
 
     private void BtnReverse_Click(object sender, RoutedEventArgs e)
@@ -499,7 +488,7 @@ public partial class PrezOrganizerWindow : Window
         LayoutService.ReverseSelected(_items, indices);
         RefreshList();
         SetSelection(indices);
-        OnItemsModified();
+
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -516,7 +505,7 @@ public partial class PrezOrganizerWindow : Window
         PushUndo();
         LayoutService.SortAlphabetical(_items, ascending: true);
         RefreshList();
-        OnItemsModified();
+
     }
 
     private void SortAlphaDesc_Click(object sender, RoutedEventArgs e)
@@ -524,7 +513,7 @@ public partial class PrezOrganizerWindow : Window
         PushUndo();
         LayoutService.SortAlphabetical(_items, ascending: false);
         RefreshList();
-        OnItemsModified();
+
     }
 
     private void SortNumAsc_Click(object sender, RoutedEventArgs e)
@@ -532,7 +521,7 @@ public partial class PrezOrganizerWindow : Window
         PushUndo();
         LayoutService.SortNumerical(_items, ascending: true);
         RefreshList();
-        OnItemsModified();
+
     }
 
     private void SortNumDesc_Click(object sender, RoutedEventArgs e)
@@ -547,7 +536,7 @@ public partial class PrezOrganizerWindow : Window
         PushUndo();
         LayoutService.SortArchitectural(_items, ascending: true);
         RefreshList();
-        OnItemsModified();
+
     }
 
     private void SortArchDesc_Click(object sender, RoutedEventArgs e)
@@ -555,7 +544,7 @@ public partial class PrezOrganizerWindow : Window
         PushUndo();
         LayoutService.SortArchitectural(_items, ascending: false);
         RefreshList();
-        OnItemsModified();
+
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -595,7 +584,7 @@ public partial class PrezOrganizerWindow : Window
         PushUndo();
         item.CurrentName = newName;
         RefreshList();
-        OnItemsModified();
+
     }
 
     private void BtnCopy_Click(object sender, RoutedEventArgs e)
@@ -620,7 +609,7 @@ public partial class PrezOrganizerWindow : Window
         }
 
         RefreshList();
-        OnItemsModified();
+
     }
 
     private void BtnAdd_Click(object sender, RoutedEventArgs e)
@@ -648,7 +637,7 @@ public partial class PrezOrganizerWindow : Window
         PushUndo();
         _items.Add(new LayoutItem(newName, isNew: true));
         RefreshList();
-        OnItemsModified();
+
     }
 
     private void BtnDelete_Click(object sender, RoutedEventArgs e)
@@ -689,7 +678,7 @@ public partial class PrezOrganizerWindow : Window
         }
 
         RefreshList();
-        OnItemsModified();
+
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -710,26 +699,20 @@ public partial class PrezOrganizerWindow : Window
                 _items[i].CurrentName = dialog.ResultItems[i].CurrentName;
             }
             RefreshList();
-            OnItemsModified();
+
         }
     }
 
-    private void BtnPrefixSuffix_Click(object sender, RoutedEventArgs e)
+    private void BtnRenameTool_Click(object sender, RoutedEventArgs e)
     {
         var selectedItems = GetSelectedItems();
-        var dialog = new PrefixSuffixDialog(_items, selectedItems);
+        var dialog = new RenameToolDialog(_items, selectedItems);
         var result = dialog.ShowDialog();
-        if (result == true)
+        if (result == true && dialog.HasChanges)
         {
             PushUndo();
-            // Appliquer les résultats
-            var targets = dialog.ApplyToAll ? _items : selectedItems;
-            LayoutService.ApplyPrefixSuffix(
-                targets.Where(i => !i.IsMarkedForDeletion),
-                dialog.Prefix,
-                dialog.Suffix);
+            // Les modifications ont été appliquées aux items via le dialogue
             RefreshList();
-            OnItemsModified();
         }
     }
 
@@ -765,25 +748,7 @@ public partial class PrezOrganizerWindow : Window
         PushUndo();
         LayoutService.ApplyCase(selectedItems, caseType);
         RefreshList();
-        OnItemsModified();
-    }
 
-    private void BtnBatchRename_Click(object sender, RoutedEventArgs e)
-    {
-        var selectedItems = GetSelectedItems();
-        var dialog = new BatchRenameDialog(_items, selectedItems);
-        var result = dialog.ShowDialog();
-        if (result == true)
-        {
-            PushUndo();
-            // Appliquer le batch rename
-            var targets = dialog.ApplyToAll
-                ? _items.Where(i => !i.IsMarkedForDeletion).ToList()
-                : selectedItems.Where(i => !i.IsMarkedForDeletion).ToList();
-            LayoutService.BatchRename(targets, dialog.Pattern, dialog.StartNumber, dialog.Increment);
-            RefreshList();
-            OnItemsModified();
-        }
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -891,7 +856,7 @@ public partial class PrezOrganizerWindow : Window
         _items.Insert(targetIndex, droppedItem);
         RefreshList();
         SetSelection([targetIndex]);
-        OnItemsModified();
+
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -936,92 +901,5 @@ public partial class PrezOrganizerWindow : Window
     {
         DialogResult = true;
         Close();
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // MODE APPLIQUER IMMÉDIATEMENT
-    // ═══════════════════════════════════════════════════════════
-
-    private void ImmediateCheckBox_Changed(object sender, RoutedEventArgs e)
-    {
-        _isImmediateMode = ImmediateCheckBox.IsChecked == true;
-
-        // Masquer/afficher le bouton Appliquer selon le mode
-        BtnApply.Visibility = _isImmediateMode ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
-
-        // Si on active le mode et qu'il y a des changements en attente, les appliquer
-        if (_isImmediateMode && HasChanges)
-        {
-            ApplyChangesImmediate();
-        }
-    }
-
-    /// <summary>
-    /// Applique les modifications directement dans AutoCAD (mode immédiat).
-    /// </summary>
-    private void ApplyChangesImmediate()
-    {
-        if (!HasChanges) return;
-
-        try
-        {
-            var doc = AcadApp.DocumentManager.MdiActiveDocument;
-            if (doc == null) return;
-
-            using (doc.LockDocument())
-            using (var tr = _database.TransactionManager.StartTransaction())
-            {
-                int changeCount = LayoutService.ApplyChanges(_database, tr, _items);
-                tr.Commit();
-
-                if (changeCount > 0)
-                {
-                    Logger.Debug($"[PrezOrganizer] Mode immédiat: {changeCount} modification(s) appliquée(s)");
-                }
-            }
-
-            // Recharger les présentations depuis AutoCAD pour synchroniser
-            ReloadFromAutoCAD();
-        }
-        catch (System.Exception ex)
-        {
-            Logger.Warning($"[PrezOrganizer] Erreur application immédiate: {ex.Message}");
-            MessageBox.Show(
-                T("prezorganizer.error.applyFailed") + "\n" + ex.Message,
-                T("prezorganizer.window.title"),
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
-        }
-    }
-
-    /// <summary>
-    /// Recharge les présentations depuis AutoCAD après application en mode immédiat.
-    /// </summary>
-    private void ReloadFromAutoCAD()
-    {
-        try
-        {
-            var doc = AcadApp.DocumentManager.MdiActiveDocument;
-            if (doc == null) return;
-
-            using (doc.LockDocument())
-            using (var tr = _database.TransactionManager.StartTransaction())
-            {
-                var newItems = LayoutService.GetAllLayouts(_database, tr);
-                tr.Commit();
-
-                _items = newItems;
-                // Réinitialiser les items originaux pour éviter de ré-appliquer les mêmes changements
-                _originalItems.Clear();
-                _originalItems.AddRange(newItems.Select(i => i.Clone()));
-                _undoStack.Clear();
-
-                RefreshList();
-            }
-        }
-        catch (System.Exception ex)
-        {
-            Logger.Warning($"[PrezOrganizer] Erreur rechargement: {ex.Message}");
-        }
     }
 }

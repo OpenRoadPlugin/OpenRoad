@@ -739,6 +739,43 @@ Configuration.OnSettingChanged += (key, value) =>
 };
 ```
 
+### WindowStateHelper
+
+Helper pour mémoriser la taille et la position des fenêtres WPF entre les sessions.
+
+```csharp
+using OpenAsphalte.UI;
+
+public partial class MaFenetre : Window
+{
+    public MaFenetre()
+    {
+        InitializeComponent();
+        
+        // Restaure taille/position (ou valeurs par défaut)
+        // defaultHeight = null → utilise 95% de la zone de travail
+        WindowStateHelper.RestoreState(this, "mafenetre", defaultWidth: 800, defaultHeight: null);
+        
+        // Sauvegarde à la fermeture
+        Closing += (s, e) => WindowStateHelper.SaveState(this, "mafenetre");
+    }
+}
+```
+
+**Fonctionnalités :**
+- Mémorise `Width`, `Height`, `Left`, `Top` dans la configuration JSON
+- Vérifie que la fenêtre reste visible (minimum 100px sur l'écran)
+- Si hors écran (changement de moniteur), recentre automatiquement
+- `GetRecommendedHeight()` retourne 95% de `SystemParameters.WorkArea.Height`
+
+```csharp
+// Hauteur recommandée (95% zone de travail)
+double height = WindowStateHelper.GetRecommendedHeight();
+
+// Réinitialiser les paramètres sauvegardés
+WindowStateHelper.ResetState("mafenetre");
+```
+
 ### ModuleDiscovery
 
 ```csharp

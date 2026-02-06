@@ -7,9 +7,44 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ## [0.0.3] - En développement
 
-### À faire
-- Nouveaux modules
-- Améliorations Core
+### Modifications CORE
+- **WindowStateHelper** : Nouveau helper statique pour la persistance de taille/position des fenêtres WPF
+  - `RestoreState()` / `SaveState()` pour mémoriser entre les sessions
+  - Détection automatique si la fenêtre est hors écran → recentrage
+  - `GetRecommendedHeight()` retourne 95% de la zone de travail (respecte barre des tâches)
+  - Réutilisable par tous les modules
+
+### Sécurité
+- **Isolation des modules personnalisés** : Les modules provenant d'une source personnalisée (dossier local ou URL) ne sont plus chargés directement depuis leur emplacement distant
+  - Seuls les modules présents dans `%LOCALAPPDATA%\Autodesk\ApplicationPlugins\OAS.bundle\Contents\Modules\` sont chargés par le Core
+  - Le bouton "Installer" copie les modules dans ce dossier avant utilisation
+  - Correction d'une faille permettant l'exécution de code arbitraire depuis une source externe
+
+### Module PrezOrganizer (Organiseur de Présentations)
+
+#### Ajouté
+- **Interface adaptative** :
+  - Hauteur fenêtre à 95% de l'écran par défaut (respect barre des tâches/menu Démarrer)
+  - Persistance taille et position de la fenêtre entre les sessions
+  - Remise au centre automatique si la fenêtre serait hors écran
+  - ScrollViewer sur la barre d'outils pour s'adapter à la hauteur disponible
+- **Outil de renommage unifié** (`RenameToolDialog`) :
+  - Mode Préfixe/Suffixe : ajouter du texte au début ou à la fin
+  - Mode Pattern avec variables `{N}`, `{N:00}`, `{ORIG}`, `{DATE}`
+  - Numéro de départ et incrément configurables
+  - Portée : sélection ou toutes les présentations
+  - Aperçu en temps réel des modifications
+
+#### Corrigé
+- **TabOrder non appliqué** : Le réordonnancement par glisser-déposer et boutons fonctionne maintenant correctement
+  - Correction via algorithme en 2 passes (valeurs temporaires hautes puis valeurs finales)
+- **Fusion des dialogues** : Les anciens dialogues `PrefixSuffixDialog` et `BatchRenameDialog` sont remplacés par `RenameToolDialog`
+
+#### Supprimé
+- **Mode "Appliquer immédiatement"** : Toutes les modifications passent par le bouton Valider (comportement plus prévisible)
+- Fichiers obsolètes :
+  - `PrefixSuffixDialog.xaml` / `.xaml.cs`
+  - `BatchRenameDialog.xaml` / `.xaml.cs`
 
 ## [0.0.2] - 2026-02-06
 

@@ -63,7 +63,7 @@ public class PrezOrganizerModule : ModuleBase
     /// <summary>
     /// Version du module
     /// </summary>
-    public override string Version => "0.0.1";
+    public override string Version => "0.0.2";
 
     /// <summary>
     /// Auteur du module
@@ -87,7 +87,7 @@ public class PrezOrganizerModule : ModuleBase
     /// <summary>
     /// Version minimale du Core requise
     /// </summary>
-    public override string MinCoreVersion => "0.0.1";
+    public override string MinCoreVersion => "0.0.3";
 
     // ═══════════════════════════════════════════════════════════
     // COMMANDES
@@ -155,9 +155,8 @@ public class PrezOrganizerModule : ModuleBase
 
                 // Boutons de transformation
                 ["prezorganizer.btn.findReplace"] = "Chercher / Remplacer",
-                ["prezorganizer.btn.prefixSuffix"] = "Préfixe / Suffixe",
+                ["prezorganizer.btn.renameTool"] = "Outil de renommage",
                 ["prezorganizer.btn.case"] = "Changer la casse",
-                ["prezorganizer.btn.batchRename"] = "Renommage par lot",
 
                 // Casse
                 ["prezorganizer.case.upper"] = "MAJUSCULES",
@@ -243,6 +242,27 @@ public class PrezOrganizerModule : ModuleBase
                 ["prezorganizer.prefix.apply"] = "Appliquer",
                 ["prezorganizer.prefix.cancel"] = "Annuler",
 
+                // Outil de renommage (fusionné)
+                ["prezorganizer.renameTool.title"] = "Outil de renommage",
+                ["prezorganizer.renameTool.mode"] = "Mode de renommage :",
+                ["prezorganizer.renameTool.mode.prefixSuffix"] = "Préfixe / Suffixe",
+                ["prezorganizer.renameTool.mode.pattern"] = "Pattern avec variables",
+                ["prezorganizer.renameTool.prefix"] = "Préfixe :",
+                ["prezorganizer.renameTool.suffix"] = "Suffixe :",
+                ["prezorganizer.renameTool.pattern"] = "Pattern :",
+                ["prezorganizer.renameTool.pattern.help"] = "Variables : {N} numéro, {N:00} formaté, {ORIG} nom actuel, {DATE} date",
+                ["prezorganizer.renameTool.startNum"] = "Numéro de départ :",
+                ["prezorganizer.renameTool.increment"] = "Incrément :",
+                ["prezorganizer.renameTool.scope"] = "Appliquer à :",
+                ["prezorganizer.renameTool.scope.selected"] = "Sélection uniquement",
+                ["prezorganizer.renameTool.scope.all"] = "Toutes les présentations",
+                ["prezorganizer.renameTool.preview"] = "Prévisualisation",
+                ["prezorganizer.renameTool.preview.before"] = "Avant",
+                ["prezorganizer.renameTool.preview.after"] = "Après",
+                ["prezorganizer.renameTool.apply"] = "Appliquer",
+                ["prezorganizer.renameTool.cancel"] = "Annuler",
+                ["prezorganizer.renameTool.error.invalid"] = "Nom de présentation invalide",
+
                 // Messages
                 ["prezorganizer.success"] = "Modifications appliquées avec succès",
                 ["prezorganizer.success.count"] = "{0} modification(s) appliquée(s)",
@@ -304,9 +324,8 @@ public class PrezOrganizerModule : ModuleBase
 
                 // Transform buttons
                 ["prezorganizer.btn.findReplace"] = "Find / Replace",
-                ["prezorganizer.btn.prefixSuffix"] = "Prefix / Suffix",
+                ["prezorganizer.btn.renameTool"] = "Rename Tool",
                 ["prezorganizer.btn.case"] = "Change case",
-                ["prezorganizer.btn.batchRename"] = "Batch rename",
 
                 // Case
                 ["prezorganizer.case.upper"] = "UPPERCASE",
@@ -392,6 +411,27 @@ public class PrezOrganizerModule : ModuleBase
                 ["prezorganizer.prefix.apply"] = "Apply",
                 ["prezorganizer.prefix.cancel"] = "Cancel",
 
+                // Rename Tool (merged)
+                ["prezorganizer.renameTool.title"] = "Rename Tool",
+                ["prezorganizer.renameTool.mode"] = "Rename mode:",
+                ["prezorganizer.renameTool.mode.prefixSuffix"] = "Prefix / Suffix",
+                ["prezorganizer.renameTool.mode.pattern"] = "Pattern with variables",
+                ["prezorganizer.renameTool.prefix"] = "Prefix:",
+                ["prezorganizer.renameTool.suffix"] = "Suffix:",
+                ["prezorganizer.renameTool.pattern"] = "Pattern:",
+                ["prezorganizer.renameTool.pattern.help"] = "Variables: {N} number, {N:00} formatted, {ORIG} current name, {DATE} date",
+                ["prezorganizer.renameTool.startNum"] = "Start number:",
+                ["prezorganizer.renameTool.increment"] = "Increment:",
+                ["prezorganizer.renameTool.scope"] = "Apply to:",
+                ["prezorganizer.renameTool.scope.selected"] = "Selection only",
+                ["prezorganizer.renameTool.scope.all"] = "All presentations",
+                ["prezorganizer.renameTool.preview"] = "Preview",
+                ["prezorganizer.renameTool.preview.before"] = "Before",
+                ["prezorganizer.renameTool.preview.after"] = "After",
+                ["prezorganizer.renameTool.apply"] = "Apply",
+                ["prezorganizer.renameTool.cancel"] = "Cancel",
+                ["prezorganizer.renameTool.error.invalid"] = "Invalid presentation name",
+
                 // Messages
                 ["prezorganizer.success"] = "Changes applied successfully",
                 ["prezorganizer.success.count"] = "{0} change(s) applied",
@@ -453,9 +493,8 @@ public class PrezOrganizerModule : ModuleBase
 
                 // Botones de transformación
                 ["prezorganizer.btn.findReplace"] = "Buscar / Reemplazar",
-                ["prezorganizer.btn.prefixSuffix"] = "Prefijo / Sufijo",
+                ["prezorganizer.btn.renameTool"] = "Herramienta de renombrado",
                 ["prezorganizer.btn.case"] = "Cambiar mayúsculas",
-                ["prezorganizer.btn.batchRename"] = "Renombrado por lotes",
 
                 // Mayúsculas/minúsculas
                 ["prezorganizer.case.upper"] = "MAYÚSCULAS",
@@ -540,6 +579,27 @@ public class PrezOrganizerModule : ModuleBase
                 ["prezorganizer.prefix.previewCol.after"] = "Después",
                 ["prezorganizer.prefix.apply"] = "Aplicar",
                 ["prezorganizer.prefix.cancel"] = "Cancelar",
+
+                // Herramienta de renombrado (fusionada)
+                ["prezorganizer.renameTool.title"] = "Herramienta de renombrado",
+                ["prezorganizer.renameTool.mode"] = "Modo de renombrado:",
+                ["prezorganizer.renameTool.mode.prefixSuffix"] = "Prefijo / Sufijo",
+                ["prezorganizer.renameTool.mode.pattern"] = "Patrón con variables",
+                ["prezorganizer.renameTool.prefix"] = "Prefijo:",
+                ["prezorganizer.renameTool.suffix"] = "Sufijo:",
+                ["prezorganizer.renameTool.pattern"] = "Patrón:",
+                ["prezorganizer.renameTool.pattern.help"] = "Variables: {N} número, {N:00} formateado, {ORIG} nombre actual, {DATE} fecha",
+                ["prezorganizer.renameTool.startNum"] = "Número inicial:",
+                ["prezorganizer.renameTool.increment"] = "Incremento:",
+                ["prezorganizer.renameTool.scope"] = "Aplicar a:",
+                ["prezorganizer.renameTool.scope.selected"] = "Solo selección",
+                ["prezorganizer.renameTool.scope.all"] = "Todas las presentaciones",
+                ["prezorganizer.renameTool.preview"] = "Vista previa",
+                ["prezorganizer.renameTool.preview.before"] = "Antes",
+                ["prezorganizer.renameTool.preview.after"] = "Después",
+                ["prezorganizer.renameTool.apply"] = "Aplicar",
+                ["prezorganizer.renameTool.cancel"] = "Cancelar",
+                ["prezorganizer.renameTool.error.invalid"] = "Nombre de presentación no válido",
 
                 // Mensajes
                 ["prezorganizer.success"] = "Cambios aplicados con éxito",

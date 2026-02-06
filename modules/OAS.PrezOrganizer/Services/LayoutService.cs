@@ -130,22 +130,37 @@ public static class LayoutService
         layoutDict = (DBDictionary)tr.GetObject(db.LayoutDictionaryId, OpenMode.ForRead);
         var activeItems = items.Where(i => !i.IsMarkedForDeletion).ToList();
 
+        // Phase 1 : Assigner des TabOrder temporaires élevés pour éviter les conflits
+        // AutoCAD ne permet pas d'avoir deux layouts avec le même TabOrder,
+        // donc on doit d'abord les décaler vers des valeurs hautes
+        const int tempOffset = 10000;
+        var layoutsToReorder = new List<(Layout layout, int targetOrder)>();
+
         for (int i = 0; i < activeItems.Count; i++)
         {
-            int newTabOrder = i + 1; // TabOrder 0 = Model, 1+ = présentations
             var name = activeItems[i].CurrentName;
-
             if (layoutDict.Contains(name))
             {
                 var layoutId = layoutDict.GetAt(name);
                 var layout = (Layout)tr.GetObject(layoutId, OpenMode.ForWrite);
+                int targetOrder = i + 1; // TabOrder 0 = Model, 1+ = présentations
 
-                if (layout.TabOrder != newTabOrder)
+                if (layout.TabOrder != targetOrder)
                 {
-                    layout.TabOrder = newTabOrder;
-                    changeCount++;
+                    // D'abord déplacer vers une valeur temporaire haute
+                    layout.TabOrder = tempOffset + i;
+                    layoutsToReorder.Add((layout, targetOrder));
                 }
             }
+        }
+
+        // Phase 2 : Assigner les TabOrder finaux dans l'ordre croissant
+        // Tri par ordre cible pour éviter les collisions
+        foreach (var (layout, targetOrder) in layoutsToReorder.OrderBy(x => x.targetOrder))
+        {
+            layout.TabOrder = targetOrder;
+            changeCount++;
+            Logger.Debug($"[PrezOrganizer] Réordonnancement : {layout.LayoutName} → position {targetOrder}");
         }
 
         return changeCount;

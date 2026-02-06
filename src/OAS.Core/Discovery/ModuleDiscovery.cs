@@ -349,14 +349,10 @@ public static class ModuleDiscovery
         if (_initialized) return;
 
         // Chemin principal : sous-dossier Modules
+        // SÉCURITÉ : Seuls les modules dans ce dossier sont chargés.
+        // Les modules provenant de sources personnalisées (customModuleSource)
+        // doivent être installés (copiés) dans ce dossier via le gestionnaire de modules.
         ModulesPath = Path.Combine(basePath, "Modules");
-
-        // Ajouter chemin depuis configuration si défini
-        var configPath = Configuration.Configuration.Get("customModuleSource", "");
-        if (!string.IsNullOrWhiteSpace(configPath) && Directory.Exists(configPath))
-        {
-            AddModulesPath(configPath);
-        }
 
         Logger.Debug(L10n.TFormat("module.searchPath", ModulesPath));
 
