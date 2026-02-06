@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
@@ -30,12 +35,12 @@ public static class MarkerRenderer
     #region Fields
 
     /// <summary>
-    /// Liste des entitÃ©s transitoires actuellement affichÃ©es
+    /// Liste des entités transitoires actuellement affichées
     /// </summary>
     private static readonly List<Drawable> _transients = new();
 
     /// <summary>
-    /// Verrou pour accÃ¨s thread-safe aux transitoires
+    /// Verrou pour accès thread-safe aux transitoires
     /// </summary>
     private static readonly object _lock = new();
 
@@ -44,21 +49,21 @@ public static class MarkerRenderer
     #region Public API
 
     /// <summary>
-    /// Met Ã  jour les marqueurs affichÃ©s. Efface les anciens et dessine les nouveaux.
-    /// MÃ©thode principale appelÃ©e par le PointMonitor en temps rÃ©el.
+    /// Met à jour les marqueurs affichés. Efface les anciens et dessine les nouveaux.
+    /// Méthode principale appelée par le PointMonitor en temps réel.
     /// </summary>
-    /// <param name="snapPoints">Points d'accrochage Ã  afficher</param>
+    /// <param name="snapPoints">Points d'accrochage à afficher</param>
     /// <param name="config">Configuration visuelle</param>
     public static void UpdateMarkers(List<SnapPoint> snapPoints, SnapConfiguration config)
     {
         lock (_lock)
         {
-            // Effacer les marqueurs prÃ©cÃ©dents
+            // Effacer les marqueurs précédents
             EraseTransients();
 
             if (snapPoints.Count == 0) return;
 
-            // DÃ©terminer les points Ã  afficher
+            // Déterminer les points à afficher
             var pointsToShow = config.ShowOnlyNearest && snapPoints.Count > 0
                 ? new List<SnapPoint> { snapPoints[0] }
                 : snapPoints.Take(config.MaxVisibleMarkers).ToList();
@@ -66,7 +71,7 @@ public static class MarkerRenderer
             // Convertir le LineWeight
             var lw = IntToLineWeight(config.MarkerLineWeight);
 
-            // Dessiner chaque marqueur comme entitÃ© transitoire
+            // Dessiner chaque marqueur comme entité transitoire
             bool isFirst = true;
             foreach (var sp in pointsToShow)
             {
@@ -114,7 +119,7 @@ public static class MarkerRenderer
     #region Marker Geometry Creation
 
     /// <summary>
-    /// CrÃ©e les entitÃ©s gÃ©omÃ©triques pour un marqueur selon le mode d'accrochage.
+    /// Crée les entités géométriques pour un marqueur selon le mode d'accrochage.
     /// Chaque mode a un style visuel distinct pour une identification rapide.
     /// </summary>
     private static List<Drawable> CreateMarkerDrawables(
@@ -137,7 +142,7 @@ public static class MarkerRenderer
     }
 
     /// <summary>
-    /// CrÃ©e un marqueur carrÃ© (pour Vertex/Endpoint)
+    /// Crée un marqueur carré (pour Vertex/Endpoint)
     /// </summary>
     private static List<Drawable> CreateSquareMarker(Point3d center, double size,
         AcColor color, bool filled, LineWeight lineWeight)
@@ -172,7 +177,7 @@ public static class MarkerRenderer
     }
 
     /// <summary>
-    /// CrÃ©e un marqueur triangle (pour Midpoint)
+    /// Crée un marqueur triangle (pour Midpoint)
     /// </summary>
     private static List<Drawable> CreateTriangleMarker(Point3d center, double size,
         AcColor color, bool filled, LineWeight lineWeight)
@@ -206,7 +211,7 @@ public static class MarkerRenderer
     }
 
     /// <summary>
-    /// CrÃ©e un marqueur cercle (pour Center)
+    /// Crée un marqueur cercle (pour Center)
     /// </summary>
     private static List<Drawable> CreateCircleMarker(Point3d center, double size,
         AcColor color, bool filled, LineWeight lineWeight)
@@ -238,7 +243,7 @@ public static class MarkerRenderer
     }
 
     /// <summary>
-    /// CrÃ©e un marqueur X (pour Intersection)
+    /// Crée un marqueur X (pour Intersection)
     /// </summary>
     private static List<Drawable> CreateXMarkMarker(Point3d center, double size,
         AcColor color, LineWeight lineWeight)
@@ -265,7 +270,7 @@ public static class MarkerRenderer
     }
 
     /// <summary>
-    /// CrÃ©e un marqueur losange (pour Nearest)
+    /// Crée un marqueur losange (pour Nearest)
     /// </summary>
     private static List<Drawable> CreateDiamondMarker(Point3d center, double size,
         AcColor color, bool filled, LineWeight lineWeight)
@@ -300,7 +305,7 @@ public static class MarkerRenderer
     }
 
     /// <summary>
-    /// CrÃ©e un marqueur croix + (pour Perpendicular)
+    /// Crée un marqueur croix + (pour Perpendicular)
     /// </summary>
     private static List<Drawable> CreateCrossMarker(Point3d center, double size,
         AcColor color, LineWeight lineWeight)
@@ -327,7 +332,7 @@ public static class MarkerRenderer
     }
 
     /// <summary>
-    /// CrÃ©e un marqueur cercle + croix (pour Node)
+    /// Crée un marqueur cercle + croix (pour Node)
     /// </summary>
     private static List<Drawable> CreateCircleWithCrossMarker(Point3d center, double size,
         AcColor color, bool filled, LineWeight lineWeight)
@@ -368,7 +373,7 @@ public static class MarkerRenderer
     };
 
     /// <summary>
-    /// Supprime tous les transitoires en cours d'affichage et libÃ¨re leurs ressources
+    /// Supprime tous les transitoires en cours d'affichage et libère leurs ressources
     /// </summary>
     private static void EraseTransients()
     {

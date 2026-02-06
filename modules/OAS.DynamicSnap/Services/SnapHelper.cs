@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
@@ -19,15 +24,15 @@ using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace OpenAsphalte.Modules.DynamicSnap.Services;
 
 /// <summary>
-/// Helper statique pour l'intÃ©gration du module DynamicSnap dans d'autres modules.
-/// Fournit des mÃ©thodes avec fallback automatique vers l'accrochage AutoCAD si le module n'est pas installÃ©.
+/// Helper statique pour l'intégration du module DynamicSnap dans d'autres modules.
+/// Fournit des méthodes avec fallback automatique vers l'accrochage AutoCAD si le module n'est pas installé.
 ///
-/// Utilisation recommandÃ©e dans les autres modules OAS:
+/// Utilisation recommandée dans les autres modules OAS:
 /// <code>
 /// // Au lieu de GetPoint classique:
 /// var result = SnapHelper.GetPointOnPolylineOrFallback(
 ///     polyline,
-///     "SÃ©lectionnez un sommet:",
+///     "Sélectionnez un sommet:",
 ///     Editor,
 ///     SnapMode.Vertex);
 ///
@@ -41,12 +46,12 @@ namespace OpenAsphalte.Modules.DynamicSnap.Services;
 public static class SnapHelper
 {
     /// <summary>
-    /// Cache pour vÃ©rifier si le module est disponible
+    /// Cache pour vérifier si le module est disponible
     /// </summary>
     private static bool? _isModuleAvailable;
 
     /// <summary>
-    /// VÃ©rifie si le module DynamicSnap est installÃ© et disponible
+    /// Vérifie si le module DynamicSnap est installé et disponible
     /// </summary>
     public static bool IsAvailable
     {
@@ -61,7 +66,7 @@ public static class SnapHelper
     }
 
     /// <summary>
-    /// Force la revÃ©rification de la disponibilitÃ© du module
+    /// Force la revérification de la disponibilité du module
     /// </summary>
     public static void RefreshAvailability()
     {
@@ -69,7 +74,7 @@ public static class SnapHelper
     }
 
     /// <summary>
-    /// VÃ©rifie si le module DynamicSnap est chargÃ© via ModuleDiscovery
+    /// Vérifie si le module DynamicSnap est chargé via ModuleDiscovery
     /// </summary>
     private static bool CheckModuleAvailable()
     {
@@ -85,13 +90,13 @@ public static class SnapHelper
     }
 
     /// <summary>
-    /// SÃ©lectionne un point sur une polyligne avec accrochage OAS ou fallback AutoCAD.
+    /// Sélectionne un point sur une polyligne avec accrochage OAS ou fallback AutoCAD.
     /// </summary>
-    /// <param name="polyline">Polyligne sur laquelle sÃ©lectionner</param>
-    /// <param name="prompt">Message Ã  afficher</param>
-    /// <param name="editor">Ã‰diteur AutoCAD</param>
-    /// <param name="modes">Modes d'accrochage souhaitÃ©s (dÃ©faut: sommets + milieux)</param>
-    /// <returns>Point sÃ©lectionnÃ© ou null si annulÃ©</returns>
+    /// <param name="polyline">Polyligne sur laquelle sélectionner</param>
+    /// <param name="prompt">Message à afficher</param>
+    /// <param name="editor">Éditeur AutoCAD</param>
+    /// <param name="modes">Modes d'accrochage souhaités (défaut: sommets + milieux)</param>
+    /// <returns>Point sélectionné ou null si annulé</returns>
     public static Point3d? GetPointOnPolylineOrFallback(
         Polyline polyline,
         string prompt,
@@ -120,12 +125,12 @@ public static class SnapHelper
     }
 
     /// <summary>
-    /// SÃ©lectionne un sommet de polyligne avec accrochage OAS ou fallback.
+    /// Sélectionne un sommet de polyligne avec accrochage OAS ou fallback.
     /// </summary>
     /// <param name="polyline">Polyligne source</param>
-    /// <param name="prompt">Message Ã  afficher</param>
-    /// <param name="editor">Ã‰diteur AutoCAD</param>
-    /// <returns>Point du sommet ou null si annulÃ©</returns>
+    /// <param name="prompt">Message à afficher</param>
+    /// <param name="editor">Éditeur AutoCAD</param>
+    /// <returns>Point du sommet ou null si annulé</returns>
     public static Point3d? GetVertexOrFallback(
         Polyline polyline,
         string prompt,
@@ -139,13 +144,13 @@ public static class SnapHelper
     }
 
     /// <summary>
-    /// SÃ©lectionne un point sur une entitÃ© avec accrochage OAS ou fallback.
+    /// Sélectionne un point sur une entité avec accrochage OAS ou fallback.
     /// </summary>
-    /// <param name="entity">EntitÃ© source</param>
-    /// <param name="prompt">Message Ã  afficher</param>
-    /// <param name="editor">Ã‰diteur AutoCAD</param>
+    /// <param name="entity">Entité source</param>
+    /// <param name="prompt">Message à afficher</param>
+    /// <param name="editor">Éditeur AutoCAD</param>
     /// <param name="modes">Modes d'accrochage</param>
-    /// <returns>Point sÃ©lectionnÃ© ou null si annulÃ©</returns>
+    /// <returns>Point sélectionné ou null si annulé</returns>
     public static Point3d? GetPointOnEntityOrFallback(
         Entity entity,
         string prompt,
@@ -173,13 +178,13 @@ public static class SnapHelper
     }
 
     /// <summary>
-    /// SÃ©lectionne un point sur une polyligne et retourne le SnapPoint complet
+    /// Sélectionne un point sur une polyligne et retourne le SnapPoint complet
     /// (avec informations sur le mode, l'index de sommet, etc.)
     /// </summary>
     /// <param name="polyline">Polyligne source</param>
-    /// <param name="prompt">Message Ã  afficher</param>
+    /// <param name="prompt">Message à afficher</param>
     /// <param name="modes">Modes d'accrochage</param>
-    /// <returns>SnapPoint complet ou null si annulÃ© ou module non disponible</returns>
+    /// <returns>SnapPoint complet ou null si annulé ou module non disponible</returns>
     public static SnapPoint? GetSnapPointOnPolyline(
         Polyline polyline,
         string prompt,
@@ -193,11 +198,11 @@ public static class SnapHelper
 
     /// <summary>
     /// Retourne la distance curviligne du point d'accrochage sur une polyligne.
-    /// MÃ©thode utilitaire pour les calculs de station.
+    /// Méthode utilitaire pour les calculs de station.
     /// </summary>
     /// <param name="polyline">Polyligne</param>
     /// <param name="prompt">Message</param>
-    /// <returns>Distance curviligne ou null si annulÃ©</returns>
+    /// <returns>Distance curviligne ou null si annulé</returns>
     public static double? GetDistanceAlongPolyline(
         Polyline polyline,
         string prompt)
@@ -213,7 +218,7 @@ public static class SnapHelper
                     return snapPoint.DistanceAlongCurve;
                 }
 
-                // Sinon calculer Ã  partir du point
+                // Sinon calculer à partir du point
                 try
                 {
                     var closestPt = polyline.GetClosestPointTo(snapPoint.Point, false);

@@ -11,7 +11,7 @@
 
 [![AutoCAD 2025+](https://img.shields.io/badge/AutoCAD-2025+-blue.svg)](https://www.autodesk.com/products/autocad)
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
 ---
 
@@ -298,7 +298,7 @@ Les contributions sont les bienvenues ! Consultez [CONTRIBUTING.md](CONTRIBUTING
 
 ##  Licence
 
-Ce projet est sous licence **[Apache 2.0](LICENSE)**  libre d'utilisation, modification et distribution selon les termes de la licence.
+Ce projet est sous licence **[GNU GPL v3](LICENSE)**  libre d'utilisation, modification et distribution selon les termes de la licence.
 Voir aussi le fichier [NOTICE](NOTICE) pour les mentions et marques.
 
 ###  Avertissement (Disclaimer)

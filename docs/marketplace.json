@@ -1,9 +1,9 @@
-{
+﻿{
   "core": {
-    "latest": "0.0.2",
-    "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/releases/latest/download/OpenAsphalte_Setup_v0.0.2.exe",
-    "releaseNotes": "Version 0.0.2 - Gestionnaire de modules, personnalisation UI, corrections multiples",
-    "releaseDate": "2026-02-05",
+    "latest": "0.0.3",
+    "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/releases/latest/download/OpenAsphalte_Setup_v0.0.3.exe",
+    "releaseNotes": "Version 0.0.3 - Système de compatibilité MaxCoreVersion, gestionnaire de modules amélioré",
+    "releaseDate": "2026-02-06",
     "minAutoCADVersion": "2025"
   },
   "modules": [
@@ -11,16 +11,18 @@
       "id": "setprojection",
       "name": "Géoréférencement",
       "description": "Gestion des systèmes de coordonnées et géoréférencement des dessins. Permet de définir, détecter et appliquer des projections cartographiques (Lambert 93, CC, UTM, etc.).",
-      "version": "0.0.1",
-      "minCoreVersion": "0.0.1",
+      "version": "0.0.3",
+      "minCoreVersion": "0.0.3",
+      "maxCoreVersion": null,
       "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/OAS.Georeferencement.dll",
       "author": "Charles TILLY",
       "category": "Cartographie",
       "tags": ["projection", "coordonnées", "Lambert", "UTM", "géoréférencement"],
       "versions": [
         {
-          "version": "0.0.1",
-          "minCoreVersion": "0.0.1",
+          "version": "0.0.3",
+          "minCoreVersion": "0.0.3",
+          "maxCoreVersion": null,
           "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/OAS.Georeferencement.dll"
         }
       ]
@@ -29,8 +31,9 @@
       "id": "streetview",
       "name": "Street View",
       "description": "Ouvre Google Street View depuis un point sélectionné dans un dessin géoréférencé AutoCAD.",
-      "version": "0.0.1",
-      "minCoreVersion": "0.0.1",
+      "version": "0.0.3",
+      "minCoreVersion": "0.0.3",
+      "maxCoreVersion": null,
       "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/OAS.StreetView.dll",
       "author": "Charles TILLY",
       "category": "Cartographie",
@@ -41,8 +44,9 @@
       "id": "cota2lign",
       "name": "Cotation entre deux lignes",
       "description": "Crée des cotations alignées entre deux polylignes avec espacement régulier et cotation aux sommets.",
-      "version": "0.0.1",
-      "minCoreVersion": "0.0.1",
+      "version": "0.0.3",
+      "minCoreVersion": "0.0.3",
+      "maxCoreVersion": null,
       "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/OAS.Cota2Lign.dll",
       "author": "Charles TILLY",
       "category": "Cotations",
@@ -52,8 +56,9 @@
       "id": "dynamicsnap",
       "name": "Accrochage Dynamique OAS",
       "description": "Système d'accrochage visuel enrichi avec indicateurs graphiques pour sommets, milieux et points les plus proches.",
-      "version": "0.0.1",
-      "minCoreVersion": "0.0.1",
+      "version": "0.0.3",
+      "minCoreVersion": "0.0.3",
+      "maxCoreVersion": null,
       "downloadUrl": "https://github.com/OpenAsphaltePlugin/OpenAsphalte/raw/main/bin/Modules/OAS.DynamicSnap.dll",
       "author": "Charles TILLY",
       "category": "Outils",

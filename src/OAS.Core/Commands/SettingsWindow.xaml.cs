@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -22,12 +27,13 @@ using OpenAsphalte.Discovery;
 using OpenAsphalte.Localization;
 using OpenAsphalte.Logging;
 using OpenAsphalte.Services;
+using OpenAsphalte.UI;
 using L10n = OpenAsphalte.Localization.Localization;
 
 namespace OpenAsphalte.Commands;
 
 /// <summary>
-/// FenÃªtre des paramÃ¨tres Open Asphalte
+/// Fenêtre des paramètres Open Asphalte
 /// </summary>
 public partial class SettingsWindow : Window
 {
@@ -37,42 +43,47 @@ public partial class SettingsWindow : Window
     public SettingsWindow()
     {
         InitializeComponent();
+
+        // Restaurer la taille et la position
+        WindowStateHelper.RestoreState(this, "SettingsWindow", 900, 600);
+        Closing += (s, e) => WindowStateHelper.SaveState(this, "SettingsWindow");
+
         lstModules.ItemsSource = _moduleList;
         LoadSettings();
         UpdateLocalizedText();
     }
 
     /// <summary>
-    /// Constructeur permettant d'ouvrir directement sur un onglet spÃ©cifique
+    /// Constructeur permettant d'ouvrir directement sur un onglet spécifique
     /// </summary>
     public SettingsWindow(int tabIndex) : this()
     {
         if (tabIndex == 1) // Onglet Modules
         {
             tabModules.IsSelected = true;
-            // DÃ©clencher le chargement des modules immÃ©diatement
-            // car l'Ã©vÃ©nement OnTabSelectionChanged peut ne pas se dÃ©clencher
+            // Déclencher le chargement des modules immédiatement
+            // car l'événement OnTabSelectionChanged peut ne pas se déclencher
             Loaded += async (s, e) => await RefreshModulesListAsync();
         }
     }
 
     /// <summary>
-    /// Met Ã  jour les textes de la fenÃªtre selon la langue
+    /// Met à jour les textes de la fenêtre selon la langue
     /// </summary>
     private void UpdateLocalizedText()
     {
         Title = L10n.T("settings.title");
 
         // Tab General
-        if (tabGeneral != null) tabGeneral.Header = L10n.T("settings.tab.general", "GÃ©nÃ©ral");
+        if (tabGeneral != null) tabGeneral.Header = L10n.T("settings.tab.general", "Général");
         lblLanguage.Text = L10n.T("settings.language");
         chkDevMode.Content = L10n.T("settings.devmode");
         chkCheckUpdates.Content = L10n.T("settings.checkupdates");
 
         // Tab Modules
         if (tabModules != null) tabModules.Header = L10n.T("settings.tab.modules", "Modules");
-        if (btnCheckUpdates != null) btnCheckUpdates.Content = L10n.T("settings.modules.check", "VÃ©rifier Mises Ã  jour");
-        if (btnInstallSelected != null) btnInstallSelected.Content = L10n.T("settings.modules.installSelected", "Installer la sÃ©lection");
+        if (btnCheckUpdates != null) btnCheckUpdates.Content = L10n.T("settings.modules.check", "Vérifier Mises à jour");
+        if (btnInstallSelected != null) btnInstallSelected.Content = L10n.T("settings.modules.installSelected", "Installer la sélection");
 
         // Buttons
         btnCancel.Content = L10n.T("settings.cancel");
@@ -80,11 +91,11 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    /// Charge les paramÃ¨tres actuels
+    /// Charge les paramètres actuels
     /// </summary>
     private void LoadSettings()
     {
-        // Langue - CrÃ©er les items dynamiquement
+        // Langue - Créer les items dynamiquement
         _initialLanguage = L10n.CurrentLanguage;
         cmbLanguage.Items.Clear();
 
@@ -103,13 +114,13 @@ public partial class SettingsWindow : Window
             }
         }
 
-        // Mode dÃ©veloppeur
+        // Mode développeur
         chkDevMode.IsChecked = Configuration.Configuration.DevMode;
 
-        // Mises Ã  jour
+        // Mises à jour
         chkCheckUpdates.IsChecked = Configuration.Configuration.CheckUpdatesOnStartup;
 
-        // Source Modules personnalisÃ©e
+        // Source Modules personnalisée
         txtCustomSource.Text = Configuration.Configuration.Get("customModuleSource", "");
 
         // Infos
@@ -117,7 +128,7 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    /// Met Ã  jour le texte d'information
+    /// Met à jour le texte d'information
     /// </summary>
     private void UpdateInfoText()
     {
@@ -127,31 +138,31 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    /// Enregistre les paramÃ¨tres
+    /// Enregistre les paramètres
     /// </summary>
     private void OnSaveClick(object sender, RoutedEventArgs e)
     {
         try
         {
-            // Langue - Utiliser SetLanguage pour dÃ©clencher la mise Ã  jour de l'UI
+            // Langue - Utiliser SetLanguage pour déclencher la mise à jour de l'UI
             if (cmbLanguage.SelectedItem is ComboBoxItem selectedLang)
             {
                 var newLanguage = selectedLang.Tag?.ToString() ?? "fr";
                 if (newLanguage != _initialLanguage)
                 {
-                    // SetLanguage dÃ©clenche l'Ã©vÃ©nement OnLanguageChanged
-                    // qui met Ã  jour automatiquement l'UI
+                    // SetLanguage déclenche l'événement OnLanguageChanged
+                    // qui met à jour automatiquement l'UI
                     L10n.SetLanguage(newLanguage);
                 }
             }
 
-            // Mode dÃ©veloppeur
+            // Mode développeur
             Configuration.Configuration.Set("devMode", chkDevMode.IsChecked == true);
 
-            // Mises Ã  jour
+            // Mises à jour
             Configuration.Configuration.Set("checkUpdatesOnStartup", chkCheckUpdates.IsChecked == true);
 
-            // Source Modules personnalisÃ©e
+            // Source Modules personnalisée
             Configuration.Configuration.Set("customModuleSource", txtCustomSource.Text);
 
             // Sauvegarder
@@ -181,7 +192,7 @@ public partial class SettingsWindow : Window
     private void OnBrowseSourceClick(object sender, RoutedEventArgs e)
     {
         using var dialog = new System.Windows.Forms.FolderBrowserDialog();
-        dialog.Description = "SÃ©lectionnez le dossier contenant le fichier marketplace.json";
+        dialog.Description = "Sélectionnez le dossier contenant le fichier marketplace.json";
         dialog.UseDescriptionForTitle = true;
         dialog.ShowNewFolderButton = false;
 
@@ -197,24 +208,24 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    /// GÃ¨re le changement d'onglet - rafraÃ®chit la liste des modules quand on arrive sur l'onglet Modules
+    /// Gère le changement d'onglet - rafraîchit la liste des modules quand on arrive sur l'onglet Modules
     /// </summary>
     private async void OnTabSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (e.Source is System.Windows.Controls.TabControl && tabModules != null && tabModules.IsSelected)
         {
-            // Toujours rafraÃ®chir quand on arrive sur l'onglet Modules
+            // Toujours rafraîchir quand on arrive sur l'onglet Modules
             await RefreshModulesListAsync();
         }
     }
 
     /// <summary>
-    /// RafraÃ®chit la liste des modules depuis le catalogue
+    /// Rafraîchit la liste des modules depuis le catalogue
     /// </summary>
     private async Task RefreshModulesListAsync()
     {
         btnCheckUpdates.IsEnabled = false;
-        txtUpdateStatus.Text = L10n.T("settings.modules.checking", "VÃ©rification...");
+        txtUpdateStatus.Text = L10n.T("settings.modules.checking", "Vérification...");
         _moduleList.Clear();
 
         try
@@ -223,19 +234,19 @@ public partial class SettingsWindow : Window
 
             if (!result.Success)
             {
-                txtUpdateStatus.Text = L10n.T("settings.modules.error", "Erreur rÃ©seau");
+                txtUpdateStatus.Text = L10n.T("settings.modules.error", "Erreur réseau");
                 return;
             }
 
             if (result.CoreUpdateAvailable)
             {
-                 txtUpdateStatus.Text = L10n.T("settings.modules.coreAvailable", "Mise Ã  jour Open Asphalte dispo !");
+                 txtUpdateStatus.Text = L10n.T("settings.modules.coreAvailable", "Mise à jour Open Asphalte dispo !");
             }
             else
             {
                 var installedCount = ModuleDiscovery.Modules.Count;
                 var totalCount = result.Manifest?.Modules.Count ?? 0;
-                txtUpdateStatus.Text = L10n.TFormat("settings.modules.status", "{0}/{1} modules installÃ©s", installedCount, totalCount);
+                txtUpdateStatus.Text = L10n.TFormat("settings.modules.status", "{0}/{1} modules installés", installedCount, totalCount);
             }
 
             // Afficher les modules
@@ -247,34 +258,36 @@ public partial class SettingsWindow : Window
 
                 foreach (var moduleDef in sortedModules)
                 {
-                    var isInstalled = ModuleDiscovery.Modules.Any(m => m.Id.Equals(moduleDef.Id, StringComparison.OrdinalIgnoreCase));
+                    var installedModule = ModuleDiscovery.Modules.FirstOrDefault(m => m.Id.Equals(moduleDef.Id, StringComparison.OrdinalIgnoreCase));
+                    var isInstalled = installedModule != null;
                     var updateInfo = result.Updates.FirstOrDefault(u => u.ModuleId == moduleDef.Id);
 
-                    var installedVersion = ModuleDiscovery.Modules
-                        .FirstOrDefault(m => m.Id.Equals(moduleDef.Id, StringComparison.OrdinalIgnoreCase))?.Version ?? "-";
+                    var installedVersion = installedModule?.Version ?? "-";
+                    // Utiliser le nom du module installé (vrai nom) si disponible, sinon celui du manifest
+                    var displayName = installedModule?.Name ?? moduleDef.Name;
 
                     var item = new ModuleItemViewModel
                     {
                         Definition = moduleDef,
-                        Name = moduleDef.Name,
+                        Name = displayName,
                         Description = moduleDef.Description,
                         VersionDisplay = isInstalled ? $"{installedVersion} -> {moduleDef.Version}" : moduleDef.Version,
-                        StatusIcon = isInstalled ? (updateInfo != null ? "!" : "âœ“") : "+",
+                        StatusIcon = isInstalled ? (updateInfo != null ? "!" : "?") : "+",
                         StatusColor = isInstalled ? (updateInfo != null ? System.Windows.Media.Brushes.Orange : System.Windows.Media.Brushes.Green) : System.Windows.Media.Brushes.Blue,
                         NameBrush = moduleDef.IsCustomSource ? System.Windows.Media.Brushes.Purple : System.Windows.Media.Brushes.Black,
                         IsSelected = false,
                         NameWeight = moduleDef.IsCustomSource ? System.Windows.FontWeights.Bold : System.Windows.FontWeights.Normal,
                         CanUpdate = !isInstalled || updateInfo != null,
                         ActionText = isInstalled
-                            ? (updateInfo != null ? L10n.T("modules.action.update", "Mettre Ã  jour") : L10n.T("modules.action.uninstall", "DÃ©sinstaller"))
+                            ? (updateInfo != null ? L10n.T("modules.action.update", "Mettre à jour") : L10n.T("modules.action.uninstall", "Désinstaller"))
                             : L10n.T("modules.action.install", "Installer")
                     };
 
-                    // Activer le bouton de dÃ©sinstallation si dÃ©jÃ  installÃ© et Ã  jour
+                    // Activer le bouton de désinstallation si déjà installé et à jour
                     if (isInstalled && updateInfo == null)
                     {
                         item.CanUpdate = true;
-                        item.ActionText = L10n.T("modules.action.uninstall", "DÃ©sinstaller");
+                        item.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
                     }
 
                     _moduleList.Add(item);
@@ -296,13 +309,13 @@ public partial class SettingsWindow : Window
     {
         await RefreshModulesListAsync();
 
-        // VÃ©rifier si mise Ã  jour Core disponible et proposer
+        // Vérifier si mise à jour Core disponible et proposer
         var result = await UpdateService.CheckForUpdatesAsync();
         if (result.Success && result.CoreUpdateAvailable && result.Manifest != null)
         {
             if (System.Windows.MessageBox.Show(
-                L10n.T("settings.modules.coreUpdateMsg", "Une nouvelle version d'Open Asphalte est disponible. Mettre Ã  jour ?"),
-                "Mise Ã  jour",
+                L10n.T("settings.modules.coreUpdateMsg", "Une nouvelle version d'Open Asphalte est disponible. Mettre à jour ?"),
+                "Mise à jour",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
@@ -314,7 +327,7 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    /// GÃ¨re le clic sur le bouton d'action d'un module (installer/dÃ©sinstaller/mettre Ã  jour)
+    /// Gère le clic sur le bouton d'action d'un module (installer/désinstaller/mettre à jour)
     /// </summary>
     private async void OnModuleActionClick(object sender, RoutedEventArgs e)
     {
@@ -322,23 +335,23 @@ public partial class SettingsWindow : Window
         {
             try
             {
-                // VÃ©rifier si c'est une dÃ©sinstallation
-                var isUninstall = item.ActionText == L10n.T("modules.action.uninstall", "DÃ©sinstaller");
+                // Vérifier si c'est une désinstallation
+                var isUninstall = item.ActionText == L10n.T("modules.action.uninstall", "Désinstaller");
                 if (isUninstall)
                 {
                     await UninstallModuleAsync(item, btn);
                     return;
                 }
 
-                // RÃ©cupÃ©rer le manifest pour vÃ©rifier les dÃ©pendances
+                // Récupérer le manifest pour vérifier les dépendances
                 var checkResult = await UpdateService.CheckForUpdatesAsync();
                 if (!checkResult.Success || checkResult.Manifest == null)
                 {
-                    System.Windows.MessageBox.Show(L10n.T("settings.modules.error", "Erreur rÃ©seau"), "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                    System.Windows.MessageBox.Show(L10n.T("settings.modules.error", "Erreur réseau"), "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                // VÃ©rifier les dÃ©pendances manquantes
+                // Vérifier les dépendances manquantes
                 var missingDeps = GetMissingDependencies(item.Definition, checkResult.Manifest);
                 var installedModules = new List<string>();
 
@@ -351,64 +364,64 @@ public partial class SettingsWindow : Window
 
                     var result = System.Windows.MessageBox.Show(
                         message,
-                        L10n.T("modules.manager.dependencies.title", "DÃ©pendances requises"),
+                        L10n.T("modules.manager.dependencies.title", "Dépendances requises"),
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
 
                     if (result != MessageBoxResult.Yes)
                     {
-                        return; // L'utilisateur a annulÃ©
+                        return; // L'utilisateur a annulé
                     }
 
-                    // Installer les dÃ©pendances d'abord
+                    // Installer les dépendances d'abord
                     foreach (var dep in missingDeps)
                     {
                         btn.Content = L10n.TFormat("modules.manager.installing", "Installation de {0}...", dep.Name);
                         await UpdateService.InstallModuleAsync(dep);
                         installedModules.Add(dep.Name);
 
-                        // Mettre Ã  jour le ViewModel correspondant dans la liste
+                        // Mettre à jour le ViewModel correspondant dans la liste
                         var depVm = _moduleList.FirstOrDefault(m => m.Definition.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase));
                         if (depVm != null)
                         {
                             depVm.CanUpdate = true;
-                            depVm.StatusIcon = "âœ“";
+                            depVm.StatusIcon = "?";
                             depVm.StatusColor = System.Windows.Media.Brushes.Green;
-                            depVm.ActionText = L10n.T("modules.action.uninstall", "DÃ©sinstaller");
+                            depVm.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
                         }
                     }
                 }
 
                 btn.IsEnabled = false;
-                btn.Content = L10n.T("modules.manager.downloading", "TÃ©lÃ©chargement...");
+                btn.Content = L10n.T("modules.manager.downloading", "Téléchargement...");
 
                 await UpdateService.InstallModuleAsync(item.Definition);
                 installedModules.Add(item.Name);
 
-                // Mise Ã  jour de l'Ã©tat "installÃ©" permet maintenant la dÃ©sinstallation
-                btn.Content = L10n.T("modules.action.uninstall", "DÃ©sinstaller");
+                // Mise à jour de l'état "installé" permet maintenant la désinstallation
+                btn.Content = L10n.T("modules.action.uninstall", "Désinstaller");
                 item.CanUpdate = true;
-                item.StatusIcon = "âœ“";
+                item.StatusIcon = "?";
                 item.StatusColor = System.Windows.Media.Brushes.Green;
-                item.ActionText = L10n.T("modules.action.uninstall", "DÃ©sinstaller");
+                item.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
 
-                // Message de succÃ¨s
+                // Message de succès
                 if (installedModules.Count > 1)
                 {
-                    var modulesList = string.Join("\nâ€¢ ", installedModules);
+                    var modulesList = string.Join("\n• ", installedModules);
                     System.Windows.MessageBox.Show(
                         L10n.TFormat("modules.manager.restartRequired.multiple",
-                            "Les modules suivants ont Ã©tÃ© installÃ©s :\n{0}\n\nRedÃ©marrez AutoCAD pour les activer.",
-                            "â€¢ " + modulesList),
-                        L10n.T("modules.manager.installSuccess", "Installation rÃ©ussie"),
+                            "Les modules suivants ont été installés :\n{0}\n\nRedémarrez AutoCAD pour les activer.",
+                            "• " + modulesList),
+                        L10n.T("modules.manager.installSuccess", "Installation réussie"),
                         MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
                 else
                 {
                     System.Windows.MessageBox.Show(
-                        L10n.TFormat("modules.manager.restartRequired", "Le module {0} a Ã©tÃ© installÃ©.\n\nRedÃ©marrez AutoCAD pour l'activer.", item.Name),
-                        L10n.T("common.success", "SuccÃ¨s"),
+                        L10n.TFormat("modules.manager.restartRequired", "Le module {0} a été installé.\n\nRedémarrez AutoCAD pour l'activer.", item.Name),
+                        L10n.T("common.success", "Succès"),
                         MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
@@ -416,14 +429,14 @@ public partial class SettingsWindow : Window
             catch (System.Exception ex)
             {
                 System.Windows.MessageBox.Show(ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                btn.Content = L10n.T("modules.manager.retry", "RÃ©essayer");
+                btn.Content = L10n.T("modules.manager.retry", "Réessayer");
                 btn.IsEnabled = true;
             }
         }
     }
 
     /// <summary>
-    /// RÃ©cupÃ¨re les dÃ©pendances manquantes pour un module
+    /// Récupère les dépendances manquantes pour un module
     /// </summary>
     private List<ModuleDefinition> GetMissingDependencies(ModuleDefinition module, MarketplaceManifest manifest)
     {
@@ -434,12 +447,12 @@ public partial class SettingsWindow : Window
 
         foreach (var depId in module.Dependencies)
         {
-            // VÃ©rifier si la dÃ©pendance est dÃ©jÃ  installÃ©e
+            // Vérifier si la dépendance est déjà installée
             var isInstalled = ModuleDiscovery.Modules.Any(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
             if (isInstalled)
                 continue;
 
-            // Trouver la dÃ©finition de la dÃ©pendance dans le manifest
+            // Trouver la définition de la dépendance dans le manifest
             var depDef = manifest.Modules.FirstOrDefault(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
             if (depDef != null)
             {
@@ -451,35 +464,35 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    /// DÃ©sinstalle un module
+    /// Désinstalle un module
     /// </summary>
     private async Task UninstallModuleAsync(ModuleItemViewModel item, System.Windows.Controls.Button btn)
     {
         var moduleId = item.Definition.Id;
         var moduleName = item.Name;
 
-        // 1. Trouver le module chargÃ© pour vÃ©rifier les dÃ©pendances
+        // 1. Trouver le module chargé pour vérifier les dépendances
         var loadedModuleDescriptor = ModuleDiscovery.LoadedModules
             .FirstOrDefault(m => m.Module.Id.Equals(moduleId, StringComparison.OrdinalIgnoreCase));
 
         if (loadedModuleDescriptor == null)
         {
-             // Si le module n'est pas chargÃ©, on essaie de le trouver physiquement dans le dossier Modules
-             // Cela peut arriver si le module a Ã©tÃ© installÃ© mais nÃ©cessite un redÃ©marrage
-             System.Windows.MessageBox.Show(L10n.T("modules.manager.notLoaded", "Module introuvable ou pas encore chargÃ©."), "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+             // Si le module n'est pas chargé, on essaie de le trouver physiquement dans le dossier Modules
+             // Cela peut arriver si le module a été installé mais nécessite un redémarrage
+             System.Windows.MessageBox.Show(L10n.T("modules.manager.notLoaded", "Module introuvable ou pas encore chargé."), "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
              return;
         }
 
-        // 2. VÃ©rifier les dÃ©pendances (autres modules qui dÃ©pendent de celui-ci)
+        // 2. Vérifier les dépendances (autres modules qui dépendent de celui-ci)
         var dependentModules = ModuleDiscovery.Modules
             .Where(m => m.Dependencies.Contains(moduleId, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
         if (dependentModules.Any())
         {
-            var depNames = string.Join("\nâ€¢ ", dependentModules.Select(m => m.Name));
+            var depNames = string.Join("\n• ", dependentModules.Select(m => m.Name));
             var message = L10n.TFormat("modules.manager.uninstall.dependents",
-                "Attention : Les modules suivants dÃ©pendent de {0} :\n\nâ€¢ {1}\n\nSi vous dÃ©sinstallez {0}, ces modules ne fonctionneront plus correctement.\n\nVoulez-vous vraiment continuer ?",
+                "Attention : Les modules suivants dépendent de {0} :\n\n• {1}\n\nSi vous désinstallez {0}, ces modules ne fonctionneront plus correctement.\n\nVoulez-vous vraiment continuer ?",
                 moduleName, depNames);
 
             if (System.Windows.MessageBox.Show(message, L10n.T("modules.manager.warning", "Attention"),
@@ -490,8 +503,8 @@ public partial class SettingsWindow : Window
         }
         else
         {
-            var message = L10n.TFormat("modules.manager.uninstall.confirm", "Voulez-vous vraiment dÃ©sinstaller le module {0} ?", moduleName);
-            if (System.Windows.MessageBox.Show(message, L10n.T("modules.manager.uninstall.title", "DÃ©sinstallation"),
+            var message = L10n.TFormat("modules.manager.uninstall.confirm", "Voulez-vous vraiment désinstaller le module {0} ?", moduleName);
+            if (System.Windows.MessageBox.Show(message, L10n.T("modules.manager.uninstall.title", "Désinstallation"),
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
                 return;
@@ -502,17 +515,17 @@ public partial class SettingsWindow : Window
         {
             btn.IsEnabled = false;
 
-            // 3. ProcÃ©der Ã  la "dÃ©sinstallation" (renommage .dll -> .dll.del)
+            // 3. Procéder à la "désinstallation" (renommage .dll -> .dll.del)
             var filePath = loadedModuleDescriptor.FilePath;
 
-            // OpÃ©rations fichier en arriÃ¨re-plan pour ne pas bloquer l'UI
+            // Opérations fichier en arrière-plan pour ne pas bloquer l'UI
             await Task.Run(() =>
             {
                 // On renomme le fichier DLL principal
                 if (File.Exists(filePath))
                 {
                     var delPath = filePath + ".del";
-                    if (File.Exists(delPath)) File.Delete(delPath); // Nettoyer si existe dÃ©jÃ 
+                    if (File.Exists(delPath)) File.Delete(delPath); // Nettoyer si existe déjà
 
                     File.Move(filePath, delPath);
 
@@ -536,28 +549,28 @@ public partial class SettingsWindow : Window
                 }
             });
 
-            // 4. Mettre Ã  jour l'interface
+            // 4. Mettre à jour l'interface
             item.ActionText = L10n.T("modules.action.install", "Installer");
             item.CanUpdate = true;
             item.StatusIcon = "+";
             item.StatusColor = System.Windows.Media.Brushes.Blue;
             item.VersionDisplay = item.Definition.Version;
 
-            // 5. Demander le redÃ©marrage
+            // 5. Demander le redémarrage
             System.Windows.MessageBox.Show(
                 L10n.TFormat("modules.manager.uninstall.restart",
-                    "Le module {0} a Ã©tÃ© marquÃ© pour dÃ©sinstallation.\n\nIl sera complÃ¨tement supprimÃ© au prochain dÃ©marrage d'AutoCAD.",
+                    "Le module {0} a été marqué pour désinstallation.\n\nIl sera complètement supprimé au prochain démarrage d'AutoCAD.",
                     moduleName),
-                L10n.T("common.success", "SuccÃ¨s"),
+                L10n.T("common.success", "Succès"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
         }
         catch (IOException ioEx)
         {
-            // Erreur typique si fichier verrouillÃ©
+            // Erreur typique si fichier verrouillé
             Logger.Error($"Uninstall error (IO): {ioEx}");
             System.Windows.MessageBox.Show(
-                L10n.T("modules.manager.uninstall.locked", "Impossible de supprimer le fichier car il est verrouillÃ© par AutoCAD.\nEssayez de fermer AutoCAD et de supprimer le fichier manuellement."),
+                L10n.T("modules.manager.uninstall.locked", "Impossible de supprimer le fichier car il est verrouillé par AutoCAD.\nEssayez de fermer AutoCAD et de supprimer le fichier manuellement."),
                 L10n.T("cmd.error", "Erreur"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -574,7 +587,7 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    /// GÃ¨re le changement de sÃ©lection des modules (checkbox)
+    /// Gère le changement de sélection des modules (checkbox)
     /// </summary>
     private void OnModuleSelectionChanged(object sender, RoutedEventArgs e)
     {
@@ -582,7 +595,7 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    /// Met Ã  jour l'interface selon la sÃ©lection
+    /// Met à jour l'interface selon la sélection
     /// </summary>
     private void UpdateSelectionUI()
     {
@@ -595,12 +608,12 @@ public partial class SettingsWindow : Window
         }
         else
         {
-            txtSelectedCount.Text = L10n.TFormat("settings.modules.selectedCount", "{0} module(s) sÃ©lectionnÃ©(s)", selectedCount);
+            txtSelectedCount.Text = L10n.TFormat("settings.modules.selectedCount", "{0} module(s) sélectionné(s)", selectedCount);
         }
     }
 
     /// <summary>
-    /// Installe tous les modules sÃ©lectionnÃ©s
+    /// Installe tous les modules sélectionnés
     /// </summary>
     private async void OnInstallSelectedClick(object sender, RoutedEventArgs e)
     {
@@ -611,22 +624,22 @@ public partial class SettingsWindow : Window
 
         try
         {
-            // RÃ©cupÃ©rer le manifest pour les dÃ©pendances
+            // Récupérer le manifest pour les dépendances
             var checkResult = await UpdateService.CheckForUpdatesAsync();
             if (!checkResult.Success || checkResult.Manifest == null)
             {
-                System.Windows.MessageBox.Show(L10n.T("settings.modules.error", "Erreur rÃ©seau"), "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(L10n.T("settings.modules.error", "Erreur réseau"), "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            // Collecter toutes les dÃ©pendances manquantes
+            // Collecter toutes les dépendances manquantes
             var allDependencies = new List<ModuleDefinition>();
             foreach (var module in selectedModules)
             {
                 var deps = GetMissingDependencies(module.Definition, checkResult.Manifest);
                 foreach (var dep in deps)
                 {
-                    // Ã‰viter les doublons et les modules dÃ©jÃ  sÃ©lectionnÃ©s
+                    // Éviter les doublons et les modules déjà sélectionnés
                     if (!allDependencies.Any(d => d.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase)) &&
                         !selectedModules.Any(m => m.Definition.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase)))
                     {
@@ -635,17 +648,17 @@ public partial class SettingsWindow : Window
                 }
             }
 
-            // Demander confirmation pour les dÃ©pendances supplÃ©mentaires
+            // Demander confirmation pour les dépendances supplémentaires
             if (allDependencies.Count > 0)
             {
-                var depNames = string.Join("\nâ€¢ ", allDependencies.Select(d => d.Name));
+                var depNames = string.Join("\n• ", allDependencies.Select(d => d.Name));
                 var message = L10n.TFormat("settings.modules.dependenciesRequired",
-                    "Les modules suivants seront Ã©galement installÃ©s (dÃ©pendances requises) :\n\nâ€¢ {0}\n\nContinuer ?",
+                    "Les modules suivants seront également installés (dépendances requises) :\n\n• {0}\n\nContinuer ?",
                     depNames);
 
                 var result = System.Windows.MessageBox.Show(
                     message,
-                    L10n.T("modules.manager.dependencies.title", "DÃ©pendances requises"),
+                    L10n.T("modules.manager.dependencies.title", "Dépendances requises"),
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
 
@@ -654,41 +667,41 @@ public partial class SettingsWindow : Window
             }
 
             // Confirmer l'installation
-            var selectedNames = string.Join("\nâ€¢ ", selectedModules.Select(m => m.Name));
+            var selectedNames = string.Join("\n• ", selectedModules.Select(m => m.Name));
             var totalCount = selectedModules.Count + allDependencies.Count;
             var confirmMessage = L10n.TFormat("settings.modules.confirmInstall",
-                "Installer {0} module(s) ?\n\nâ€¢ {1}",
+                "Installer {0} module(s) ?\n\n• {1}",
                 totalCount, selectedNames);
 
             if (System.Windows.MessageBox.Show(confirmMessage, L10n.T("settings.modules.installTitle", "Installation"),
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
-            // DÃ©sactiver les contrÃ´les pendant l'installation
+            // Désactiver les contrôles pendant l'installation
             btnInstallSelected.IsEnabled = false;
             btnCheckUpdates.IsEnabled = false;
             var installedModules = new List<string>();
 
-            // D'abord installer les dÃ©pendances
+            // D'abord installer les dépendances
             foreach (var dep in allDependencies)
             {
                 txtUpdateStatus.Text = L10n.TFormat("modules.manager.installing", "Installation de {0}...", dep.Name);
                 await UpdateService.InstallModuleAsync(dep);
                 installedModules.Add(dep.Name);
 
-                // Mettre Ã  jour le ViewModel correspondant
+                // Mettre à jour le ViewModel correspondant
                 var depVm = _moduleList.FirstOrDefault(m => m.Definition.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase));
                 if (depVm != null)
                 {
                     depVm.CanUpdate = true;
                     depVm.IsSelected = false;
-                    depVm.StatusIcon = "âœ“";
+                    depVm.StatusIcon = "?";
                     depVm.StatusColor = System.Windows.Media.Brushes.Green;
-                    depVm.ActionText = L10n.T("modules.action.uninstall", "DÃ©sinstaller");
+                    depVm.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
                 }
             }
 
-            // Ensuite installer les modules sÃ©lectionnÃ©s
+            // Ensuite installer les modules sélectionnés
             foreach (var module in selectedModules)
             {
                 txtUpdateStatus.Text = L10n.TFormat("modules.manager.installing", "Installation de {0}...", module.Name);
@@ -697,30 +710,30 @@ public partial class SettingsWindow : Window
 
                 module.CanUpdate = true;
                 module.IsSelected = false;
-                module.StatusIcon = "âœ“";
+                module.StatusIcon = "?";
                 module.StatusColor = System.Windows.Media.Brushes.Green;
-                module.ActionText = L10n.T("modules.action.uninstall", "DÃ©sinstaller");
+                module.ActionText = L10n.T("modules.action.uninstall", "Désinstaller");
             }
 
-            // RafraÃ®chir l'affichage
+            // Rafraîchir l'affichage
             lstModules.Items.Refresh();
             UpdateSelectionUI();
 
             var installedCount = ModuleDiscovery.Modules.Count + installedModules.Count;
             var totalAvailable = checkResult.Manifest?.Modules.Count ?? 0;
-            txtUpdateStatus.Text = L10n.TFormat("settings.modules.status", "{0}/{1} modules installÃ©s", installedCount, totalAvailable);
+            txtUpdateStatus.Text = L10n.TFormat("settings.modules.status", "{0}/{1} modules installés", installedCount, totalAvailable);
 
-            // Message de succÃ¨s
-            var modulesList = string.Join("\nâ€¢ ", installedModules);
+            // Message de succès
+            var modulesList = string.Join("\n• ", installedModules);
             System.Windows.MessageBox.Show(
                 L10n.TFormat("modules.manager.restartRequired.multiple",
-                    "Les modules suivants ont Ã©tÃ© installÃ©s :\n{0}\n\nRedÃ©marrez AutoCAD pour les activer.",
-                    "â€¢ " + modulesList),
-                L10n.T("modules.manager.installSuccess", "Installation rÃ©ussie"),
+                    "Les modules suivants ont été installés :\n{0}\n\nRedémarrez AutoCAD pour les activer.",
+                    "• " + modulesList),
+                L10n.T("modules.manager.installSuccess", "Installation réussie"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
 
-            Logger.Success(L10n.TFormat("settings.modules.installed", "{0} module(s) installÃ©(s)", installedModules.Count));
+            Logger.Success(L10n.TFormat("settings.modules.installed", "{0} module(s) installé(s)", installedModules.Count));
         }
         catch (System.Exception ex)
         {

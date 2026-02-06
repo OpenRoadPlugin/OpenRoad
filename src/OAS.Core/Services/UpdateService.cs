@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.IO;
 using System.Net.Http;
@@ -24,7 +29,7 @@ using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// Service de gestion des mises Ã  jour et du tÃ©lÃ©chargement de modules.
+/// Service de gestion des mises à jour et du téléchargement de modules.
 /// </summary>
 public static class UpdateService
 {
@@ -48,7 +53,7 @@ public static class UpdateService
     #region Startup Update Check
 
     /// <summary>
-    /// RÃ©cupÃ¨re la version majeure d'AutoCAD (ex: 2025, 2026).
+    /// Récupère la version majeure d'AutoCAD (ex: 2025, 2026).
     /// </summary>
     /// <returns>Version AutoCAD sous forme de string (ex: "2025")</returns>
     public static string GetAutoCADVersion()
@@ -62,7 +67,7 @@ public static class UpdateService
             if (parts.Length >= 1 && int.TryParse(parts[0], out var majorVer))
             {
                 // AutoCAD 2025 = version 25.x, AutoCAD 2000 = version 15.x
-                // Formule: AnnÃ©e = 2000 + (version - 15) pour versions >= 15
+                // Formule: Année = 2000 + (version - 15) pour versions >= 15
                 // Pour version 25 -> 2025
                 var year = 2000 + majorVer;
                 return year.ToString();
@@ -76,17 +81,17 @@ public static class UpdateService
     }
 
     /// <summary>
-    /// VÃ©rifie si une mise Ã  jour est disponible au dÃ©marrage.
-    /// Cette mÃ©thode est appelÃ©e de maniÃ¨re asynchrone et non-bloquante.
+    /// Vérifie si une mise à jour est disponible au démarrage.
+    /// Cette méthode est appelée de manière asynchrone et non-bloquante.
     /// </summary>
-    /// <returns>RÃ©sultat de la vÃ©rification avec informations de mise Ã  jour</returns>
+    /// <returns>Résultat de la vérification avec informations de mise à jour</returns>
     public static async Task<StartupUpdateResult> CheckStartupUpdateAsync()
     {
         var result = new StartupUpdateResult();
 
         try
         {
-            // RÃ©cupÃ©rer les informations de release depuis GitHub API
+            // Récupérer les informations de release depuis GitHub API
             var response = await _httpClient.GetAsync(GitHubApiReleasesUrl);
 
             if (!response.IsSuccessStatusCode)
@@ -112,7 +117,7 @@ public static class UpdateService
                 return result;
             }
 
-            // RÃ©cupÃ©rer la version actuelle
+            // Récupérer la version actuelle
             var currentVersionStr = Plugin.Version;
             // Nettoyer la version (supprimer suffixes comme -dev, +hash)
             var cleanVersion = currentVersionStr.Split('-')[0].Split('+')[0];
@@ -136,7 +141,7 @@ public static class UpdateService
                 return result;
             }
 
-            // VÃ©rifier la version AutoCAD minimale requise
+            // Vérifier la version AutoCAD minimale requise
             var minAutoCAD = ExtractMinAutoCADVersion(release);
             var currentAutoCAD = GetAutoCADVersion();
 
@@ -155,7 +160,7 @@ public static class UpdateService
                 }
             }
 
-            // Mise Ã  jour disponible et compatible!
+            // Mise à jour disponible et compatible!
             result.UpdateAvailable = true;
             Logger.Info(L10n.TFormat("update.available", latestVersion.ToString()));
 
@@ -183,7 +188,7 @@ public static class UpdateService
     /// </summary>
     private static string ExtractMinAutoCADVersion(GitHubRelease release)
     {
-        // Par dÃ©faut, utiliser 2025
+        // Par défaut, utiliser 2025
         var defaultVersion = "2025";
 
         if (string.IsNullOrEmpty(release.Body))
@@ -222,7 +227,7 @@ public static class UpdateService
         if (release.Assets == null || release.Assets.Count == 0)
             return release.HtmlUrl ?? "";
 
-        // Chercher un asset qui ressemble Ã  un installateur
+        // Chercher un asset qui ressemble à un installateur
         var installer = release.Assets.FirstOrDefault(a =>
             a.Name.Contains("Setup", StringComparison.OrdinalIgnoreCase) ||
             a.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase));
@@ -231,7 +236,7 @@ public static class UpdateService
     }
 
     /// <summary>
-    /// Affiche une notification non-bloquante de mise Ã  jour disponible.
+    /// Affiche une notification non-bloquante de mise à jour disponible.
     /// </summary>
     public static void ShowUpdateNotification(StartupUpdateResult result)
     {
@@ -240,7 +245,7 @@ public static class UpdateService
 
         try
         {
-            // Afficher via MessageBox (non-bloquant car appelÃ© dans un contexte appropriÃ©)
+            // Afficher via MessageBox (non-bloquant car appelé dans un contexte approprié)
             var message = L10n.TFormat("update.notification.message",
                 result.LatestVersion.ToString(),
                 result.CurrentVersion?.ToString() ?? "?");
@@ -253,7 +258,7 @@ public static class UpdateService
 
             if (mbResult == System.Windows.MessageBoxResult.Yes)
             {
-                // Ouvrir la page de tÃ©lÃ©chargement
+                // Ouvrir la page de téléchargement
                 var url = string.IsNullOrEmpty(result.DownloadUrl) ? result.ReleaseUrl : result.DownloadUrl;
                 if (UrlValidationService.IsValidUpdateUrl(url) || url.StartsWith("https://github.com"))
                 {
@@ -367,8 +372,19 @@ public static class UpdateService
                 var bestVersion = candidates
                     .Where(v =>
                     {
-                        if (!Version.TryParse(v.MinCoreVersion, out var minCore)) return true; // Si pas specifie, on suppose compatible
-                        return minCore <= coreVersion;
+                        // Vérifier MinCoreVersion
+                        if (Version.TryParse(v.MinCoreVersion, out var minCore))
+                        {
+                            if (minCore > coreVersion) return false;
+                        }
+
+                        // Vérifier MaxCoreVersion (si définie)
+                        if (!string.IsNullOrEmpty(v.MaxCoreVersion) && Version.TryParse(v.MaxCoreVersion, out var maxCore))
+                        {
+                            if (maxCore < coreVersion) return false;
+                        }
+
+                        return true;
                     })
                     .OrderByDescending(v =>
                     {
@@ -427,25 +443,25 @@ public static class UpdateService
         }
         catch (HttpRequestException httpEx)
         {
-            // Erreurs HTTP spÃ©cifiques (404, 500, etc.)
+            // Erreurs HTTP spécifiques (404, 500, etc.)
             var statusCode = httpEx.StatusCode;
             string errorMessage;
 
             if (statusCode == System.Net.HttpStatusCode.NotFound)
             {
-                errorMessage = L10n.T("update.error.notFound", "Catalogue de modules introuvable (404). VÃ©rifiez votre connexion ou rÃ©essayez plus tard.");
+                errorMessage = L10n.T("update.error.notFound", "Catalogue de modules introuvable (404). Vérifiez votre connexion ou réessayez plus tard.");
             }
             else if (statusCode == System.Net.HttpStatusCode.Forbidden)
             {
-                errorMessage = L10n.T("update.error.forbidden", "AccÃ¨s au catalogue refusÃ© (403).");
+                errorMessage = L10n.T("update.error.forbidden", "Accès au catalogue refusé (403).");
             }
             else if (httpEx.Message.Contains("No such host"))
             {
-                errorMessage = L10n.T("update.error.noInternet", "Impossible de contacter le serveur. VÃ©rifiez votre connexion Internet.");
+                errorMessage = L10n.T("update.error.noInternet", "Impossible de contacter le serveur. Vérifiez votre connexion Internet.");
             }
             else
             {
-                errorMessage = L10n.TFormat("update.error.http", "Erreur rÃ©seau: {0}", httpEx.Message);
+                errorMessage = L10n.TFormat("update.error.http", "Erreur réseau: {0}", httpEx.Message);
             }
 
             Logger.Error($"Update check failed (HTTP): {httpEx.Message}");
@@ -453,7 +469,7 @@ public static class UpdateService
         }
         catch (TaskCanceledException)
         {
-            var errorMessage = L10n.T("update.error.timeout", "DÃ©lai d'attente dÃ©passÃ©. Le serveur ne rÃ©pond pas.");
+            var errorMessage = L10n.T("update.error.timeout", "Délai d'attente dépassé. Le serveur ne répond pas.");
             Logger.Error("Update check failed: timeout");
             return new UpdateCheckResult { Success = false, ErrorMessage = errorMessage };
         }
@@ -775,6 +791,9 @@ public class ModuleDefinition
     [JsonPropertyName("minCoreVersion")]
     public string MinCoreVersion { get; set; } = "";
 
+    [JsonPropertyName("maxCoreVersion")]
+    public string? MaxCoreVersion { get; set; }
+
     [JsonPropertyName("downloadUrl")]
     public string DownloadUrl { get; set; } = "";
 
@@ -797,6 +816,9 @@ public class ModuleVersionInfo
 
     [JsonPropertyName("minCoreVersion")]
     public string MinCoreVersion { get; set; } = "";
+
+    [JsonPropertyName("maxCoreVersion")]
+    public string? MaxCoreVersion { get; set; }
 
     [JsonPropertyName("downloadUrl")]
     public string DownloadUrl { get; set; } = "";
@@ -829,32 +851,32 @@ public class ModuleUpdateInfo
 }
 
 /// <summary>
-/// RÃ©sultat de la vÃ©rification des mises Ã  jour au dÃ©marrage.
+/// Résultat de la vérification des mises à jour au démarrage.
 /// </summary>
 public class StartupUpdateResult
 {
-    /// <summary>Version actuelle installÃ©e</summary>
+    /// <summary>Version actuelle installée</summary>
     public Version? CurrentVersion { get; set; }
 
-    /// <summary>DerniÃ¨re version disponible</summary>
+    /// <summary>Dernière version disponible</summary>
     public Version? LatestVersion { get; set; }
 
-    /// <summary>True si une mise Ã  jour est disponible et compatible</summary>
+    /// <summary>True si une mise à jour est disponible et compatible</summary>
     public bool UpdateAvailable { get; set; }
 
-    /// <summary>True si la version actuelle est Ã  jour</summary>
+    /// <summary>True si la version actuelle est à jour</summary>
     public bool IsUpToDate { get; set; }
 
-    /// <summary>True si la mise Ã  jour nÃ©cessite une version AutoCAD plus rÃ©cente</summary>
+    /// <summary>True si la mise à jour nécessite une version AutoCAD plus récente</summary>
     public bool IncompatibleAutoCAD { get; set; }
 
-    /// <summary>Version AutoCAD minimale requise pour la mise Ã  jour</summary>
+    /// <summary>Version AutoCAD minimale requise pour la mise à jour</summary>
     public string RequiredAutoCADVersion { get; set; } = "";
 
     /// <summary>URL de la page de release GitHub</summary>
     public string ReleaseUrl { get; set; } = "";
 
-    /// <summary>URL de tÃ©lÃ©chargement de l'installateur</summary>
+    /// <summary>URL de téléchargement de l'installateur</summary>
     public string DownloadUrl { get; set; } = "";
 
     /// <summary>Notes de version</summary>
@@ -862,7 +884,7 @@ public class StartupUpdateResult
 }
 
 /// <summary>
-/// ModÃ¨le pour la rÃ©ponse de l'API GitHub releases.
+/// Modèle pour la réponse de l'API GitHub releases.
 /// </summary>
 public class GitHubRelease
 {
@@ -886,7 +908,7 @@ public class GitHubRelease
 }
 
 /// <summary>
-/// ModÃ¨le pour un asset de release GitHub.
+/// Modèle pour un asset de release GitHub.
 /// </summary>
 public class GitHubAsset
 {

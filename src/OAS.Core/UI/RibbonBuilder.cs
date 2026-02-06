@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.Windows;
 using System.Windows.Media.Imaging;
@@ -21,11 +26,11 @@ namespace OpenAsphalte.UI;
 
 /// <summary>
 /// Construction dynamique du ruban (Ribbon) Open Asphalte.
-/// GÃ©nÃ¨re automatiquement le ruban basÃ© sur les modules dÃ©couverts.
+/// Génère automatiquement le ruban basé sur les modules découverts.
 /// </summary>
 /// <remarks>
-/// Le ruban supporte une mise Ã  jour incrÃ©mentale lors du changement de langue
-/// pour Ã©viter le scintillement causÃ© par une reconstruction complÃ¨te.
+/// Le ruban supporte une mise à jour incrémentale lors du changement de langue
+/// pour éviter le scintillement causé par une reconstruction complète.
 /// </remarks>
 public static class RibbonBuilder
 {
@@ -34,30 +39,30 @@ public static class RibbonBuilder
     private const string LogoResourcePath = "pack://application:,,,/OAS.Core;component/Resources/OAS_Logo.png";
     private static bool _ribbonCreated = false;
 
-    // Cache pour mise Ã  jour incrÃ©mentale des textes
+    // Cache pour mise à jour incrémentale des textes
     private static readonly Dictionary<string, RibbonButton> _buttonCache = new();
     private static readonly Dictionary<string, RibbonPanelSource> _panelCache = new();
 
-    // Images redimensionnÃ©es pour le ruban
+    // Images redimensionnées pour le ruban
     private static BitmapImage? _largeImage = null;  // 32x32
     private static BitmapImage? _smallImage = null;  // 16x16
 
     /// <summary>
-    /// Retourne le titre de l'onglet (nom personnalisÃ© ou dÃ©faut)
+    /// Retourne le titre de l'onglet (nom personnalisé ou défaut)
     /// </summary>
     private static string GetTabTitle()
     {
-        // RÃ©cupÃ©rer le nom personnalisÃ© depuis la configuration
+        // Récupérer le nom personnalisé depuis la configuration
         var customName = Configuration.Configuration.MainMenuName;
 
-        // Si le nom est personnalisÃ© (diffÃ©rent du dÃ©faut), l'utiliser
+        // Si le nom est personnalisé (différent du défaut), l'utiliser
         if (!string.IsNullOrEmpty(customName) &&
             !customName.Equals(DefaultTabTitle, StringComparison.OrdinalIgnoreCase))
         {
             return customName;
         }
 
-        // Sinon utiliser la traduction (ou dÃ©faut)
+        // Sinon utiliser la traduction (ou défaut)
         return L10n.T("app.name", DefaultTabTitle);
     }
 
@@ -98,7 +103,7 @@ public static class RibbonBuilder
     }
 
     /// <summary>
-    /// Charge une image et la redimensionne aux dimensions spÃ©cifiÃ©es
+    /// Charge une image et la redimensionne aux dimensions spécifiées
     /// </summary>
     private static BitmapImage? LoadAndResizeImage(string uri, int width, int height)
     {
@@ -120,7 +125,7 @@ public static class RibbonBuilder
     }
 
     /// <summary>
-    /// Retourne l'image du logo pour compatibilitÃ© (utilise la grande image)
+    /// Retourne l'image du logo pour compatibilité (utilise la grande image)
     /// </summary>
     private static BitmapImage? GetLogoImage() => GetLargeImage();
 
@@ -186,7 +191,7 @@ public static class RibbonBuilder
     }
 
     /// <summary>
-    /// CrÃ©e un panneau pour un module
+    /// Crée un panneau pour un module
     /// </summary>
     private static RibbonPanel? CreateModulePanel(IModule module, List<CommandDescriptor> commands)
     {
@@ -199,7 +204,7 @@ public static class RibbonBuilder
             };
             panel.Source = source;
 
-            // Enregistrer dans le cache pour mise Ã  jour incrÃ©mentale
+            // Enregistrer dans le cache pour mise à jour incrémentale
             _panelCache[module.Id] = source;
 
             // Grouper les commandes par groupe
@@ -258,7 +263,7 @@ public static class RibbonBuilder
     }
 
     /// <summary>
-    /// CrÃ©e le panneau systÃ¨me
+    /// Crée le panneau système
     /// </summary>
     private static RibbonPanel CreateSystemPanel()
     {
@@ -266,14 +271,14 @@ public static class RibbonBuilder
         var source = new RibbonPanelSource { Title = L10n.T("system.name") };
         panel.Source = source;
 
-        // Enregistrer dans le cache pour mise Ã  jour incrÃ©mentale
+        // Enregistrer dans le cache pour mise à jour incrémentale
         _panelCache["_system"] = source;
 
-        // Images redimensionnÃ©es
+        // Images redimensionnées
         var largeIcon = GetLargeImage();
         var smallIcon = GetSmallImage();
 
-        // Bouton ParamÃ¨tres - Grand bouton
+        // Bouton Paramètres - Grand bouton
         var settingsButton = new RibbonButton
         {
             Text = L10n.T("system.settings"),
@@ -290,7 +295,7 @@ public static class RibbonBuilder
         _buttonCache["OAS_SETTINGS"] = settingsButton;
         source.Items.Add(settingsButton);
 
-        // Bouton Ã€ propos - Grand bouton
+        // Bouton À propos - Grand bouton
         var aboutButton = new RibbonButton
         {
             Text = L10n.T("about.title"),
@@ -307,7 +312,7 @@ public static class RibbonBuilder
         _buttonCache["OAS_VERSION"] = aboutButton;
         source.Items.Add(aboutButton);
 
-        // Panneau avec les boutons secondaires (Aide, Recharger, Mise Ã  jour)
+        // Panneau avec les boutons secondaires (Aide, Recharger, Mise à jour)
         var rowPanel = new RibbonRowPanel();
 
         // Aide
@@ -328,7 +333,7 @@ public static class RibbonBuilder
         rowPanel.Items.Add(reloadButton);
         rowPanel.Items.Add(new RibbonRowBreak());
 
-        // Mise Ã  jour
+        // Mise à jour
         var updateButton = CreateSystemButtonSmall(
             L10n.T("system.update"),
             "OAS_UPDATE",
@@ -342,7 +347,7 @@ public static class RibbonBuilder
     }
 
     /// <summary>
-    /// CrÃ©e un petit bouton systÃ¨me (16x16)
+    /// Crée un petit bouton système (16x16)
     /// </summary>
     private static RibbonButton CreateSystemButtonSmall(string text, string command, string tooltip)
     {
@@ -381,7 +386,7 @@ public static class RibbonBuilder
             ToolTip = CreateTooltip(cmd.GetLocalizedDisplayName(), cmd.GetLocalizedDescription())
         };
 
-        // Charger l'icÃ´ne si spÃ©cifiÃ©e (avec redimensionnement)
+        // Charger l'icône si spécifiée (avec redimensionnement)
         BitmapImage? largeIcon = null;
         BitmapImage? smallIcon = null;
 
@@ -405,14 +410,14 @@ public static class RibbonBuilder
         button.LargeImage = largeIcon;
         button.Image = smallIcon;
 
-        // Enregistrer dans le cache pour mise Ã  jour incrÃ©mentale
+        // Enregistrer dans le cache pour mise à jour incrémentale
         _buttonCache[cmd.CommandName] = button;
 
         return button;
     }
 
     /// <summary>
-    /// CrÃ©e une infobulle formatÃ©e
+    /// Crée une infobulle formatée
     /// </summary>
     private static RibbonToolTip CreateTooltip(string title, string content)
     {
@@ -450,14 +455,14 @@ public static class RibbonBuilder
     }
 
     /// <summary>
-    /// Reconstruit le ruban (utilisÃ© aprÃ¨s changement de langue).
-    /// Utilise une mise Ã  jour incrÃ©mentale si possible pour Ã©viter le scintillement.
+    /// Reconstruit le ruban (utilisé après changement de langue).
+    /// Utilise une mise à jour incrémentale si possible pour éviter le scintillement.
     /// </summary>
     public static void RebuildRibbon()
     {
         try
         {
-            // VÃ©rifier que le ruban est disponible
+            // Vérifier que le ruban est disponible
             var ribbonControl = ComponentManager.Ribbon;
             if (ribbonControl == null)
             {
@@ -465,14 +470,14 @@ public static class RibbonBuilder
                 return;
             }
 
-            // Tenter une mise Ã  jour incrÃ©mentale si le ruban existe
+            // Tenter une mise à jour incrémentale si le ruban existe
             if (_ribbonCreated && TryUpdateLocalizedTexts())
             {
-                Logger.Debug(L10n.T("ui.ribbon.updated", "Ruban mis Ã  jour (incrÃ©mental)"));
+                Logger.Debug(L10n.T("ui.ribbon.updated", "Ruban mis à jour (incrémental)"));
                 return;
             }
 
-            // Sinon, reconstruction complÃ¨te
+            // Sinon, reconstruction complète
             RemoveRibbon();
             CreateRibbon();
         }
@@ -483,9 +488,9 @@ public static class RibbonBuilder
     }
 
     /// <summary>
-    /// Met Ã  jour uniquement les textes localisÃ©s du ruban sans recrÃ©er la structure.
+    /// Met à jour uniquement les textes localisés du ruban sans recréer la structure.
     /// </summary>
-    /// <returns>True si la mise Ã  jour a rÃ©ussi, false si reconstruction nÃ©cessaire</returns>
+    /// <returns>True si la mise à jour a réussi, false si reconstruction nécessaire</returns>
     private static bool TryUpdateLocalizedTexts()
     {
         try
@@ -494,10 +499,10 @@ public static class RibbonBuilder
             var tab = ribbonControl?.FindTab(TabId);
             if (tab == null) return false;
 
-            // Mettre Ã  jour le titre de l'onglet
+            // Mettre à jour le titre de l'onglet
             tab.Title = GetTabTitle();
 
-            // Mettre Ã  jour les panneaux en cache
+            // Mettre à jour les panneaux en cache
             foreach (var kvp in _panelCache)
             {
                 var moduleId = kvp.Key;
@@ -513,13 +518,13 @@ public static class RibbonBuilder
                 }
             }
 
-            // Mettre Ã  jour le panneau systÃ¨me
+            // Mettre à jour le panneau système
             if (_panelCache.TryGetValue("_system", out var systemPanel))
             {
                 systemPanel.Title = L10n.T("system.name");
             }
 
-            // Mettre Ã  jour les boutons en cache
+            // Mettre à jour les boutons en cache
             foreach (var kvp in _buttonCache)
             {
                 var commandName = kvp.Key;
@@ -538,7 +543,7 @@ public static class RibbonBuilder
                 }
             }
 
-            // Mettre Ã  jour les boutons systÃ¨me
+            // Mettre à jour les boutons système
             UpdateSystemButtonText("OAS_SETTINGS", L10n.T("system.settings"), L10n.T("system.settings.desc"));
             UpdateSystemButtonText("OAS_VERSION", L10n.T("about.title"), L10n.T("system.version.desc"));
             UpdateSystemButtonText("OAS_HELP", L10n.T("system.help"), L10n.T("system.help.desc"));
@@ -554,7 +559,7 @@ public static class RibbonBuilder
     }
 
     /// <summary>
-    /// Met Ã  jour le texte d'un bouton systÃ¨me en cache
+    /// Met à jour le texte d'un bouton système en cache
     /// </summary>
     private static void UpdateSystemButtonText(string commandName, string text, string tooltip)
     {
@@ -572,7 +577,7 @@ public static class RibbonBuilder
 public class RibbonCommandHandler : System.Windows.Input.ICommand
 {
     /// <summary>
-    /// Ã‰vÃ©nement requis par ICommand (non utilisÃ© car CanExecute retourne toujours true)
+    /// Événement requis par ICommand (non utilisé car CanExecute retourne toujours true)
     /// </summary>
     public event EventHandler? CanExecuteChanged
     {
@@ -592,7 +597,7 @@ public class RibbonCommandHandler : System.Windows.Input.ICommand
                 if (doc != null)
                 {
                     // Format: ^C^C annule les commandes en cours, puis lance la commande
-                    // Le _ rend la commande internationale (non localisÃ©e)
+                    // Le _ rend la commande internationale (non localisée)
                     doc.SendStringToExecute($"^C^C_{command} ", true, false, false);
                 }
             }

@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Windows;
 using System.Windows.Input;
@@ -16,7 +21,7 @@ using L10n = OpenAsphalte.Localization.Localization;
 namespace OpenAsphalte.Modules.PrezOrganizer.Views;
 
 /// <summary>
-/// BoÃ®te de dialogue simple pour saisir un texte (renommage, ajout...).
+/// Boîte de dialogue simple pour saisir un texte (renommage, ajout...).
 /// </summary>
 public partial class InputDialog : Window
 {
@@ -26,11 +31,11 @@ public partial class InputDialog : Window
     public string ResultText => InputTextBox.Text?.Trim() ?? string.Empty;
 
     /// <summary>
-    /// CrÃ©e une boÃ®te de dialogue de saisie.
+    /// Crée une boîte de dialogue de saisie.
     /// </summary>
-    /// <param name="title">Titre de la fenÃªtre</param>
+    /// <param name="title">Titre de la fenêtre</param>
     /// <param name="prompt">Texte du label</param>
-    /// <param name="defaultValue">Valeur par dÃ©faut dans le champ</param>
+    /// <param name="defaultValue">Valeur par défaut dans le champ</param>
     public InputDialog(string title, string prompt, string defaultValue = "")
     {
         InitializeComponent();
@@ -53,7 +58,7 @@ public partial class InputDialog : Window
     {
         if (string.IsNullOrWhiteSpace(InputTextBox.Text))
         {
-            ErrorText.Text = T("prezorganizer.error.emptyName", "Le nom ne peut pas Ãªtre vide");
+            ErrorText.Text = T("prezorganizer.error.emptyName", "Le nom ne peut pas être vide");
             ErrorText.Visibility = System.Windows.Visibility.Visible;
             InputTextBox.Focus();
             return;

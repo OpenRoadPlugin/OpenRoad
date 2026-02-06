@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+﻿// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.IO;
 using System.Reflection;
@@ -26,17 +31,17 @@ using OpenAsphalte.UI;
 using L10n = OpenAsphalte.Localization.Localization;
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
-// Enregistrer la classe de commandes système
+// Enregistrer la classe de commandes syst�me
 [assembly: CommandClass(typeof(SystemCommands))]
 
-// Point d'entrée du plugin
+// Point d'entr�e du plugin
 [assembly: ExtensionApplication(typeof(OpenAsphalte.Plugin))]
 
 namespace OpenAsphalte;
 
 /// <summary>
-/// Point d'entrée principal du plugin Open Asphalte pour AutoCAD.
-/// Gère le cycle de vie de l'application et la découverte automatique des modules.
+/// Point d'entr�e principal du plugin Open Asphalte pour AutoCAD.
+/// G�re le cycle de vie de l'application et la d�couverte automatique des modules.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -61,7 +66,7 @@ public class Plugin : IExtensionApplication
     private static EventHandler? _updateIdleHandler;
 
     /// <summary>
-    /// Version du coeur Open Asphalte (chargée depuis version.json)
+    /// Version du coeur Open Asphalte (charg�e depuis version.json)
     /// </summary>
     public static string Version => _version.Value;
 
@@ -79,7 +84,7 @@ public class Plugin : IExtensionApplication
     private static readonly object _idleLock = new();
 
     /// <summary>
-    /// Charge la version depuis version.json de manière thread-safe
+    /// Charge la version depuis version.json de mani�re thread-safe
     /// </summary>
     private static string LoadVersionFromJson()
     {
@@ -95,21 +100,21 @@ public class Plugin : IExtensionApplication
 
                 if (doc.RootElement.TryGetProperty("version", out var versionElement))
                 {
-                    return versionElement.GetString() ?? "0.0.1";
+                    return versionElement.GetString() ?? "0.0.3";
                 }
             }
         }
         catch (System.Exception ex)
         {
-            // En cas d'erreur, utiliser la version par défaut
+            // En cas d'erreur, utiliser la version par d�faut
             StartupLog.Write($"LoadVersionFromJson error: {ex.Message}");
         }
 
-        return "0.0.1";
+        return "0.0.3";
     }
 
     /// <summary>
-    /// Appelé au chargement du plugin par AutoCAD
+    /// Appel� au chargement du plugin par AutoCAD
     /// </summary>
     public void Initialize()
     {
@@ -122,7 +127,7 @@ public class Plugin : IExtensionApplication
             BasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
             StartupLog.Write($"BasePath: {BasePath}");
 
-            // 2. La version est chargée automatiquement via Lazy<T>
+            // 2. La version est charg�e automatiquement via Lazy<T>
 
             // 3. Charger la configuration utilisateur
             Configuration.Configuration.Load();
@@ -153,7 +158,7 @@ public class Plugin : IExtensionApplication
             // 9. Verification des mises a jour au demarrage (si active)
             if (Configuration.Configuration.CheckUpdatesOnStartup)
             {
-                // Vérification asynchrone non-bloquante
+                // V�rification asynchrone non-bloquante
                 _ = CheckForUpdatesOnStartupAsync();
             }
             StartupLog.Write("Initialize: end");
@@ -166,7 +171,7 @@ public class Plugin : IExtensionApplication
     }
 
     /// <summary>
-    /// Active le journal fichier et capture les exceptions non gérées.
+    /// Active le journal fichier et capture les exceptions non g�r�es.
     /// </summary>
     private static void EnableDiagnostics()
     {
@@ -185,7 +190,7 @@ public class Plugin : IExtensionApplication
             }
             catch (System.Exception logEx)
             {
-                // Fallback: écrire dans StartupLog si Logger échoue
+                // Fallback: �crire dans StartupLog si Logger �choue
                 StartupLog.Write($"UnhandledException logging failed: {logEx.Message}");
             }
         };
@@ -213,12 +218,12 @@ public class Plugin : IExtensionApplication
             }
             catch
             {
-                // Silencieux: éviter boucle infinie si StartupLog échoue
+                // Silencieux: �viter boucle infinie si StartupLog �choue
             }
         };
         AppDomain.CurrentDomain.FirstChanceException += _firstChanceHandler;
 
-        Logger.Info($"Diagnostics activés. Log: {Logger.LogFilePath}");
+        Logger.Info($"Diagnostics activ�s. Log: {Logger.LogFilePath}");
     }
 
     /// <summary>
@@ -300,7 +305,7 @@ public class Plugin : IExtensionApplication
 
             Logger.Debug(L10n.T("plugin.uiCreated"));
 
-            // Proposer d'ouvrir le gestionnaire de modules si aucun module n'est installé
+            // Proposer d'ouvrir le gestionnaire de modules si aucun module n'est install�
             CheckFirstRunNoModules();
         }
         catch (System.Exception ex)
@@ -311,17 +316,17 @@ public class Plugin : IExtensionApplication
     }
 
     /// <summary>
-    /// Vérifie si c'est le premier démarrage sans modules et propose d'ouvrir le gestionnaire
+    /// V�rifie si c'est le premier d�marrage sans modules et propose d'ouvrir le gestionnaire
     /// </summary>
     private static void CheckFirstRunNoModules()
     {
         try
         {
-            // Vérifier si des modules sont chargés
+            // V�rifier si des modules sont charg�s
             if (ModuleDiscovery.Modules.Count > 0)
                 return;
 
-            // Afficher la proposition à chaque démarrage si aucun module
+            // Afficher la proposition � chaque d�marrage si aucun module
             var result = System.Windows.MessageBox.Show(
                 L10n.T("firstrun.noModules.message"),
                 L10n.T("firstrun.noModules.title"),
@@ -330,7 +335,7 @@ public class Plugin : IExtensionApplication
 
             if (result == System.Windows.MessageBoxResult.Yes)
             {
-                // Ouvrir les paramètres directement sur l'onglet Modules
+                // Ouvrir les param�tres directement sur l'onglet Modules
                 var window = new SettingsWindow(1); // 1 = index de l'onglet Modules
                 AcadApp.ShowModalWindow(window);
             }
@@ -338,13 +343,13 @@ public class Plugin : IExtensionApplication
         catch (System.Exception ex)
         {
             StartupLog.Write($"CheckFirstRunNoModules error: {ex.Message}");
-            // Ne pas bloquer le démarrage
+            // Ne pas bloquer le d�marrage
         }
     }
 
     /// <summary>
-    /// Vérifie les mises à jour au démarrage de manière asynchrone.
-    /// Cette méthode est non-bloquante et s'exécute en arrière-plan.
+    /// V�rifie les mises � jour au d�marrage de mani�re asynchrone.
+    /// Cette m�thode est non-bloquante et s'ex�cute en arri�re-plan.
     /// </summary>
     private static async Task CheckForUpdatesOnStartupAsync()
     {
@@ -353,15 +358,15 @@ public class Plugin : IExtensionApplication
             StartupLog.Write("CheckForUpdatesOnStartupAsync: begin");
             Logger.Debug(L10n.T("update.checking.startup"));
 
-            // Attendre un peu pour ne pas ralentir le démarrage
+            // Attendre un peu pour ne pas ralentir le d�marrage
             await Task.Delay(2000);
 
-            // Vérifier les mises à jour via GitHub API
+            // V�rifier les mises � jour via GitHub API
             var result = await UpdateService.CheckStartupUpdateAsync();
 
             if (result.UpdateAvailable)
             {
-                // Afficher la notification sur le thread UI (handler auto-détaché)
+                // Afficher la notification sur le thread UI (handler auto-d�tach�)
                 _updateIdleHandler = (_, _) =>
                 {
                     if (_updateIdleHandler != null)
@@ -389,7 +394,7 @@ public class Plugin : IExtensionApplication
         }
         catch (System.Exception ex)
         {
-            // Ne jamais bloquer le démarrage pour une erreur de mise à jour
+            // Ne jamais bloquer le d�marrage pour une erreur de mise � jour
             StartupLog.Write($"CheckForUpdatesOnStartupAsync error (ignored): {ex.Message}");
         }
     }
@@ -463,7 +468,7 @@ public class Plugin : IExtensionApplication
         }
         catch (System.Exception ex)
         {
-            // Log silencieux à la fermeture pour éviter les blocages
+            // Log silencieux � la fermeture pour �viter les blocages
             StartupLog.Write($"Terminate error (ignored): {ex.Message}");
         }
     }

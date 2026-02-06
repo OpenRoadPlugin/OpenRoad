@@ -352,6 +352,12 @@
             Version minimale du Core requise (format semver)
             </summary>
         </member>
+        <member name="P:OpenAsphalte.Abstractions.IModule.MaxCoreVersion">
+            <summary>
+            Version maximale du Core supportée (format semver)
+            Null si aucune limite haute (compatible avec toutes les versions futures)
+            </summary>
+        </member>
         <member name="P:OpenAsphalte.Abstractions.IModule.Contributors">
             <summary>
             Liste des contributeurs ayant participé au développement du module.
@@ -443,6 +449,9 @@
         <member name="P:OpenAsphalte.Abstractions.ModuleBase.MinCoreVersion">
             <inheritdoc />
         </member>
+        <member name="P:OpenAsphalte.Abstractions.ModuleBase.MaxCoreVersion">
+            <inheritdoc />
+        </member>
         <member name="P:OpenAsphalte.Abstractions.ModuleBase.Contributors">
             <inheritdoc />
         </member>
@@ -517,7 +526,7 @@
         </member>
         <member name="M:OpenAsphalte.Commands.AboutWindow.OnCloseClick(System.Object,System.Windows.RoutedEventArgs)">
             <summary>
-            Ferme la fen�tre
+            Ferme la fen?tre
             </summary>
         </member>
         <member name="M:OpenAsphalte.Commands.AboutWindow.InitializeComponent">
@@ -549,6 +558,23 @@
             <summary>
             Translated name using NameKey if available, otherwise falls back to Name
             </summary>
+        </member>
+        <member name="T:OpenAsphalte.Commands.ModuleCompatibilityStatus">
+            <summary>
+            Statut de compatibilité d'un module avec le Core installé
+            </summary>
+        </member>
+        <member name="F:OpenAsphalte.Commands.ModuleCompatibilityStatus.Compatible">
+            <summary>Module compatible avec le Core actuel</summary>
+        </member>
+        <member name="F:OpenAsphalte.Commands.ModuleCompatibilityStatus.CoreTooOld">
+            <summary>Core trop ancien pour ce module</summary>
+        </member>
+        <member name="F:OpenAsphalte.Commands.ModuleCompatibilityStatus.CoreTooNew">
+            <summary>Core trop récent pour ce module</summary>
+        </member>
+        <member name="F:OpenAsphalte.Commands.ModuleCompatibilityStatus.OlderVersionAvailable">
+            <summary>Module incompatible mais une version antérieure est compatible</summary>
         </member>
         <member name="T:OpenAsphalte.Commands.ModuleManagerWindow">
             <summary>
@@ -612,6 +638,11 @@
         <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.OnInstallCategoryClick(System.Object,System.Windows.RoutedEventArgs)">
             <summary>
             Installe tous les modules d'une catégorie
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.CheckModuleCompatibility(OpenAsphalte.Services.ModuleDefinition,System.Version)">
+            <summary>
+            Vérifie la compatibilité d'un module avec le Core actuel
             </summary>
         </member>
         <member name="M:OpenAsphalte.Commands.ModuleManagerWindow.InitializeComponent">
@@ -1121,6 +1152,21 @@
             Resout les dependances entre modules
             </summary>
         </member>
+        <member name="T:OpenAsphalte.Discovery.ModuleDiscovery.CoreCompatibilityResult">
+            <summary>
+            Résultat de la vérification de compatibilité Core
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.CoreCompatibilityResult.#ctor(System.Boolean,System.String)">
+            <summary>
+            Résultat de la vérification de compatibilité Core
+            </summary>
+        </member>
+        <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.CheckCoreVersionCompatibility(OpenAsphalte.Discovery.ModuleDescriptor)">
+            <summary>
+            Vérifie la compatibilité de version du Core pour un module (min et max)
+            </summary>
+        </member>
         <member name="M:OpenAsphalte.Discovery.ModuleDiscovery.IsCoreVersionCompatible(OpenAsphalte.Discovery.ModuleDescriptor)">
             <summary>
             Vérifie la compatibilité de version minimale du Core pour un module
@@ -1387,8 +1433,8 @@
         </member>
         <member name="T:OpenAsphalte.Plugin">
             <summary>
-            Point d'entrée principal du plugin Open Asphalte pour AutoCAD.
-            Gère le cycle de vie de l'application et la découverte automatique des modules.
+            Point d'entr�e principal du plugin Open Asphalte pour AutoCAD.
+            G�re le cycle de vie de l'application et la d�couverte automatique des modules.
             </summary>
             <remarks>
             <para>
@@ -1406,7 +1452,7 @@
         </member>
         <member name="P:OpenAsphalte.Plugin.Version">
             <summary>
-            Version du coeur Open Asphalte (chargée depuis version.json)
+            Version du coeur Open Asphalte (charg�e depuis version.json)
             </summary>
         </member>
         <member name="P:OpenAsphalte.Plugin.AppName">
@@ -1421,17 +1467,17 @@
         </member>
         <member name="M:OpenAsphalte.Plugin.LoadVersionFromJson">
             <summary>
-            Charge la version depuis version.json de manière thread-safe
+            Charge la version depuis version.json de mani�re thread-safe
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.Initialize">
             <summary>
-            Appelé au chargement du plugin par AutoCAD
+            Appel� au chargement du plugin par AutoCAD
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.EnableDiagnostics">
             <summary>
-            Active le journal fichier et capture les exceptions non gérées.
+            Active le journal fichier et capture les exceptions non g�r�es.
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.ShowWelcomeMessage">
@@ -1446,13 +1492,13 @@
         </member>
         <member name="M:OpenAsphalte.Plugin.CheckFirstRunNoModules">
             <summary>
-            Vérifie si c'est le premier démarrage sans modules et propose d'ouvrir le gestionnaire
+            V�rifie si c'est le premier d�marrage sans modules et propose d'ouvrir le gestionnaire
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.CheckForUpdatesOnStartupAsync">
             <summary>
-            Vérifie les mises à jour au démarrage de manière asynchrone.
-            Cette méthode est non-bloquante et s'exécute en arrière-plan.
+            V�rifie les mises � jour au d�marrage de mani�re asynchrone.
+            Cette m�thode est non-bloquante et s'ex�cute en arri�re-plan.
             </summary>
         </member>
         <member name="M:OpenAsphalte.Plugin.OnLanguageChanged(System.String,System.String)">
@@ -1690,10 +1736,10 @@
             <summary>Accélération gravitationnelle (m/s²)</summary>
         </member>
         <member name="F:OpenAsphalte.Services.GeometryService.DegToRad">
-            <summary>Pi / 180 pour conversion degrés → radians</summary>
+            <summary>Pi / 180 pour conversion degrés ? radians</summary>
         </member>
         <member name="F:OpenAsphalte.Services.GeometryService.RadToDeg">
-            <summary>180 / Pi pour conversion radians → degrés</summary>
+            <summary>180 / Pi pour conversion radians ? degrés</summary>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.Distance(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
             <summary>
@@ -1733,7 +1779,7 @@
             </summary>
             <param name="from">Point d'origine du vecteur</param>
             <param name="to">Point de destination du vecteur</param>
-            <returns>Angle en radians dans l'intervalle [-π, π]</returns>
+            <returns>Angle en radians dans l'intervalle [-p, p]</returns>
             <remarks>
             Utilise <see cref="M:System.Math.Atan2(System.Double,System.Double)"/> pour gérer correctement tous les quadrants.
             Pour un résultat en degrés, utilisez <see cref="M:OpenAsphalte.Services.GeometryService.AngleBetweenDegrees(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)"/>.
@@ -1746,14 +1792,14 @@
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.NormalizeAngle(System.Double)">
             <summary>
-            Normalise un angle en radians dans l'intervalle [0, 2π].
+            Normalise un angle en radians dans l'intervalle [0, 2p].
             </summary>
-            <param name="angle">Angle à normaliser (peut être négatif ou > 2π)</param>
-            <returns>Angle normalisé dans [0, 2π]</returns>
+            <param name="angle">Angle à normaliser (peut être négatif ou > 2p)</param>
+            <returns>Angle normalisé dans [0, 2p]</returns>
             <example>
             <code>
             var normalized = GeometryService.NormalizeAngle(-Math.PI / 2);
-            // Résultat: 3π/2 (environ 4.712)
+            // Résultat: 3p/2 (environ 4.712)
             </code>
             </example>
         </member>
@@ -1766,7 +1812,7 @@
             <summary>
             Calcule l'angle entre deux vecteurs.
             </summary>
-            <returns>Angle en radians [0, π]</returns>
+            <returns>Angle en radians [0, p]</returns>
         </member>
         <member name="M:OpenAsphalte.Services.GeometryService.Bearing(Autodesk.AutoCAD.Geometry.Point3d,Autodesk.AutoCAD.Geometry.Point3d)">
             <summary>
@@ -2584,6 +2630,69 @@
             <summary>
             Événement requis par ICommand (non utilisé car CanExecute retourne toujours true)
             </summary>
+        </member>
+        <member name="T:OpenAsphalte.UI.WindowStateHelper">
+            <summary>
+            Helper statique pour gérer la persistance de taille et position des fenêtres.
+            Mémorise l'état entre les sessions et vérifie que la fenêtre reste visible à l'écran.
+            </summary>
+            <remarks>
+            Utilisation dans une fenêtre :
+            <code>
+            public MyWindow()
+            {
+                InitializeComponent();
+                WindowStateHelper.RestoreState(this, "mywindow", 800, 600);
+                Closing += (s, e) => WindowStateHelper.SaveState(this, "mywindow");
+            }
+            </code>
+            </remarks>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.RestoreState(System.Windows.Window,System.String,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Restaure la taille et la position d'une fenêtre depuis la configuration.
+            Si aucune configuration n'existe ou si la fenêtre serait hors écran,
+            utilise les dimensions par défaut centrées sur l'écran.
+            </summary>
+            <param name="window">Fenêtre à configurer</param>
+            <param name="windowId">Identifiant unique pour stocker les paramètres (ex: "prezorganizer")</param>
+            <param name="defaultWidth">Largeur par défaut si aucune sauvegarde</param>
+            <param name="defaultHeight">Hauteur par défaut si aucune sauvegarde (null = 95% de la hauteur de travail)</param>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.SaveState(System.Windows.Window,System.String)">
+            <summary>
+            Sauvegarde la taille et la position actuelles d'une fenêtre dans la configuration.
+            </summary>
+            <param name="window">Fenêtre à sauvegarder</param>
+            <param name="windowId">Identifiant unique utilisé pour RestoreState</param>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.GetRecommendedHeight">
+            <summary>
+            Calcule la hauteur de fenêtre recommandée (95% de la zone de travail).
+            Utile pour définir la hauteur par défaut d'une fenêtre.
+            </summary>
+            <returns>Hauteur en pixels</returns>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.GetRecommendedWidth(System.Double)">
+            <summary>
+            Calcule la largeur de fenêtre recommandée pour un ratio donné.
+            </summary>
+            <param name="heightRatio">Ratio largeur/hauteur (ex: 0.6 pour une fenêtre plus large que haute)</param>
+            <returns>Largeur en pixels</returns>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.IsRectOnScreen(System.Windows.Rect)">
+            <summary>
+            Vérifie si un rectangle est suffisamment visible sur au moins un écran.
+            </summary>
+            <param name="rect">Rectangle à vérifier</param>
+            <returns>True si au moins MinVisiblePortion pixels sont visibles</returns>
+        </member>
+        <member name="M:OpenAsphalte.UI.WindowStateHelper.ResetState(System.String)">
+            <summary>
+            Réinitialise les paramètres de fenêtre sauvegardés pour un identifiant donné.
+            La prochaine ouverture utilisera les valeurs par défaut.
+            </summary>
+            <param name="windowId">Identifiant de la fenêtre</param>
         </member>
     </members>
 </doc>

@@ -1,27 +1,32 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace OpenAsphalte.Abstractions;
 
 /// <summary>
 /// Classe de base abstraite pour tous les modules Open Asphalte.
-/// Fournit une implÃ©mentation par dÃ©faut de <see cref="IModule"/>.
+/// Fournit une implémentation par défaut de <see cref="IModule"/>.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Pour crÃ©er un nouveau module, hÃ©ritez de cette classe et implÃ©mentez
-/// les propriÃ©tÃ©s abstraites (Id, Name, Description).
+/// Pour créer un nouveau module, héritez de cette classe et implémentez
+/// les propriétés abstraites (Id, Name, Description).
 /// </para>
 /// <para>
-/// Exemple d'implÃ©mentation :
+/// Exemple d'implémentation :
 /// <code>
 /// public class MonModule : ModuleBase
 /// {
@@ -42,7 +47,7 @@ public abstract class ModuleBase : IModule
     private bool _disposed = false;
     private bool _initialized = false;
 
-    #region PropriÃ©tÃ©s abstraites (Ã  implÃ©menter)
+    #region Propriétés abstraites (à implémenter)
 
     /// <inheritdoc />
     public abstract string Id { get; }
@@ -55,7 +60,7 @@ public abstract class ModuleBase : IModule
 
     #endregion
 
-    #region PropriÃ©tÃ©s avec valeurs par dÃ©faut
+    #region Propriétés avec valeurs par défaut
 
     /// <inheritdoc />
     public virtual string Version => "1.0.0";
@@ -77,6 +82,9 @@ public abstract class ModuleBase : IModule
 
     /// <inheritdoc />
     public virtual string MinCoreVersion => "1.0.0";
+
+    /// <inheritdoc />
+    public virtual string? MaxCoreVersion => null;
 
     /// <inheritdoc />
     public virtual IEnumerable<Contributor> Contributors => Enumerable.Empty<Contributor>();
@@ -121,7 +129,7 @@ public abstract class ModuleBase : IModule
     #region IDisposable
 
     /// <summary>
-    /// LibÃ¨re les ressources du module
+    /// Libère les ressources du module
     /// </summary>
     public void Dispose()
     {
@@ -130,9 +138,9 @@ public abstract class ModuleBase : IModule
     }
 
     /// <summary>
-    /// LibÃ¨re les ressources managÃ©es et non-managÃ©es
+    /// Libère les ressources managées et non-managées
     /// </summary>
-    /// <param name="disposing">True si appelÃ© depuis Dispose()</param>
+    /// <param name="disposing">True si appelé depuis Dispose()</param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed) return;

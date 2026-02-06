@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.IO;
 using System.Reflection;
@@ -95,27 +100,27 @@ public class CommandDescriptor
     public required IModule Module { get; init; }
 
     /// <summary>
-    /// CatÃ©gorie menu niveau 1
+    /// Catégorie menu niveau 1
     /// </summary>
     public string? MenuCategory { get; init; }
 
     /// <summary>
-    /// ClÃ© de traduction pour la catÃ©gorie niveau 1
+    /// Clé de traduction pour la catégorie niveau 1
     /// </summary>
     public string? MenuCategoryKey { get; init; }
 
     /// <summary>
-    /// Sous-catÃ©gorie menu niveau 2
+    /// Sous-catégorie menu niveau 2
     /// </summary>
     public string? MenuSubCategory { get; init; }
 
     /// <summary>
-    /// ClÃ© de traduction pour la sous-catÃ©gorie niveau 2
+    /// Clé de traduction pour la sous-catégorie niveau 2
     /// </summary>
     public string? MenuSubCategoryKey { get; init; }
 
     /// <summary>
-    /// Obtient le nom affichÃ© traduit
+    /// Obtient le nom affiché traduit
     /// </summary>
     public string GetLocalizedDisplayName()
     {
@@ -214,22 +219,22 @@ public static class ModuleDiscovery
     public static IReadOnlyList<CommandDescriptor> AllCommands => _allCommands.AsReadOnly();
 
     /// <summary>
-    /// Chemins additionnels pour la dÃ©couverte de modules (configurables)
+    /// Chemins additionnels pour la découverte de modules (configurables)
     /// </summary>
     public static IReadOnlyList<string> AdditionalModulesPaths => _additionalPaths.AsReadOnly();
 
     private static readonly List<string> _additionalPaths = new();
 
     /// <summary>
-    /// Ajoute un chemin additionnel pour la dÃ©couverte de modules.
-    /// Doit Ãªtre appelÃ© avant DiscoverAndLoad().
+    /// Ajoute un chemin additionnel pour la découverte de modules.
+    /// Doit être appelé avant DiscoverAndLoad().
     /// </summary>
     /// <param name="path">Chemin vers un dossier contenant des modules OAS.*.dll</param>
     public static void AddModulesPath(string path)
     {
         if (_initialized)
         {
-            Logger.Warning(L10n.T("module.pathAddedTooLate", "Impossible d'ajouter un chemin aprÃ¨s l'initialisation"));
+            Logger.Warning(L10n.T("module.pathAddedTooLate", "Impossible d'ajouter un chemin après l'initialisation"));
             return;
         }
 
@@ -241,13 +246,13 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
-    /// RÃ©cupÃ¨re les dÃ©pendances manquantes pour un module Ã  installer.
-    /// VÃ©rifie les modules chargÃ©s en mÃ©moire, les fichiers DLL prÃ©sents et les IDs additionnels fournis.
+    /// Récupère les dépendances manquantes pour un module à installer.
+    /// Vérifie les modules chargés en mémoire, les fichiers DLL présents et les IDs additionnels fournis.
     /// </summary>
-    /// <param name="moduleDef">DÃ©finition du module Ã  vÃ©rifier</param>
-    /// <param name="manifest">Manifest du marketplace contenant toutes les dÃ©finitions de modules</param>
-    /// <param name="additionalInstalledIds">IDs de modules installÃ©s dans cette session mais pas encore chargÃ©s (optionnel)</param>
-    /// <returns>Liste des modules manquants Ã  installer, dans l'ordre (sous-dÃ©pendances en premier)</returns>
+    /// <param name="moduleDef">Définition du module à vérifier</param>
+    /// <param name="manifest">Manifest du marketplace contenant toutes les définitions de modules</param>
+    /// <param name="additionalInstalledIds">IDs de modules installés dans cette session mais pas encore chargés (optionnel)</param>
+    /// <returns>Liste des modules manquants à installer, dans l'ordre (sous-dépendances en premier)</returns>
     public static List<Services.ModuleDefinition> GetMissingDependencies(
         Services.ModuleDefinition moduleDef,
         Services.MarketplaceManifest manifest,
@@ -262,22 +267,22 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
-    /// VÃ©rifie si un module est disponible (chargÃ© ou prÃ©sent sur le disque)
+    /// Vérifie si un module est disponible (chargé ou présent sur le disque)
     /// </summary>
-    /// <param name="moduleId">ID du module Ã  vÃ©rifier</param>
-    /// <param name="additionalInstalledIds">IDs de modules installÃ©s dans cette session</param>
+    /// <param name="moduleId">ID du module à vérifier</param>
+    /// <param name="additionalInstalledIds">IDs de modules installés dans cette session</param>
     /// <returns>True si le module est disponible</returns>
     public static bool IsModuleAvailable(string moduleId, IEnumerable<string>? additionalInstalledIds = null)
     {
-        // VÃ©rifier si chargÃ© en mÃ©moire
+        // Vérifier si chargé en mémoire
         if (Modules.Any(m => m.Id.Equals(moduleId, StringComparison.OrdinalIgnoreCase)))
             return true;
 
-        // VÃ©rifier si dans les IDs additionnels
+        // Vérifier si dans les IDs additionnels
         if (additionalInstalledIds?.Contains(moduleId, StringComparer.OrdinalIgnoreCase) == true)
             return true;
 
-        // VÃ©rifier si le fichier DLL existe physiquement
+        // Vérifier si le fichier DLL existe physiquement
         if (!string.IsNullOrEmpty(ModulesPath))
         {
             var possibleFiles = new[]
@@ -294,7 +299,7 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
-    /// RÃ©cursion interne pour GetMissingDependencies
+    /// Récursion interne pour GetMissingDependencies
     /// </summary>
     private static void GetMissingDependenciesRecursive(
         Services.ModuleDefinition moduleDef,
@@ -314,24 +319,24 @@ public static class ModuleDiscovery
             if (!visiting.Add(depId))
                 continue;
 
-            // VÃ©rifier si la dÃ©pendance est dÃ©jÃ  disponible
+            // Vérifier si la dépendance est déjà disponible
             if (IsModuleAvailable(depId, installedIds))
                 continue;
 
-            // VÃ©rifier si dÃ©jÃ  dans la liste des manquants
+            // Vérifier si déjà dans la liste des manquants
             if (missing.Any(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase)))
                 continue;
 
-            // Chercher la dÃ©finition dans le manifest
+            // Chercher la définition dans le manifest
             var depDef = manifest.Modules
                 .FirstOrDefault(m => m.Id.Equals(depId, StringComparison.OrdinalIgnoreCase));
 
             if (depDef != null)
             {
-                // D'abord rÃ©cursivement vÃ©rifier les sous-dÃ©pendances
+                // D'abord récursivement vérifier les sous-dépendances
                 GetMissingDependenciesRecursive(depDef, manifest, installedIds, missing, visiting);
 
-                // Puis ajouter cette dÃ©pendance (aprÃ¨s ses propres dÃ©pendances)
+                // Puis ajouter cette dépendance (après ses propres dépendances)
                 if (!missing.Any(m => m.Id.Equals(depDef.Id, StringComparison.OrdinalIgnoreCase)))
                 {
                     missing.Add(depDef);
@@ -349,14 +354,10 @@ public static class ModuleDiscovery
         if (_initialized) return;
 
         // Chemin principal : sous-dossier Modules
+        // SÉCURITÉ : Seuls les modules dans ce dossier sont chargés.
+        // Les modules provenant de sources personnalisées (customModuleSource)
+        // doivent être installés (copiés) dans ce dossier via le gestionnaire de modules.
         ModulesPath = Path.Combine(basePath, "Modules");
-
-        // Ajouter chemin depuis configuration si dÃ©fini
-        var configPath = Configuration.Configuration.Get("customModuleSource", "");
-        if (!string.IsNullOrWhiteSpace(configPath) && Directory.Exists(configPath))
-        {
-            AddModulesPath(configPath);
-        }
 
         Logger.Debug(L10n.TFormat("module.searchPath", ModulesPath));
 
@@ -367,7 +368,7 @@ public static class ModuleDiscovery
             Logger.Info(L10n.T("module.folderCreated"));
         }
 
-        // Nettoyage des modules marquÃ©s pour suppression (.del)
+        // Nettoyage des modules marqués pour suppression (.del)
         CleanupDeletedModules(ModulesPath);
 
         // Migration: Renommer les anciens modules OpenRoad.*.dll en OAS.*.dll
@@ -401,7 +402,7 @@ public static class ModuleDiscovery
             }
         }
 
-        // DÃ©dupliquer par nom de fichier (le premier trouvÃ© gagne)
+        // Dédupliquer par nom de fichier (le premier trouvé gagne)
         var uniqueDlls = allDllFiles
             .GroupBy(p => Path.GetFileName(p), StringComparer.OrdinalIgnoreCase)
             .Select(g => g.First())
@@ -428,7 +429,7 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
-    /// Supprime les fichiers marquÃ©s pour suppression (.del) lors des sessions prÃ©cÃ©dentes
+    /// Supprime les fichiers marqués pour suppression (.del) lors des sessions précédentes
     /// </summary>
     private static void CleanupDeletedModules(string folderPath)
     {
@@ -448,7 +449,7 @@ public static class ModuleDiscovery
                 }
                 catch (System.Exception ex)
                 {
-                    // Si on ne peut pas supprimer, c'est pas grave, on rÃ©essaiera la prochaine fois
+                    // Si on ne peut pas supprimer, c'est pas grave, on réessaiera la prochaine fois
                     Logger.Debug($"Could not cleanup {Path.GetFileName(file)}: {ex.Message}");
                 }
             }
@@ -462,7 +463,7 @@ public static class ModuleDiscovery
     /// <summary>
     /// Migration: Renomme les anciens modules OpenRoad.*.dll en OAS.*.dll
     /// </summary>
-    /// <param name="folderPath">Chemin du dossier Ã  scanner</param>
+    /// <param name="folderPath">Chemin du dossier à scanner</param>
     private static void MigrateOldModuleNames(string folderPath)
     {
         try
@@ -474,7 +475,7 @@ public static class ModuleDiscovery
                 var newName = "OAS." + oldName.Substring("OpenRoad.".Length);
                 var newPath = Path.Combine(folderPath, newName);
 
-                // Ne pas Ã©craser si le nouveau fichier existe dÃ©jÃ 
+                // Ne pas écraser si le nouveau fichier existe déjà
                 if (!File.Exists(newPath))
                 {
                     try
@@ -506,10 +507,10 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
-    /// VÃ©rifie si une DLL est signÃ©e numÃ©riquement.
+    /// Vérifie si une DLL est signée numériquement.
     /// </summary>
     /// <param name="dllPath">Chemin vers la DLL</param>
-    /// <returns>True si signÃ©e, False sinon</returns>
+    /// <returns>True si signée, False sinon</returns>
     private static bool IsModuleSigned(string dllPath)
     {
         try
@@ -525,14 +526,14 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
-    /// VÃ©rifie et avertit si un module n'est pas signÃ©.
-    /// Dans le futur, cette mÃ©thode pourra bloquer les modules non signÃ©s.
+    /// Vérifie et avertit si un module n'est pas signé.
+    /// Dans le futur, cette méthode pourra bloquer les modules non signés.
     /// </summary>
     private static bool ValidateModuleSecurity(string dllPath)
     {
         var fileName = Path.GetFileName(dllPath);
 
-        // VÃ©rifier la signature
+        // Vérifier la signature
         if (!IsModuleSigned(dllPath))
         {
             var allowUnsigned = Configuration.Configuration.Get("allowUnsignedModules", true);
@@ -543,7 +544,7 @@ public static class ModuleDiscovery
                 return false;
             }
 
-            // Avertissement pour les modules non signÃ©s
+            // Avertissement pour les modules non signés
             Logger.Warning(L10n.TFormat("module.unsigned", fileName));
         }
         else
@@ -561,14 +562,14 @@ public static class ModuleDiscovery
     {
         try
         {
-            // SÃ‰CURITÃ‰: Valider que le fichier est bien dans un dossier autorisÃ©
+            // SÉCURITÉ: Valider que le fichier est bien dans un dossier autorisé
             var fullPath = Path.GetFullPath(dllPath);
             var modulesFullPath = Path.GetFullPath(ModulesPath);
 
-            // VÃ©rifier le dossier principal
+            // Vérifier le dossier principal
             bool isInAuthorizedPath = fullPath.StartsWith(modulesFullPath, StringComparison.OrdinalIgnoreCase);
 
-            // VÃ©rifier les chemins additionnels
+            // Vérifier les chemins additionnels
             if (!isInAuthorizedPath)
             {
                 foreach (var additionalPath in _additionalPaths)
@@ -594,7 +595,7 @@ public static class ModuleDiscovery
                 return;
             }
 
-            // Validation de sÃ©curitÃ© (signature)
+            // Validation de sécurité (signature)
             if (!ValidateModuleSecurity(fullPath))
             {
                 return;
@@ -714,10 +715,11 @@ public static class ModuleDiscovery
     {
         foreach (var descriptor in _loadedModules)
         {
-            if (!IsCoreVersionCompatible(descriptor))
+            var compatResult = CheckCoreVersionCompatibility(descriptor);
+            if (!compatResult.IsCompatible)
             {
                 descriptor.DependenciesSatisfied = false;
-                descriptor.MissingDependencies.Add($"core>={descriptor.Module.MinCoreVersion}");
+                descriptor.MissingDependencies.Add(compatResult.Reason!);
                 continue;
             }
 
@@ -734,26 +736,51 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
-    /// VÃ©rifie la compatibilitÃ© de version minimale du Core pour un module
+    /// Résultat de la vérification de compatibilité Core
     /// </summary>
-    private static bool IsCoreVersionCompatible(ModuleDescriptor descriptor)
+    private record CoreCompatibilityResult(bool IsCompatible, string? Reason);
+
+    /// <summary>
+    /// Vérifie la compatibilité de version du Core pour un module (min et max)
+    /// </summary>
+    private static CoreCompatibilityResult CheckCoreVersionCompatibility(ModuleDescriptor descriptor)
     {
-        var minVersion = ParseVersion(descriptor.Module.MinCoreVersion);
         var coreVersion = ParseVersion(Plugin.Version);
 
+        // Vérifier MinCoreVersion
+        var minVersion = ParseVersion(descriptor.Module.MinCoreVersion);
         if (minVersion == null || coreVersion == null)
         {
             Logger.Warning(L10n.TFormat("module.coreVersionUnknown", descriptor.Module.Name, descriptor.Module.MinCoreVersion, Plugin.Version));
-            return true;
+            return new CoreCompatibilityResult(true, null);
         }
 
         if (coreVersion < minVersion)
         {
             Logger.Warning(L10n.TFormat("module.coreVersionIncompatible", descriptor.Module.Name, descriptor.Module.MinCoreVersion, Plugin.Version));
-            return false;
+            return new CoreCompatibilityResult(false, $"core>={descriptor.Module.MinCoreVersion}");
         }
 
-        return true;
+        // Vérifier MaxCoreVersion (si définie)
+        if (!string.IsNullOrEmpty(descriptor.Module.MaxCoreVersion))
+        {
+            var maxVersion = ParseVersion(descriptor.Module.MaxCoreVersion);
+            if (maxVersion != null && coreVersion > maxVersion)
+            {
+                Logger.Warning(L10n.TFormat("module.coreVersionTooNew", descriptor.Module.Name, descriptor.Module.MaxCoreVersion, Plugin.Version));
+                return new CoreCompatibilityResult(false, $"core<={descriptor.Module.MaxCoreVersion}");
+            }
+        }
+
+        return new CoreCompatibilityResult(true, null);
+    }
+
+    /// <summary>
+    /// Vérifie la compatibilité de version minimale du Core pour un module
+    /// </summary>
+    private static bool IsCoreVersionCompatible(ModuleDescriptor descriptor)
+    {
+        return CheckCoreVersionCompatibility(descriptor).IsCompatible;
     }
 
     /// <summary>
@@ -830,7 +857,7 @@ public static class ModuleDiscovery
                     descriptor.Module.Shutdown();
                 }
 
-                // Ensuite Dispose pour libÃ©rer les ressources
+                // Ensuite Dispose pour libérer les ressources
                 descriptor.Module.Dispose();
                 Logger.Debug(L10n.TFormat("module.shutdown", descriptor.Module.Name));
             }

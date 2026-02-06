@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Windows;
 using System.Windows.Controls;
@@ -18,8 +23,8 @@ using L10n = OpenAsphalte.Localization.Localization;
 namespace OpenAsphalte.Modules.Georeferencement.Views;
 
 /// <summary>
-/// FenÃªtre de sÃ©lection du systÃ¨me de coordonnÃ©es.
-/// Permet de rechercher, filtrer et sÃ©lectionner une projection cartographique.
+/// Fenêtre de sélection du système de coordonnées.
+/// Permet de rechercher, filtrer et sélectionner une projection cartographique.
 /// </summary>
 public partial class SetProjectionWindow : Window
 {
@@ -29,12 +34,12 @@ public partial class SetProjectionWindow : Window
     private List<ProjectionInfo> _filteredProjections;
 
     /// <summary>
-    /// Projection sÃ©lectionnÃ©e par l'utilisateur
+    /// Projection sélectionnée par l'utilisateur
     /// </summary>
     public ProjectionInfo? SelectedProjection { get; private set; }
 
     /// <summary>
-    /// Indique si l'utilisateur veut supprimer le systÃ¨me actuel
+    /// Indique si l'utilisateur veut supprimer le système actuel
     /// </summary>
     public bool ClearProjection { get; private set; }
 
@@ -44,10 +49,10 @@ public partial class SetProjectionWindow : Window
     public bool EnableGeoMap { get; private set; }
 
     /// <summary>
-    /// CrÃ©e une nouvelle fenÃªtre de sÃ©lection de projection
+    /// Crée une nouvelle fenêtre de sélection de projection
     /// </summary>
-    /// <param name="currentCs">Code du systÃ¨me de coordonnÃ©es actuel (peut Ãªtre null)</param>
-    /// <param name="detectedProjection">Projection dÃ©tectÃ©e automatiquement (peut Ãªtre null)</param>
+    /// <param name="currentCs">Code du système de coordonnées actuel (peut être null)</param>
+    /// <param name="detectedProjection">Projection détectée automatiquement (peut être null)</param>
     public SetProjectionWindow(string? currentCs, ProjectionInfo? detectedProjection)
     {
         InitializeComponent();
@@ -66,7 +71,7 @@ public partial class SetProjectionWindow : Window
         // Charger les projections
         RefreshProjectionList();
 
-        // SÃ©lectionner la projection dÃ©tectÃ©e ou actuelle
+        // Sélectionner la projection détectée ou actuelle
         SelectInitialProjection();
 
         // Focus sur la recherche
@@ -74,13 +79,13 @@ public partial class SetProjectionWindow : Window
     }
 
     /// <summary>
-    /// Applique les traductions Ã  l'interface
+    /// Applique les traductions à l'interface
     /// </summary>
     private void ApplyTranslations()
     {
         Title = T("georef.window.title");
 
-        // En-tÃªte
+        // En-tête
         CurrentSystemLabel.Text = T("georef.window.current");
         DetectedSystemLabel.Text = T("georef.window.detected");
 
@@ -100,7 +105,7 @@ public partial class SetProjectionWindow : Window
         // Placeholder recherche (via ToolTip car le placeholder est dans le style)
         SearchBox.ToolTip = T("georef.window.search.tooltip");
 
-        // Panneau dÃ©tails
+        // Panneau détails
         DetailsHeader.Text = T("georef.window.details");
         NameLabel.Text = T("georef.window.details.name");
         CodeLabel.Text = T("georef.window.details.code");
@@ -111,7 +116,7 @@ public partial class SetProjectionWindow : Window
         DescriptionLabel.Text = T("georef.window.details.description");
         BoundsHeader.Text = T("georef.window.details.bounds");
 
-        // En-tÃªtes de colonnes
+        // En-têtes de colonnes
         ColumnName.Header = T("georef.window.list.header.name");
         ColumnCode.Header = T("georef.window.list.header.code");
         ColumnCountry.Header = T("georef.window.list.header.country");
@@ -122,7 +127,7 @@ public partial class SetProjectionWindow : Window
     /// </summary>
     private void InitializeDisplay()
     {
-        // SystÃ¨me actuel - le code peut Ãªtre au format "EPSG:xxxx" ou un code interne
+        // Système actuel - le code peut être au format "EPSG:xxxx" ou un code interne
         if (!string.IsNullOrEmpty(_currentCs))
         {
             var currentProj = GetProjectionFromCgeocs(_currentCs);
@@ -135,7 +140,7 @@ public partial class SetProjectionWindow : Window
             CurrentSystemText.Text = T("georef.window.none");
         }
 
-        // SystÃ¨me dÃ©tectÃ©
+        // Système détecté
         if (_detectedProjection != null)
         {
             DetectedSystemText.Text = _detectedProjection.DisplayName;
@@ -147,13 +152,13 @@ public partial class SetProjectionWindow : Window
     }
 
     /// <summary>
-    /// RÃ©cupÃ¨re une projection Ã  partir d'une valeur CGEOCS (format "EPSG:xxxx" ou code interne)
+    /// Récupère une projection à partir d'une valeur CGEOCS (format "EPSG:xxxx" ou code interne)
     /// </summary>
     private static ProjectionInfo? GetProjectionFromCgeocs(string cgeocs)
     {
         if (string.IsNullOrWhiteSpace(cgeocs)) return null;
 
-        // Format EPSG:xxxx (retournÃ© par AutoCAD)
+        // Format EPSG:xxxx (retourné par AutoCAD)
         if (cgeocs.StartsWith("EPSG:", StringComparison.OrdinalIgnoreCase))
         {
             if (int.TryParse(cgeocs.AsSpan(5), out int epsg))
@@ -167,18 +172,18 @@ public partial class SetProjectionWindow : Window
     }
 
     /// <summary>
-    /// SÃ©lectionne la projection initiale (dÃ©tectÃ©e ou actuelle)
+    /// Sélectionne la projection initiale (détectée ou actuelle)
     /// </summary>
     private void SelectInitialProjection()
     {
         ProjectionInfo? toSelect = null;
 
-        // PrioritÃ© Ã  la projection dÃ©tectÃ©e
+        // Priorité à la projection détectée
         if (_detectedProjection != null)
         {
             toSelect = _filteredProjections.FirstOrDefault(p => p.Code == _detectedProjection.Code);
         }
-        // Sinon, sÃ©lectionner la projection actuelle (via CGEOCS au format EPSG:xxxx)
+        // Sinon, sélectionner la projection actuelle (via CGEOCS au format EPSG:xxxx)
         else if (!string.IsNullOrEmpty(_currentCs))
         {
             var currentProj = GetProjectionFromCgeocs(_currentCs);
@@ -196,7 +201,7 @@ public partial class SetProjectionWindow : Window
     }
 
     /// <summary>
-    /// RafraÃ®chit la liste des projections selon le filtre actuel
+    /// Rafraîchit la liste des projections selon le filtre actuel
     /// </summary>
     private void RefreshProjectionList()
     {
@@ -227,15 +232,15 @@ public partial class SetProjectionWindow : Window
                 .ToList();
         }
 
-        // Mettre Ã  jour la liste
+        // Mettre à jour la liste
         ProjectionListView.ItemsSource = _filteredProjections;
 
-        // Mettre Ã  jour le compteur
+        // Mettre à jour le compteur
         UpdateResultCount();
     }
 
     /// <summary>
-    /// Met Ã  jour le compteur de rÃ©sultats
+    /// Met à jour le compteur de résultats
     /// </summary>
     private void UpdateResultCount()
     {
@@ -250,7 +255,7 @@ public partial class SetProjectionWindow : Window
     }
 
     /// <summary>
-    /// Met Ã  jour le panneau de dÃ©tails avec la projection sÃ©lectionnÃ©e
+    /// Met à jour le panneau de détails avec la projection sélectionnée
     /// </summary>
     private void UpdateDetails(ProjectionInfo? projection)
     {
@@ -273,8 +278,8 @@ public partial class SetProjectionWindow : Window
         DetailDescription.Text = projection.Description;
 
         // Limites
-        DetailBoundsX.Text = $"X: {projection.MinX:N0} â†’ {projection.MaxX:N0}";
-        DetailBoundsY.Text = $"Y: {projection.MinY:N0} â†’ {projection.MaxY:N0}";
+        DetailBoundsX.Text = $"X: {projection.MinX:N0} ? {projection.MaxX:N0}";
+        DetailBoundsY.Text = $"Y: {projection.MinY:N0} ? {projection.MaxY:N0}";
     }
 
     /// <summary>
@@ -288,7 +293,7 @@ public partial class SetProjectionWindow : Window
     {
         RefreshProjectionList();
 
-        // Essayer de garder la sÃ©lection si elle est encore dans la liste filtrÃ©e
+        // Essayer de garder la sélection si elle est encore dans la liste filtrée
         if (SelectedProjection != null)
         {
             var match = _filteredProjections.FirstOrDefault(p => p.Code == SelectedProjection.Code);

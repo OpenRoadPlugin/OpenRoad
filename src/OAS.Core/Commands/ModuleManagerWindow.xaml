@@ -1,14 +1,19 @@
 <!--
-    Copyright 2026 Open Asphalte Contributors
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-        http://www.apache.org/licenses/LICENSE-2.0
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+    Open Asphalte
+    Copyright (C) 2026 Open Asphalte Contributors
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <Window x:Class="OpenAsphalte.Commands.ModuleManagerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -41,7 +46,8 @@
 
         <!-- Template pour les items de module -->
         <DataTemplate x:Key="ModuleItemTemplate">
-            <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Margin="0,0,0,8" Padding="12" Background="White">
+            <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Margin="0,0,0,8" Padding="12"
+                    Background="White" Opacity="{Binding ModuleOpacity}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -73,17 +79,30 @@
                             <TextBlock Text="{Binding DependenciesText}" Foreground="#E65100" FontSize="11"
                                        Margin="12,0,0,0" Visibility="{Binding HasDependenciesVisibility}"/>
                         </StackPanel>
+                        <!-- Avertissement compatibilité -->
+                        <TextBlock Text="{Binding CompatibilityReason}" Foreground="#D32F2F" FontSize="11"
+                                   Margin="0,4,0,0" Visibility="{Binding CompatibilityWarningVisibility}"/>
                     </StackPanel>
 
-                    <!-- Bouton action -->
-                    <Button Grid.Column="2" Content="{Binding ActionText}"
-                            Style="{StaticResource ActionButtonStyle}"
-                            IsEnabled="{Binding CanPerformAction}"
-                            Background="{Binding ActionBackground}"
-                            Foreground="{Binding ActionForeground}"
-                            Click="OnModuleActionClick"
-                            Tag="{Binding}"
-                            VerticalAlignment="Center"/>
+                    <!-- Boutons action -->
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal">
+                        <!-- Bouton version alternative -->
+                        <Button Content="{Binding AlternativeButtonText}"
+                                Style="{StaticResource ActionButtonStyle}"
+                                Background="#FF9800" Foreground="White"
+                                Click="OnInstallAlternativeClick"
+                                Tag="{Binding}"
+                                Visibility="{Binding AlternativeButtonVisibility}"
+                                Margin="0,0,8,0"/>
+                        <!-- Bouton action principal -->
+                        <Button Content="{Binding ActionText}"
+                                Style="{StaticResource ActionButtonStyle}"
+                                IsEnabled="{Binding CanPerformAction}"
+                                Background="{Binding ActionBackground}"
+                                Foreground="{Binding ActionForeground}"
+                                Click="OnModuleActionClick"
+                                Tag="{Binding}"/>
+                    </StackPanel>
                 </Grid>
             </Border>
         </DataTemplate>

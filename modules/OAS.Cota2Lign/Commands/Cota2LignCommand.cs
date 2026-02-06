@@ -1,13 +1,18 @@
-﻿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.EditorInput;
@@ -18,23 +23,24 @@ using OpenAsphalte.Logging;
 using OpenAsphalte.Services;
 using OpenAsphalte.Modules.Cota2Lign.Services;
 using OpenAsphalte.Modules.Cota2Lign.Views;
+using OpenAsphalte.Modules.DynamicSnap.Services;
 
 using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
 namespace OpenAsphalte.Modules.Cota2Lign.Commands;
 
 /// <summary>
-/// Commande pour créer des cotations alignées entre deux polylignes.
-/// Supporte l'interdistance, la cotation aux sommets et la prévisualisation.
+/// Commande pour cr�er des cotations align�es entre deux polylignes.
+/// Supporte l'interdistance, la cotation aux sommets et la pr�visualisation.
 /// </summary>
 public class Cota2LignCommand : CommandBase
 {
     /// <summary>
-    /// Exécute la commande de cotation entre deux lignes
+    /// Ex�cute la commande de cotation entre deux lignes
     /// </summary>
     [CommandMethod("OAS_COTA2LIGN")]
     [CommandInfo("Cotation entre 2 lignes",
-        Description = "Crée des cotations alignées entre deux polylignes",
+        Description = "Cr�e des cotations align�es entre deux polylignes",
         DisplayNameKey = "cota2lign.cmd.title",
         DescriptionKey = "cota2lign.cmd.desc",
         MenuCategory = "Dessin",
@@ -50,17 +56,17 @@ public class Cota2LignCommand : CommandBase
     {
         ExecuteSafe(() =>
         {
-            // Charger les paramètres depuis le dessin
+            // Charger les param�tres depuis le dessin
             var settings = Cota2LignSettings.LoadFromDrawing(Database!);
 
-            // Sauvegarder l'OSMODE utilisateur pour le restaurer à la fin
+            // Sauvegarder l'OSMODE utilisateur pour le restaurer � la fin
             int originalOsmode = Convert.ToInt32(AcadApp.GetSystemVariable("OSMODE"));
 
             try
             {
-                // ═══════════════════════════════════════════════════════
-                // SÉLECTION POLYLIGNE 1 (RÉFÉRENCE) - avec boucle paramètres
-                // ═══════════════════════════════════════════════════════
+                // -------------------------------------------------------
+                // S�LECTION POLYLIGNE 1 (R�F�RENCE) - avec boucle param�tres
+                // -------------------------------------------------------
                 ObjectId polyline1Id;
                 while (true)
                 {
@@ -69,9 +75,9 @@ public class Cota2LignCommand : CommandBase
 
                     if (pl1Result.Value.openSettings)
                     {
-                        // Ouvrir les paramètres puis reprendre la sélection
+                        // Ouvrir les param�tres puis reprendre la s�lection
                         OpenSettingsWindow(settings);
-                        // Recharger les paramètres après modification
+                        // Recharger les param�tres apr�s modification
                         settings = Cota2LignSettings.LoadFromDrawing(Database!);
                         continue;
                     }
@@ -80,9 +86,9 @@ public class Cota2LignCommand : CommandBase
                     break;
                 }
 
-                // ═══════════════════════════════════════════════════════
-                // SÉLECTION POLYLIGNE 2 (CIBLE)
-                // ═══════════════════════════════════════════════════════
+                // -------------------------------------------------------
+                // S�LECTION POLYLIGNE 2 (CIBLE)
+                // -------------------------------------------------------
                 var pl2Result = SelectPolyline(T("cota2lign.select.pl2"), polyline1Id);
                 if (pl2Result == null)
                 {
@@ -91,15 +97,19 @@ public class Cota2LignCommand : CommandBase
                 }
 
                 var polyline2Id = pl2Result.Value;
-
-                // ═══════════════════════════════════════════════════════
-                // SÉLECTION POINTS DÉPART/ARRIVÉE
-                // ═══════════════════════════════════════════════════════
-                // Si OAS Snap est actif, désactiver temporairement l'OSNAP AutoCAD
+                // Mettre les deux polylignes en surbrillance (style Primary uniforme)
+                HighlightHelper.HighlightEntities(polyline1Id, polyline2Id);
+                // -------------------------------------------------------
+                // S�LECTION POINTS D�PART/ARRIV�E
+                // -------------------------------------------------------
+                // Si OAS Snap est actif, d�sactiver temporairement l'OSNAP AutoCAD
                 if (settings.UseOasSnap && SnapIntegrationService.IsDynamicSnapAvailable)
                 {
                     AcadApp.SetSystemVariable("OSMODE", 0);
                 }
+
+                // Mettre la polyligne ma�tresse en �vidence pour la s�lection des points
+                HighlightHelper.SetPrimaryEntity(polyline1Id);
 
                 var startPoint = GetPointOnPolyline(T("cota2lign.select.start"), polyline1Id, settings);
                 if (startPoint == null)
@@ -115,9 +125,9 @@ public class Cota2LignCommand : CommandBase
                     return;
                 }
 
-                // ═══════════════════════════════════════════════════════
-                // GÉNÉRATION DES STATIONS ET CRÉATION DES COTATIONS
-                // ═══════════════════════════════════════════════════════
+                // -------------------------------------------------------
+                // G�N�RATION DES STATIONS ET CR�ATION DES COTATIONS
+                // -------------------------------------------------------
                 int dimCount = 0;
 
                 ExecuteInTransaction(tr =>
@@ -129,7 +139,7 @@ public class Cota2LignCommand : CommandBase
                     double startDist = GetDistanceAtPoint(polyline1, startPoint.Value);
                     double endDist = GetDistanceAtPoint(polyline1, endPoint.Value);
 
-                    // Générer les stations
+                    // G�n�rer les stations
                     var stations = StationService.BuildStations(
                         polyline1,
                         startDist,
@@ -144,13 +154,13 @@ public class Cota2LignCommand : CommandBase
                         return;
                     }
 
-                    // Préparation du BlockTableRecord
+                    // Pr�paration du BlockTableRecord
                     var btr = (BlockTableRecord)tr.GetObject(Database!.CurrentSpaceId, OpenMode.ForWrite);
 
-                    // Déterminer le calque de destination
+                    // D�terminer le calque de destination
                     string targetLayer = GetTargetLayer(tr, settings);
 
-                    // Créer les cotations avec annulation groupée
+                    // Cr�er les cotations avec annulation group�e
                     foreach (var stationDist in stations)
                     {
                         var pt1 = polyline1.GetPointAtDist(stationDist);
@@ -160,7 +170,7 @@ public class Cota2LignCommand : CommandBase
                         var tangentAngle = GeometryService.GetTangentAngle(polyline1, stationDist);
                         var perpAngle = tangentAngle + (settings.ReverseSide ? -Math.PI / 2 : Math.PI / 2);
 
-                        // Créer la cotation alignée
+                        // Cr�er la cotation align�e
                         var dimension = CreateAlignedDimension(pt1, pt2, settings.DimensionOffset, perpAngle);
                         dimension.Layer = targetLayer;
 
@@ -179,6 +189,9 @@ public class Cota2LignCommand : CommandBase
             {
                 // Toujours restaurer l'OSMODE utilisateur
                 AcadApp.SetSystemVariable("OSMODE", originalOsmode);
+
+                // Toujours nettoyer la surbrillance
+                HighlightHelper.ClearHighlight();
             }
         });
     }
@@ -186,7 +199,7 @@ public class Cota2LignCommand : CommandBase
     #region Private Methods - Selection
 
     /// <summary>
-    /// Sélectionne une polyligne avec option pour ouvrir les paramètres
+    /// S�lectionne une polyligne avec option pour ouvrir les param�tres
     /// </summary>
     private (ObjectId objectId, bool openSettings)? SelectPolylineWithOptions(string prompt)
     {
@@ -211,7 +224,7 @@ public class Cota2LignCommand : CommandBase
     }
 
     /// <summary>
-    /// Sélectionne une polyligne (exclut une ObjectId si spécifiée)
+    /// S�lectionne une polyligne (exclut une ObjectId si sp�cifi�e)
     /// </summary>
     private ObjectId? SelectPolyline(string prompt, ObjectId? excludeId = null)
     {
@@ -239,12 +252,12 @@ public class Cota2LignCommand : CommandBase
     }
 
     /// <summary>
-    /// Demande un point à l'utilisateur.
-    /// Utilise le module DynamicSnap si disponible et activé, sinon OSNAP AutoCAD.
+    /// Demande un point � l'utilisateur.
+    /// Utilise le module DynamicSnap si disponible et activ�, sinon OSNAP AutoCAD.
     /// </summary>
     private Point3d? GetPointOnPolyline(string prompt, ObjectId polylineId, Cota2LignSettings settings)
     {
-        // Utiliser le service d'intégration qui gère automatiquement le fallback
+        // Utiliser le service d'int�gration qui g�re automatiquement le fallback
         return SnapIntegrationService.GetPointOnPolyline(
             polylineId,
             prompt,
@@ -268,14 +281,14 @@ public class Cota2LignCommand : CommandBase
     #region Private Methods - Dimension Creation
 
     /// <summary>
-    /// Crée une cotation alignée entre deux points
+    /// Cr�e une cotation align�e entre deux points
     /// </summary>
     private AlignedDimension CreateAlignedDimension(Point3d pt1, Point3d pt2, double offset, double perpAngle)
     {
         // Point milieu pour le placement de la ligne de cotation
         var midPoint = GeometryService.MidPoint(pt1, pt2);
 
-        // Décalage perpendiculaire
+        // D�calage perpendiculaire
         var dimLinePoint = new Point3d(
             midPoint.X + offset * Math.Cos(perpAngle),
             midPoint.Y + offset * Math.Sin(perpAngle),
@@ -287,8 +300,8 @@ public class Cota2LignCommand : CommandBase
     }
 
     /// <summary>
-    /// Détermine le calque de destination pour les cotations.
-    /// Crée le calque s'il n'existe pas.
+    /// D�termine le calque de destination pour les cotations.
+    /// Cr�e le calque s'il n'existe pas.
     /// </summary>
     private string GetTargetLayer(Transaction tr, Cota2LignSettings settings)
     {
@@ -300,7 +313,7 @@ public class Cota2LignCommand : CommandBase
             return currentLayer.Name;
         }
 
-        // Utiliser le calque spécifié - le créer s'il n'existe pas
+        // Utiliser le calque sp�cifi� - le cr�er s'il n'existe pas
         LayerService.EnsureLayer(Database!, tr, settings.TargetLayer);
         return settings.TargetLayer;
     }
@@ -310,7 +323,7 @@ public class Cota2LignCommand : CommandBase
     #region Private Methods - Settings
 
     /// <summary>
-    /// Ouvre la fenêtre de paramètres
+    /// Ouvre la fen�tre de param�tres
     /// </summary>
     private void OpenSettingsWindow(Cota2LignSettings settings)
     {
@@ -319,7 +332,7 @@ public class Cota2LignCommand : CommandBase
 
         if (result == true)
         {
-            // Sauvegarder les paramètres dans le dessin
+            // Sauvegarder les param�tres dans le dessin
             settings.SaveToDrawing(Database!);
             Logger.Info(T("cota2lign.settings.saved"));
         }

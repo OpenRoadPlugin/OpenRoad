@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
@@ -17,19 +22,19 @@ using OpenAsphalte.Modules.DynamicSnap.Models;
 namespace OpenAsphalte.Modules.DynamicSnap.Services;
 
 /// <summary>
-/// Service de dÃ©tection des points d'accrochage sur les entitÃ©s AutoCAD.
+/// Service de détection des points d'accrochage sur les entités AutoCAD.
 /// Analyse les polylignes, cercles, arcs, etc. pour trouver les points d'accrochage.
 /// </summary>
 public static class SnapDetector
 {
     /// <summary>
-    /// DÃ©tecte tous les points d'accrochage sur une entitÃ©
+    /// Détecte tous les points d'accrochage sur une entité
     /// </summary>
-    /// <param name="entity">EntitÃ© Ã  analyser</param>
+    /// <param name="entity">Entité à analyser</param>
     /// <param name="cursorPoint">Position du curseur</param>
-    /// <param name="tolerance">TolÃ©rance de dÃ©tection</param>
+    /// <param name="tolerance">Tolérance de détection</param>
     /// <param name="modes">Modes d'accrochage actifs</param>
-    /// <returns>Liste des points d'accrochage dÃ©tectÃ©s</returns>
+    /// <returns>Liste des points d'accrochage détectés</returns>
     public static List<SnapPoint> DetectSnapPoints(
         Entity entity,
         Point3d cursorPoint,
@@ -40,7 +45,7 @@ public static class SnapDetector
 
         if (entity == null) return snapPoints;
 
-        // Dispatcher selon le type d'entitÃ©
+        // Dispatcher selon le type d'entité
         switch (entity)
         {
             case Polyline polyline:
@@ -72,7 +77,7 @@ public static class SnapDetector
                 break;
         }
 
-        // Filtrer par tolÃ©rance et trier par prioritÃ©
+        // Filtrer par tolérance et trier par priorité
         return snapPoints
             .Where(sp => sp.Distance <= tolerance)
             .OrderBy(sp => sp, SnapPointComparer.Instance)
@@ -80,7 +85,7 @@ public static class SnapDetector
     }
 
     /// <summary>
-    /// DÃ©tecte les points d'accrochage sur une polyligne
+    /// Détecte les points d'accrochage sur une polyligne
     /// </summary>
     private static void DetectPolylineSnapPoints(
         Polyline polyline,
@@ -107,10 +112,10 @@ public static class SnapDetector
             }
         }
 
-        // ExtrÃ©mitÃ©s (Endpoint)
+        // Extrémités (Endpoint)
         if (modes.HasMode(SnapMode.Endpoint))
         {
-            // Point de dÃ©part
+            // Point de départ
             Point3d startPt = polyline.GetPoint3dAt(0);
             double startDist = cursor.DistanceTo(startPt);
             if (startDist <= tolerance)
@@ -179,7 +184,7 @@ public static class SnapDetector
     }
 
     /// <summary>
-    /// DÃ©tecte les points d'accrochage sur une ligne
+    /// Détecte les points d'accrochage sur une ligne
     /// </summary>
     private static void DetectLineSnapPoints(
         Line line,
@@ -188,7 +193,7 @@ public static class SnapDetector
         SnapMode modes,
         List<SnapPoint> results)
     {
-        // ExtrÃ©mitÃ©s
+        // Extrémités
         if (modes.HasMode(SnapMode.Endpoint) || modes.HasMode(SnapMode.Vertex))
         {
             double startDist = cursor.DistanceTo(line.StartPoint);
@@ -242,7 +247,7 @@ public static class SnapDetector
     }
 
     /// <summary>
-    /// DÃ©tecte les points d'accrochage sur un cercle
+    /// Détecte les points d'accrochage sur un cercle
     /// </summary>
     private static void DetectCircleSnapPoints(
         Circle circle,
@@ -304,7 +309,7 @@ public static class SnapDetector
     }
 
     /// <summary>
-    /// DÃ©tecte les points d'accrochage sur un arc
+    /// Détecte les points d'accrochage sur un arc
     /// </summary>
     private static void DetectArcSnapPoints(
         Arc arc,
@@ -323,7 +328,7 @@ public static class SnapDetector
             }
         }
 
-        // ExtrÃ©mitÃ©s
+        // Extrémités
         if (modes.HasMode(SnapMode.Endpoint))
         {
             double startDist = cursor.DistanceTo(arc.StartPoint);
@@ -382,7 +387,7 @@ public static class SnapDetector
     }
 
     /// <summary>
-    /// DÃ©tecte les points d'accrochage sur un objet Point
+    /// Détecte les points d'accrochage sur un objet Point
     /// </summary>
     private static void DetectPointSnapPoints(
         DBPoint point,
@@ -402,7 +407,7 @@ public static class SnapDetector
     }
 
     /// <summary>
-    /// DÃ©tecte les points d'accrochage sur une rÃ©fÃ©rence de bloc
+    /// Détecte les points d'accrochage sur une référence de bloc
     /// </summary>
     private static void DetectBlockSnapPoints(
         BlockReference blockRef,
@@ -422,7 +427,7 @@ public static class SnapDetector
     }
 
     /// <summary>
-    /// DÃ©tecte les points d'accrochage sur une courbe gÃ©nÃ©rique
+    /// Détecte les points d'accrochage sur une courbe générique
     /// </summary>
     private static void DetectCurveSnapPoints(
         Curve curve,
@@ -431,7 +436,7 @@ public static class SnapDetector
         SnapMode modes,
         List<SnapPoint> results)
     {
-        // ExtrÃ©mitÃ©s
+        // Extrémités
         if (modes.HasMode(SnapMode.Endpoint))
         {
             try
@@ -477,7 +482,7 @@ public static class SnapDetector
     }
 
     /// <summary>
-    /// Calcule la distance curviligne jusqu'Ã  un sommet de polyligne
+    /// Calcule la distance curviligne jusqu'à un sommet de polyligne
     /// </summary>
     private static double GetDistanceAtVertex(Polyline polyline, int vertexIndex)
     {

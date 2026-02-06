@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Runtime.InteropServices;
 using Autodesk.AutoCAD.Interop;
@@ -21,7 +26,7 @@ namespace OpenAsphalte.UI;
 
 /// <summary>
 /// Wrapper IDisposable pour les objets COM AutoCAD.
-/// Assure une libÃ©ration propre des ressources COM mÃªme en cas d'exception.
+/// Assure une libération propre des ressources COM même en cas d'exception.
 /// </summary>
 internal sealed class ComWrapper<T> : IDisposable where T : class
 {
@@ -31,8 +36,8 @@ internal sealed class ComWrapper<T> : IDisposable where T : class
     public ComWrapper(T? obj) => Object = obj;
 
     /// <summary>
-    /// LibÃ¨re manuellement l'objet COM et le remplace par un autre.
-    /// Utile pour rÃ©assigner sans crÃ©er un nouveau wrapper.
+    /// Libère manuellement l'objet COM et le remplace par un autre.
+    /// Utile pour réassigner sans créer un nouveau wrapper.
     /// </summary>
     public void ReplaceWith(T? newObj)
     {
@@ -42,7 +47,7 @@ internal sealed class ComWrapper<T> : IDisposable where T : class
     }
 
     /// <summary>
-    /// LibÃ¨re l'objet COM de maniÃ¨re sÃ©curisÃ©e
+    /// Libère l'objet COM de manière sécurisée
     /// </summary>
     private void SafeRelease()
     {
@@ -70,7 +75,7 @@ internal sealed class ComWrapper<T> : IDisposable where T : class
 
 /// <summary>
 /// Construction dynamique du menu contextuel Open Asphalte.
-/// GÃ©nÃ¨re automatiquement le menu basÃ© sur les modules dÃ©couverts.
+/// Génère automatiquement le menu basé sur les modules découverts.
 /// </summary>
 public static class MenuBuilder
 {
@@ -78,7 +83,7 @@ public static class MenuBuilder
     private static bool _menuCreated = false;
 
     /// <summary>
-    /// CrÃ©e le menu Open Asphalte basÃ© sur les modules dÃ©couverts.
+    /// Crée le menu Open Asphalte basé sur les modules découverts.
     /// </summary>
     public static void CreateMenu()
     {
@@ -115,7 +120,7 @@ public static class MenuBuilder
             AcadPopupMenu? oasMenu = null;
             bool menuExisted = false;
 
-            // Chercher si le menu existe dÃ©jÃ  (toutes langues possibles)
+            // Chercher si le menu existe déjà (toutes langues possibles)
             for (int i = 0; i < menusWrapper.Object.Count; i++)
             {
                 AcadPopupMenu? existingMenu = null;
@@ -131,7 +136,7 @@ public static class MenuBuilder
                 }
                 finally
                 {
-                    // Ne pas libÃ©rer si c'est notre menu trouvÃ©
+                    // Ne pas libérer si c'est notre menu trouvé
                     if (existingMenu != null && existingMenu != oasMenu)
                         try { Marshal.ReleaseComObject(existingMenu); } catch { }
                 }
@@ -142,7 +147,7 @@ public static class MenuBuilder
             {
                 ClearMenuItems(oasMenu);
 
-                // Renommer si nÃ©cessaire (changement de langue)
+                // Renommer si nécessaire (changement de langue)
                 if (!oasMenu.Name.Equals(menuName, StringComparison.Ordinal))
                 {
                     try { oasMenu.Name = menuName; } catch { }
@@ -150,7 +155,7 @@ public static class MenuBuilder
             }
             else
             {
-                // CrÃ©er un nouveau menu
+                // Créer un nouveau menu
                 oasMenu = menusWrapper.Object.Add(menuName);
             }
 
@@ -160,22 +165,22 @@ public static class MenuBuilder
             {
                 int idx = 0;
 
-                // RÃ©cupÃ©rer toutes les commandes visibles
+                // Récupérer toutes les commandes visibles
                 var allCommands = ModuleDiscovery.AllCommands
                     .Where(c => c.ShowInMenu)
                     .OrderBy(c => c.Order)
                     .ToList();
 
-                // Groupement niveau 1 (CatÃ©gorie)
-                // Si MenuCategory est null, on utilise un fallback sur le Module (comportement rÃ©tro-compatible)
-                // Pour Ã©viter les doublons, on utilise une clÃ© composite (id) et on garde le nom affichÃ© (label)
+                // Groupement niveau 1 (Catégorie)
+                // Si MenuCategory est null, on utilise un fallback sur le Module (comportement rétro-compatible)
+                // Pour éviter les doublons, on utilise une clé composite (id) et on garde le nom affiché (label)
                 var lvl1Groups = allCommands
                     .GroupBy(c => new
                     {
-                        // ClÃ© d'unicitÃ© du menu niveau 1
+                        // Clé d'unicité du menu niveau 1
                         Id = c.MenuCategoryKey ?? c.MenuCategory ?? c.Module.NameKey ?? c.Module.Name
                     })
-                    .OrderBy(g => g.Min(c => c.Module.Order)) // On ordonne par l'ordre du premier module trouvÃ© dans le groupe
+                    .OrderBy(g => g.Min(c => c.Module.Order)) // On ordonne par l'ordre du premier module trouvé dans le groupe
                     .ToList();
 
                 bool isFirst = true;
@@ -191,11 +196,11 @@ public static class MenuBuilder
                     }
                     isFirst = false;
 
-                    // DÃ©terminer le nom du menu niveau 1
-                    // On prend la premiÃ¨re commande du groupe pour rÃ©cupÃ©rer les infos de traduction
+                    // Déterminer le nom du menu niveau 1
+                    // On prend la première commande du groupe pour récupérer les infos de traduction
                     var representativeCmd = commandsLvl1.First();
 
-                    // PrioritÃ© :
+                    // Priorité :
                     // 1. MenuCategoryKey (ex: "carto.title")
                     // 2. MenuCategory (ex: "Cartographie")
                     // 3. Module.NameKey (fallback)
@@ -215,18 +220,18 @@ public static class MenuBuilder
 
                     int subIdx = 0;
 
-                    // Groupement niveau 2 (Sous-catÃ©gorie)
-                    // Les commandes sans sous-catÃ©gorie vont directement dans le menu niveau 1
-                    // Celles avec sous-catÃ©gorie vont dans un sous-menu
+                    // Groupement niveau 2 (Sous-catégorie)
+                    // Les commandes sans sous-catégorie vont directement dans le menu niveau 1
+                    // Celles avec sous-catégorie vont dans un sous-menu
 
-                    // On sÃ©pare celles qui ont une sous-catÃ©gorie de celles qui n'en ont pas
+                    // On sépare celles qui ont une sous-catégorie de celles qui n'en ont pas
                     var commandsWithSub = commandsLvl1.Where(c => !string.IsNullOrEmpty(c.MenuSubCategory) || !string.IsNullOrEmpty(c.MenuSubCategoryKey)).ToList();
                     var commandsDirect = commandsLvl1.Where(c => string.IsNullOrEmpty(c.MenuSubCategory) && string.IsNullOrEmpty(c.MenuSubCategoryKey)).ToList();
 
                     // 1. D'abord les sous-menus
                     var lvl2Groups = commandsWithSub
                         .GroupBy(c => new { Id = c.MenuSubCategoryKey ?? c.MenuSubCategory })
-                        .OrderBy(g => g.Min(c => c.Order)); // Ordre basÃ© sur la premiÃ¨re commande
+                        .OrderBy(g => g.Min(c => c.Order)); // Ordre basé sur la première commande
 
                     foreach (var lvl2Group in lvl2Groups)
                     {
@@ -248,7 +253,7 @@ public static class MenuBuilder
                         }
                     }
 
-                    // SÃ©parateur entre sous-menus et commandes directes si besoin
+                    // Séparateur entre sous-menus et commandes directes si besoin
                     if (lvl2Groups.Any() && commandsDirect.Any())
                     {
                         lvl1MenuWrapper.Object.AddSeparator(subIdx++);
@@ -258,7 +263,7 @@ public static class MenuBuilder
                     string? lastGroup = null;
                     foreach (var cmd in commandsDirect.OrderBy(c => c.Order))
                     {
-                        // Gestion des groupes (sÃ©parateurs visuels)
+                        // Gestion des groupes (séparateurs visuels)
                         if (cmd.Group != null && cmd.Group != lastGroup && lastGroup != null)
                         {
                             lvl1MenuWrapper.Object.AddSeparator(subIdx++);
@@ -270,14 +275,14 @@ public static class MenuBuilder
                     }
                 }
 
-                // === Commandes systÃ¨me (toujours prÃ©sentes) ===
+                // === Commandes système (toujours présentes) ===
                 oasMenu.AddSeparator(idx++);
                 oasMenu.AddMenuItem(idx++, L10n.T("system.settings"), "OAS_SETTINGS ");
                 oasMenu.AddMenuItem(idx++, L10n.T("system.help"), "OAS_HELP ");
                 oasMenu.AddSeparator(idx++);
                 oasMenu.AddMenuItem(idx++, L10n.T("about.title"), "OAS_VERSION ");
 
-                // InsÃ©rer dans la barre de menus si pas dÃ©jÃ  prÃ©sent
+                // Insérer dans la barre de menus si pas déjà présent
                 if (!menuExisted || !IsMenuInMenuBar(menuBarWrapper.Object, oasMenu.Name))
                 {
                     int insertIndex = menuBarWrapper.Object.Count - 1;
@@ -301,30 +306,30 @@ public static class MenuBuilder
     }
 
     /// <summary>
-    /// VÃ©rifie si un nom correspond au menu Open Asphalte (toutes langues et noms personnalisÃ©s)
+    /// Vérifie si un nom correspond au menu Open Asphalte (toutes langues et noms personnalisés)
     /// </summary>
     private static bool IsOasMenu(string? name)
     {
         if (string.IsNullOrWhiteSpace(name)) return false;
 
-        // VÃ©rification du nom par dÃ©faut "Open Asphalte"
+        // Vérification du nom par défaut "Open Asphalte"
         if (name.Equals(DefaultMenuName, StringComparison.OrdinalIgnoreCase)) return true;
         if (name.Contains(DefaultMenuName, StringComparison.OrdinalIgnoreCase)) return true;
 
-        // VÃ©rification du nom personnalisÃ© dÃ©fini dans la configuration
-        // L'installateur gÃ©nÃ¨re des noms au format "[Nom] - OA"
+        // Vérification du nom personnalisé défini dans la configuration
+        // L'installateur génère des noms au format "[Nom] - OA"
         var configuredName = Configuration.Configuration.MainMenuName;
         if (!string.IsNullOrEmpty(configuredName) &&
             name.Equals(configuredName, StringComparison.OrdinalIgnoreCase)) return true;
 
-        // VÃ©rification du suffixe " - OA" (format installateur)
+        // Vérification du suffixe " - OA" (format installateur)
         if (name.EndsWith(" - OA", StringComparison.OrdinalIgnoreCase)) return true;
 
         return false;
     }
 
     /// <summary>
-    /// VÃ©rifie si un menu est prÃ©sent dans la barre de menus
+    /// Vérifie si un menu est présent dans la barre de menus
     /// </summary>
     private static bool IsMenuInMenuBar(AcadMenuBar menuBar, string menuName)
     {
@@ -350,13 +355,13 @@ public static class MenuBuilder
     }
 
     /// <summary>
-    /// Vide tous les Ã©lÃ©ments d'un menu
+    /// Vide tous les éléments d'un menu
     /// </summary>
     private static void ClearMenuItems(AcadPopupMenu menu)
     {
         try
         {
-            // Supprimer tous les Ã©lÃ©ments du menu en partant de la fin
+            // Supprimer tous les éléments du menu en partant de la fin
             while (menu.Count > 0)
             {
                 AcadPopupMenuItem? item = null;
@@ -429,7 +434,7 @@ public static class MenuBuilder
     }
 
     /// <summary>
-    /// Reconstruit le menu (utilisÃ© aprÃ¨s changement de langue)
+    /// Reconstruit le menu (utilisé après changement de langue)
     /// </summary>
     public static void RebuildMenu()
     {

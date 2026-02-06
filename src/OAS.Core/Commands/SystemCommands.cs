@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.EditorInput;
@@ -128,8 +133,8 @@ public class SystemCommands : CommandBase
 
             if (result == true)
             {
-                // Note: L'UI est automatiquement reconstruite via l'Ã©vÃ©nement OnLanguageChanged
-                // si la langue a changÃ© (dÃ©clenchÃ© par L10n.SetLanguage dans SettingsWindow)
+                // Note: L'UI est automatiquement reconstruite via l'événement OnLanguageChanged
+                // si la langue a changé (déclenché par L10n.SetLanguage dans SettingsWindow)
                 Logger.Success(T("cmd.success"));
             }
         }
@@ -162,7 +167,7 @@ public class SystemCommands : CommandBase
     }
 
     /// <summary>
-    /// Ouvre le gestionnaire de modules pour installer/mettre Ã  jour les modules
+    /// Ouvre le gestionnaire de modules pour installer/mettre à jour les modules
     /// </summary>
     [CommandMethod("OAS_MODULES")]
     [CommandInfo("Modules",
@@ -184,7 +189,7 @@ public class SystemCommands : CommandBase
     }
 
     /// <summary>
-    /// VÃ©rifie les mises Ã  jour en ouvrant la page des releases GitHub
+    /// Vérifie les mises à jour en ouvrant la page des releases GitHub
     /// </summary>
     [CommandMethod("OAS_UPDATE")]
     [CommandInfo("Update",
@@ -206,10 +211,10 @@ public class SystemCommands : CommandBase
         {
             var url = Configuration.Configuration.UpdateUrl;
 
-            // Valider l'URL avant ouverture (sÃ©curitÃ©)
+            // Valider l'URL avant ouverture (sécurité)
             if (!UrlValidationService.IsValidUpdateUrl(url))
             {
-                Logger.Error(L10n.TFormat("system.update.openError", "URL non valide ou non sÃ©curisÃ©e"));
+                Logger.Error(L10n.TFormat("system.update.openError", "URL non valide ou non sécurisée"));
                 return;
             }
 

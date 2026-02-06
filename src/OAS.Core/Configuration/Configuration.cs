@@ -1,13 +1,18 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.IO;
 using System.Text.Json;
@@ -61,13 +66,13 @@ public static class Configuration
     }
 
     /// <summary>
-    /// Version actuelle du schÃ©ma de configuration.
-    /// IncrÃ©mentez cette valeur lors de changements breaking dans la structure.
+    /// Version actuelle du schéma de configuration.
+    /// Incrémentez cette valeur lors de changements breaking dans la structure.
     /// </summary>
     public const int CurrentConfigVersion = 1;
 
     /// <summary>
-    /// Version du fichier de configuration chargÃ©
+    /// Version du fichier de configuration chargé
     /// </summary>
     public static int LoadedConfigVersion { get; private set; } = 0;
 
@@ -98,7 +103,7 @@ public static class Configuration
                 var json = File.ReadAllText(ConfigFile);
                 StartupLog.Write($"Configuration.Load: read {json.Length} chars");
 
-                // Validation basique du JSON avant dÃ©sÃ©rialisation
+                // Validation basique du JSON avant désérialisation
                 if (string.IsNullOrWhiteSpace(json))
                 {
                     _settings = new();
@@ -118,7 +123,7 @@ public static class Configuration
                     Logger.Debug(string.Format(L10n.T("config.loaded", "Configuration chargee depuis {0}"), ConfigFile));
                     StartupLog.Write("Configuration.Load: deserialized");
 
-                    // VÃ©rifier et migrer la version
+                    // Vérifier et migrer la version
                     LoadedConfigVersion = ReadConfigVersion();
                     if (LoadedConfigVersion < CurrentConfigVersion)
                     {
@@ -131,7 +136,7 @@ public static class Configuration
             {
                 StartupLog.Write("Configuration.Load: file missing, creating defaults");
                 _settings = new();
-                // Nouvelle configuration : dÃ©finir la version
+                // Nouvelle configuration : définir la version
                 _settings["_configVersion"] = CurrentConfigVersion;
                 LoadedConfigVersion = CurrentConfigVersion;
                 _loaded = true;
@@ -192,13 +197,13 @@ public static class Configuration
     {
         Logger.Info(L10n.TFormat("config.migrating", fromVersion, toVersion));
 
-        // Migrations sÃ©quentielles
+        // Migrations séquentielles
         for (int v = fromVersion; v < toVersion; v++)
         {
             switch (v)
             {
                 case 0:
-                    // Migration v0 -> v1 : ajout des valeurs par dÃ©faut manquantes
+                    // Migration v0 -> v1 : ajout des valeurs par défaut manquantes
                     if (!_settings.ContainsKey("language"))
                         _settings["language"] = "fr";
                     if (!_settings.ContainsKey("devMode"))
@@ -209,13 +214,13 @@ public static class Configuration
             }
         }
 
-        // Mettre Ã  jour la version
+        // Mettre à jour la version
         _settings["_configVersion"] = toVersion;
         LoadedConfigVersion = toVersion;
 
-        // Sauvegarder aprÃ¨s migration
+        // Sauvegarder après migration
         Save();
-        Logger.Success(L10n.T("config.migrated", "Configuration migrÃ©e avec succÃ¨s"));
+        Logger.Success(L10n.T("config.migrated", "Configuration migrée avec succès"));
     }
 
     /// <summary>
@@ -225,7 +230,7 @@ public static class Configuration
     {
         try
         {
-            // S'assurer que la version est toujours prÃ©sente
+            // S'assurer que la version est toujours présente
             if (!_settings.ContainsKey("_configVersion"))
             {
                 _settings["_configVersion"] = CurrentConfigVersion;
@@ -257,12 +262,12 @@ public static class Configuration
     }
 
     /// <summary>
-    /// RÃ©cupÃ¨re une valeur de configuration
+    /// Récupère une valeur de configuration
     /// </summary>
     /// <typeparam name="T">Type de la valeur</typeparam>
-    /// <param name="key">ClÃ© de configuration</param>
-    /// <param name="defaultValue">Valeur par dÃ©faut</param>
-    /// <returns>Valeur ou dÃ©faut si non trouvÃ©e</returns>
+    /// <param name="key">Clé de configuration</param>
+    /// <param name="defaultValue">Valeur par défaut</param>
+    /// <returns>Valeur ou défaut si non trouvée</returns>
     public static T Get<T>(string key, T defaultValue)
     {
         EnsureLoaded();
@@ -378,16 +383,16 @@ public static class Configuration
         return 0;
     }
 
-    #region PropriÃ©tÃ©s raccourcis
+    #region Propriétés raccourcis
 
     /// <summary>
     /// Langue active (fr, en, es).
     /// Pour changer la langue avec notification de l'UI, utilisez <see cref="Localization.Localization.SetLanguage"/>.
     /// </summary>
     /// <remarks>
-    /// Cette propriÃ©tÃ© accÃ¨de directement Ã  la configuration.
-    /// Si vous voulez que le changement de langue soit propagÃ© Ã  l'UI,
-    /// utilisez plutÃ´t <c>Localization.Localization.SetLanguage(language)</c>.
+    /// Cette propriété accède directement à la configuration.
+    /// Si vous voulez que le changement de langue soit propagé à l'UI,
+    /// utilisez plutôt <c>Localization.Localization.SetLanguage(language)</c>.
     /// </remarks>
     public static string Language
     {

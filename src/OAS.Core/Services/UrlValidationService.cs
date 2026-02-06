@@ -1,24 +1,29 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace OpenAsphalte.Services;
 
 /// <summary>
-/// Service de validation des URLs pour la sÃ©curitÃ©.
-/// Centralise les contrÃ´les de sÃ©curitÃ© pour Ã©viter les duplications.
+/// Service de validation des URLs pour la sécurité.
+/// Centralise les contrôles de sécurité pour éviter les duplications.
 /// </summary>
 public static class UrlValidationService
 {
     /// <summary>
-    /// Liste blanche des domaines autorisÃ©s pour les mises Ã  jour
+    /// Liste blanche des domaines autorisés pour les mises à jour
     /// </summary>
     private static readonly string[] AllowedUpdateHosts =
     {
@@ -28,12 +33,12 @@ public static class UrlValidationService
     };
 
     /// <summary>
-    /// Valide qu'une URL de mise Ã  jour est sÃ©curisÃ©e.
+    /// Valide qu'une URL de mise à jour est sécurisée.
     /// </summary>
-    /// <param name="url">URL Ã  valider</param>
-    /// <returns>True si l'URL est valide et sÃ©curisÃ©e, false sinon</returns>
+    /// <param name="url">URL à valider</param>
+    /// <returns>True si l'URL est valide et sécurisée, false sinon</returns>
     /// <remarks>
-    /// CritÃ¨res de validation :
+    /// Critères de validation :
     /// - URL non nulle et non vide
     /// - URL absolue valide
     /// - Protocole HTTPS uniquement
@@ -47,19 +52,19 @@ public static class UrlValidationService
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
             return false;
 
-        // N'autoriser que HTTPS pour la sÃ©curitÃ©
+        // N'autoriser que HTTPS pour la sécurité
         if (uri.Scheme != Uri.UriSchemeHttps)
             return false;
 
-        // VÃ©rifier que le domaine est dans la liste blanche
+        // Vérifier que le domaine est dans la liste blanche
         return AllowedUpdateHosts.Any(host =>
             uri.Host.EndsWith(host, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>
-    /// Valide qu'une URL est sÃ©curisÃ©e (HTTPS uniquement).
+    /// Valide qu'une URL est sécurisée (HTTPS uniquement).
     /// </summary>
-    /// <param name="url">URL Ã  valider</param>
+    /// <param name="url">URL à valider</param>
     /// <returns>True si l'URL utilise HTTPS, false sinon</returns>
     public static bool IsSecureUrl(string? url)
     {
@@ -73,10 +78,10 @@ public static class UrlValidationService
     }
 
     /// <summary>
-    /// VÃ©rifie si un domaine est dans la liste blanche des mises Ã  jour.
+    /// Vérifie si un domaine est dans la liste blanche des mises à jour.
     /// </summary>
-    /// <param name="host">Nom de domaine Ã  vÃ©rifier</param>
-    /// <returns>True si le domaine est autorisÃ©</returns>
+    /// <param name="host">Nom de domaine à vérifier</param>
+    /// <returns>True si le domaine est autorisé</returns>
     public static bool IsAllowedHost(string? host)
     {
         if (string.IsNullOrWhiteSpace(host))

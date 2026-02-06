@@ -1,19 +1,24 @@
-ï»¿// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace OpenAsphalte.Modules.DynamicSnap.Models;
 
 /// <summary>
 /// Configuration pour une session d'accrochage dynamique.
-/// Permet de personnaliser le comportement du systÃ¨me de snap.
+/// Permet de personnaliser le comportement du système de snap.
 /// </summary>
 public sealed class SnapConfiguration
 {
@@ -23,25 +28,25 @@ public sealed class SnapConfiguration
     public SnapMode ActiveModes { get; set; } = SnapMode.PolylineFull;
 
     /// <summary>
-    /// TolÃ©rance de dÃ©tection en unitÃ©s du dessin.
-    /// Distance maximale entre le curseur et un point pour qu'il soit dÃ©tectÃ©.
+    /// Tolérance de détection en unités du dessin.
+    /// Distance maximale entre le curseur et un point pour qu'il soit détecté.
     /// </summary>
     public double Tolerance { get; set; } = 0.0;
 
     /// <summary>
-    /// TolÃ©rance relative Ã  la taille de vue (0.01 = 1% de la vue).
-    /// UtilisÃ© si Tolerance == 0.
+    /// Tolérance relative à la taille de vue (0.01 = 1% de la vue).
+    /// Utilisé si Tolerance == 0.
     /// </summary>
     public double ToleranceViewRatio { get; set; } = 0.02;
 
     /// <summary>
-    /// Rayon du marqueur visuel en unitÃ©s du dessin.
+    /// Rayon du marqueur visuel en unités du dessin.
     /// </summary>
     public double MarkerSize { get; set; } = 0.0;
 
     /// <summary>
-    /// Taille du marqueur relative Ã  la vue (0.01 = 1% de la vue).
-    /// UtilisÃ© si MarkerSize == 0.
+    /// Taille du marqueur relative à la vue (0.01 = 1% de la vue).
+    /// Utilisé si MarkerSize == 0.
     /// </summary>
     public double MarkerViewRatio { get; set; } = 0.015;
 
@@ -49,21 +54,21 @@ public sealed class SnapConfiguration
     /// Couleur du marqueur (index AutoCAD 1-255).
     /// 1 = Rouge, 2 = Jaune, 3 = Vert, 4 = Cyan, 5 = Bleu, 6 = Magenta, 7 = Blanc
     /// </summary>
-    public short MarkerColor { get; set; } = 3; // Vert par dÃ©faut
+    public short MarkerColor { get; set; } = 3; // Vert par défaut
 
     /// <summary>
-    /// Couleur du marqueur actif/sÃ©lectionnÃ©
+    /// Couleur du marqueur actif/sélectionné
     /// </summary>
     public short ActiveMarkerColor { get; set; } = 1; // Rouge
 
     /// <summary>
-    /// Indique si les marqueurs doivent Ãªtre pleins (hachurÃ©s) ou seulement en contour
+    /// Indique si les marqueurs doivent être pleins (hachurés) ou seulement en contour
     /// </summary>
     public bool FilledMarkers { get; set; } = false;
 
     /// <summary>
-    /// Ã‰paisseur de ligne des marqueurs (valeurs AutoCAD LineWeight)
-    /// 0 = dÃ©faut, 30 = 0.30mm, 50 = 0.50mm, etc.
+    /// Épaisseur de ligne des marqueurs (valeurs AutoCAD LineWeight)
+    /// 0 = défaut, 30 = 0.30mm, 50 = 0.50mm, etc.
     /// </summary>
     public int MarkerLineWeight { get; set; } = 30;
 
@@ -78,27 +83,27 @@ public sealed class SnapConfiguration
     public bool ShowOnlyNearest { get; set; } = true;
 
     /// <summary>
-    /// Afficher tous les marqueurs dans la zone de tolÃ©rance
+    /// Afficher tous les marqueurs dans la zone de tolérance
     /// </summary>
     public bool ShowAllInRange { get; set; } = false;
 
     /// <summary>
-    /// Nombre maximum de marqueurs Ã  afficher si ShowAllInRange = true
+    /// Nombre maximum de marqueurs à afficher si ShowAllInRange = true
     /// </summary>
     public int MaxVisibleMarkers { get; set; } = 10;
 
     /// <summary>
-    /// Type de marqueur visuel Ã  afficher
+    /// Type de marqueur visuel à afficher
     /// </summary>
     public MarkerStyle MarkerStyle { get; set; } = MarkerStyle.Circle;
 
     /// <summary>
-    /// Indique si l'accrochage OSNAP d'AutoCAD doit Ãªtre dÃ©sactivÃ© temporairement
+    /// Indique si l'accrochage OSNAP d'AutoCAD doit être désactivé temporairement
     /// </summary>
     public bool DisableAutoCADOsnap { get; set; } = true;
 
     /// <summary>
-    /// CrÃ©er une configuration par dÃ©faut pour les polylignes
+    /// Créer une configuration par défaut pour les polylignes
     /// </summary>
     public static SnapConfiguration ForPolylines()
     {
@@ -109,7 +114,7 @@ public sealed class SnapConfiguration
     }
 
     /// <summary>
-    /// CrÃ©er une configuration pour les sommets uniquement
+    /// Créer une configuration pour les sommets uniquement
     /// </summary>
     public static SnapConfiguration VerticesOnly()
     {
@@ -120,7 +125,7 @@ public sealed class SnapConfiguration
     }
 
     /// <summary>
-    /// CrÃ©er une configuration pour tous les types d'entitÃ©s
+    /// Créer une configuration pour tous les types d'entités
     /// </summary>
     public static SnapConfiguration All()
     {
@@ -177,7 +182,7 @@ public enum MarkerStyle
     XMark,
 
     /// <summary>
-    /// CarrÃ©
+    /// Carré
     /// </summary>
     Square,
 

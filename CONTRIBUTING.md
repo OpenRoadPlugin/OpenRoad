@@ -1,15 +1,15 @@
-ï»¿# Contribuer Ã  Open Asphalte
+# Contribuer à Open Asphalte
 
-Merci de votre intÃ©rÃªt pour contribuer Ã  Open Asphalte ! 
+Merci de votre intérêt pour contribuer à Open Asphalte ! 
 
 ---
 
-##  Environnement de dÃ©veloppement
+##  Environnement de développement
 
-### PrÃ©requis
+### Prérequis
 
-- **.NET 8 SDK**  [TÃ©lÃ©charger](https://dotnet.microsoft.com/download/dotnet/8.0)
-- **AutoCAD 2025**  Pour les DLL de rÃ©fÃ©rence
+- **.NET 8 SDK**  [Télécharger](https://dotnet.microsoft.com/download/dotnet/8.0)
+- **AutoCAD 2025**  Pour les DLL de référence
 - **Visual Studio 2022** ou **VS Code** avec extensions :
   - C# (ms-dotnettools.csharp)
   - C# Dev Kit (ms-dotnettools.csdevkit)
@@ -24,7 +24,7 @@ Merci de votre intÃ©rÃªt pour contribuer Ã  Open Asphalte !
 
 2. Ouvrez le projet dans votre IDE
 
-3. VÃ©rifiez les chemins AutoCAD dans src/OAS.Core/OAS.Core.csproj :
+3. Vérifiez les chemins AutoCAD dans src/OAS.Core/OAS.Core.csproj :
    `xml
    <HintPath>C:\Program Files\Autodesk\AutoCAD 2025\accoremgd.dll</HintPath>
    `
@@ -36,7 +36,7 @@ cd src/OAS.Core
 dotnet build -c Release
 ```
 
-Le fichier OAS.Core.dll sera gÃ©nÃ©rÃ© dans bin/.
+Le fichier OAS.Core.dll sera généré dans bin/.
 
 ---
 
@@ -45,16 +45,16 @@ Le fichier OAS.Core.dll sera gÃ©nÃ©rÃ© dans bin/.
 ```
 OpenAsphalte/
  src/
-    OAS.Core/                    # CÅ“ur du plugin
-        Plugin.cs            # Point d'entrÃ©e
+    OAS.Core/                    # Cœur du plugin
+        Plugin.cs            # Point d'entrée
         Abstractions/        # Interfaces pour modules
-        Discovery/           # DÃ©couverte automatique
-        Configuration/       # ParamÃ¨tres utilisateur
+        Discovery/           # Découverte automatique
+        Configuration/       # Paramètres utilisateur
         Localization/        # Traductions
         Logging/             # Logs
-        Services/            # Services partagÃ©s
+        Services/            # Services partagés
         UI/                  # Menu et ruban
-        Commands/            # Commandes systÃ¨me
+        Commands/            # Commandes système
 
  templates/                   # Templates pour modules
  bin/
@@ -66,28 +66,28 @@ OpenAsphalte/
 
 ##  Types de contributions
 
-### 1. AmÃ©liorer le Core
+### 1. Améliorer le Core
 
-Le Core doit rester **gÃ©nÃ©rique** et bÃ©nÃ©ficier Ã  tous les modules.
+Le Core doit rester **générique** et bénéficier à tous les modules.
 
-**Ã€ faire :**
+**À faire :**
 - Corriger des bugs
-- AmÃ©liorer les performances
-- Ajouter des services partagÃ©s utiles Ã  plusieurs modules
-- AmÃ©liorer la documentation
+- Améliorer les performances
+- Ajouter des services partagés utiles à plusieurs modules
+- Améliorer la documentation
 
-**Ã€ ne PAS faire :**
-- Ajouter des fonctionnalitÃ©s spÃ©cifiques Ã  un mÃ©tier
-- Modifier la dÃ©couverte des modules pour un cas particulier
-- Ajouter des commandes utilisateur (sauf commandes systÃ¨me)
+**À ne PAS faire :**
+- Ajouter des fonctionnalités spécifiques à un métier
+- Modifier la découverte des modules pour un cas particulier
+- Ajouter des commandes utilisateur (sauf commandes système)
 
-### 2. CrÃ©er un module
+### 2. Créer un module
 
-Les nouvelles fonctionnalitÃ©s doivent Ãªtre crÃ©Ã©es comme des **modules sÃ©parÃ©s**.
+Les nouvelles fonctionnalités doivent être créées comme des **modules séparés**.
 
-Consultez le [Guide dÃ©veloppeur](docs/guides/developer_guide.md) pour crÃ©er un module.
+Consultez le [Guide développeur](docs/guides/developer_guide.md) pour créer un module.
 
-### 3. AmÃ©liorer la documentation
+### 3. Améliorer la documentation
 
 - Corriger les erreurs
 - Ajouter des exemples
@@ -99,16 +99,16 @@ Consultez le [Guide dÃ©veloppeur](docs/guides/developer_guide.md) pour crÃ©er un
 
 ### Nommage
 
-| Ã‰lÃ©ment | Convention | Exemple |
+| Élément | Convention | Exemple |
 |---------|------------|---------|
 | Namespace Core | OpenAsphalte.* | OpenAsphalte.Services |
 | Namespace Module | OpenAsphalte.Modules.{Module} | OpenAsphalte.Modules.Voirie |
 | Commande | OAS_{MODULE}_{ACTION} | OAS_VOIRIE_PARKING |
-| ClÃ© traduction | {module}.{section}.{key} | voirie.parking.title |
+| Clé traduction | {module}.{section}.{key} | voirie.parking.title |
 
 ### Style de code
 
-- Utilisez les alias recommandÃ©s :
+- Utilisez les alias recommandés :
   `csharp
   using AcadApp = Autodesk.AutoCAD.ApplicationServices.Application;
   using AcColor = Autodesk.AutoCAD.Colors.Color;
@@ -130,7 +130,7 @@ git clone https://github.com/VOTRE_USERNAME/openasphalte.git
 cd openasphalte
 `
 
-### 2. CrÃ©er une branche
+### 2. Créer une branche
 
 `ash
 git checkout -b feature/ma-fonctionnalite
@@ -142,7 +142,7 @@ git checkout -b fix/mon-correctif
 
 - Respectez les conventions de code
 - Testez vos modifications dans AutoCAD
-- Mettez Ã  jour la documentation si nÃ©cessaire
+- Mettez à jour la documentation si nécessaire
 
 ### 4. Committer
 
@@ -151,13 +151,13 @@ Utilisez des messages de commit clairs :
 `ash
 # Pour le Core
 git commit -m "feat(core): ajoute support des arcs dans GeometryService"
-git commit -m "fix(core): corrige le crash au dÃ©chargement"
+git commit -m "fix(core): corrige le crash au déchargement"
 
 # Pour un module
 git commit -m "feat(module-voirie): ajoute commande de marquage au sol"
 
 # Pour la documentation
-git commit -m "docs: amÃ©liore le guide dÃ©veloppeur"
+git commit -m "docs: améliore le guide développeur"
 `
 
 ### 5. Push et Pull Request
@@ -173,10 +173,10 @@ Puis ouvrez une Pull Request sur GitHub.
 ##  Checklist avant PR
 
 - [ ] Le code compile sans erreur
-- [ ] Les conventions de nommage sont respectÃ©es
-- [ ] La documentation est Ã  jour
+- [ ] Les conventions de nommage sont respectées
+- [ ] La documentation est à jour
 - [ ] Les traductions FR/EN/ES sont fournies (si applicable)
-- [ ] Aucun texte utilisateur n'est codÃ© en dur (utiliser Localization)
+- [ ] Aucun texte utilisateur n'est codé en dur (utiliser Localization)
 - [ ] Les tests dans AutoCAD passent
 
 ---
@@ -190,81 +190,81 @@ Merci pour votre contribution !
 
 ---
 
-## ðŸ† Reconnaissance des contributeurs
+## ?? Reconnaissance des contributeurs
 
-Open Asphalte valorise ses contributeurs ! Selon votre niveau de participation, vous pouvez Ãªtre crÃ©ditÃ© directement dans le programme.
+Open Asphalte valorise ses contributeurs ! Selon votre niveau de participation, vous pouvez être crédité directement dans le programme.
 
-### CrÃ©dits automatiques pour les dÃ©veloppeurs de modules
+### Crédits automatiques pour les développeurs de modules
 
-**Si vous dÃ©veloppez un module**, vos crÃ©dits sont **automatiquement affichÃ©s** via les propriÃ©tÃ©s de votre classe module :
+**Si vous développez un module**, vos crédits sont **automatiquement affichés** via les propriétés de votre classe module :
 
 ```csharp
 public class MonModule : ModuleBase
 {
-    public override string Author => "Votre Nom";           // AffichÃ© dans OAS_VERSION et OAS_MODULES
+    public override string Author => "Votre Nom";           // Affiché dans OAS_VERSION et OAS_MODULES
     public override string Version => "1.0.0";              // Version de votre module
     public override string Description => "Mon super module";
     
     // Vous pouvez aussi ajouter un lien dans la description :
-    // "Module de gÃ©olocalisation - https://monsite.com"
+    // "Module de géolocalisation - https://monsite.com"
 }
 ```
 
 Ces informations apparaissent dans :
-- La commande `OAS_VERSION` â€” Liste des modules chargÃ©s avec auteurs
-- Le gestionnaire de modules `OAS_MODULES` â€” DÃ©tails de chaque module
-- Le marketplace (si votre module est publiÃ©)
+- La commande `OAS_VERSION` — Liste des modules chargés avec auteurs
+- Le gestionnaire de modules `OAS_MODULES` — Détails de chaque module
+- Le marketplace (si votre module est publié)
 
 ### Niveaux de reconnaissance additionnels
 
-| Niveau | CritÃ¨res | Reconnaissance |
+| Niveau | Critères | Reconnaissance |
 |--------|----------|----------------|
-| **Contributeur** | 1-3 contributions acceptÃ©es (PR, corrections, traductions) | Nom dans le fichier NOTICE |
+| **Contributeur** | 1-3 contributions acceptées (PR, corrections, traductions) | Nom dans le fichier NOTICE |
 | **Contributeur actif** | 4-10 contributions significatives | Nom + lien vers profil GitHub dans `OAS_VERSION` |
-| **DÃ©veloppeur Core** | Contributions majeures au Core | Nom + lien site personnel dans `OAS_VERSION` et documentation |
-| **Testeur reconnu** | Tests rÃ©guliers + rapports de bugs dÃ©taillÃ©s (5+) | Mention dans `OAS_VERSION` section testeurs |
+| **Développeur Core** | Contributions majeures au Core | Nom + lien site personnel dans `OAS_VERSION` et documentation |
+| **Testeur reconnu** | Tests réguliers + rapports de bugs détaillés (5+) | Mention dans `OAS_VERSION` section testeurs |
 
-### Comment demander vos crÃ©dits ?
+### Comment demander vos crédits ?
 
 1. **Lors de votre Pull Request**, ajoutez dans la description :
    ```
-   ## CrÃ©dits souhaitÃ©s
+   ## Crédits souhaités
    - Nom/Pseudo : [Votre nom]
    - Site web : [URL de votre site] (optionnel)
-   - RÃ´le : DÃ©veloppeur / Testeur / Traducteur
+   - Rôle : Développeur / Testeur / Traducteur
    ```
 
-2. **AprÃ¨s plusieurs contributions**, ouvrez une Issue avec le label `credits` en listant vos contributions.
+2. **Après plusieurs contributions**, ouvrez une Issue avec le label `credits` en listant vos contributions.
 
-### Informations affichÃ©es
+### Informations affichées
 
 Vous pouvez choisir d'afficher :
-- âœ… Votre nom ou pseudonyme
-- âœ… Un lien vers votre site personnel ou portfolio
-- âœ… Un lien vers votre profil GitHub
-- âœ… Votre entreprise (si applicable)
+- ? Votre nom ou pseudonyme
+- ? Un lien vers votre site personnel ou portfolio
+- ? Un lien vers votre profil GitHub
+- ? Votre entreprise (si applicable)
 
-Toutes ces informations sont **optionnelles**. Vous pouvez contribuer anonymement si vous le prÃ©fÃ©rez.
+Toutes ces informations sont **optionnelles**. Vous pouvez contribuer anonymement si vous le préférez.
 
-### OÃ¹ apparaissent les crÃ©dits ?
+### Où apparaissent les crédits ?
 
-- **Fichier [NOTICE](NOTICE)** â€” Liste complÃ¨te des contributeurs
-- **Commande `OAS_VERSION`** â€” FenÃªtre "Ã€ propos" dans AutoCAD
-- **Documentation** â€” Page des contributeurs (pour contributions majeures)
+- **Fichier [NOTICE](NOTICE)** — Liste complète des contributeurs
+- **Commande `OAS_VERSION`** — Fenêtre "À propos" dans AutoCAD
+- **Documentation** — Page des contributeurs (pour contributions majeures)
 
 ---
 
-##  Licence et responsabilitÃ©
+##  Licence et responsabilité
 
-En contribuant Ã  Open Asphalte, vous acceptez que :
+En contribuant à Open Asphalte, vous acceptez que :
 
-1. **Vos contributions sont sous licence Apache 2.0**  Elles peuvent Ãªtre utilisÃ©es, modifiÃ©es et distribuÃ©es librement
+1. **Vos contributions sont sous licence GNU GPL v3**  Elles peuvent être utilisées, modifiées et distribuées librement
 2. **Vous accordez une licence de brevet**  Pour toute contribution que vous soumettez
-3. **Vous renoncez Ã  toute rÃ©clamation** concernant l'utilisation de votre code
+3. **Vous renoncez à toute réclamation** concernant l'utilisation de votre code
 4. **Open Asphalte est fourni "tel quel"**  Sans garantie d'aucune sorte
 
 ### Marques
 
-"Open Asphalte" est une marque rÃ©servÃ©e. Les contributions n'accordent aucun droit sur le nom ou le logo.
+"Open Asphalte" est une marque réservée. Les contributions n'accordent aucun droit sur le nom ou le logo.
 
-Pour plus de dÃ©tails, consultez notre [Politique de SÃ©curitÃ©](SECURITY.md), le fichier [LICENSE](LICENSE) et le fichier [NOTICE](NOTICE).
+Pour plus de détails, consultez notre [Politique de Sécurité](SECURITY.md), le fichier [LICENSE](LICENSE) et le fichier [NOTICE](NOTICE).

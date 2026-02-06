@@ -1,13 +1,18 @@
-Ôªø// Copyright 2026 Open Asphalte Contributors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Open Asphalte
+// Copyright (C) 2026 Open Asphalte Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -24,12 +29,28 @@ using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using Button = System.Windows.Controls.Button;
 using Color = System.Windows.Media.Color;
+using System.Reflection;
 
 namespace OpenAsphalte.Commands;
 
 /// <summary>
-/// Fen√™tre de gestion des modules Open Asphalte.
-/// Permet d'installer, mettre √† jour et g√©rer les modules depuis le catalogue GitHub.
+/// Statut de compatibilitÈ d'un module avec le Core installÈ
+/// </summary>
+public enum ModuleCompatibilityStatus
+{
+    /// <summary>Module compatible avec le Core actuel</summary>
+    Compatible,
+    /// <summary>Core trop ancien pour ce module</summary>
+    CoreTooOld,
+    /// <summary>Core trop rÈcent pour ce module</summary>
+    CoreTooNew,
+    /// <summary>Module incompatible mais une version antÈrieure est compatible</summary>
+    OlderVersionAvailable
+}
+
+/// <summary>
+/// FenÍtre de gestion des modules Open Asphalte.
+/// Permet d'installer, mettre ‡ jour et gÈrer les modules depuis le catalogue GitHub.
 /// </summary>
 public partial class ModuleManagerWindow : Window
 {
@@ -44,18 +65,18 @@ public partial class ModuleManagerWindow : Window
         lstCategories.ItemsSource = _categories;
         UpdateLocalizedText();
 
-        // Charger automatiquement d√®s l'ouverture
+        // Charger automatiquement dËs l'ouverture
         Loaded += async (s, e) => await RefreshModulesAsync();
     }
 
     /// <summary>
-    /// Met √† jour les textes de la fen√™tre selon la langue
+    /// Met ‡ jour les textes de la fenÍtre selon la langue
     /// </summary>
     private void UpdateLocalizedText()
     {
         Title = L10n.T("modules.manager.title", "Gestionnaire de Modules");
         txtTitle.Text = L10n.T("modules.manager.title", "Gestionnaire de Modules");
-        txtSubtitle.Text = L10n.T("modules.manager.subtitle", "Installez et g√©rez les modules Open Asphalte depuis le catalogue officiel.");
+        txtSubtitle.Text = L10n.T("modules.manager.subtitle", "Installez et gÈrez les modules Open Asphalte depuis le catalogue officiel.");
         btnRefresh.ToolTip = L10n.T("modules.manager.refresh", "Actualiser");
         txtFilter.Text = L10n.T("modules.manager.filter", "Filtrer:");
         btnClose.Content = L10n.T("settings.cancel", "Fermer");
@@ -65,9 +86,9 @@ public partial class ModuleManagerWindow : Window
         if (cmbFilter.Items.Count >= 4)
         {
             ((ComboBoxItem)cmbFilter.Items[0]).Content = L10n.T("modules.filter.all", "Tous");
-            ((ComboBoxItem)cmbFilter.Items[1]).Content = L10n.T("modules.filter.installed", "Install√©s");
+            ((ComboBoxItem)cmbFilter.Items[1]).Content = L10n.T("modules.filter.installed", "InstallÈs");
             ((ComboBoxItem)cmbFilter.Items[2]).Content = L10n.T("modules.filter.available", "Disponibles");
-            ((ComboBoxItem)cmbFilter.Items[3]).Content = L10n.T("modules.filter.updates", "Mises √† jour");
+            ((ComboBoxItem)cmbFilter.Items[3]).Content = L10n.T("modules.filter.updates", "Mises ‡ jour");
         }
 
         // Chemin modules
@@ -106,6 +127,8 @@ public partial class ModuleManagerWindow : Window
             }
 
             // Construire la liste des modules
+            var coreVersion = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 0);
+
             foreach (var moduleDef in _manifest.Modules)
             {
                 var installedModule = ModuleDiscovery.Modules
@@ -129,17 +152,23 @@ public partial class ModuleManagerWindow : Window
                     HasUpdate = hasUpdate,
                 };
 
+                // VÈrifier la compatibilitÈ
+                var (status, reason, alternative) = CheckModuleCompatibility(moduleDef, coreVersion);
+                vm.CompatibilityStatus = status;
+                vm.CompatibilityReason = reason;
+                vm.AlternativeVersion = alternative;
+
                 vm.UpdateDisplay();
                 _allModules.Add(vm);
             }
 
             ApplyFilter();
 
-            // Mise √† jour du statut
+            // Mise ‡ jour du statut
             var installedCount = _allModules.Count(m => m.IsInstalled);
             var updateCount = _allModules.Count(m => m.HasUpdate);
             txtStatus.Text = L10n.TFormat("modules.manager.status",
-                "{0} module(s) disponible(s), {1} install√©(s), {2} mise(s) √† jour",
+                "{0} module(s) disponible(s), {1} installÈ(s), {2} mise(s) ‡ jour",
                 _allModules.Count, installedCount, updateCount);
         }
         catch (Exception ex)
@@ -155,11 +184,11 @@ public partial class ModuleManagerWindow : Window
     }
 
     /// <summary>
-    /// Extrait la cat√©gorie du module
+    /// Extrait la catÈgorie du module
     /// </summary>
     private string GetCategoryFromDefinition(ModuleDefinition def)
     {
-        // Utiliser la r√©flexion pour acc√©der √† la propri√©t√© Category si elle existe
+        // Utiliser la rÈflexion pour accÈder ‡ la propriÈtÈ Category si elle existe
         var categoryProp = def.GetType().GetProperty("Category");
         if (categoryProp != null)
         {
@@ -171,7 +200,7 @@ public partial class ModuleManagerWindow : Window
     }
 
     /// <summary>
-    /// Applique le filtre s√©lectionn√© et regroupe par cat√©gorie
+    /// Applique le filtre sÈlectionnÈ et regroupe par catÈgorie
     /// </summary>
     private void ApplyFilter()
     {
@@ -187,7 +216,7 @@ public partial class ModuleManagerWindow : Window
             _ => _allModules
         };
 
-        // Grouper par cat√©gorie
+        // Grouper par catÈgorie
         var groups = filtered
             .GroupBy(m => m.Category)
             .OrderBy(g => g.Key);
@@ -204,38 +233,38 @@ public partial class ModuleManagerWindow : Window
             _categories.Add(categoryVm);
         }
 
-        // Afficher le message vide si n√©cessaire
+        // Afficher le message vide si nÈcessaire
         var hasModules = _categories.Any();
         pnlEmpty.Visibility = hasModules ? Visibility.Collapsed : Visibility.Visible;
         lstCategories.Visibility = hasModules ? Visibility.Visible : Visibility.Collapsed;
 
         if (!hasModules && _allModules.Count > 0)
         {
-            txtEmptyIcon.Text = "üîç";
+            txtEmptyIcon.Text = "??";
             txtEmptyMessage.Text = L10n.T("modules.manager.noMatch", "Aucun module ne correspond au filtre");
         }
     }
 
     /// <summary>
-    /// Retourne l'ic√¥ne pour une cat√©gorie
+    /// Retourne l'icÙne pour une catÈgorie
     /// </summary>
     private string GetCategoryIcon(string category)
     {
         return category.ToLower() switch
         {
-            "cartographie" => "üó∫Ô∏è",
-            "voirie" => "üõ£Ô∏è",
-            "topographie" => "üìê",
-            "hydraulique" => "üíß",
-            "r√©seaux" => "üîå",
-            "dessin" => "‚úèÔ∏è",
-            "import/export" => "üìÅ",
-            _ => "üì¶"
+            "cartographie" => "???",
+            "voirie" => "???",
+            "topographie" => "??",
+            "hydraulique" => "??",
+            "rÈseaux" => "??",
+            "dessin" => "??",
+            "import/export" => "??",
+            _ => "??"
         };
     }
 
     /// <summary>
-    /// Affiche l'√©tat de chargement
+    /// Affiche l'Ètat de chargement
     /// </summary>
     private void SetLoadingState(bool isLoading, string? message = null)
     {
@@ -251,7 +280,7 @@ public partial class ModuleManagerWindow : Window
         {
             pnlEmpty.Visibility = Visibility.Visible;
             lstCategories.Visibility = Visibility.Collapsed;
-            txtEmptyIcon.Text = "‚è≥";
+            txtEmptyIcon.Text = "?";
             txtEmptyMessage.Text = message ?? L10n.T("modules.manager.loading", "Chargement...");
         }
     }
@@ -266,7 +295,7 @@ public partial class ModuleManagerWindow : Window
 
         pnlEmpty.Visibility = Visibility.Visible;
         lstCategories.Visibility = Visibility.Collapsed;
-        txtEmptyIcon.Text = "‚ùå";
+        txtEmptyIcon.Text = "?";
         txtEmptyMessage.Text = message;
     }
 
@@ -277,11 +306,11 @@ public partial class ModuleManagerWindow : Window
     {
         pnlEmpty.Visibility = Visibility.Visible;
         lstCategories.Visibility = Visibility.Collapsed;
-        txtEmptyIcon.Text = "üì¶";
+        txtEmptyIcon.Text = "??";
         txtEmptyMessage.Text = message;
     }
 
-    // === √âV√âNEMENTS ===
+    // === …V…NEMENTS ===
 
     private async void OnRefreshClick(object sender, RoutedEventArgs e)
     {
@@ -295,14 +324,14 @@ public partial class ModuleManagerWindow : Window
     }
 
     /// <summary>
-    /// R√©cup√®re les d√©pendances manquantes pour un module
+    /// RÈcupËre les dÈpendances manquantes pour un module
     /// </summary>
     private List<ModuleDefinition> GetMissingDependencies(ModuleDefinition moduleDef)
     {
         if (_manifest == null)
             return new List<ModuleDefinition>();
 
-        // IDs des modules install√©s dans cette session (pas encore charg√©s en m√©moire)
+        // IDs des modules installÈs dans cette session (pas encore chargÈs en mÈmoire)
         var sessionInstalledIds = _allModules
             .Where(m => m.IsInstalled)
             .Select(m => m.Id);
@@ -311,20 +340,20 @@ public partial class ModuleManagerWindow : Window
     }
 
     /// <summary>
-    /// Installe un module et ses d√©pendances
+    /// Installe un module et ses dÈpendances
     /// </summary>
     private async Task<List<string>> InstallModuleWithDependenciesAsync(ModuleDefinition moduleDef, List<ModuleDefinition> dependencies)
     {
         var installedModules = new List<string>();
 
-        // D'abord installer les d√©pendances (dans l'ordre)
+        // D'abord installer les dÈpendances (dans l'ordre)
         foreach (var dep in dependencies)
         {
             SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0}...", dep.Name));
             await UpdateService.InstallModuleAsync(dep);
             installedModules.Add(dep.Name);
 
-            // Mettre √† jour le ViewModel correspondant
+            // Mettre ‡ jour le ViewModel correspondant
             var depVm = _allModules.FirstOrDefault(m => m.Id.Equals(dep.Id, StringComparison.OrdinalIgnoreCase));
             if (depVm != null)
             {
@@ -353,7 +382,7 @@ public partial class ModuleManagerWindow : Window
 
         try
         {
-            // V√©rifier les d√©pendances manquantes
+            // VÈrifier les dÈpendances manquantes
             var missingDeps = GetMissingDependencies(module.Definition);
 
             if (missingDeps.Count > 0)
@@ -365,26 +394,26 @@ public partial class ModuleManagerWindow : Window
 
                 var result = MessageBox.Show(
                     message,
-                    L10n.T("modules.manager.dependencies.title", "D√©pendances requises"),
+                    L10n.T("modules.manager.dependencies.title", "DÈpendances requises"),
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
 
                 if (result != MessageBoxResult.Yes)
                 {
-                    return; // L'utilisateur a annul√©
+                    return; // L'utilisateur a annulÈ
                 }
             }
 
             btn.IsEnabled = false;
-            module.ActionText = L10n.T("modules.manager.downloading", "T√©l√©chargement...");
+            module.ActionText = L10n.T("modules.manager.downloading", "TÈlÈchargement...");
             btn.Content = module.ActionText;
 
             List<string> installedModules;
 
             if (missingDeps.Count > 0)
             {
-                // Installer avec les d√©pendances
-                SetLoadingState(true, L10n.T("modules.manager.dependencies.installing", "Installation des d√©pendances..."));
+                // Installer avec les dÈpendances
+                SetLoadingState(true, L10n.T("modules.manager.dependencies.installing", "Installation des dÈpendances..."));
                 installedModules = await InstallModuleWithDependenciesAsync(module.Definition, missingDeps);
             }
             else
@@ -395,7 +424,7 @@ public partial class ModuleManagerWindow : Window
                 installedModules = new List<string> { module.Name };
             }
 
-            // Succ√®s
+            // SuccËs
             module.IsInstalled = true;
             module.HasUpdate = false;
             module.LocalVersion = module.RemoteVersion;
@@ -404,20 +433,20 @@ public partial class ModuleManagerWindow : Window
             btn.Content = module.ActionText;
             btn.IsEnabled = module.CanPerformAction;
 
-            // Rafra√Æchir l'affichage des cat√©gories
+            // RafraÓchir l'affichage des catÈgories
             ApplyFilter();
 
-            Logger.Success(L10n.TFormat("modules.manager.installed", "Module {0} install√© avec succ√®s", module.Name));
+            Logger.Success(L10n.TFormat("modules.manager.installed", "Module {0} installÈ avec succËs", module.Name));
 
-            // Message de red√©marrage
+            // Message de redÈmarrage
             if (installedModules.Count > 1)
             {
-                var modulesList = string.Join("\n‚Ä¢ ", installedModules);
+                var modulesList = string.Join("\nï ", installedModules);
                 MessageBox.Show(
                     L10n.TFormat("modules.manager.restartRequired.multiple",
-                        "Les modules suivants ont √©t√© install√©s :\n{0}\n\nRed√©marrez AutoCAD pour les activer.",
-                        "‚Ä¢ " + modulesList),
-                    L10n.T("modules.manager.installSuccess", "Installation r√©ussie"),
+                        "Les modules suivants ont ÈtÈ installÈs :\n{0}\n\nRedÈmarrez AutoCAD pour les activer.",
+                        "ï " + modulesList),
+                    L10n.T("modules.manager.installSuccess", "Installation rÈussie"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
@@ -425,8 +454,8 @@ public partial class ModuleManagerWindow : Window
             {
                 MessageBox.Show(
                     L10n.TFormat("modules.manager.restartRequired",
-                        "Le module {0} a √©t√© install√©.\n\nRed√©marrez AutoCAD pour l'activer.", module.Name),
-                    L10n.T("modules.manager.installSuccess", "Installation r√©ussie"),
+                        "Le module {0} a ÈtÈ installÈ.\n\nRedÈmarrez AutoCAD pour l'activer.", module.Name),
+                    L10n.T("modules.manager.installSuccess", "Installation rÈussie"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
@@ -440,7 +469,7 @@ public partial class ModuleManagerWindow : Window
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
 
-            module.ActionText = L10n.T("modules.manager.retry", "R√©essayer");
+            module.ActionText = L10n.T("modules.manager.retry", "RÈessayer");
             btn.Content = module.ActionText;
             btn.IsEnabled = true;
         }
@@ -451,7 +480,7 @@ public partial class ModuleManagerWindow : Window
     }
 
     /// <summary>
-    /// Installe tous les modules d'une cat√©gorie
+    /// Installe tous les modules d'une catÈgorie
     /// </summary>
     private async void OnInstallCategoryClick(object sender, RoutedEventArgs e)
     {
@@ -463,7 +492,7 @@ public partial class ModuleManagerWindow : Window
         if (modulesToInstall.Count == 0)
         {
             MessageBox.Show(
-                L10n.T("modules.manager.category.allInstalled", "Tous les modules de cette cat√©gorie sont d√©j√† install√©s."),
+                L10n.T("modules.manager.category.allInstalled", "Tous les modules de cette catÈgorie sont dÈj‡ installÈs."),
                 L10n.T("modules.manager.title", "Gestionnaire de Modules"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
@@ -473,9 +502,9 @@ public partial class ModuleManagerWindow : Window
         // Confirmer l'installation
         var result = MessageBox.Show(
             L10n.TFormat("modules.manager.category.confirmInstall",
-                "Voulez-vous installer les {0} module(s) de la cat√©gorie \"{1}\" ?\n\n‚Ä¢ {2}",
-                modulesToInstall.Count, category.Name, string.Join("\n‚Ä¢ ", modulesToInstall.Select(m => m.Name))),
-            L10n.T("modules.manager.category.installAll", "Installer la cat√©gorie"),
+                "Voulez-vous installer les {0} module(s) de la catÈgorie \"{1}\" ?\n\nï {2}",
+                modulesToInstall.Count, category.Name, string.Join("\nï ", modulesToInstall.Select(m => m.Name))),
+            L10n.T("modules.manager.category.installAll", "Installer la catÈgorie"),
             MessageBoxButton.YesNo,
             MessageBoxImage.Question);
 
@@ -487,7 +516,7 @@ public partial class ModuleManagerWindow : Window
             btn.IsEnabled = false;
             var installedModules = new List<string>();
 
-            // Collecter toutes les d√©pendances manquantes
+            // Collecter toutes les dÈpendances manquantes
             var allDependencies = new List<ModuleDefinition>();
             foreach (var module in modulesToInstall)
             {
@@ -502,7 +531,7 @@ public partial class ModuleManagerWindow : Window
                 }
             }
 
-            // Installer les d√©pendances d'abord
+            // Installer les dÈpendances d'abord
             foreach (var dep in allDependencies)
             {
                 SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0}...", dep.Name));
@@ -519,7 +548,7 @@ public partial class ModuleManagerWindow : Window
                 }
             }
 
-            // Installer les modules de la cat√©gorie
+            // Installer les modules de la catÈgorie
             foreach (var module in modulesToInstall)
             {
                 SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0}...", module.Name));
@@ -532,21 +561,21 @@ public partial class ModuleManagerWindow : Window
                 module.UpdateDisplay();
             }
 
-            // Rafra√Æchir l'affichage
+            // RafraÓchir l'affichage
             ApplyFilter();
 
-            // Message de succ√®s
-            var modulesList = string.Join("\n‚Ä¢ ", installedModules);
+            // Message de succËs
+            var modulesList = string.Join("\nï ", installedModules);
             MessageBox.Show(
                 L10n.TFormat("modules.manager.restartRequired.multiple",
-                    "Les modules suivants ont √©t√© install√©s :\n{0}\n\nRed√©marrez AutoCAD pour les activer.",
-                    "‚Ä¢ " + modulesList),
-                L10n.T("modules.manager.installSuccess", "Installation r√©ussie"),
+                    "Les modules suivants ont ÈtÈ installÈs :\n{0}\n\nRedÈmarrez AutoCAD pour les activer.",
+                    "ï " + modulesList),
+                L10n.T("modules.manager.installSuccess", "Installation rÈussie"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
 
             Logger.Success(L10n.TFormat("modules.manager.category.installed",
-                "{0} module(s) install√©(s) depuis la cat√©gorie {1}", installedModules.Count, category.Name));
+                "{0} module(s) installÈ(s) depuis la catÈgorie {1}", installedModules.Count, category.Name));
         }
         catch (Exception ex)
         {
@@ -592,6 +621,139 @@ public partial class ModuleManagerWindow : Window
         }
     }
 
+    /// <summary>
+    /// VÈrifie la compatibilitÈ d'un module avec le Core actuel
+    /// </summary>
+    private (ModuleCompatibilityStatus status, string reason, ModuleVersionInfo? alternative)
+        CheckModuleCompatibility(ModuleDefinition moduleDef, Version coreVersion)
+    {
+        // VÈrifier la version principale
+        bool isLatestCompatible = IsVersionCompatible(moduleDef.MinCoreVersion, moduleDef.MaxCoreVersion, coreVersion);
+
+        if (isLatestCompatible)
+        {
+            return (ModuleCompatibilityStatus.Compatible, "", null);
+        }
+
+        // La version principale n'est pas compatible - chercher une alternative
+        ModuleVersionInfo? alternativeVersion = null;
+
+        if (moduleDef.PreviousVersions != null && moduleDef.PreviousVersions.Count > 0)
+        {
+            alternativeVersion = moduleDef.PreviousVersions
+                .Where(v => IsVersionCompatible(v.MinCoreVersion, v.MaxCoreVersion, coreVersion))
+                .OrderByDescending(v =>
+                {
+                    Version.TryParse(v.Version, out var ver);
+                    return ver;
+                })
+                .FirstOrDefault();
+        }
+
+        // DÈterminer le type d'incompatibilitÈ
+        ModuleCompatibilityStatus status;
+        string reason;
+
+        if (Version.TryParse(moduleDef.MinCoreVersion, out var minCore) && coreVersion < minCore)
+        {
+            status = alternativeVersion != null ? ModuleCompatibilityStatus.OlderVersionAvailable : ModuleCompatibilityStatus.CoreTooOld;
+            reason = L10n.TFormat("modules.compatibility.coreTooOld", "NÈcessite Core {0}+", moduleDef.MinCoreVersion);
+        }
+        else if (!string.IsNullOrEmpty(moduleDef.MaxCoreVersion) &&
+                 Version.TryParse(moduleDef.MaxCoreVersion, out var maxCore) && coreVersion > maxCore)
+        {
+            status = alternativeVersion != null ? ModuleCompatibilityStatus.OlderVersionAvailable : ModuleCompatibilityStatus.CoreTooNew;
+            reason = L10n.TFormat("modules.compatibility.coreTooNew", "Incompatible Core > {0}", moduleDef.MaxCoreVersion);
+        }
+        else
+        {
+            status = ModuleCompatibilityStatus.Compatible;
+            reason = "";
+        }
+
+        return (status, reason, alternativeVersion);
+    }
+
+    private bool IsVersionCompatible(string? minCoreVersion, string? maxCoreVersion, Version coreVersion)
+    {
+        // VÈrifier MinCoreVersion
+        if (!string.IsNullOrEmpty(minCoreVersion) && Version.TryParse(minCoreVersion, out var minCore))
+        {
+            if (coreVersion < minCore) return false;
+        }
+
+        // VÈrifier MaxCoreVersion
+        if (!string.IsNullOrEmpty(maxCoreVersion) && Version.TryParse(maxCoreVersion, out var maxCore))
+        {
+            if (coreVersion > maxCore) return false;
+        }
+
+        return true;
+    }
+
+    private async void OnInstallAlternativeClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn || btn.Tag is not ModuleViewModel module)
+            return;
+
+        if (module.AlternativeVersion == null)
+            return;
+
+        try
+        {
+            btn.IsEnabled = false;
+
+            // CrÈer une copie de la dÈfinition avec la version alternative
+            var altDef = new ModuleDefinition
+            {
+                Id = module.Definition.Id,
+                Name = module.Definition.Name,
+                Description = module.Definition.Description,
+                Author = module.Definition.Author,
+                Version = module.AlternativeVersion.Version,
+                MinCoreVersion = module.AlternativeVersion.MinCoreVersion,
+                MaxCoreVersion = module.AlternativeVersion.MaxCoreVersion,
+                DownloadUrl = module.AlternativeVersion.DownloadUrl,
+                Dependencies = module.Definition.Dependencies,
+                IsCustomSource = module.Definition.IsCustomSource
+            };
+
+            SetLoadingState(true, L10n.TFormat("modules.manager.installing", "Installation de {0} v{1}...", module.Name, altDef.Version));
+            await UpdateService.InstallModuleAsync(altDef);
+
+            // SuccËs
+            module.IsInstalled = true;
+            module.LocalVersion = altDef.Version;
+            module.CompatibilityStatus = ModuleCompatibilityStatus.Compatible;
+            module.UpdateDisplay();
+
+            ApplyFilter();
+
+            Logger.Success(L10n.TFormat("modules.manager.installed", "Module {0} v{1} installÈ avec succËs", module.Name, altDef.Version));
+
+            MessageBox.Show(
+                L10n.TFormat("modules.manager.restartRequired",
+                    "Le module {0} v{1} a ÈtÈ installÈ.\n\nRedÈmarrez AutoCAD pour l'activer.", module.Name, altDef.Version),
+                L10n.T("modules.manager.installSuccess", "Installation rÈussie"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Alternative install error: {ex}");
+            MessageBox.Show(
+                L10n.TFormat("modules.manager.installError", "Erreur lors de l'installation: {0}", ex.Message),
+                L10n.T("cmd.error", "Erreur"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            btn.IsEnabled = true;
+            SetLoadingState(false);
+        }
+    }
+
     private void OnCloseClick(object sender, RoutedEventArgs e)
     {
         Close();
@@ -599,15 +761,15 @@ public partial class ModuleManagerWindow : Window
 }
 
 /// <summary>
-/// ViewModel pour une cat√©gorie de modules
+/// ViewModel pour une catÈgorie de modules
 /// </summary>
 public class CategoryViewModel
 {
     public string Name { get; set; } = "";
-    public string Icon { get; set; } = "üì¶";
+    public string Icon { get; set; } = "??";
     public ObservableCollection<ModuleViewModel> Modules { get; set; } = new();
 
-    // Propri√©t√©s calcul√©es
+    // PropriÈtÈs calculÈes
     public string ModuleCountText { get; set; } = "";
     public string InstallAllText { get; set; } = "";
     public Visibility InstallAllVisibility { get; set; } = Visibility.Collapsed;
@@ -648,7 +810,14 @@ public class ModuleViewModel
     public bool IsInstalled { get; set; }
     public bool HasUpdate { get; set; }
 
-    // Propri√©t√©s calcul√©es pour l'affichage
+    // CompatibilitÈ
+    public ModuleCompatibilityStatus CompatibilityStatus { get; set; } = ModuleCompatibilityStatus.Compatible;
+    public string CompatibilityReason { get; set; } = "";
+    public ModuleVersionInfo? AlternativeVersion { get; set; }
+    public bool IsCompatible => CompatibilityStatus == ModuleCompatibilityStatus.Compatible;
+    public bool HasAlternative => AlternativeVersion != null;
+
+    // PropriÈtÈs calculÈes pour l'affichage
     public string VersionDisplay { get; set; } = "";
     public string StatusIcon { get; set; } = "";
     public Brush StatusBackground { get; set; } = Brushes.Gray;
@@ -657,19 +826,53 @@ public class ModuleViewModel
     public Brush ActionBackground { get; set; } = Brushes.LightGray;
     public Brush ActionForeground { get; set; } = Brushes.Black;
 
-    // D√©pendances
+    // DÈpendances
     public string DependenciesText { get; set; } = "";
     public Visibility HasDependenciesVisibility { get; set; } = Visibility.Collapsed;
 
+    // CompatibilitÈ UI
+    public Visibility CompatibilityWarningVisibility { get; set; } = Visibility.Collapsed;
+    public Visibility AlternativeButtonVisibility { get; set; } = Visibility.Collapsed;
+    public string AlternativeButtonText { get; set; } = "";
+    public double ModuleOpacity { get; set; } = 1.0;
+
     /// <summary>
-    /// Met √† jour les propri√©t√©s d'affichage selon l'√©tat
+    /// Met ‡ jour les propriÈtÈs d'affichage selon l'Ètat
     /// </summary>
     public void UpdateDisplay()
     {
-        // Afficher les d√©pendances
+        // Gestion de la compatibilitÈ
+        if (!IsCompatible)
+        {
+            ModuleOpacity = 0.6;
+            CompatibilityWarningVisibility = Visibility.Visible;
+
+            if (HasAlternative)
+            {
+                AlternativeButtonVisibility = Visibility.Visible;
+                AlternativeButtonText = L10n.TFormat("modules.install.alternative", "Installer v{0}", AlternativeVersion!.Version);
+            }
+
+            // Version display avec avertissement
+            VersionDisplay = $"v{RemoteVersion} ??";
+            StatusIcon = "?";
+            StatusBackground = CreateFrozenBrush(158, 158, 158); // Gris
+            ActionText = CompatibilityReason;
+            CanPerformAction = false;
+            ActionBackground = CreateFrozenBrush(200, 200, 200);
+            ActionForeground = Brushes.Gray;
+            return;
+        }
+
+        // Reset si compatible
+        ModuleOpacity = 1.0;
+        CompatibilityWarningVisibility = Visibility.Collapsed;
+        AlternativeButtonVisibility = Visibility.Collapsed;
+
+        // Afficher les dÈpendances
         if (Definition.Dependencies != null && Definition.Dependencies.Count > 0)
         {
-            DependenciesText = $"‚ö†Ô∏è {L10n.T("modules.requires", "Requiert")}: {string.Join(", ", Definition.Dependencies)}";
+            DependenciesText = $"?? {L10n.T("modules.requires", "Requiert")}: {string.Join(", ", Definition.Dependencies)}";
             HasDependenciesVisibility = IsInstalled ? Visibility.Collapsed : Visibility.Visible;
         }
         else
@@ -681,22 +884,22 @@ public class ModuleViewModel
         {
             if (HasUpdate)
             {
-                // Mise √† jour disponible
-                VersionDisplay = $"v{LocalVersion} ‚Üí v{RemoteVersion}";
-                StatusIcon = "‚Üë";
+                // Mise ‡ jour disponible
+                VersionDisplay = $"v{LocalVersion} ? v{RemoteVersion}";
+                StatusIcon = "?";
                 StatusBackground = CreateFrozenBrush(255, 152, 0); // Orange
-                ActionText = L10n.T("modules.action.update", "Mettre √† jour");
+                ActionText = L10n.T("modules.action.update", "Mettre ‡ jour");
                 CanPerformAction = true;
                 ActionBackground = CreateFrozenBrush(255, 152, 0);
                 ActionForeground = Brushes.White;
             }
             else
             {
-                // Install√© et √† jour
+                // InstallÈ et ‡ jour
                 VersionDisplay = $"v{LocalVersion}";
-                StatusIcon = "‚úì";
+                StatusIcon = "?";
                 StatusBackground = CreateFrozenBrush(76, 175, 80); // Vert
-                ActionText = L10n.T("modules.action.installed", "Install√©");
+                ActionText = L10n.T("modules.action.installed", "InstallÈ");
                 CanPerformAction = false;
                 ActionBackground = CreateFrozenBrush(200, 200, 200);
                 ActionForeground = Brushes.Gray;
@@ -704,7 +907,7 @@ public class ModuleViewModel
         }
         else
         {
-            // Non install√©
+            // Non installÈ
             VersionDisplay = $"v{RemoteVersion}";
             StatusIcon = "+";
             StatusBackground = CreateFrozenBrush(33, 150, 243); // Bleu
